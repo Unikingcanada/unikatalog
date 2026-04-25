@@ -1,14 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import ElevatorBuckets from './pages/ElevatorBuckets';
 import Catalog from './pages/Catalog';
+import ElevatorBuckets from './pages/ElevatorBuckets';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/ElevatorBuckets" replace />} />
-        <Route path="/ElevatorBuckets" element={<ElevatorBuckets />} />
+        <Route path="/" element={<Navigate to="/Catalog" replace />} />
         <Route path="/Catalog" element={<Catalog />} />
+        <Route path="/ElevatorBuckets" element={<ElevatorBuckets />} />
       </Routes>
     </BrowserRouter>
   )
