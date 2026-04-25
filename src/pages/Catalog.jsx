@@ -4,7 +4,6 @@ import { CatalogProduct } from "@/api/entities";
 const NAVY = "#1a3a5c";
 const SILVER = "#9ca3af";
 const INTRALOX_RED = "#c8102e";
-const INTRALOX_LOGO_URL = "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/3a7335a99_intralox_logo.png";
 
 const MATERIAL_INFO = {
   "Polypropylene":       { abbr: "PP", color: "#dbeafe", text: "#1e40af", note: "General purpose · FDA compliant · good chemical resistance" },
@@ -36,42 +35,13 @@ const CAT_IMGS = {
 };
 const CAT_ICONS = { "Straight-Running Belts":"➡️","Radius Belts":"↩️","Spiral Belts":"🌀","Side-Flexing Belts":"↪️" };
 
-// ── Intralox Official Logo ──────────────────────────────────────
-function IntraloxLogo({ height = 24 }) {
-  const [imgErr, setImgErr] = useState(false);
-  if (!imgErr) {
-    return (
-      <img
-        src={INTRALOX_LOGO_URL}
-        alt="Intralox"
-        height={height}
-        onError={() => setImgErr(true)}
-        style={{ display: "block", objectFit: "contain" }}
-      />
-    );
-  }
-  // SVG fallback
-  const svgH = height;
-  const svgW = Math.round(height * 4.3);
-  return (
-    <svg height={svgH} width={svgW} viewBox={`0 0 ${svgW} ${svgH}`} style={{ display: "block" }}>
-      <text x="0" y={svgH * 0.82} fontFamily="'Arial Black',Arial,sans-serif" fontWeight="900"
-        fontSize={svgH * 0.88} fill="#2d2d2d">INTRA</text>
-      <text x={svgW * 0.596} y={svgH * 0.82} fontFamily="'Arial Black',Arial,sans-serif" fontWeight="900"
-        fontSize={svgH * 0.88} fill={INTRALOX_RED}>LOX</text>
-    </svg>
-  );
-}
 
-function VendorLogo({ vendor, height = 22, light = false }) {
-  if (vendor === "Intralox") {
-    return light
-      ? <span style={{ fontFamily:"'Arial Black',Arial,sans-serif", fontWeight:900, fontSize:height*0.85, color:"#fff", letterSpacing:-0.5 }}>
-          <span style={{ color:"#ccc" }}>INTRA</span>LOX
-        </span>
-      : <IntraloxLogo height={height} />;
-  }
-  const colors = { Movex:{ bg:"#fef3c7",text:"#92400e" }, Rollepaal:{ bg:"#f0fdf4",text:"#166534" } };
+function VendorLogo({ vendor, height = 22 }) {
+  const colors = {
+    Intralox:  { bg:"#fee2e2", text:"#991b1b" },
+    Movex:     { bg:"#fef3c7", text:"#92400e" },
+    Rollepaal: { bg:"#f0fdf4", text:"#166534" },
+  };
   const vc = colors[vendor] || { bg:"#f3f4f6", text:"#374151" };
   return <span style={{ padding:"3px 9px", background:vc.bg, color:vc.text, fontWeight:800, fontSize:height*0.55, borderRadius:5 }}>{vendor}</span>;
 }
@@ -500,11 +470,7 @@ function TearSheet({ product, onClose }) {
                 {product.open_area && product.open_area!=="0%" && <span style={{ padding:"3px 8px",background:"#fef9c3",color:"#854d0e",borderRadius:5,fontSize:11,fontWeight:600 }}>{product.open_area} open</span>}
                 {product.hinge_style && <span style={{ padding:"3px 8px",background:"#f3f4f6",color:"#374151",borderRadius:5,fontSize:11,fontWeight:600 }}>{product.hinge_style} hinge</span>}
               </div>
-              {product.vendor === "Intralox" && (
-                <div style={{ marginTop:14 }}>
-                  <img src={INTRALOX_LOGO_URL} alt="Intralox" height={20} style={{ objectFit:"contain" }} />
-                </div>
-              )}
+
             </div>
             {catImg && (
               <div style={{ width:220,flexShrink:0,overflow:"hidden" }}>
