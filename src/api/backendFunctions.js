@@ -8,3 +8,5 @@ export const checkUniKonnect = base44.functions.checkUniKonnect;
 export const oppProductHistory = base44.functions.oppProductHistory;
 export const weeklyPerformanceReport = base44.functions.weeklyPerformanceReport;
 export const iscPerformanceReport = base44.functions.iscPerformanceReport;
+export const uploadBeltImages = base44.functions.uploadBeltImages;
+export const bulkUpdateCatalog = base44.functions.bulkUpdateCatalog;
