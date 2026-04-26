@@ -421,7 +421,16 @@ export default function Catalog() {
         const chainTypeMap = { "Drive Chain": "ANSI/BS Chain", "Conveyor Chain": "Conveyor Chain", "Engineering Chain": "Engineered Chain", "Agricultural Chain": "Engineered Chain" };
         setAll([
           ...intralox.map(r => ({ ...r, _type: r.category || "Modular Plastic Belt" })),
-          ...uni.map(r => ({ ...r, _type: r.product_type })),
+          ...uni.map(r => {
+            const chainTypes = new Set(["ANSI/BS Chain","Conveyor Chain","Engineered Chain","Cast Chain","Welded Steel Chain","Forged Chain","Overhead Chain","Sharptop Chain","Kiln Chain","Thermoforming Chain","Table Top Chain"]);
+            const isChain = chainTypes.has(r.product_type);
+            return {
+              ...r,
+              _type: r.product_type,
+              series: isChain && r.model_code ? r.model_code : (r.series || ""),
+              style: isChain && r.model_code ? (r.series || r.style || "") : (r.style || ""),
+            };
+          }),
           ...buckets.map(r => ({ ...r, _type: getBucketType(r) })),
           ...dh.map(r => ({
             ...r,

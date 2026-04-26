@@ -93,24 +93,30 @@ function normalizeElevatorBucket(r) {
 
 const UNI_TYPE_REMAP = { "Modular Plastic Belt": "Modular Belt" };
 
+const CHAIN_TYPE_KEYS = new Set(["ANSI/BS Chain","Conveyor Chain","Engineered Chain","Cast Chain","Welded Steel Chain","Forged Chain","Overhead Chain","Sharptop Chain","Kiln Chain","Thermoforming Chain","Table Top Chain"]);
+
 function normalizeUniCatalog(r) {
   const rawType = r.product_type || "General";
   const type = UNI_TYPE_REMAP[rawType] || rawType;
+  const isChain = CHAIN_TYPE_KEYS.has(type);
   const specs = parseSpecs(r.key_specs);
   const cleanSpecs = Object.fromEntries(
     Object.entries(specs)
       .filter(([k]) => !["suppliers","supplier","vendor","vendors","brand"].includes(k.toLowerCase()))
       .map(([k, v]) => [k.replace(/_/g, " "), v])
   );
+  // For chain types: use model_code as the display name (e.g. "40-2"), series becomes subtitle
+  const displayName = isChain && r.model_code ? r.model_code : (r.series || "");
+  const displayStyle = isChain && r.model_code ? (r.series || r.style || "") : (r.style || "");
   return {
     id: r.id, _source: "unicatalog", type,
     brand: SHOW_BRAND.has(type) ? (r.vendor || "") : "",
-    series: r.series || "", style: r.style || "", category: r.style || "",
+    series: displayName, style: displayStyle, category: displayStyle,
     application: r.application || "", materials: r.materials || "", material: r.materials || "",
     duty: r.duty || "", notes: [r.features, r.notes].filter(Boolean).join(" "),
     catalog_url: r.catalog_url || "", tech_doc_url: r.tech_doc_url || "",
     image_url: r.image_url || "", belt_data: null, sprocket_data: null,
-    specs: { "Style": r.style || null, "Application": r.application || null, "Materials": r.materials || null, "Duty": r.duty || null, ...cleanSpecs },
+    specs: { "Model": r.model_code || null, "Series": r.series || null, "Style": r.style || null, "Application": r.application || null, "Materials": r.materials || null, "Duty": r.duty || null, ...cleanSpecs },
   };
 }
 
