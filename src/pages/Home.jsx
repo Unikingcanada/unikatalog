@@ -25,6 +25,7 @@ const PRODUCT_TYPES = [
 ];
 
 const TYPE_MAP = Object.fromEntries(PRODUCT_TYPES.map(t => [t.key, t]));
+
 const FILTER_LABELS = {
   category: "Belt Category", style: "Style / Type", pitch_in: "Pitch",
   materials: "Material", material: "Material", hinge_style: "Hinge Style",
@@ -43,6 +44,12 @@ function parseJSON(raw) {
   try { return JSON.parse(raw); } catch (e) { return null; }
 }
 
+function parseSpecs(raw) {
+  if (!raw) return {};
+  if (typeof raw === "object") return raw;
+  try { return JSON.parse(raw); } catch (e) { return {}; }
+}
+
 function normalizeCatalogProduct(r) {
   return {
     id: r.id, _source: "catalogproduct",
@@ -54,7 +61,7 @@ function normalizeCatalogProduct(r) {
     application: r.category || "", duty: "", notes: r.notes || "",
     catalog_url: "", tech_doc_url: r.tech_doc_url || "",
     image_url: r.image_url || "", belt_data: r.belt_data || null,
-    sprocket_data: r.sprocket_data || null, page_range: r.page_range || "",
+    sprocket_data: r.sprocket_data || null,
     specs: {
       "Belt Category": r.category || null, "Style": r.style || null,
       "Pitch": r.pitch_in ? r.pitch_in + '" (' + r.pitch_mm + ' mm)' : null,
@@ -67,17 +74,16 @@ function normalizeCatalogProduct(r) {
 
 function normalizeElevatorBucket(r) {
   return {
-    id: r.id, _source: "elevbucket", type: "Elevator Bucket", brand: r.vendor || "",
-    series: r.series || "", style: r.style || "", category: r.profile || "",
-    application: r.application || "",
+    id: r.id, _source: "elevbucket", type: "Elevator Bucket",
+    brand: r.vendor || "", series: r.series || "", style: r.style || "",
+    category: r.profile || "", application: r.application || "",
     discharge_type: r.discharge_type && r.discharge_type !== "N/A" ? r.discharge_type : "",
     duty: r.duty || "", material: r.material || "", materials: r.material || "",
     profile: r.profile && r.profile !== "N/A" ? r.profile : "",
     notes: r.notes || "", catalog_url: "", tech_doc_url: r.tech_doc_url || "",
-    image_url: r.image_url || "", belt_data: null, sprocket_data: null, page_range: r.page_range || "",
+    image_url: r.image_url || "", belt_data: null, sprocket_data: null,
     specs: {
-      "Brand": r.vendor || null,
-      "Discharge Type": r.discharge_type && r.discharge_type !== "N/A" ? r.discharge_type : null,
+      "Brand": r.vendor || null, "Discharge Type": r.discharge_type && r.discharge_type !== "N/A" ? r.discharge_type : null,
       "Profile": r.profile && r.profile !== "N/A" ? r.profile : null,
       "Duty": r.duty || null, "Material": r.material || null,
       "Available Sizes": r.bucket_sizes || null, "Application": r.application || null,
@@ -90,7 +96,7 @@ const UNI_TYPE_REMAP = { "Modular Plastic Belt": "Modular Belt" };
 function normalizeUniCatalog(r) {
   const rawType = r.product_type || "General";
   const type = UNI_TYPE_REMAP[rawType] || rawType;
-  const specs = parseJSON(r.key_specs) || {};
+  const specs = parseSpecs(r.key_specs);
   const cleanSpecs = Object.fromEntries(
     Object.entries(specs)
       .filter(([k]) => !["suppliers","supplier","vendor","vendors","brand"].includes(k.toLowerCase()))
@@ -103,7 +109,7 @@ function normalizeUniCatalog(r) {
     application: r.application || "", materials: r.materials || "", material: r.materials || "",
     duty: r.duty || "", notes: [r.features, r.notes].filter(Boolean).join(" "),
     catalog_url: r.catalog_url || "", tech_doc_url: r.tech_doc_url || "",
-    image_url: r.image_url || "", belt_data: null, sprocket_data: null, page_range: r.page_range || "",
+    image_url: r.image_url || "", belt_data: null, sprocket_data: null,
     specs: { "Style": r.style || null, "Application": r.application || null, "Materials": r.materials || null, "Duty": r.duty || null, ...cleanSpecs },
   };
 }
@@ -129,14 +135,18 @@ function applyFilters(products, activeFilters) {
 
 // ─── Tear Sheet ───────────────────────────────────────────────────────────────
 
-function printTearSheet(product, typeDef) {
-  const specs = Object.entries(product.specs).filter(([, v]) => v != null && v !== "" && v !== "N/A");
+function printTearSheet(product) {
+  const typeDef = TYPE_MAP[product.type];
+  const specs = Object.entries(product.specs || {}).filter(([, v]) => v != null && v !== "" && v !== "N/A");
+
   let beltRows = [];
-  const bd = parseJSON(product.belt_data);
-  if (Array.isArray(bd)) beltRows = bd;
+  if (product.belt_data) {
+    try { const p = parseJSON(product.belt_data); if (Array.isArray(p)) beltRows = p; } catch (e) {}
+  }
   let sprocketRows = [];
-  const sd = parseJSON(product.sprocket_data);
-  if (Array.isArray(sd)) sprocketRows = sd;
+  if (product.sprocket_data) {
+    try { const p = parseJSON(product.sprocket_data); if (Array.isArray(p)) sprocketRows = p; } catch (e) {}
+  }
 
   const beltCols = ["material","strength_lbf","strength_nm","temp_min_f","temp_max_f","mass_lbft2","mass_kgm2"];
   const beltLabels = { material:"Material", strength_lbf:"Strength (lbf)", strength_nm:"Strength (N/m)", temp_min_f:"Min °F", temp_max_f:"Max °F", mass_lbft2:"lb/ft²", mass_kgm2:"kg/m²" };
@@ -146,134 +156,182 @@ function printTearSheet(product, typeDef) {
   const sprocketLabels = { type:"Type", material:"Material", teeth:"Teeth", pitch_dia_in:"Pitch Dia (in)", pitch_dia_mm:"Pitch Dia (mm)", outer_dia_in:"Outer Dia (in)", outer_dia_mm:"Outer Dia (mm)", hub_width_in:"Hub Width (in)", hub_width_mm:"Hub Width (mm)" };
   const activeSprocketCols = sprocketCols.filter(k => sprocketRows.some(r => r[k] != null && r[k] !== ""));
 
-  const html = `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Tear Sheet – ${product.series}</title>
+  const w = window.open("", "_blank");
+  w.document.write(`<!DOCTYPE html><html><head><title>Tear Sheet — ${product.series}</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'Inter',sans-serif; background:#fff; color:#0f172a; font-size:13px; }
-  .page { max-width:780px; margin:0 auto; padding:32px 36px; }
-  .header { display:flex; align-items:flex-start; justify-content:space-between; border-bottom:3px solid #0f2340; padding-bottom:18px; margin-bottom:22px; }
-  .brand { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#0f2340; margin-bottom:4px; }
-  .title { font-size:26px; font-weight:900; color:#0f2340; line-height:1.1; }
-  .subtitle { font-size:13px; color:#64748b; margin-top:4px; }
-  .logo-area { text-align:right; }
-  .logo-text { font-size:18px; font-weight:900; color:#0f2340; letter-spacing:1px; }
-  .logo-sub { font-size:9px; color:#94a3b8; letter-spacing:2px; text-transform:uppercase; margin-top:2px; }
-  .badge { display:inline-block; padding:3px 10px; border-radius:99px; font-size:10px; font-weight:700; background:#dbeafe; color:#1e40af; margin-bottom:12px; }
-  .img-block { margin-bottom:20px; text-align:center; background:#f8fafc; border-radius:8px; padding:16px; border:1px solid #e2e8f0; }
-  .img-block img { max-height:140px; max-width:100%; object-fit:contain; }
-  .section-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#64748b; margin-bottom:8px; border-bottom:1px solid #e2e8f0; padding-bottom:4px; }
-  .specs-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:20px; }
-  .spec-cell { background:#f8fafc; border-radius:6px; padding:8px 10px; border:1px solid #f1f5f9; }
-  .spec-label { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#94a3b8; margin-bottom:2px; }
-  .spec-value { font-size:12px; font-weight:600; color:#0f2340; }
-  .notes-box { background:#f0f4f8; border-left:3px solid #1a3a5c; padding:10px 13px; border-radius:0 6px 6px 0; margin-bottom:20px; font-size:12px; color:#334155; line-height:1.7; }
-  table { width:100%; border-collapse:collapse; font-size:11px; margin-bottom:20px; }
-  thead tr { background:#0f2340; }
-  thead th { padding:7px 10px; color:#fff; font-weight:700; text-align:left; white-space:nowrap; }
-  tbody tr:nth-child(even) { background:#f8fafc; }
-  tbody td { padding:6px 10px; border-bottom:1px solid #e2e8f0; }
-  .footer { margin-top:24px; border-top:1px solid #e2e8f0; padding-top:12px; display:flex; justify-content:space-between; font-size:9px; color:#94a3b8; }
-  @media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; background: #fff; }
+  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+  .header { background: #0f2340; color: #fff; padding: 22px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .header-left { display: flex; align-items: center; gap: 18px; }
+  .header img { max-height: 44px; }
+  .header-title { font-size: 22px; font-weight: 800; letter-spacing: 0.3px; }
+  .header-sub { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 3px; }
+  .header-meta { text-align: right; font-size: 11px; color: rgba(255,255,255,0.45); }
+  .accent-bar { height: 4px; background: linear-gradient(90deg, #2d8a4e, #1a3a5c); }
+  .body { padding: 24px 32px; }
+  .product-hero { display: flex; gap: 24px; align-items: flex-start; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb; }
+  .product-img { width: 140px; height: 100px; object-fit: contain; border: 1px solid #e5e7eb; border-radius: 6px; padding: 6px; background: #f8fafc; flex-shrink: 0; }
+  .product-name { font-size: 26px; font-weight: 900; color: #0f2340; line-height: 1.1; }
+  .product-type { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #2d8a4e; margin-bottom: 6px; }
+  .product-style { font-size: 14px; color: #64748b; margin-top: 4px; }
+  .tags { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .tag { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 99px; padding: 3px 10px; font-size: 11px; font-weight: 600; color: #334155; }
+  .notes-box { background: #f8fafc; border-left: 3px solid #1a3a5c; border-radius: 4px; padding: 10px 14px; font-size: 12px; color: #334155; line-height: 1.7; margin-bottom: 18px; }
+  .section-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #1a3a5c; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 2px solid #e2e8f0; }
+  .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 20px; }
+  .spec-cell { background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 5px; padding: 7px 10px; }
+  .spec-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #94a3b8; margin-bottom: 2px; }
+  .spec-value { font-size: 12px; font-weight: 600; color: #0f2340; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px; }
+  thead tr { background: #0f2340; }
+  thead th { padding: 7px 10px; color: #fff; font-weight: 700; text-align: left; white-space: nowrap; }
+  tbody tr:nth-child(even) { background: #f8fafc; }
+  tbody td { padding: 6px 10px; border-bottom: 1px solid #e5e7eb; color: #334155; }
+  tbody td:first-child { font-weight: 600; color: #0f2340; }
+  .footer { margin-top: 24px; padding-top: 12px; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+  .footer-left { font-size: 10px; color: #94a3b8; }
+  .footer-right { font-size: 10px; color: #94a3b8; text-align: right; }
+  .confidential { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #cbd5e1; }
+  .no-print { margin: 16px 32px; display: flex; gap: 10px; }
+  @media print { .no-print { display: none !important; } }
+  .btn { padding: 8px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; }
+  .btn-primary { background: #0f2340; color: #fff; }
+  .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
+  .section-wrap { margin-bottom: 20px; }
 </style></head><body>
-<div class="page">
-  <div class="header">
+<div class="no-print">
+  <button class="btn btn-primary" onclick="window.print()">Print / Save PDF</button>
+  <button class="btn btn-secondary" onclick="window.close()">Close</button>
+</div>
+<div class="header">
+  <div class="header-left">
     <div>
-      <div class="brand">${typeDef?.label || product.type}</div>
-      <div class="title">${product.series}</div>
-      ${product.style ? '<div class="subtitle">' + product.style + '</div>' : ''}
-    </div>
-    <div class="logo-area">
-      <div class="logo-text">UNIKING</div>
-      <div class="logo-sub">Canada</div>
+      <div class="header-title">UNIKING CANADA</div>
+      <div class="header-sub">Technical Product Reference</div>
     </div>
   </div>
-
-  ${product.image_url ? '<div class="img-block"><img src="' + product.image_url + '" /></div>' : ''}
-  ${product.notes ? '<div class="notes-box">' + product.notes + '</div>' : ''}
-
-  ${specs.length ? `
-  <div class="section-title">Specifications</div>
-  <div class="specs-grid">
-    ${specs.map(([l,v]) => `<div class="spec-cell"><div class="spec-label">${l}</div><div class="spec-value">${v}</div></div>`).join('')}
-  </div>` : ''}
-
-  ${beltRows.length && activeBeltCols.length ? `
-  <div class="section-title">Belt Data — Mechanical Properties</div>
-  <table>
-    <thead><tr>${activeBeltCols.map(k => '<th>' + beltLabels[k] + '</th>').join('')}</tr></thead>
-    <tbody>${beltRows.map(row => '<tr>' + activeBeltCols.map(k => '<td>' + (row[k] != null ? row[k] : '—') + '</td>').join('') + '</tr>').join('')}</tbody>
-  </table>` : ''}
-
-  ${sprocketRows.length && activeSprocketCols.length ? `
-  <div class="section-title">Compatible Sprockets</div>
-  <table>
-    <thead><tr>${activeSprocketCols.map(k => '<th>' + sprocketLabels[k] + '</th>').join('')}</tr></thead>
-    <tbody>${sprocketRows.map(row => '<tr>' + activeSprocketCols.map(k => '<td>' + (row[k] != null ? row[k] : '—') + '</td>').join('') + '</tr>').join('')}</tbody>
-  </table>` : ''}
-
-  <div class="footer">
-    <span>Uniking Canada · Internal Use Only · Confidential</span>
-    <span>${product.page_range ? 'Source: pp. ' + product.page_range : ''}</span>
-    <span>Printed ${new Date().toLocaleDateString('en-CA')}</span>
+  <div class="header-meta">
+    <div style="font-size:13px;font-weight:700;color:#fff;">${product.series}</div>
+    <div>${typeDef?.label || product.type}</div>
+    <div style="margin-top:4px;">${new Date().toLocaleDateString("en-CA", { year:"numeric", month:"long", day:"numeric" })}</div>
   </div>
 </div>
-<script>window.onload = () => { window.print(); }<\/script>
-</body></html>`;
+<div class="accent-bar"></div>
+<div class="body">
+  <div class="product-hero">
+    ${product.image_url ? `<img class="product-img" src="${product.image_url}" alt="${product.series}" />` : ""}
+    <div>
+      <div class="product-type">${typeDef?.label || product.type}${product.brand ? " · " + product.brand : ""}</div>
+      <div class="product-name">${product.series}</div>
+      ${product.style ? `<div class="product-style">${product.style}</div>` : ""}
+      <div class="tags">
+        ${product.pitch_in ? `<span class="tag">${product.pitch_in} pitch</span>` : ""}
+        ${product.hinge_style ? `<span class="tag">${product.hinge_style}</span>` : ""}
+        ${product.open_area ? `<span class="tag">${product.open_area} open area</span>` : ""}
+      </div>
+    </div>
+  </div>
 
-  const w = window.open("", "_blank");
-  if (w) { w.document.write(html); w.document.close(); }
+  ${product.notes ? `<div class="notes-box">${product.notes}</div>` : ""}
+
+  ${specs.length ? `
+  <div class="section-wrap">
+    <div class="section-title">Specifications</div>
+    <div class="specs-grid">
+      ${specs.map(([l, v]) => `<div class="spec-cell"><div class="spec-label">${l}</div><div class="spec-value">${v}</div></div>`).join("")}
+    </div>
+  </div>` : ""}
+
+  ${beltRows.length && activeBeltCols.length ? `
+  <div class="section-wrap">
+    <div class="section-title">Belt Data — Material Properties</div>
+    <table>
+      <thead><tr>${activeBeltCols.map(k => `<th>${beltLabels[k]}</th>`).join("")}</tr></thead>
+      <tbody>${beltRows.map(row => `<tr>${activeBeltCols.map(k => `<td>${row[k] != null ? row[k] : "—"}</td>`).join("")}</tr>`).join("")}</tbody>
+    </table>
+  </div>` : ""}
+
+  ${sprocketRows.length && activeSprocketCols.length ? `
+  <div class="section-wrap">
+    <div class="section-title">Compatible Sprockets</div>
+    <table>
+      <thead><tr>${activeSprocketCols.map(k => `<th>${sprocketLabels[k]}</th>`).join("")}</tr></thead>
+      <tbody>${sprocketRows.map(row => `<tr>${activeSprocketCols.map(k => `<td>${row[k] != null ? row[k] : "—"}</td>`).join("")}</tr>`).join("")}</tbody>
+    </table>
+  </div>` : ""}
+
+  ${(product.catalog_url || product.tech_doc_url) ? `
+  <div class="section-wrap">
+    <div class="section-title">Technical Resources</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;">
+      ${product.catalog_url ? `<a href="${product.catalog_url}" style="font-size:12px;color:#1a3a5c;font-weight:600;">View Catalog PDF</a>` : ""}
+      ${product.tech_doc_url ? `<a href="${product.tech_doc_url}" style="font-size:12px;color:#1a3a5c;font-weight:600;">Technical Documentation</a>` : ""}
+    </div>
+  </div>` : ""}
+
+  <div class="footer">
+    <div class="footer-left">
+      <div>Uniking Canada · 1-800-xxx-xxxx · info@unikingcanada.com</div>
+      <div class="confidential">Confidential — Internal Use Only</div>
+    </div>
+    <div class="footer-right">
+      <div>${product.series}${product.style ? " / " + product.style : ""}</div>
+      <div style="margin-top:2px;">No pricing information included</div>
+    </div>
+  </div>
+</div>
+</body></html>`);
+  w.document.close();
 }
 
 // ─── Sprocket Table ───────────────────────────────────────────────────────────
 
 function SprocketTable({ data }) {
   const rows = parseJSON(data);
-  if (!Array.isArray(rows) || !rows.length) return <div style={{color:C.muted,fontSize:13}}>No sprocket data available for this series.</div>;
+  if (!Array.isArray(rows) || !rows.length) return <div style={{ color: C.muted, fontSize: 13 }}>No sprocket data available for this series.</div>;
 
   const cols = ["type","material","teeth","pitch_dia_in","pitch_dia_mm","outer_dia_in","outer_dia_mm","hub_width_in","hub_width_mm"];
   const labels = { type:"Type", material:"Material", teeth:"Teeth", pitch_dia_in:"Pitch Dia (in)", pitch_dia_mm:"Pitch Dia (mm)", outer_dia_in:"Outer Dia (in)", outer_dia_mm:"Outer Dia (mm)", hub_width_in:"Hub W (in)", hub_width_mm:"Hub W (mm)" };
   const active = cols.filter(k => rows.some(r => r[k] != null && r[k] !== ""));
 
   // Group by type
-  const onepiece = rows.filter(r => r.type === "One-Piece");
-  const split = rows.filter(r => r.type === "Split");
-
-  const renderGroup = (groupRows, label) => {
-    if (!groupRows.length) return null;
-    return (
-      <div style={{marginBottom:16}}>
-        <div style={{fontSize:11,fontWeight:700,color:C.navyMid,marginBottom:6,textTransform:"uppercase",letterSpacing:"0.6px"}}>{label}</div>
-        <div style={{overflowX:"auto",borderRadius:6,border:"1px solid "+C.border}}>
-          <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
-            <thead>
-              <tr style={{background:C.navyMid}}>
-                {active.filter(k=>k!=="type").map(k => <th key={k} style={{padding:"7px 10px",color:"#fff",fontWeight:700,textAlign:"left",whiteSpace:"nowrap"}}>{labels[k]}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              {groupRows.map((row, i) => (
-                <tr key={i} style={{background:i%2===0?"#f8fafc":"#fff",borderBottom:"1px solid "+C.border}}>
-                  {active.filter(k=>k!=="type").map(k => (
-                    <td key={k} style={{padding:"6px 10px",color:k==="material"?C.navyMid:C.text,fontWeight:k==="material"?700:400,whiteSpace:"nowrap"}}>
-                      {row[k] != null ? String(row[k]) : "—"}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
-  };
+  const groups = {};
+  for (const row of rows) {
+    const t = row.type || "One-Piece";
+    if (!groups[t]) groups[t] = [];
+    groups[t].push(row);
+  }
 
   return (
     <div>
-      <p style={{fontSize:12,color:C.muted,marginBottom:12}}>Compatible sprockets for this series. All belts in the same series use the same sprockets.</p>
-      {renderGroup(onepiece, "One-Piece Sprockets")}
-      {renderGroup(split, "Split Sprockets")}
+      {Object.entries(groups).map(([grpType, grpRows]) => (
+        <div key={grpType} style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8, color: C.navyMid, marginBottom: 6 }}>{grpType} Sprockets</div>
+          <div style={{ overflowX: "auto", borderRadius: 6, border: "1px solid " + C.border }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+              <thead>
+                <tr style={{ background: C.navyMid }}>
+                  {active.filter(k => k !== "type").map(k => (
+                    <th key={k} style={{ padding: "7px 10px", color: "#fff", fontWeight: 700, textAlign: "left", whiteSpace: "nowrap" }}>{labels[k]}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {grpRows.map((row, i) => (
+                  <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid " + C.border }}>
+                    {active.filter(k => k !== "type").map(k => (
+                      <td key={k} style={{ padding: "6px 10px", color: k === "material" ? C.navyMid : C.text, fontWeight: k === "material" ? 700 : 400, whiteSpace: "nowrap" }}>
+                        {row[k] != null ? String(row[k]) : "—"}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -287,14 +345,24 @@ function BeltDataTable({ data }) {
   const labels = { material:"Material", strength_lbf:"Strength (lbf)", strength_nm:"Strength (N/m)", temp_min_f:"Min °F", temp_max_f:"Max °F", mass_lbft2:"lb/ft²", mass_kgm2:"kg/m²" };
   const cols = keys.filter(k => rows.some(r => r[k] != null && r[k] !== ""));
   return (
-    <div style={{overflowX:"auto",borderRadius:6,border:"1px solid "+C.border}}>
-      <table style={{width:"100%",borderCollapse:"collapse",fontSize:12}}>
-        <thead><tr style={{background:C.navyMid}}>{cols.map(k=><th key={k} style={{padding:"7px 10px",color:"#fff",fontWeight:700,textAlign:"left",whiteSpace:"nowrap"}}>{labels[k]}</th>)}</tr></thead>
-        <tbody>{rows.map((row,i)=>(
-          <tr key={i} style={{background:i%2===0?"#f8fafc":"#fff",borderBottom:"1px solid "+C.border}}>
-            {cols.map(k=><td key={k} style={{padding:"6px 10px",color:k==="material"?C.navyMid:C.text,fontWeight:k==="material"?700:400,whiteSpace:"nowrap"}}>{row[k]!=null?String(row[k]):"—"}</td>)}
+    <div style={{ overflowX: "auto", borderRadius: 6, border: "1px solid " + C.border }}>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+        <thead>
+          <tr style={{ background: C.navyMid }}>
+            {cols.map(k => <th key={k} style={{ padding: "8px 10px", color: "#fff", fontWeight: 700, textAlign: "left", whiteSpace: "nowrap" }}>{labels[k]}</th>)}
           </tr>
-        ))}</tbody>
+        </thead>
+        <tbody>
+          {rows.map((row, i) => (
+            <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid " + C.border }}>
+              {cols.map(k => (
+                <td key={k} style={{ padding: "7px 10px", color: k === "material" ? C.navyMid : C.text, fontWeight: k === "material" ? 700 : 400, whiteSpace: "nowrap" }}>
+                  {row[k] != null ? String(row[k]) : "—"}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   );
@@ -303,16 +371,18 @@ function BeltDataTable({ data }) {
 // ─── Spec Table ───────────────────────────────────────────────────────────────
 
 function SpecTable({ specs }) {
-  const entries = Object.entries(specs).filter(([,v]) => v != null && v !== "" && v !== "N/A" && String(v) !== "undefined");
-  if (!entries.length) return <div style={{color:C.muted,fontSize:13}}>No specifications available.</div>;
+  const entries = Object.entries(specs).filter(([, v]) => v != null && v !== "" && v !== "N/A" && String(v) !== "undefined");
+  if (!entries.length) return <div style={{ color: C.muted, fontSize: 13 }}>No specifications available.</div>;
   return (
-    <table style={{width:"100%",borderCollapse:"collapse",fontSize:13}}>
-      <tbody>{entries.map(([k,v],i)=>(
-        <tr key={k} style={{background:i%2?"#f8fafc":"#fff"}}>
-          <td style={{padding:"8px 12px",color:C.muted,fontWeight:600,width:"40%",verticalAlign:"top",borderBottom:"1px solid "+C.border}}>{k}</td>
-          <td style={{padding:"8px 12px",color:C.text,borderBottom:"1px solid "+C.border,lineHeight:1.5}}>{String(v)}</td>
-        </tr>
-      ))}</tbody>
+    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+      <tbody>
+        {entries.map(([k, v], i) => (
+          <tr key={k} style={{ background: i % 2 ? "#f8fafc" : "#fff" }}>
+            <td style={{ padding: "8px 12px", color: C.muted, fontWeight: 600, width: "40%", verticalAlign: "top", borderBottom: "1px solid " + C.border }}>{k}</td>
+            <td style={{ padding: "8px 12px", color: C.text, borderBottom: "1px solid " + C.border, lineHeight: 1.5 }}>{String(v)}</td>
+          </tr>
+        ))}
+      </tbody>
     </table>
   );
 }
@@ -326,44 +396,45 @@ function ProductModal({ product, showBrand, onClose }) {
 
   const hasBelt = !!(parseJSON(product.belt_data)?.length);
   const hasSprocket = !!(parseJSON(product.sprocket_data)?.length);
-  const hasDocs = !!(product.catalog_url || product.tech_doc_url);
 
   const tabs = [
     ["specs", "Specifications"],
     hasBelt ? ["belt", "Belt Data"] : null,
     hasSprocket ? ["sprockets", "Sprockets"] : null,
-    hasDocs ? ["docs", "Documents"] : null,
+    (product.catalog_url || product.tech_doc_url) ? ["docs", "Documents"] : null,
   ].filter(Boolean);
 
   return (
-    <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:24}}>
-      <div onClick={e=>e.stopPropagation()} style={{background:"#fff",borderRadius:10,width:"100%",maxWidth:700,maxHeight:"90vh",display:"flex",flexDirection:"column",boxShadow:"0 24px 64px rgba(0,0,0,0.22)"}}>
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 10, width: "100%", maxWidth: 700, maxHeight: "90vh", display: "flex", flexDirection: "column", boxShadow: "0 24px 64px rgba(0,0,0,0.22)" }}>
 
         {/* Header */}
-        <div style={{background:C.navyMid,padding:"20px 26px",borderRadius:"10px 10px 0 0",flexShrink:0}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
-            <div style={{display:"flex",gap:14,alignItems:"flex-start",flex:1}}>
+        <div style={{ background: C.navyMid, padding: "20px 26px", borderRadius: "10px 10px 0 0", flexShrink: 0 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ display: "flex", gap: 16, alignItems: "flex-start", flex: 1 }}>
               {product.image_url ? (
-                <div style={{background:"rgba(255,255,255,.1)",borderRadius:8,padding:6,flexShrink:0,width:100,height:76,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                  <img src={product.image_url} alt="" style={{maxWidth:90,maxHeight:68,objectFit:"contain"}} onError={e=>{e.target.parentElement.style.display="none";}} />
+                <div style={{ background: "rgba(255,255,255,0.1)", borderRadius: 8, padding: 6, flexShrink: 0, width: 100, height: 76, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <img src={product.image_url} alt="" style={{ maxWidth: 90, maxHeight: 68, objectFit: "contain" }} onError={e => { e.target.parentElement.style.display = "none"; }} />
                 </div>
               ) : null}
               <div>
-                <div style={{fontSize:10,textTransform:"uppercase",letterSpacing:"1.5px",color:"rgba(255,255,255,0.4)",marginBottom:5}}>
+                <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "1.5px", color: "rgba(255,255,255,0.4)", marginBottom: 5 }}>
                   {typeDef?.label || product.type}{showBrand && product.brand ? " · " + product.brand : ""}
                 </div>
-                <div style={{fontSize:19,fontWeight:800,color:"#fff",lineHeight:1.25}}>{product.series}</div>
-                {product.style && product.style !== product.series ? <div style={{fontSize:13,color:"rgba(255,255,255,0.6)",marginTop:3}}>{product.style}</div> : null}
-                <div style={{display:"flex",gap:6,marginTop:8,flexWrap:"wrap"}}>
-                  {product.pitch_in ? <span style={{background:"rgba(255,255,255,.15)",color:"#fff",padding:"2px 8px",borderRadius:99,fontSize:10,fontWeight:700}}>{product.pitch_in}</span> : null}
-                  {product.hinge_style ? <span style={{background:"rgba(255,255,255,.15)",color:"#fff",padding:"2px 8px",borderRadius:99,fontSize:10,fontWeight:700}}>{product.hinge_style}</span> : null}
-                  {product.open_area ? <span style={{background:"rgba(255,255,255,.15)",color:"#fff",padding:"2px 8px",borderRadius:99,fontSize:10,fontWeight:700}}>{product.open_area} open</span> : null}
+                <div style={{ fontSize: 19, fontWeight: 800, color: "#fff", lineHeight: 1.25 }}>{product.series}</div>
+                {product.style && product.style !== product.series ? (
+                  <div style={{ fontSize: 13, color: "rgba(255,255,255,0.6)", marginTop: 3 }}>{product.style}</div>
+                ) : null}
+                <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
+                  {product.pitch_in ? <span style={{ background: "rgba(255,255,255,.15)", color: "#fff", padding: "2px 8px", borderRadius: 99, fontSize: 10, fontWeight: 700 }}>{product.pitch_in}</span> : null}
+                  {product.hinge_style ? <span style={{ background: "rgba(255,255,255,.15)", color: "#fff", padding: "2px 8px", borderRadius: 99, fontSize: 10, fontWeight: 700 }}>{product.hinge_style}</span> : null}
+                  {product.open_area ? <span style={{ background: "rgba(255,255,255,.15)", color: "#fff", padding: "2px 8px", borderRadius: 99, fontSize: 10, fontWeight: 700 }}>{product.open_area} open</span> : null}
                 </div>
               </div>
             </div>
-            <div style={{display:"flex",flexDirection:"column",gap:6,alignItems:"flex-end",flexShrink:0}}>
-              <button onClick={onClose} style={{background:"rgba(255,255,255,0.12)",border:"none",color:"#fff",width:30,height:30,borderRadius:6,cursor:"pointer",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
-              <button onClick={()=>printTearSheet(product, typeDef)} style={{background:"rgba(255,255,255,0.15)",border:"1px solid rgba(255,255,255,.3)",color:"#fff",padding:"5px 11px",borderRadius:6,cursor:"pointer",fontSize:11,fontWeight:700,whiteSpace:"nowrap"}}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-end", flexShrink: 0 }}>
+              <button onClick={onClose} style={{ background: "rgba(255,255,255,0.12)", border: "none", color: "#fff", width: 30, height: 30, borderRadius: 6, cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
+              <button onClick={() => printTearSheet(product)} style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", color: "#fff", padding: "5px 12px", borderRadius: 6, cursor: "pointer", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap" }}>
                 Print Tear Sheet
               </button>
             </div>
@@ -372,9 +443,9 @@ function ProductModal({ product, showBrand, onClose }) {
 
         {/* Tabs */}
         {tabs.length > 1 ? (
-          <div style={{display:"flex",borderBottom:"2px solid "+C.border,padding:"0 26px",overflowX:"auto"}}>
-            {tabs.map(([id,label])=>(
-              <button key={id} onClick={()=>setTab(id)} style={{padding:"10px 14px",border:"none",background:"none",cursor:"pointer",fontSize:12,fontWeight:700,whiteSpace:"nowrap",color:tab===id?C.navyMid:C.muted,borderBottom:tab===id?"2px solid "+C.navyMid:"2px solid transparent",marginBottom:-2}}>
+          <div style={{ display: "flex", borderBottom: "2px solid " + C.border, padding: "0 26px" }}>
+            {tabs.map(([id, label]) => (
+              <button key={id} onClick={() => setTab(id)} style={{ padding: "10px 14px", border: "none", background: "none", cursor: "pointer", fontSize: 12, fontWeight: 700, color: tab === id ? C.navyMid : C.muted, borderBottom: tab === id ? "2px solid " + C.navyMid : "2px solid transparent", marginBottom: -2, whiteSpace: "nowrap" }}>
                 {label}
               </button>
             ))}
@@ -382,24 +453,43 @@ function ProductModal({ product, showBrand, onClose }) {
         ) : null}
 
         {/* Body */}
-        <div style={{padding:"20px 26px 24px",overflowY:"auto"}}>
+        <div style={{ padding: "20px 26px 24px", overflowY: "auto" }}>
           {tab === "specs" && (
             <div>
-              {product.notes ? <div style={{marginBottom:16,fontSize:13,color:C.slate,lineHeight:1.75,background:C.bg,padding:"12px 14px",borderRadius:6,borderLeft:"3px solid "+C.navyMid}}>{product.notes}</div> : null}
-              <div style={{border:"1px solid "+C.border,borderRadius:6,overflow:"hidden"}}><SpecTable specs={product.specs} /></div>
+              {product.notes ? (
+                <div style={{ marginBottom: 16, fontSize: 13, color: C.slate, lineHeight: 1.75, background: C.bg, padding: "12px 14px", borderRadius: 6, borderLeft: "3px solid " + C.navyMid }}>
+                  {product.notes}
+                </div>
+              ) : null}
+              <div style={{ border: "1px solid " + C.border, borderRadius: 6, overflow: "hidden" }}>
+                <SpecTable specs={product.specs} />
+              </div>
             </div>
           )}
           {tab === "belt" && (
             <div>
-              <p style={{fontSize:12,color:C.muted,marginBottom:12}}>Mechanical properties per material. Strength ratings are per metre of belt width.</p>
+              <p style={{ fontSize: 12, color: C.muted, marginBottom: 12 }}>Mechanical properties per material option. Strength ratings are per metre of belt width.</p>
               <BeltDataTable data={product.belt_data} />
             </div>
           )}
-          {tab === "sprockets" && <SprocketTable data={product.sprocket_data} />}
+          {tab === "sprockets" && (
+            <div>
+              <p style={{ fontSize: 12, color: C.muted, marginBottom: 14 }}>All belts in the {product.series} use the same sprocket family. Sprockets are shared across styles within this series.</p>
+              <SprocketTable data={product.sprocket_data} />
+            </div>
+          )}
           {tab === "docs" && (
-            <div style={{display:"flex",flexDirection:"column",gap:10}}>
-              {product.catalog_url ? <a href={product.catalog_url} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",background:C.bg,borderRadius:8,border:"1px solid "+C.border,color:C.navyMid,fontWeight:700,fontSize:13,textDecoration:"none"}}>📄 View Catalog PDF</a> : null}
-              {product.tech_doc_url ? <a href={product.tech_doc_url} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",background:C.bg,borderRadius:8,border:"1px solid "+C.border,color:C.navyMid,fontWeight:700,fontSize:13,textDecoration:"none"}}>📐 Technical Documentation</a> : null}
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {product.catalog_url ? (
+                <a href={product.catalog_url} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 14px", background: C.bg, borderRadius: 8, border: "1px solid " + C.border, color: C.navyMid, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
+                  View Catalog PDF
+                </a>
+              ) : null}
+              {product.tech_doc_url ? (
+                <a href={product.tech_doc_url} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 14px", background: C.bg, borderRadius: 8, border: "1px solid " + C.border, color: C.navyMid, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
+                  Technical Documentation
+                </a>
+              ) : null}
             </div>
           )}
         </div>
@@ -412,32 +502,38 @@ function ProductModal({ product, showBrand, onClose }) {
 
 function ProductCard({ product, showBrand, onClick }) {
   const [hovered, setHovered] = useState(false);
-  const topSpecs = Object.entries(product.specs).filter(([,v])=>v!=null&&v!==""&&v!=="N/A"&&String(v)!=="undefined").slice(0,3);
+  const topSpecs = Object.entries(product.specs)
+    .filter(([, v]) => v != null && v !== "" && v !== "N/A" && String(v) !== "undefined")
+    .slice(0, 3);
+
   return (
-    <div onClick={()=>onClick(product)} onMouseEnter={()=>setHovered(true)} onMouseLeave={()=>setHovered(false)}
-      style={{background:C.bgCard,borderRadius:8,cursor:"pointer",border:"1px solid "+(hovered?C.navyMid:C.border),boxShadow:hovered?"0 4px 16px rgba(26,58,92,0.09)":"none",transition:"border-color 0.13s,box-shadow 0.13s",display:"flex",flexDirection:"column",overflow:"hidden"}}>
-      <div style={{height:3,background:C.navyMid,flexShrink:0}} />
+    <div onClick={() => onClick(product)} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ background: C.bgCard, borderRadius: 8, cursor: "pointer", border: "1px solid " + (hovered ? C.navyMid : C.border), boxShadow: hovered ? "0 4px 16px rgba(26,58,92,0.09)" : "none", transition: "border-color 0.13s, box-shadow 0.13s", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div style={{ height: 3, background: C.navyMid, flexShrink: 0 }} />
       {product.image_url ? (
-        <div style={{background:"#f8fafc",borderBottom:"1px solid #f1f5f9",height:110,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
-          <img src={product.image_url} alt="" style={{maxHeight:98,maxWidth:"86%",objectFit:"contain"}} onError={e=>{e.target.parentElement.style.display="none";}} />
+        <div style={{ background: "#f8fafc", borderBottom: "1px solid #f1f5f9", height: 110, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+          <img src={product.image_url} alt="" style={{ maxHeight: 98, maxWidth: "86%", objectFit: "contain" }} onError={e => { e.target.parentElement.style.display = "none"; }} />
         </div>
       ) : null}
-      <div style={{padding:"13px 15px",flex:1,display:"flex",flexDirection:"column",gap:5}}>
-        {showBrand && product.brand ? <span style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.8px",color:C.navyMid,background:"#eef3f8",padding:"2px 7px",borderRadius:3,alignSelf:"flex-start"}}>{product.brand}</span> : null}
-        <div style={{fontSize:14,fontWeight:700,color:C.text,lineHeight:1.3}}>{product.series}</div>
-        {product.style && product.style !== product.series ? <div style={{fontSize:12,color:C.muted}}>{product.style}</div> : null}
-        {topSpecs.length ? (
-          <div style={{display:"flex",flexWrap:"wrap",gap:5,marginTop:4}}>
-            {topSpecs.map(([k,v])=>(
-              <div key={k} style={{fontSize:11,background:C.bg,border:"1px solid "+C.border,borderRadius:3,padding:"2px 7px",color:C.slate}}>
-                <span style={{color:C.muted}}>{k}: </span>{String(v).length>20?String(v).slice(0,20)+"…":String(v)}
+      <div style={{ padding: "13px 15px", flex: 1, display: "flex", flexDirection: "column", gap: 5 }}>
+        {showBrand && product.brand ? (
+          <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", color: C.navyMid, background: "#eef3f8", padding: "2px 7px", borderRadius: 3, alignSelf: "flex-start" }}>{product.brand}</span>
+        ) : null}
+        <div style={{ fontSize: 14, fontWeight: 700, color: C.text, lineHeight: 1.3 }}>{product.series}</div>
+        {product.style && product.style !== product.series ? <div style={{ fontSize: 12, color: C.muted }}>{product.style}</div> : null}
+        {topSpecs.length > 0 ? (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 4 }}>
+            {topSpecs.map(([k, v]) => (
+              <div key={k} style={{ fontSize: 11, background: C.bg, border: "1px solid " + C.border, borderRadius: 3, padding: "2px 7px", color: C.slate }}>
+                <span style={{ color: C.muted }}>{k}: </span>
+                {String(v).length > 20 ? String(v).slice(0, 20) + "…" : String(v)}
               </div>
             ))}
           </div>
         ) : null}
       </div>
-      <div style={{borderTop:"1px solid "+C.bg,padding:"8px 15px",background:hovered?"#f1f5f9":C.bgCard,transition:"background 0.13s"}}>
-        <span style={{fontSize:11,fontWeight:600,color:C.navyMid}}>View Specifications ›</span>
+      <div style={{ borderTop: "1px solid " + C.bg, padding: "8px 15px", background: hovered ? "#f1f5f9" : C.bgCard, transition: "background 0.13s" }}>
+        <span style={{ fontSize: 11, fontWeight: 600, color: C.navyMid }}>View Specifications ›</span>
       </div>
     </div>
   );
@@ -449,23 +545,28 @@ function FilterBar({ typeKey, allProducts, activeFilters, onChange }) {
   const fields = TYPE_MAP[typeKey]?.filters || [];
   const hasActive = Object.values(activeFilters).some(Boolean);
   return (
-    <div style={{display:"flex",flexWrap:"wrap",gap:14,alignItems:"flex-end",marginBottom:22}}>
-      {fields.map(field=>{
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 14, alignItems: "flex-end", marginBottom: 22 }}>
+      {fields.map(field => {
         const options = getFilterOptions(allProducts, field);
         if (options.length < 2) return null;
+        const label = FILTER_LABELS[field] || field;
         const active = activeFilters[field] || "";
         return (
           <div key={field}>
-            <div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.8px",color:C.muted,marginBottom:4}}>{FILTER_LABELS[field]||field}</div>
-            <select value={active} onChange={e=>onChange(field,e.target.value)}
-              style={{padding:"7px 10px",border:"1px solid "+(active?C.navyMid:C.border),borderRadius:5,fontSize:12,color:active?C.navyMid:C.slate,fontWeight:active?600:400,background:active?"#eef3f8":"#fff",cursor:"pointer",outline:"none",minWidth:150}}>
+            <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", color: C.muted, marginBottom: 4 }}>{label}</div>
+            <select value={active} onChange={e => onChange(field, e.target.value)}
+              style={{ padding: "7px 10px", border: "1px solid " + (active ? C.navyMid : C.border), borderRadius: 5, fontSize: 12, color: active ? C.navyMid : C.slate, fontWeight: active ? 600 : 400, background: active ? "#eef3f8" : "#fff", cursor: "pointer", outline: "none", minWidth: 150 }}>
               <option value="">All</option>
-              {options.map(o=><option key={o} value={o}>{o}</option>)}
+              {options.map(o => <option key={o} value={o}>{o}</option>)}
             </select>
           </div>
         );
       })}
-      {hasActive && <button onClick={()=>onChange("__clear__",null)} style={{padding:"7px 14px",background:"none",border:"1px solid "+C.border,borderRadius:5,fontSize:12,color:C.muted,cursor:"pointer",alignSelf:"flex-end"}}>Clear All</button>}
+      {hasActive && (
+        <button onClick={() => onChange("__clear__", null)} style={{ padding: "7px 14px", background: "none", border: "1px solid " + C.border, borderRadius: 5, fontSize: 12, color: C.muted, cursor: "pointer", alignSelf: "flex-end" }}>
+          Clear All
+        </button>
+      )}
     </div>
   );
 }
@@ -481,40 +582,40 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand }) {
     let list = applyFilters(allProducts, activeFilters);
     if (search.trim()) {
       const q = search.toLowerCase();
-      list = list.filter(p=>[p.series,p.style,p.category,p.notes,p.materials,p.application].some(f=>f&&f.toLowerCase().includes(q)));
+      list = list.filter(p => [p.series, p.style, p.category, p.notes, p.materials, p.application].some(f => f && f.toLowerCase().includes(q)));
     }
-    return list.sort((a,b)=>{
-      const na=parseFloat((a.series||"").replace(/[^\d.]/g,""))||0;
-      const nb=parseFloat((b.series||"").replace(/[^\d.]/g,""))||0;
-      if(na!==nb) return na-nb;
-      return (a.style||"").localeCompare(b.style||"");
+    return list.sort((a, b) => {
+      const na = parseFloat((a.series || "").replace(/[^\d.]/g, "")) || 0;
+      const nb = parseFloat((b.series || "").replace(/[^\d.]/g, "")) || 0;
+      if (na !== nb) return na - nb;
+      return (a.style || "").localeCompare(b.style || "");
     });
   }, [allProducts, activeFilters, search]);
 
   function handleFilter(field, val) {
-    if (field==="__clear__") { setActiveFilters({}); return; }
-    setActiveFilters(prev=>({...prev,[field]:val}));
+    if (field === "__clear__") { setActiveFilters({}); return; }
+    setActiveFilters(prev => ({ ...prev, [field]: val }));
   }
 
   return (
     <div>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20,flexWrap:"wrap",gap:10}}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 10 }}>
         <div>
-          <div style={{fontSize:19,fontWeight:800,color:C.text}}>{TYPE_MAP[typeKey]?.label||typeKey}{brand?" — "+brand:""}</div>
-          <div style={{fontSize:13,color:C.muted,marginTop:2}}>{filtered.length} product{filtered.length!==1?"s":""}</div>
+          <div style={{ fontSize: 19, fontWeight: 800, color: C.text }}>{TYPE_MAP[typeKey]?.label || typeKey}{brand ? " — " + brand : ""}</div>
+          <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{filtered.length} product{filtered.length !== 1 ? "s" : ""}</div>
         </div>
-        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search..."
-          style={{padding:"8px 13px",border:"1px solid "+C.border,borderRadius:6,fontSize:13,outline:"none",width:220}} />
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..."
+          style={{ padding: "8px 13px", border: "1px solid " + C.border, borderRadius: 6, fontSize: 13, outline: "none", width: 220 }} />
       </div>
       <FilterBar typeKey={typeKey} allProducts={allProducts} activeFilters={activeFilters} onChange={handleFilter} />
-      {filtered.length===0 ? (
-        <div style={{textAlign:"center",padding:60,color:C.muted,fontSize:14}}>No products match your filters.</div>
+      {filtered.length === 0 ? (
+        <div style={{ textAlign: "center", padding: 60, color: C.muted, fontSize: 14 }}>No products match your filters.</div>
       ) : (
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:14}}>
-          {filtered.map(p=><ProductCard key={p.id} product={p} showBrand={showBrand} onClick={setSelected} />)}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 14 }}>
+          {filtered.map(p => <ProductCard key={p.id} product={p} showBrand={showBrand} onClick={setSelected} />)}
         </div>
       )}
-      {selected ? <ProductModal product={selected} showBrand={showBrand} onClose={()=>setSelected(null)} /> : null}
+      {selected ? <ProductModal product={selected} showBrand={showBrand} onClose={() => setSelected(null)} /> : null}
     </div>
   );
 }
@@ -525,17 +626,17 @@ function TypeGrid({ types, counts, onSelect }) {
   const [hovered, setHovered] = useState(null);
   return (
     <div>
-      <div style={{marginBottom:28}}>
-        <div style={{fontSize:22,fontWeight:800,color:C.text,marginBottom:4}}>Product Catalog</div>
-        <div style={{fontSize:14,color:C.muted}}>Select a product category to browse specifications</div>
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontSize: 22, fontWeight: 800, color: C.text, marginBottom: 4 }}>Product Catalog</div>
+        <div style={{ fontSize: 14, color: C.muted }}>Select a product category to browse specifications</div>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:14}}>
-        {types.map(t=>(
-          <div key={t.key} onClick={()=>onSelect(t.key)} onMouseEnter={()=>setHovered(t.key)} onMouseLeave={()=>setHovered(null)}
-            style={{background:hovered===t.key?C.navyMid:C.bgCard,border:"1px solid "+(hovered===t.key?C.navyMid:C.border),borderRadius:8,padding:"18px 20px",cursor:"pointer",transition:"all 0.15s",display:"flex",flexDirection:"column",gap:6}}>
-            <div style={{fontSize:14,fontWeight:700,color:hovered===t.key?"#fff":C.text}}>{t.label}</div>
-            <div style={{fontSize:12,color:hovered===t.key?"rgba(255,255,255,0.65)":C.muted,lineHeight:1.5}}>{t.description}</div>
-            <div style={{fontSize:11,color:hovered===t.key?"rgba(255,255,255,0.45)":C.muted,marginTop:4}}>{counts[t.key]||0} products</div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
+        {types.map(t => (
+          <div key={t.key} onClick={() => onSelect(t.key)} onMouseEnter={() => setHovered(t.key)} onMouseLeave={() => setHovered(null)}
+            style={{ background: hovered === t.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === t.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: hovered === t.key ? "#fff" : C.text }}>{t.label}</div>
+            <div style={{ fontSize: 12, color: hovered === t.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{t.description}</div>
+            <div style={{ fontSize: 11, color: hovered === t.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>{counts[t.key] || 0} products</div>
           </div>
         ))}
       </div>
@@ -546,23 +647,53 @@ function TypeGrid({ types, counts, onSelect }) {
 // ─── Brand Grid ───────────────────────────────────────────────────────────────
 
 function BrandGrid({ products, typeDef, onSelect }) {
-  const brands = useMemo(()=>[...new Set(products.map(p=>p.brand).filter(Boolean))].sort(),[products]);
+  const brands = useMemo(() => [...new Set(products.map(p => p.brand).filter(Boolean))].sort(), [products]);
   const [hovered, setHovered] = useState(null);
   return (
     <div>
-      <div style={{marginBottom:24}}>
-        <div style={{fontSize:20,fontWeight:800,color:C.text,marginBottom:4}}>{typeDef?.label}</div>
-        <div style={{fontSize:13,color:C.muted}}>Select a brand to browse products</div>
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ fontSize: 20, fontWeight: 800, color: C.text, marginBottom: 4 }}>{typeDef?.label}</div>
+        <div style={{ fontSize: 13, color: C.muted }}>Select a brand to browse products</div>
       </div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:12}}>
-        {brands.map(b=>(
-          <div key={b} onClick={()=>onSelect(b)} onMouseEnter={()=>setHovered(b)} onMouseLeave={()=>setHovered(null)}
-            style={{background:hovered===b?C.navyMid:C.bgCard,border:"1px solid "+(hovered===b?C.navyMid:C.border),borderRadius:8,padding:"20px 22px",cursor:"pointer",transition:"all 0.15s",textAlign:"center"}}>
-            <div style={{fontSize:16,fontWeight:700,color:hovered===b?"#fff":C.text,marginBottom:4}}>{b}</div>
-            <div style={{fontSize:12,color:hovered===b?"rgba(255,255,255,0.5)":C.muted}}>{products.filter(p=>p.brand===b).length} products</div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
+        {brands.map(b => (
+          <div key={b} onClick={() => onSelect(b)} onMouseEnter={() => setHovered(b)} onMouseLeave={() => setHovered(null)}
+            style={{ background: hovered === b ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === b ? C.navyMid : C.border), borderRadius: 8, padding: "20px 22px", cursor: "pointer", transition: "all 0.15s", textAlign: "center" }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: hovered === b ? "#fff" : C.text, marginBottom: 4 }}>{b}</div>
+            <div style={{ fontSize: 12, color: hovered === b ? "rgba(255,255,255,0.5)" : C.muted }}>{products.filter(p => p.brand === b).length} products</div>
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+// ─── Top Bar ──────────────────────────────────────────────────────────────────
+
+function TopBar() {
+  return (
+    <div style={{ background: C.navy, height: 56, display: "flex", alignItems: "center", padding: "0 40px", justifyContent: "space-between", flexShrink: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <span style={{ color: "#fff", fontWeight: 800, fontSize: 15, letterSpacing: "0.5px" }}>UNIKING CANADA</span>
+        <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 13 }}>/</span>
+        <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 13 }}>Product Catalog</span>
+      </div>
+      <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, letterSpacing: "1px", textTransform: "uppercase" }}>Confidential · Internal Use Only</span>
+    </div>
+  );
+}
+
+function Breadcrumb({ items, onNav }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, marginBottom: 24, flexWrap: "wrap" }}>
+      {items.map((item, i) => (
+        <span key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          {i > 0 && <span style={{ color: C.border, fontSize: 14 }}>›</span>}
+          {i < items.length - 1
+            ? <span onClick={() => onNav(i)} style={{ color: C.navyMid, cursor: "pointer", fontWeight: 600 }}>{item}</span>
+            : <span style={{ color: C.muted }}>{item}</span>}
+        </span>
+      ))}
     </div>
   );
 }
@@ -576,68 +707,55 @@ export default function Home() {
   const [selectedType, setSelectedType] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     async function load() {
       try {
         const [cat, elev, uni] = await Promise.all([CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list()]);
-        setAllData([...cat.map(normalizeCatalogProduct), ...elev.map(normalizeElevatorBucket), ...uni.map(normalizeUniCatalog)]);
-      } catch(e) { console.error(e); } finally { setLoading(false); }
+        setAllData([
+          ...cat.map(normalizeCatalogProduct),
+          ...elev.map(normalizeElevatorBucket),
+          ...uni.map(normalizeUniCatalog),
+        ]);
+      } catch (e) { console.error("Catalog load error:", e); }
+      finally { setLoading(false); }
     }
     load();
-  },[]);
+  }, []);
 
-  const typeCounts = useMemo(()=>{ const c={}; for(const p of allData) c[p.type]=(c[p.type]||0)+1; return c; },[allData]);
-  const availableTypes = useMemo(()=>PRODUCT_TYPES.filter(t=>(typeCounts[t.key]||0)>0),[typeCounts]);
-  const typeProducts = useMemo(()=>allData.filter(p=>p.type===selectedType),[allData,selectedType]);
-  const viewProducts = useMemo(()=>selectedBrand?typeProducts.filter(p=>p.brand===selectedBrand):typeProducts,[typeProducts,selectedBrand]);
-
+  const typeCounts = useMemo(() => { const c = {}; for (const p of allData) c[p.type] = (c[p.type] || 0) + 1; return c; }, [allData]);
+  const availableTypes = useMemo(() => PRODUCT_TYPES.filter(t => (typeCounts[t.key] || 0) > 0), [typeCounts]);
+  const typeProducts = useMemo(() => allData.filter(p => p.type === selectedType), [allData, selectedType]);
+  const viewProducts = useMemo(() => selectedBrand ? typeProducts.filter(p => p.brand === selectedBrand) : typeProducts, [typeProducts, selectedBrand]);
   const isBrandGated = selectedType && BRAND_GATED.has(selectedType);
   const showBrand = selectedType && SHOW_BRAND.has(selectedType) && !selectedBrand;
 
-  function selectType(typeKey) { setSelectedType(typeKey); setSelectedBrand(null); setView(BRAND_GATED.has(typeKey)?"brands":"products"); }
+  function selectType(typeKey) { setSelectedType(typeKey); setSelectedBrand(null); setView(BRAND_GATED.has(typeKey) ? "brands" : "products"); }
   function selectBrand(brand) { setSelectedBrand(brand); setView("products"); }
   function navTo(level) {
-    if(level===0){setView("home");setSelectedType(null);setSelectedBrand(null);}
-    else if(level===1&&isBrandGated){setView("brands");setSelectedBrand(null);}
+    if (level === 0) { setView("home"); setSelectedType(null); setSelectedBrand(null); }
+    else if (level === 1 && isBrandGated) { setView("brands"); setSelectedBrand(null); }
   }
 
   const breadcrumbs = ["All Products"];
-  if(selectedType) breadcrumbs.push(TYPE_MAP[selectedType]?.label||selectedType);
-  if(selectedBrand) breadcrumbs.push(selectedBrand);
-
-  function Breadcrumb({ items, onNav }) {
-    return (
-      <div style={{display:"flex",alignItems:"center",gap:6,fontSize:12,marginBottom:24,flexWrap:"wrap"}}>
-        {items.map((item,i)=>(
-          <span key={i} style={{display:"flex",alignItems:"center",gap:6}}>
-            {i>0&&<span style={{color:C.border,fontSize:14}}>›</span>}
-            {i<items.length-1
-              ?<span onClick={()=>onNav(i)} style={{color:C.navyMid,cursor:"pointer",fontWeight:600}}>{item}</span>
-              :<span style={{color:C.muted}}>{item}</span>}
-          </span>
-        ))}
-      </div>
-    );
-  }
+  if (selectedType) breadcrumbs.push(TYPE_MAP[selectedType]?.label || selectedType);
+  if (selectedBrand) breadcrumbs.push(selectedBrand);
 
   return (
-    <div style={{minHeight:"100vh",background:C.bg,fontFamily:"'Inter','Segoe UI',Arial,sans-serif",display:"flex",flexDirection:"column"}}>
-      <div style={{background:C.navy,height:56,display:"flex",alignItems:"center",padding:"0 40px",justifyContent:"space-between",flexShrink:0}}>
-        <div style={{display:"flex",alignItems:"center",gap:10}}>
-          <span style={{color:"#fff",fontWeight:800,fontSize:15,letterSpacing:"0.5px"}}>UNIKING CANADA</span>
-          <span style={{color:"rgba(255,255,255,0.25)",fontSize:13}}>/</span>
-          <span style={{color:"rgba(255,255,255,0.5)",fontSize:13}}>Product Catalog</span>
-        </div>
-        <span style={{color:"rgba(255,255,255,0.25)",fontSize:11,letterSpacing:"1px",textTransform:"uppercase"}}>Confidential · Internal Use Only</span>
+    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column" }}>
+      <TopBar />
+      <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "32px 40px", boxSizing: "border-box" }}>
+        {view !== "home" ? <Breadcrumb items={breadcrumbs} onNav={navTo} /> : null}
+        {loading ? (
+          <div style={{ textAlign: "center", padding: 80, color: C.muted, fontSize: 14 }}>Loading catalog...</div>
+        ) : view === "home" ? (
+          <TypeGrid types={availableTypes} counts={typeCounts} onSelect={selectType} />
+        ) : view === "brands" ? (
+          <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} />
+        ) : (
+          <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} />
+        )}
       </div>
-      <div style={{flex:1,maxWidth:1280,width:"100%",margin:"0 auto",padding:"32px 40px",boxSizing:"border-box"}}>
-        {view!=="home"?<Breadcrumb items={breadcrumbs} onNav={navTo} />:null}
-        {loading ? <div style={{textAlign:"center",padding:80,color:C.muted,fontSize:14}}>Loading catalog...</div>
-          : view==="home" ? <TypeGrid types={availableTypes} counts={typeCounts} onSelect={selectType} />
-          : view==="brands" ? <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} />
-          : <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} />}
-      </div>
-      <div style={{borderTop:"1px solid "+C.border,padding:"14px 40px",textAlign:"center",fontSize:11,color:"#cbd5e1"}}>
+      <div style={{ borderTop: "1px solid " + C.border, padding: "14px 40px", textAlign: "center", fontSize: 11, color: "#cbd5e1" }}>
         Uniking Canada · Technical Product Reference · Confidential — Internal Use Only
       </div>
     </div>
