@@ -1,3 +1,4 @@
+// v2 - images + belt data + sorted series
 import { useState, useEffect, useMemo } from "react";
 import { UniCatalog } from "@/api/entities";
 import { CatalogProduct } from "@/api/entities";
