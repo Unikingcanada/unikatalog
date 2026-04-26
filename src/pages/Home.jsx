@@ -120,14 +120,56 @@ function normalizeUniCatalog(r) {
   };
 }
 
+const DH_SERIES_TYPE_MAP = {
+  "Welded Steel Mill Chain":          "Welded Steel Chain",
+  "Welded Steel Drag Chain":          "Welded Steel Chain",
+  "Palm Oil Chain":                   "Engineered Chain",
+  "Sugar Mill Chain":                 "Engineered Chain",
+  "Block Chain":                      "Engineered Chain",
+  "Engineering Steel Bush Chain":     "Engineered Chain",
+  "S/WH/WR Engineering":             "Engineered Chain",
+  "Conveyor Chain (M Series)":        "Conveyor Chain",
+};
+
+const DH_IMAGE_MAP = {
+  "A Series Short Pitch Precision Roller Chain":  "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+  "B Series Short Pitch Precision Roller Chain":  "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+  "Heavy Duty Series Roller Chain":               "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+  "SH Series High Strength Heavy Duty Short Pitch Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+  "SP Series High Strength Short Pitch Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+  "X3 Series High Performance B Series Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+  "Double Pitch Transmission Chain":              "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+  "Bush Chain (Custom Pitch)":                    "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+  "Side Bow Chain (Offset Roller)":               "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+  "Welded Steel Mill Chain":                      "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/b0fcc4e6b_generated_image.png",
+  "Welded Steel Drag Chain":                      "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/b0fcc4e6b_generated_image.png",
+  "Engineering Steel Bush Chain":                 "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/a95633a32_generated_image.png",
+  "S Type Steel Agricultural Chain":              "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9def24712_generated_image.png",
+  "CA Type Steel Agricultural Chain":             "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9def24712_generated_image.png",
+  "Combine Harvester Chain":                      "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9def24712_generated_image.png",
+  "Steel Pintle Chain":                           "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9def24712_generated_image.png",
+  "O-Ring Agricultural Chain":                    "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9def24712_generated_image.png",
+  "Conveyor Chain (M Series)":                    "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/37623535e_generated_image.png",
+  "Palm Oil Chain":                               "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/37623535e_generated_image.png",
+  "Sugar Mill Chain":                             "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/37623535e_generated_image.png",
+  "Block Chain":                                  "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9781c628a_generated_image.png",
+};
+
 function normalizeDonghuaChain(r) {
-  const chainTypeMap = {
-    "Drive Chain": "ANSI/BS Chain",
-    "Conveyor Chain": "Conveyor Chain",
-    "Engineering Chain": "Engineered Chain",
-    "Agricultural Chain": "Engineered Chain",
-  };
-  const type = chainTypeMap[r.chain_type] || "ANSI/BS Chain";
+  const seriesType = DH_SERIES_TYPE_MAP[r.series];
+  let type;
+  if (seriesType) {
+    type = seriesType;
+  } else if (r.chain_type === "Drive Chain") {
+    type = "ANSI/BS Chain";
+  } else if (r.chain_type === "Conveyor Chain") {
+    type = "Conveyor Chain";
+  } else if (r.chain_type === "Agricultural Chain") {
+    type = "Engineered Chain";
+  } else {
+    type = "Engineered Chain";
+  }
+
   const displayNo = r.ansi_no || r.bs_no || r.iso_no || r.chain_no || "";
   const specs = {};
   if (r.pitch_mm) specs["Pitch (mm)"] = r.pitch_mm;
@@ -150,11 +192,11 @@ function normalizeDonghuaChain(r) {
     application: r.application || "",
     materials: r.materials || "Carbon Steel",
     material: r.materials || "Carbon Steel",
-    duty: r.chain_type === "Engineering Chain" || r.chain_type === "Agricultural Chain" ? "Heavy" : "",
+    duty: (r.chain_type === "Engineering Chain" || r.chain_type === "Agricultural Chain") ? "Heavy" : "",
     notes: [r.notes, altNos ? "Cross-ref: " + altNos : ""].filter(Boolean).join(" | "),
     catalog_url: r.catalog_url || "",
     tech_doc_url: "",
-    image_url: "",
+    image_url: DH_IMAGE_MAP[r.series] || "",
     belt_data: null, sprocket_data: null,
     specs: { "Chain No.": displayNo || null, "Series": r.series || null, "Type": r.chain_type || null, "Strands": r.strands || null, "Materials": r.materials || null, ...specs },
   };

@@ -418,7 +418,13 @@ export default function Catalog() {
   useEffect(() => {
     Promise.all([CatalogProduct.list(), UniCatalog.list(), ElevatorBucket.list(), DonghuaChain.list()])
       .then(([intralox, uni, buckets, dh]) => {
-        const chainTypeMap = { "Drive Chain": "ANSI/BS Chain", "Conveyor Chain": "Conveyor Chain", "Engineering Chain": "Engineered Chain", "Agricultural Chain": "Engineered Chain" };
+        const chainTypeMap = {
+              "Drive Chain": "ANSI/BS Chain",
+              "Conveyor Chain": "Conveyor Chain",
+              "Engineering Chain": "Engineered Chain",
+              "Agricultural Chain": "Engineered Chain",
+            };
+            const weldedSeries = new Set(["Welded Steel Mill Chain","Welded Steel Drag Chain"]);
         setAll([
           ...intralox.map(r => ({ ...r, _type: r.category || "Modular Plastic Belt" })),
           ...uni.map(r => {
@@ -434,14 +440,33 @@ export default function Catalog() {
           ...buckets.map(r => ({ ...r, _type: getBucketType(r) })),
           ...dh.map(r => ({
             ...r,
-            _type: chainTypeMap[r.chain_type] || "ANSI/BS Chain",
+            _type: weldedSeries.has(r.series) ? "Welded Steel Chain" : (chainTypeMap[r.chain_type] || "ANSI/BS Chain"),
             series: r.ansi_no || r.bs_no || r.iso_no || r.chain_no || "",
             style: r.series || r.chain_type || "",
             materials: r.materials || "Carbon Steel",
             vendor: "",
             notes: r.notes || "",
             catalog_url: r.catalog_url || "",
-            image_url: "",
+            image_url: {
+                  "A Series Short Pitch Precision Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+                  "B Series Short Pitch Precision Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+                  "Heavy Duty Series Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+                  "SH Series High Strength Heavy Duty Short Pitch Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+                  "SP Series High Strength Short Pitch Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+                  "X3 Series High Performance B Series Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+                  "Double Pitch Transmission Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+                  "Bush Chain (Custom Pitch)": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
+                  "Welded Steel Mill Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/b0fcc4e6b_generated_image.png",
+                  "Welded Steel Drag Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/b0fcc4e6b_generated_image.png",
+                  "Engineering Steel Bush Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/a95633a32_generated_image.png",
+                  "S Type Steel Agricultural Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9def24712_generated_image.png",
+                  "CA Type Steel Agricultural Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9def24712_generated_image.png",
+                  "Combine Harvester Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9def24712_generated_image.png",
+                  "Steel Pintle Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9def24712_generated_image.png",
+                  "Palm Oil Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/37623535e_generated_image.png",
+                  "Sugar Mill Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/37623535e_generated_image.png",
+                  "Block Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9781c628a_generated_image.png",
+                }[r.series] || "",
             key_specs: JSON.stringify(Object.fromEntries([
               r.pitch_mm && ["Pitch (mm)", r.pitch_mm],
               r.roller_dia_mm && ["Roller Dia. (mm)", r.roller_dia_mm],
