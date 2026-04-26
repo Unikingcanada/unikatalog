@@ -1,4 +1,4 @@
-// v2 - images + belt data + sorted series
+// v3 - images + belt data + sorted series
 import { useState, useEffect, useMemo } from "react";
 import { UniCatalog } from "@/api/entities";
 import { CatalogProduct } from "@/api/entities";
@@ -36,10 +36,18 @@ function getBucketType(b) {
   return "Elevator Bucket";
 }
 
-function Badge({ label, bg = "#f3f4f6", color = "#374151", xs }) {
+function Badge({ label, bg, color, xs }) {
   return (
-    <span style={{ display: "inline-flex", alignItems: "center", padding: xs ? "1px 7px" : "3px 10px",
-      borderRadius: 99, background: bg, color, fontSize: xs ? 10 : 11, fontWeight: 700, whiteSpace: "nowrap" }}>
+    <span style={{
+      display: "inline-flex", alignItems: "center",
+      padding: xs ? "1px 7px" : "3px 10px",
+      borderRadius: 99,
+      background: bg || "#f3f4f6",
+      color: color || "#374151",
+      fontSize: xs ? 10 : 11,
+      fontWeight: 700,
+      whiteSpace: "nowrap"
+    }}>
       {label}
     </span>
   );
@@ -48,27 +56,34 @@ function Badge({ label, bg = "#f3f4f6", color = "#374151", xs }) {
 function BeltDataTable({ beltData }) {
   if (!beltData) return null;
   let rows = [];
-  try { rows = typeof beltData === "string" ? JSON.parse(beltData) : beltData; } catch { return null; }
-  if (!rows.length) return null;
+  try {
+    rows = typeof beltData === "string" ? JSON.parse(beltData) : beltData;
+  } catch (e) {
+    return null;
+  }
+  if (!Array.isArray(rows) || rows.length === 0) return null;
 
-  const cols = [
+  const allCols = [
     { key: "material", label: "Material" },
     { key: "strength_lbf", label: "Strength (lbf)" },
     { key: "strength_nm", label: "Strength (N/m)" },
-    { key: "temp_min_f", label: "Min Temp (°F)" },
-    { key: "temp_max_f", label: "Max Temp (°F)" },
-    { key: "mass_lbft2", label: "Mass (lb/ft²)" },
-    { key: "mass_kgm2", label: "Mass (kg/m²)" },
-  ].filter(c => rows.some(r => r[c.key] != null && r[c.key] !== ""));
+    { key: "temp_min_f", label: "Min °F" },
+    { key: "temp_max_f", label: "Max °F" },
+    { key: "mass_lbft2", label: "lb/ft²" },
+    { key: "mass_kgm2", label: "kg/m²" },
+  ];
+  const cols = allCols.filter(c => rows.some(r => r[c.key] != null && r[c.key] !== ""));
 
   return (
-    <div style={{ overflowX: "auto" }}>
+    <div style={{ overflowX: "auto", borderRadius: 8, border: "1px solid #e5e7eb" }}>
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
         <thead>
           <tr style={{ background: NAVY }}>
             {cols.map(c => (
-              <th key={c.key} style={{ padding: "8px 10px", color: "#fff", fontWeight: 700,
-                textAlign: "left", whiteSpace: "nowrap", fontSize: 11 }}>{c.label}</th>
+              <th key={c.key} style={{
+                padding: "9px 12px", color: "#fff", fontWeight: 700,
+                textAlign: "left", whiteSpace: "nowrap", fontSize: 11
+              }}>{c.label}</th>
             ))}
           </tr>
         </thead>
@@ -76,8 +91,12 @@ function BeltDataTable({ beltData }) {
           {rows.map((row, i) => (
             <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid #e5e7eb" }}>
               {cols.map(c => (
-                <td key={c.key} style={{ padding: "7px 10px", color: c.key === "material" ? NAVY : "#374151",
-                  fontWeight: c.key === "material" ? 700 : 400, whiteSpace: "nowrap" }}>
+                <td key={c.key} style={{
+                  padding: "8px 12px",
+                  color: c.key === "material" ? NAVY : "#374151",
+                  fontWeight: c.key === "material" ? 700 : 400,
+                  whiteSpace: "nowrap"
+                }}>
                   {row[c.key] != null ? String(row[c.key]) : "—"}
                 </td>
               ))}
@@ -91,61 +110,81 @@ function BeltDataTable({ beltData }) {
 
 function Card({ rec, type, onClick }) {
   const tm = TYPE_META[type] || { color: NAVY, bg: "#f3f4f6" };
-  const hasImage = !!rec.image_url;
 
   return (
-    <div onClick={onClick}
-      style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb",
+    <div
+      onClick={onClick}
+      style={{
+        background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb",
         cursor: "pointer", display: "flex", flexDirection: "column", overflow: "hidden",
-        transition: "transform .15s, box-shadow .15s" }}
-      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,.10)"; }}
-      onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}>
+        transition: "transform .15s, box-shadow .15s"
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.transform = "translateY(-2px)";
+        e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,.10)";
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.transform = "";
+        e.currentTarget.style.boxShadow = "";
+      }}
+    >
+      <div style={{ height: 4, background: `linear-gradient(90deg, ${tm.color}, ${tm.color}66)` }} />
 
-      <div style={{ height: 4, background: `linear-gradient(90deg,${tm.color},${tm.color}66)` }} />
-
-      {/* Product Image */}
-      {hasImage && (
-        <div style={{ background: "#f8fafc", borderBottom: "1px solid #f1f5f9",
-          display: "flex", alignItems: "center", justifyContent: "center", height: 130, overflow: "hidden" }}>
-          <img src={rec.image_url} alt={rec.series}
-            style={{ maxHeight: 120, maxWidth: "100%", objectFit: "contain", padding: "8px" }}
-            onError={e => { e.target.style.display = "none"; }} />
+      {rec.image_url ? (
+        <div style={{
+          background: "#f8fafc", borderBottom: "1px solid #f1f5f9",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          height: 130, overflow: "hidden"
+        }}>
+          <img
+            src={rec.image_url}
+            alt={rec.series || "product"}
+            style={{ maxHeight: 118, maxWidth: "90%", objectFit: "contain" }}
+            onError={e => { e.target.parentElement.style.display = "none"; }}
+          />
         </div>
-      )}
+      ) : null}
 
       <div style={{ padding: "12px 14px", flex: 1, display: "flex", flexDirection: "column", gap: 5 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 6 }}>
           <Badge label={type} bg={tm.bg} color={tm.color} xs />
-          {rec.pitch_in && (
+          {rec.pitch_in ? (
             <span style={{ fontSize: 10, color: "#9ca3af" }}>{rec.pitch_in}" pitch</span>
-          )}
+          ) : null}
         </div>
 
         <div style={{ fontSize: 13, fontWeight: 800, color: NAVY, lineHeight: 1.25 }}>
-          {rec.series || rec.name || "—"}
+          {rec.series || "—"}
         </div>
-        {(rec.style || rec.category) && (
+
+        {(rec.style || rec.category) ? (
           <div style={{ fontSize: 11, color: "#6b7280" }}>{rec.style || rec.category}</div>
-        )}
+        ) : null}
 
         <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
-          {rec.hinge_style && <Badge label={rec.hinge_style} bg="#f9fafb" color="#374151" xs />}
-          {rec.open_area && rec.open_area !== "0%" && <Badge label={`${rec.open_area} open`} bg="#f0fdf4" color="#15803d" xs />}
-          {rec.duty && !rec.hinge_style && <Badge label={rec.duty} bg="#f9fafb" color="#374151" xs />}
+          {rec.hinge_style ? <Badge label={rec.hinge_style} bg="#f9fafb" color="#374151" xs /> : null}
+          {rec.open_area && rec.open_area !== "0%" ? (
+            <Badge label={rec.open_area + " open"} bg="#f0fdf4" color="#15803d" xs />
+          ) : null}
+          {rec.duty && !rec.hinge_style ? <Badge label={rec.duty} bg="#f9fafb" color="#374151" xs /> : null}
         </div>
 
-        {(rec.notes || rec.materials || rec.material) && (
-          <div style={{ fontSize: 11, color: "#6b7280", lineHeight: 1.5,
-            display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+        {(rec.notes || rec.materials || rec.material) ? (
+          <div style={{
+            fontSize: 11, color: "#6b7280", lineHeight: 1.5,
+            display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden"
+          }}>
             {rec.notes || rec.materials || rec.material}
           </div>
-        )}
+        ) : null}
       </div>
 
-      <div style={{ padding: "8px 14px", borderTop: "1px solid #f3f4f6",
-        display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{
+        padding: "8px 14px", borderTop: "1px solid #f3f4f6",
+        display: "flex", justifyContent: "space-between", alignItems: "center"
+      }}>
         <span style={{ fontSize: 10, color: "#d1d5db" }}>
-          {rec.page_range ? `pp. ${rec.page_range}` : ""}
+          {rec.page_range ? "pp. " + rec.page_range : ""}
         </span>
         <span style={{ fontSize: 11, color: tm.color, fontWeight: 700 }}>Details →</span>
       </div>
@@ -163,110 +202,161 @@ function Modal({ rec, type, onClose }) {
 
   let beltRows = [];
   if (rec.belt_data) {
-    try { beltRows = typeof rec.belt_data === "string" ? JSON.parse(rec.belt_data) : rec.belt_data; } catch {}
+    try {
+      const parsed = typeof rec.belt_data === "string" ? JSON.parse(rec.belt_data) : rec.belt_data;
+      if (Array.isArray(parsed)) beltRows = parsed;
+    } catch (e) {}
   }
   const hasBeltData = beltRows.length > 0;
 
   let parsedSpecs = null;
-  if (rec.key_specs) { try { parsedSpecs = JSON.parse(rec.key_specs); } catch {} }
+  if (rec.key_specs) {
+    try { parsedSpecs = JSON.parse(rec.key_specs); } catch (e) {}
+  }
 
   const matStr = rec.materials || rec.material || "";
-  const mats = matStr.split(/[,/]/).map(m => m.trim()).filter(Boolean);
+  const mats = matStr.split(/[,\/]/).map(m => m.trim()).filter(Boolean);
 
   const specs = isIntralox ? [
-    ["Series", rec.series], ["Category", rec.category], ["Style", rec.style],
-    ["Pitch", rec.pitch_in ? `${rec.pitch_in}" (${rec.pitch_mm}mm)` : "—"],
-    ["Min Width", rec.min_width_in ? `${rec.min_width_in}"` : "—"],
-    ["Open Area", rec.open_area], ["Hinge Style", rec.hinge_style],
-    ["Pages", rec.page_range ? `pp. ${rec.page_range}` : "—"],
+    ["Series", rec.series],
+    ["Category", rec.category],
+    ["Style", rec.style],
+    ["Pitch", rec.pitch_in ? rec.pitch_in + '" (' + rec.pitch_mm + 'mm)' : null],
+    ["Min Width", rec.min_width_in ? rec.min_width_in + '"' : null],
+    ["Open Area", rec.open_area],
+    ["Hinge Style", rec.hinge_style],
+    ["Pages", rec.page_range ? "pp. " + rec.page_range : null],
   ] : [
-    ["Series", rec.series], ["Style", rec.style || rec.category],
-    ["Vendor", rec.vendor], ["Duty", rec.duty],
+    ["Series", rec.series],
+    ["Style", rec.style || rec.category],
+    ["Vendor", rec.vendor],
+    ["Duty", rec.duty],
     ["Application", rec.application],
     ["Model / Part No.", rec.model_code],
     ["Sizes Available", rec.sizes_available],
-    ["Pages", rec.page_range ? `pp. ${rec.page_range}` : "—"],
+    ["Pages", rec.page_range ? "pp. " + rec.page_range : null],
   ];
 
   const tabs = [
     ["overview", "Specs"],
-    mats.length > 0 && ["materials", "Materials"],
-    hasBeltData && ["beltdata", "Belt Data"],
-    parsedSpecs && ["keyspecs", "Key Specs"],
-    isBucket && rec.bucket_sizes && ["sizes", "Sizes"],
-    (rec.catalog_url || rec.tech_doc_url || rec.cad_url) && ["resources", "Resources"],
+    mats.length > 0 ? ["materials", "Materials"] : null,
+    hasBeltData ? ["beltdata", "Belt Data"] : null,
+    parsedSpecs ? ["keyspecs", "Key Specs"] : null,
+    (isBucket && rec.bucket_sizes) ? ["sizes", "Sizes"] : null,
+    (rec.catalog_url || rec.tech_doc_url || rec.cad_url) ? ["resources", "Resources"] : null,
   ].filter(Boolean);
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.55)", zIndex: 1000,
-      display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }} onClick={onClose}>
-      <div style={{ background: "#fff", borderRadius: 16, width: "100%", maxWidth: 700,
-        maxHeight: "93vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
-
+    <div
+      style={{
+        position: "fixed", inset: 0, background: "rgba(0,0,0,.55)", zIndex: 1000,
+        display: "flex", alignItems: "center", justifyContent: "center", padding: 16
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          background: "#fff", borderRadius: 16, width: "100%", maxWidth: 700,
+          maxHeight: "93vh", overflowY: "auto"
+        }}
+        onClick={e => e.stopPropagation()}
+      >
         {/* Header */}
-        <div style={{ background: `linear-gradient(135deg,${NAVY},#2d5986)`,
-          borderRadius: "16px 16px 0 0", padding: "20px 22px 16px", position: "relative" }}>
-          <button onClick={onClose} style={{ position: "absolute", top: 12, right: 14,
-            background: "rgba(255,255,255,.15)", border: "none", borderRadius: "50%",
-            width: 32, height: 32, cursor: "pointer", color: "#fff", fontSize: 16 }}>✕</button>
+        <div style={{
+          background: "linear-gradient(135deg, " + NAVY + ", #2d5986)",
+          borderRadius: "16px 16px 0 0", padding: "20px 22px 16px", position: "relative"
+        }}>
+          <button
+            onClick={onClose}
+            style={{
+              position: "absolute", top: 12, right: 14,
+              background: "rgba(255,255,255,.15)", border: "none", borderRadius: "50%",
+              width: 32, height: 32, cursor: "pointer", color: "#fff", fontSize: 16
+            }}
+          >✕</button>
 
           <div style={{ display: "flex", gap: 8, marginBottom: 10, flexWrap: "wrap" }}>
             <Badge label={type} bg={tm.bg} color={tm.color} />
-            {rec.vendor && <Badge label={rec.vendor} bg="rgba(255,255,255,.15)" color="#fff" />}
+            {rec.vendor ? <Badge label={rec.vendor} bg="rgba(255,255,255,.15)" color="#fff" /> : null}
           </div>
 
           <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
-            {rec.image_url && (
-              <div style={{ background: "rgba(255,255,255,.1)", borderRadius: 10, padding: 8,
-                flexShrink: 0, width: 120, height: 90, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <img src={rec.image_url} alt={rec.series}
+            {rec.image_url ? (
+              <div style={{
+                background: "rgba(255,255,255,.1)", borderRadius: 10, padding: 8,
+                flexShrink: 0, width: 120, height: 90,
+                display: "flex", alignItems: "center", justifyContent: "center"
+              }}>
+                <img
+                  src={rec.image_url}
+                  alt={rec.series || "product"}
                   style={{ maxWidth: 110, maxHeight: 80, objectFit: "contain" }}
-                  onError={e => { e.target.parentElement.style.display = "none"; }} />
+                  onError={e => { e.target.parentElement.style.display = "none"; }}
+                />
               </div>
-            )}
+            ) : null}
             <div>
-              <div style={{ fontSize: 21, fontWeight: 900, color: "#fff", lineHeight: 1.15 }}>{rec.series}</div>
-              {(rec.style || rec.category) && (
-                <div style={{ fontSize: 13, color: "rgba(255,255,255,.65)", marginTop: 4 }}>{rec.style || rec.category}</div>
-              )}
+              <div style={{ fontSize: 21, fontWeight: 900, color: "#fff", lineHeight: 1.15 }}>
+                {rec.series}
+              </div>
+              {(rec.style || rec.category) ? (
+                <div style={{ fontSize: 13, color: "rgba(255,255,255,.65)", marginTop: 4 }}>
+                  {rec.style || rec.category}
+                </div>
+              ) : null}
               <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
-                {rec.pitch_in && <Badge label={`${rec.pitch_in}" pitch`} bg="rgba(255,255,255,.15)" color="#fff" />}
-                {rec.hinge_style && <Badge label={rec.hinge_style} bg="rgba(255,255,255,.15)" color="#fff" />}
-                {rec.open_area && <Badge label={`${rec.open_area} open`} bg="rgba(255,255,255,.15)" color="#fff" />}
+                {rec.pitch_in ? <Badge label={rec.pitch_in + '" pitch'} bg="rgba(255,255,255,.15)" color="#fff" /> : null}
+                {rec.hinge_style ? <Badge label={rec.hinge_style} bg="rgba(255,255,255,.15)" color="#fff" /> : null}
+                {rec.open_area ? <Badge label={rec.open_area + " open"} bg="rgba(255,255,255,.15)" color="#fff" /> : null}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Notes */}
-        {rec.notes && (
-          <div style={{ margin: "14px 20px 0", fontSize: 13, color: "#374151", lineHeight: 1.7,
-            padding: "10px 14px", background: "#f8fafc", borderRadius: 8, borderLeft: `3px solid ${tm.color}` }}>
+        {rec.notes ? (
+          <div style={{
+            margin: "14px 20px 0", fontSize: 13, color: "#374151", lineHeight: 1.7,
+            padding: "10px 14px", background: "#f8fafc", borderRadius: 8,
+            borderLeft: "3px solid " + tm.color
+          }}>
             {rec.notes}
           </div>
-        )}
+        ) : null}
 
-        {/* Features */}
-        {rec.features && (
+        {rec.features ? (
           <div style={{ margin: "10px 20px 0" }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>Features</div>
+            <div style={{
+              fontSize: 11, fontWeight: 700, color: "#9ca3af",
+              textTransform: "uppercase", letterSpacing: 1, marginBottom: 6
+            }}>Features</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-              {rec.features.split(";").map((f, i) => f.trim() && (
-                <span key={i} style={{ fontSize: 11, padding: "3px 9px", borderRadius: 99,
-                  background: tm.bg, color: tm.color, fontWeight: 600 }}>✓ {f.trim()}</span>
-              ))}
+              {rec.features.split(";").map((f, i) => f.trim() ? (
+                <span key={i} style={{
+                  fontSize: 11, padding: "3px 9px", borderRadius: 99,
+                  background: tm.bg, color: tm.color, fontWeight: 600
+                }}>✓ {f.trim()}</span>
+              ) : null)}
             </div>
           </div>
-        )}
+        ) : null}
 
         {/* Tabs */}
-        <div style={{ display: "flex", borderBottom: "2px solid #f3f4f6", margin: "14px 20px 0", overflowX: "auto" }}>
+        <div style={{
+          display: "flex", borderBottom: "2px solid #f3f4f6",
+          margin: "14px 20px 0", overflowX: "auto"
+        }}>
           {tabs.map(([id, label]) => (
-            <button key={id} onClick={() => setTab(id)}
-              style={{ padding: "8px 14px", border: "none", background: "none", cursor: "pointer",
-                fontSize: 12, fontWeight: 700, whiteSpace: "nowrap",
+            <button
+              key={id}
+              onClick={() => setTab(id)}
+              style={{
+                padding: "8px 14px", border: "none", background: "none",
+                cursor: "pointer", fontSize: 12, fontWeight: 700, whiteSpace: "nowrap",
                 color: tab === id ? tm.color : "#9ca3af",
-                borderBottom: tab === id ? `2px solid ${tm.color}` : "2px solid transparent", marginBottom: -2 }}>
+                borderBottom: tab === id ? "2px solid " + tm.color : "2px solid transparent",
+                marginBottom: -2
+              }}
+            >
               {label}
             </button>
           ))}
@@ -274,88 +364,95 @@ function Modal({ rec, type, onClose }) {
 
         <div style={{ padding: "16px 20px 24px" }}>
 
-          {/* Overview */}
           {tab === "overview" && (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
               {specs.filter(([, v]) => v && v !== "—" && v !== "null").map(([l, v]) => (
-                <div key={l} style={{ padding: "10px 12px", background: "#f8fafc", borderRadius: 8, border: "1px solid #f1f5f9" }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: .5, marginBottom: 3 }}>{l}</div>
+                <div key={l} style={{
+                  padding: "10px 12px", background: "#f8fafc",
+                  borderRadius: 8, border: "1px solid #f1f5f9"
+                }}>
+                  <div style={{
+                    fontSize: 10, fontWeight: 700, color: "#9ca3af",
+                    textTransform: "uppercase", letterSpacing: .5, marginBottom: 3
+                  }}>{l}</div>
                   <div style={{ fontSize: 13, color: NAVY, fontWeight: 600 }}>{v}</div>
                 </div>
               ))}
             </div>
           )}
 
-          {/* Materials */}
           {tab === "materials" && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {mats.map((m, i) => (
-                <span key={i} style={{ padding: "8px 14px", borderRadius: 99, background: tm.bg,
-                  color: tm.color, fontWeight: 700, fontSize: 13 }}>{m}</span>
+                <span key={i} style={{
+                  padding: "8px 14px", borderRadius: 99,
+                  background: tm.bg, color: tm.color, fontWeight: 700, fontSize: 13
+                }}>{m}</span>
               ))}
             </div>
           )}
 
-          {/* Belt Data */}
           {tab === "beltdata" && (
             <div>
-              <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 12, lineHeight: 1.6 }}>
+              <p style={{ fontSize: 12, color: "#6b7280", marginBottom: 12, lineHeight: 1.6 }}>
                 Mechanical properties per material option. Strength ratings are per metre of belt width.
-              </div>
+              </p>
               <BeltDataTable beltData={rec.belt_data} />
             </div>
           )}
 
-          {/* Key Specs */}
           {tab === "keyspecs" && parsedSpecs && (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
               {Object.entries(parsedSpecs).map(([k, v]) => (
                 <div key={k} style={{ padding: "10px 12px", background: "#f8fafc", borderRadius: 8 }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: .5, marginBottom: 3 }}>
-                    {k.replace(/_/g, " ")}
-                  </div>
+                  <div style={{
+                    fontSize: 10, fontWeight: 700, color: "#9ca3af",
+                    textTransform: "uppercase", letterSpacing: .5, marginBottom: 3
+                  }}>{k.replace(/_/g, " ")}</div>
                   <div style={{ fontSize: 13, color: NAVY, fontWeight: 600 }}>{String(v)}</div>
                 </div>
               ))}
             </div>
           )}
 
-          {/* Sizes */}
           {tab === "sizes" && rec.bucket_sizes && (
             <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.8, whiteSpace: "pre-wrap" }}>
               {rec.bucket_sizes}
             </div>
           )}
 
-          {/* Resources */}
           {tab === "resources" && (
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {rec.catalog_url && (
-                <a href={rec.catalog_url} target="_blank" rel="noreferrer"
-                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px",
-                    background: "#f8fafc", borderRadius: 10, border: "1px solid #e5e7eb",
-                    color: NAVY, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
+              {rec.catalog_url ? (
+                <a href={rec.catalog_url} target="_blank" rel="noreferrer" style={{
+                  display: "flex", alignItems: "center", gap: 10, padding: "12px 16px",
+                  background: "#f8fafc", borderRadius: 10, border: "1px solid #e5e7eb",
+                  color: NAVY, fontWeight: 700, fontSize: 13, textDecoration: "none"
+                }}>
                   <span style={{ fontSize: 18 }}>📄</span> View Catalog PDF
                 </a>
-              )}
-              {rec.tech_doc_url && (
-                <a href={rec.tech_doc_url} target="_blank" rel="noreferrer"
-                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px",
-                    background: "#f8fafc", borderRadius: 10, border: "1px solid #e5e7eb",
-                    color: NAVY, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
+              ) : null}
+              {rec.tech_doc_url ? (
+                <a href={rec.tech_doc_url} target="_blank" rel="noreferrer" style={{
+                  display: "flex", alignItems: "center", gap: 10, padding: "12px 16px",
+                  background: "#f8fafc", borderRadius: 10, border: "1px solid #e5e7eb",
+                  color: NAVY, fontWeight: 700, fontSize: 13, textDecoration: "none"
+                }}>
                   <span style={{ fontSize: 18 }}>📐</span> Technical Documentation
                 </a>
-              )}
-              {rec.cad_url && (
-                <a href={rec.cad_url} target="_blank" rel="noreferrer"
-                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px",
-                    background: "#f8fafc", borderRadius: 10, border: "1px solid #e5e7eb",
-                    color: NAVY, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
+              ) : null}
+              {rec.cad_url ? (
+                <a href={rec.cad_url} target="_blank" rel="noreferrer" style={{
+                  display: "flex", alignItems: "center", gap: 10, padding: "12px 16px",
+                  background: "#f8fafc", borderRadius: 10, border: "1px solid #e5e7eb",
+                  color: NAVY, fontWeight: 700, fontSize: 13, textDecoration: "none"
+                }}>
                   <span style={{ fontSize: 18 }}>📁</span> CAD Drawing
                 </a>
-              )}
+              ) : null}
             </div>
           )}
+
         </div>
       </div>
     </div>
@@ -402,12 +499,12 @@ export default function Catalog() {
   }, [allProducts]);
 
   const seriesOptions = useMemo(() => {
-    const filtered = typeFilter === "All" ? allProducts : allProducts.filter(p => p._type === typeFilter);
-    const s = new Set(filtered.map(p => p.series).filter(Boolean));
+    const base = typeFilter === "All" ? allProducts : allProducts.filter(p => p._type === typeFilter);
+    const s = new Set(base.map(p => p.series).filter(Boolean));
     return ["All", ...Array.from(s).sort((a, b) => {
       const na = parseFloat(a.replace(/\D/g, "")) || 0;
       const nb = parseFloat(b.replace(/\D/g, "")) || 0;
-      return na - nb || a.localeCompare(b);
+      return na !== nb ? na - nb : a.localeCompare(b);
     })];
   }, [allProducts, typeFilter]);
 
@@ -417,7 +514,7 @@ export default function Catalog() {
   }, [allProducts]);
 
   const pitchOptions = useMemo(() => {
-    const s = new Set(allProducts.filter(p => p.pitch_in).map(p => `${p.pitch_in}"`));
+    const s = new Set(allProducts.filter(p => p.pitch_in).map(p => p.pitch_in + '"'));
     return ["All", ...Array.from(s).sort((a, b) => parseFloat(a) - parseFloat(b))];
   }, [allProducts]);
 
@@ -426,7 +523,7 @@ export default function Catalog() {
     if (typeFilter !== "All") list = list.filter(p => p._type === typeFilter);
     if (seriesFilter !== "All") list = list.filter(p => p.series === seriesFilter);
     if (hingeFilter !== "All") list = list.filter(p => p.hinge_style === hingeFilter);
-    if (pitchFilter !== "All") list = list.filter(p => `${p.pitch_in}"` === pitchFilter);
+    if (pitchFilter !== "All") list = list.filter(p => (p.pitch_in + '"') === pitchFilter);
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(p =>
@@ -437,87 +534,109 @@ export default function Catalog() {
     return list.sort((a, b) => {
       const na = parseFloat((a.series || "").replace(/\D/g, "")) || 0;
       const nb = parseFloat((b.series || "").replace(/\D/g, "")) || 0;
-      return na - nb || (a.style || "").localeCompare(b.style || "");
+      if (na !== nb) return na - nb;
+      return (a.style || "").localeCompare(b.style || "");
     });
   }, [allProducts, typeFilter, seriesFilter, hingeFilter, pitchFilter, search]);
 
-  // Group by series for display
-  const grouped = useMemo(() => {
-    if (typeFilter === "All" || seriesFilter !== "All") return null;
-    const map = {};
-    filtered.forEach(p => {
-      const key = p.series || "Other";
-      if (!map[key]) map[key] = [];
-      map[key].push(p);
-    });
-    return map;
-  }, [filtered, typeFilter, seriesFilter]);
-
-  const Sel = ({ value, onChange, options, label }) => (
-    <select value={value} onChange={e => onChange(e.target.value)}
-      style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #d1d5db", fontSize: 13,
-        color: NAVY, background: "#fff", cursor: "pointer", fontWeight: value !== "All" ? 700 : 400 }}>
-      <option value="All">{label}</option>
-      {options.filter(o => o !== "All").map(o => <option key={o} value={o}>{o}</option>)}
-    </select>
-  );
+  function Sel({ value, onChange, options, label }) {
+    return (
+      <select
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        style={{
+          padding: "8px 12px", borderRadius: 8, border: "1px solid #d1d5db",
+          fontSize: 13, color: NAVY, background: "#fff", cursor: "pointer",
+          fontWeight: value !== "All" ? 700 : 400
+        }}
+      >
+        <option value="All">{label}</option>
+        {options.filter(o => o !== "All").map(o => <option key={o} value={o}>{o}</option>)}
+      </select>
+    );
+  }
 
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
 
       {/* Top Bar */}
-      <div style={{ background: NAVY, padding: "0 24px", display: "flex", alignItems: "center",
-        justifyContent: "space-between", height: 56, boxShadow: "0 2px 8px rgba(0,0,0,.18)" }}>
+      <div style={{
+        background: NAVY, padding: "0 24px",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        height: 56, boxShadow: "0 2px 8px rgba(0,0,0,.18)"
+      }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <a href="/" style={{ color: "rgba(255,255,255,.5)", textDecoration: "none", fontSize: 12 }}>Home</a>
           <span style={{ color: "rgba(255,255,255,.3)", fontSize: 12 }}>/</span>
           <span style={{ color: "#fff", fontSize: 13, fontWeight: 700 }}>Product Catalog</span>
         </div>
         <div style={{ fontSize: 11, color: "rgba(255,255,255,.45)" }}>
-          {loading ? "Loading..." : `${filtered.length} products`}
+          {loading ? "Loading..." : filtered.length + " products"}
         </div>
       </div>
 
-      {/* Search + Filters */}
+      {/* Filters */}
       <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "14px 24px" }}>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", maxWidth: 1200, margin: "0 auto" }}>
           <input
-            value={search} onChange={e => setSearch(e.target.value)}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
             placeholder="Search series, style, application, material..."
-            style={{ flex: 1, minWidth: 240, padding: "8px 14px", borderRadius: 8,
-              border: "1px solid #d1d5db", fontSize: 13, outline: "none" }}
+            style={{
+              flex: 1, minWidth: 240, padding: "8px 14px",
+              borderRadius: 8, border: "1px solid #d1d5db", fontSize: 13, outline: "none"
+            }}
           />
           <Sel value={typeFilter} onChange={v => { setTypeFilter(v); setSeriesFilter("All"); }} options={types} label="All Types" />
           {seriesOptions.length > 2 && (
             <Sel value={seriesFilter} onChange={setSeriesFilter} options={seriesOptions} label="All Series" />
           )}
-          {hingeFilter !== "All" || hingeOptions.length > 2 ? (
+          {hingeOptions.length > 2 && (
             <Sel value={hingeFilter} onChange={setHingeFilter} options={hingeOptions} label="Hinge Style" />
-          ) : null}
+          )}
           {pitchOptions.length > 2 && (
             <Sel value={pitchFilter} onChange={setPitchFilter} options={pitchOptions} label="Pitch" />
           )}
           {(typeFilter !== "All" || seriesFilter !== "All" || hingeFilter !== "All" || pitchFilter !== "All" || search) && (
-            <button onClick={() => { setTypeFilter("All"); setSeriesFilter("All"); setHingeFilter("All"); setPitchFilter("All"); setSearch(""); }}
-              style={{ padding: "8px 14px", borderRadius: 8, border: "1px solid #d1d5db",
-                background: "#f9fafb", cursor: "pointer", fontSize: 13, color: "#6b7280" }}>
+            <button
+              onClick={() => {
+                setTypeFilter("All"); setSeriesFilter("All");
+                setHingeFilter("All"); setPitchFilter("All"); setSearch("");
+              }}
+              style={{
+                padding: "8px 14px", borderRadius: 8, border: "1px solid #d1d5db",
+                background: "#f9fafb", cursor: "pointer", fontSize: 13, color: "#6b7280"
+              }}
+            >
               Clear
             </button>
           )}
         </div>
       </div>
 
-      {/* Content */}
+      {/* Grid */}
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px" }}>
         {loading ? (
-          <div style={{ textAlign: "center", padding: 80, color: "#9ca3af", fontSize: 14 }}>Loading catalog...</div>
+          <div style={{ textAlign: "center", padding: 80, color: "#9ca3af", fontSize: 14 }}>
+            Loading catalog...
+          </div>
         ) : filtered.length === 0 ? (
-          <div style={{ textAlign: "center", padding: 80, color: "#9ca3af", fontSize: 14 }}>No products match your search.</div>
+          <div style={{ textAlign: "center", padding: 80, color: "#9ca3af", fontSize: 14 }}>
+            No products match your search.
+          </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 16 }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+            gap: 16
+          }}>
             {filtered.map((rec, i) => (
-              <Card key={rec.id || i} rec={rec} type={rec._type}
-                onClick={() => { setSelected(rec); setSelectedType(rec._type); }} />
+              <Card
+                key={rec.id || i}
+                rec={rec}
+                type={rec._type}
+                onClick={() => { setSelected(rec); setSelectedType(rec._type); }}
+              />
             ))}
           </div>
         )}
