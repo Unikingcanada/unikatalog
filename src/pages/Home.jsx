@@ -624,6 +624,7 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand }) {
 
 function TypeGrid({ types, counts, onSelect }) {
   const [hovered, setHovered] = useState(null);
+  const [hovDH, setHovDH] = useState(false);
   return (
     <div>
       <div style={{ marginBottom: 28 }}>
@@ -631,6 +632,24 @@ function TypeGrid({ types, counts, onSelect }) {
         <div style={{ fontSize: 14, color: C.muted }}>Select a product category to browse specifications</div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
+        {/* Donghua Chain — dedicated page card */}
+        <div onClick={() => window.open("/DonghuaChain", "_self")}
+          onMouseEnter={() => setHovDH(true)} onMouseLeave={() => setHovDH(false)}
+          style={{ background: hovDH ? "#1d3557" : C.bgCard, border: "1px solid " + (hovDH ? "#1d3557" : C.border),
+            borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s",
+            display: "flex", flexDirection: "column", gap: 6 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: hovDH ? "#fff" : C.text }}>Donghua Industrial Chain</div>
+            <span style={{ background: hovDH ? "rgba(255,255,255,.15)" : "#eff6ff", color: hovDH ? "#fff" : "#1d4ed8",
+              fontSize: 9, fontWeight: 800, padding: "1px 6px", borderRadius: 99, letterSpacing: "0.3px" }}>389</span>
+          </div>
+          <div style={{ fontSize: 12, color: hovDH ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>
+            Drive, conveyor, engineering and agricultural chains — full dimensional specifications
+          </div>
+          <div style={{ fontSize: 11, color: hovDH ? "rgba(255,255,255,0.45)" : "#3b82f6", marginTop: 4, fontWeight: 600 }}>
+            Open Chain Catalog →
+          </div>
+        </div>
         {types.map(t => (
           <div key={t.key} onClick={() => onSelect(t.key)} onMouseEnter={() => setHovered(t.key)} onMouseLeave={() => setHovered(null)}
             style={{ background: hovered === t.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === t.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
