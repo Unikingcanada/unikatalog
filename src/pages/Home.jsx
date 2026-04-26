@@ -664,9 +664,9 @@ export default function Home() {
     async function load() {
       try {
         const [cat, elev, uni] = await Promise.all([
-          CatalogProduct.filter({}, { limit: 500 }),
-          ElevatorBucket.filter({}, { limit: 500 }),
-          UniCatalog.filter({}, { limit: 500 }),
+          CatalogProduct.list(),
+          ElevatorBucket.list(),
+          UniCatalog.list(),
         ]);
         setAllData([
           ...cat.map(normalizeCatalogProduct),
