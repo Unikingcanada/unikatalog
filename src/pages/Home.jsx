@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { UniCatalog, CatalogProduct, ElevatorBucket } from "@/api/entities";
+import { UniCatalog, CatalogProduct, ElevatorBucket, DonghuaChain } from "@/api/entities";
 
 const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics"]);
 const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket"]);
@@ -111,6 +111,46 @@ function normalizeUniCatalog(r) {
     catalog_url: r.catalog_url || "", tech_doc_url: r.tech_doc_url || "",
     image_url: r.image_url || "", belt_data: null, sprocket_data: null,
     specs: { "Style": r.style || null, "Application": r.application || null, "Materials": r.materials || null, "Duty": r.duty || null, ...cleanSpecs },
+  };
+}
+
+function normalizeDonghuaChain(r) {
+  const chainTypeMap = {
+    "Drive Chain": "ANSI/BS Chain",
+    "Conveyor Chain": "Conveyor Chain",
+    "Engineering Chain": "Engineered Chain",
+    "Agricultural Chain": "Engineered Chain",
+  };
+  const type = chainTypeMap[r.chain_type] || "ANSI/BS Chain";
+  const displayNo = r.ansi_no || r.bs_no || r.iso_no || r.chain_no || "";
+  const specs = {};
+  if (r.pitch_mm) specs["Pitch (mm)"] = r.pitch_mm;
+  if (r.roller_dia_mm) specs["Roller Dia. (mm)"] = r.roller_dia_mm;
+  if (r.inner_width_mm) specs["Inner Width (mm)"] = r.inner_width_mm;
+  if (r.pin_dia_mm) specs["Pin Dia. (mm)"] = r.pin_dia_mm;
+  if (r.pin_length_mm) specs["Pin Length (mm)"] = r.pin_length_mm;
+  if (r.plate_height_mm) specs["Plate Height (mm)"] = r.plate_height_mm;
+  if (r.plate_thickness_mm) specs["Plate Thickness (mm)"] = r.plate_thickness_mm;
+  if (r.transverse_pitch_mm) specs["Transverse Pitch (mm)"] = r.transverse_pitch_mm;
+  if (r.tensile_strength_kn) specs["Min Tensile (kN)"] = r.tensile_strength_kn;
+  if (r.tensile_strength_lbf) specs["Min Tensile (lbf)"] = r.tensile_strength_lbf;
+  if (r.weight_kg_m) specs["Weight (kg/m)"] = r.weight_kg_m;
+  const altNos = [r.ansi_no, r.bs_no, r.iso_no, r.chain_no].filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i).join(" / ");
+  return {
+    id: r.id, _source: "donghuachain", type,
+    brand: "", series: displayNo,
+    style: r.series || r.chain_type || "",
+    category: r.chain_type || "",
+    application: r.application || "",
+    materials: r.materials || "Carbon Steel",
+    material: r.materials || "Carbon Steel",
+    duty: r.chain_type === "Engineering Chain" || r.chain_type === "Agricultural Chain" ? "Heavy" : "",
+    notes: [r.notes, altNos ? "Cross-ref: " + altNos : ""].filter(Boolean).join(" | "),
+    catalog_url: r.catalog_url || "",
+    tech_doc_url: "",
+    image_url: "",
+    belt_data: null, sprocket_data: null,
+    specs: { "Chain No.": displayNo || null, "Series": r.series || null, "Type": r.chain_type || null, "Strands": r.strands || null, "Materials": r.materials || null, ...specs },
   };
 }
 
@@ -624,7 +664,6 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand }) {
 
 function TypeGrid({ types, counts, onSelect }) {
   const [hovered, setHovered] = useState(null);
-  const [hovDH, setHovDH] = useState(false);
   return (
     <div>
       <div style={{ marginBottom: 28 }}>
@@ -632,24 +671,7 @@ function TypeGrid({ types, counts, onSelect }) {
         <div style={{ fontSize: 14, color: C.muted }}>Select a product category to browse specifications</div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
-        {/* Donghua Chain — dedicated page card */}
-        <div onClick={() => window.open("/DonghuaChain", "_self")}
-          onMouseEnter={() => setHovDH(true)} onMouseLeave={() => setHovDH(false)}
-          style={{ background: hovDH ? "#1d3557" : C.bgCard, border: "1px solid " + (hovDH ? "#1d3557" : C.border),
-            borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s",
-            display: "flex", flexDirection: "column", gap: 6 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: hovDH ? "#fff" : C.text }}>Donghua Industrial Chain</div>
-            <span style={{ background: hovDH ? "rgba(255,255,255,.15)" : "#eff6ff", color: hovDH ? "#fff" : "#1d4ed8",
-              fontSize: 9, fontWeight: 800, padding: "1px 6px", borderRadius: 99, letterSpacing: "0.3px" }}>389</span>
-          </div>
-          <div style={{ fontSize: 12, color: hovDH ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>
-            Drive, conveyor, engineering and agricultural chains — full dimensional specifications
-          </div>
-          <div style={{ fontSize: 11, color: hovDH ? "rgba(255,255,255,0.45)" : "#3b82f6", marginTop: 4, fontWeight: 600 }}>
-            Open Chain Catalog →
-          </div>
-        </div>
+
         {types.map(t => (
           <div key={t.key} onClick={() => onSelect(t.key)} onMouseEnter={() => setHovered(t.key)} onMouseLeave={() => setHovered(null)}
             style={{ background: hovered === t.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === t.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
@@ -729,11 +751,12 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const [cat, elev, uni] = await Promise.all([CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list()]);
+        const [cat, elev, uni, dh] = await Promise.all([CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list(), DonghuaChain.list()]);
         setAllData([
           ...cat.map(normalizeCatalogProduct),
           ...elev.map(normalizeElevatorBucket),
           ...uni.map(normalizeUniCatalog),
+          ...dh.map(normalizeDonghuaChain),
         ]);
       } catch (e) { console.error("Catalog load error:", e); }
       finally { setLoading(false); }

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { CatalogProduct, UniCatalog, ElevatorBucket } from "@/api/entities";
+import { CatalogProduct, UniCatalog, ElevatorBucket, DonghuaChain } from "@/api/entities";
 
 const NAVY = "#1a3a5c";
 
@@ -416,12 +416,32 @@ export default function Catalog() {
   const [sel, setSel] = useState(null);
 
   useEffect(() => {
-    Promise.all([CatalogProduct.list(), UniCatalog.list(), ElevatorBucket.list()])
-      .then(([intralox, uni, buckets]) => {
+    Promise.all([CatalogProduct.list(), UniCatalog.list(), ElevatorBucket.list(), DonghuaChain.list()])
+      .then(([intralox, uni, buckets, dh]) => {
+        const chainTypeMap = { "Drive Chain": "ANSI/BS Chain", "Conveyor Chain": "Conveyor Chain", "Engineering Chain": "Engineered Chain", "Agricultural Chain": "Engineered Chain" };
         setAll([
           ...intralox.map(r => ({ ...r, _type: r.category || "Modular Plastic Belt" })),
           ...uni.map(r => ({ ...r, _type: r.product_type })),
           ...buckets.map(r => ({ ...r, _type: getBucketType(r) })),
+          ...dh.map(r => ({
+            ...r,
+            _type: chainTypeMap[r.chain_type] || "ANSI/BS Chain",
+            series: r.ansi_no || r.bs_no || r.iso_no || r.chain_no || "",
+            style: r.series || r.chain_type || "",
+            materials: r.materials || "Carbon Steel",
+            vendor: "",
+            notes: r.notes || "",
+            catalog_url: r.catalog_url || "",
+            image_url: "",
+            key_specs: JSON.stringify(Object.fromEntries([
+              r.pitch_mm && ["Pitch (mm)", r.pitch_mm],
+              r.roller_dia_mm && ["Roller Dia. (mm)", r.roller_dia_mm],
+              r.inner_width_mm && ["Inner Width (mm)", r.inner_width_mm],
+              r.pin_dia_mm && ["Pin Dia. (mm)", r.pin_dia_mm],
+              r.tensile_strength_kn && ["Min Tensile (kN)", r.tensile_strength_kn],
+              r.weight_kg_m && ["Weight (kg/m)", r.weight_kg_m],
+            ].filter(Boolean))),
+          })),
         ]);
       })
       .catch(e => console.error(e))
