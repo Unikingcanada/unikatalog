@@ -11,3 +11,4 @@ export const uploadBeltImages = base44.functions.uploadBeltImages;
 export const bulkUpdateCatalog = base44.functions.bulkUpdateCatalog;
 export const oppProductHistory = base44.functions.oppProductHistory;
 export const bulkInsertMacRelated = base44.functions.bulkInsertMacRelated;
+export const pushChainRelated = base44.functions.pushChainRelated;

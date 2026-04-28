@@ -476,6 +476,9 @@ function RelatedItemModal({ product: p, onClose }) {
   const UNIKING_DARK = "#1a1a1a";
   const UNIKING_BORDER = "#e0e0e0";
   const UNIKING_GRAY = "#f5f5f5";
+  // Normalize: item data uses 'image', DB records use 'product_image'
+  const mainImage = p.product_image || p.image;
+  const diagImage = p.diagram_image !== mainImage ? p.diagram_image : null;
 
   return (
     <div
@@ -519,16 +522,26 @@ function RelatedItemModal({ product: p, onClose }) {
         {/* Modal Body */}
         <div style={{ padding: "24px" }}>
           {/* Image + description row */}
-          <div style={{ display: "grid", gridTemplateColumns: p.product_image ? "1fr 1fr" : "1fr", gap: 24, marginBottom: 24 }}>
-            {p.product_image && (
+          <div style={{ display: "grid", gridTemplateColumns: mainImage ? "1fr 1fr" : "1fr", gap: 24, marginBottom: 24 }}>
+            {mainImage && (
               <div style={{ background: UNIKING_GRAY, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, minHeight: 160 }}>
-                <img src={p.product_image} alt={p.part_number} style={{ maxWidth: "100%", maxHeight: 180, objectFit: "contain" }} />
+                <img src={mainImage} alt={p.part_number} style={{ maxWidth: "100%", maxHeight: 180, objectFit: "contain" }} />
               </div>
             )}
             <div>
               {p.description && (
                 <div style={{ fontSize: 14, color: "#444", lineHeight: 1.7, marginBottom: 12, borderLeft: `3px solid ${UNIKING_RED}`, paddingLeft: 12 }}>
                   {p.description}
+                </div>
+              )}
+              {p.name && !p.description && (
+                <div style={{ fontSize: 14, color: "#444", lineHeight: 1.7, marginBottom: 12, borderLeft: `3px solid ${UNIKING_RED}`, paddingLeft: 12 }}>
+                  {p.name}
+                </div>
+              )}
+              {p.category && (
+                <div style={{ fontSize: 12, color: "#777", marginBottom: 6 }}>
+                  <strong>Category:</strong> {p.category}
                 </div>
               )}
               {p.industry && (
@@ -547,10 +560,10 @@ function RelatedItemModal({ product: p, onClose }) {
           </div>
 
           {/* Diagram */}
-          {p.diagram_image && p.diagram_image !== p.product_image && (
+          {diagImage && (
             <div style={{ textAlign: "center", marginBottom: 24, padding: 16, border: `1px solid ${UNIKING_BORDER}`, borderRadius: 8 }}>
               <div style={{ fontSize: 11, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Technical Drawing</div>
-              <img src={p.diagram_image} alt="diagram" style={{ maxWidth: "100%", maxHeight: 160, objectFit: "contain" }} />
+              <img src={diagImage} alt="diagram" style={{ maxWidth: "100%", maxHeight: 160, objectFit: "contain" }} />
             </div>
           )}
 
