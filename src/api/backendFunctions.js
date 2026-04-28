@@ -15,3 +15,5 @@ export const pushChainRelated = base44.functions.pushChainRelated;
 export const updatePinSpecs = base44.functions.updatePinSpecs;
 export const upgradeAttachmentImages = base44.functions.upgradeAttachmentImages;
 export const updateAttachmentImages = base44.functions.updateAttachmentImages;
+export const updateAttachmentSpecs = base44.functions.updateAttachmentSpecs;
+export const bulkUpdateRecords = base44.functions.bulkUpdateRecords;

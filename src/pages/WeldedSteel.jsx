@@ -139,30 +139,26 @@ function ImageCarousel({ images }) {
       {/* Main image */}
       <div
         onClick={() => setLightbox(true)}
-        style={{ background: UNIKING_GRAY, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, minHeight: 260, cursor: "zoom-in", position: "relative" }}
+        style={{ background: UNIKING_GRAY, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, minHeight: 220, cursor: "zoom-in", position: "relative" }}
       >
-        <img src={imgs[idx]} alt="" style={{ maxWidth: "100%", maxHeight: 280, objectFit: "contain" }} />
+        <img src={imgs[idx]} alt="" style={{ maxWidth: "100%", maxHeight: 240, objectFit: "contain" }} />
         {imgs.length > 1 && (
-          <div style={{ position: "absolute", bottom: 10, right: 12, fontSize: 12, color: "#666", background: "rgba(255,255,255,0.9)", borderRadius: 4, padding: "3px 8px", fontWeight: 600 }}>
+          <div style={{ position: "absolute", bottom: 10, right: 12, fontSize: 11, color: "#999", background: "rgba(255,255,255,0.8)", borderRadius: 4, padding: "2px 6px" }}>
             {idx + 1} / {imgs.length}
           </div>
         )}
-        <div style={{ position: "absolute", bottom: 10, left: 12, fontSize: 11, color: "#999", background: "rgba(255,255,255,0.8)", borderRadius: 4, padding: "2px 6px" }}>
-          Click to enlarge
-        </div>
       </div>
       {/* Thumbnails */}
       {imgs.length > 1 && (
-        <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
+        <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
           {imgs.map((src, i) => (
             <div
               key={i}
               onClick={() => setIdx(i)}
               style={{
-                width: 100, height: 90, border: `2px solid ${i === idx ? UNIKING_RED : UNIKING_BORDER}`,
-                borderRadius: 8, overflow: "hidden", cursor: "pointer", background: UNIKING_GRAY,
-                display: "flex", alignItems: "center", justifyContent: "center", padding: 8, flexShrink: 0,
-                boxShadow: i === idx ? "0 0 0 1px " + UNIKING_RED : "none",
+                width: 60, height: 60, border: `2px solid ${i === idx ? UNIKING_RED : UNIKING_BORDER}`,
+                borderRadius: 6, overflow: "hidden", cursor: "pointer", background: UNIKING_GRAY,
+                display: "flex", alignItems: "center", justifyContent: "center", padding: 4, flexShrink: 0
               }}
             >
               <img src={src} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
@@ -333,13 +329,21 @@ function ProductDetail({ product: p, onBack, activeRelTab, setActiveRelTab, acti
 }
 
 // ---- RELATED ITEM MODAL ----
-function RelatedItemModal({ product: p, relType, onClose }) {
+function RelatedItemModal({ product: p, relType, originalPartNumber, onClose }) {
   const [activeSpecTab, setActiveSpecTab] = useState("basic");
   const mainImage = p.product_image || p.image;
   const diagImage = (p.diagram_image && p.diagram_image !== mainImage) ? p.diagram_image : null;
   const images = [mainImage, diagImage].filter(Boolean).filter((v, i, a) => a.indexOf(v) === i);
-  const hasSpecs = p.basic_headers?.length > 0 && p.basic_rows?.length > 0;
-  const hasMoreSpecs = p.more_headers?.length > 0 && p.more_rows?.length > 0;
+  // For sprockets: filter to only the row matching the clicked part number
+  const filteredBasicRows = (relType === "sprockets" && originalPartNumber && p.basic_rows?.length > 0)
+    ? p.basic_rows.filter(row => row[0] && row[0].toLowerCase() === originalPartNumber.toLowerCase())
+    : p.basic_rows;
+  const filteredMoreRows = (relType === "sprockets" && originalPartNumber && p.more_rows?.length > 0)
+    ? p.more_rows.filter(row => row[0] && row[0].toLowerCase() === originalPartNumber.toLowerCase())
+    : p.more_rows;
+  const displayProduct = { ...p, basic_rows: filteredBasicRows?.length > 0 ? filteredBasicRows : p.basic_rows, more_rows: filteredMoreRows?.length > 0 ? filteredMoreRows : p.more_rows };
+  const hasSpecs = p.basic_headers?.length > 0 && filteredBasicRows?.length > 0;
+  const hasMoreSpecs = p.more_headers?.length > 0 && filteredMoreRows?.length > 0;
 
   const typeLabel = relType === "pins" ? "Connecting Pin" : relType === "sprockets" ? "Sprocket" : "Attachment";
 
@@ -366,14 +370,10 @@ function RelatedItemModal({ product: p, relType, onClose }) {
 
         {/* Body */}
         <div style={{ padding: "28px" }}>
-          {/* Image + info */}
-          <div style={{ display: "flex", gap: 24, marginBottom: 24, flexWrap: "wrap" }}>
-            {images.length > 0 && (
-              <div style={{ flex: "0 0 260px", minWidth: 200 }}>
-                <ImageCarousel images={images} />
-              </div>
-            )}
-            <div style={{ flex: 1, minWidth: 200, display: "flex", flexDirection: "column", gap: 12 }}>
+          {/* Image carousel + info */}
+          <div style={{ display: "grid", gridTemplateColumns: images.length > 0 ? "1fr 1fr" : "1fr", gap: 28, marginBottom: 28 }}>
+            {images.length > 0 && <ImageCarousel images={images} />}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {(p.description || p.name) && (
                 <div style={{ fontSize: 14, color: "#333", lineHeight: 1.8, borderLeft: `3px solid ${UNIKING_RED}`, paddingLeft: 14 }}>
                   {p.description || p.name}
@@ -391,7 +391,7 @@ function RelatedItemModal({ product: p, relType, onClose }) {
               )}
               {!hasSpecs && !p.description && !p.industry && !p.features?.length && (
                 <div style={{ fontSize: 13, color: "#888", fontStyle: "italic", paddingTop: 8 }}>
-                  Contact Uniking Canada for full specifications.
+                  Contact Uniking Canada for detailed specifications on this item.
                 </div>
               )}
             </div>
@@ -411,21 +411,14 @@ function RelatedItemModal({ product: p, relType, onClose }) {
               )}
               {(!hasMoreSpecs || activeSpecTab === "basic") && hasSpecs && (
                 <div>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 10 }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#999" }}>
-                      {relType === "sprockets" ? "Available Sizes" : "Basic Specifications"}
-                    </div>
-                    {relType === "sprockets" && (
-                      <div style={{ fontSize: 12, color: "#aaa" }}>— all tooth counts for this chain series</div>
-                    )}
-                  </div>
-                  <div style={{ overflowX: "auto" }}><SpecTable headers={p.basic_headers} rows={p.basic_rows} /></div>
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#999", marginBottom: 10 }}>Basic Specifications</div>
+                  <div style={{ overflowX: "auto" }}><SpecTable headers={p.basic_headers} rows={displayProduct.basic_rows} /></div>
                 </div>
               )}
               {hasMoreSpecs && activeSpecTab === "more" && (
                 <div>
                   <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#999", marginBottom: 10 }}>Additional Specifications</div>
-                  <div style={{ overflowX: "auto" }}><SpecTable headers={p.more_headers} rows={p.more_rows} /></div>
+                  <div style={{ overflowX: "auto" }}><SpecTable headers={p.more_headers} rows={displayProduct.more_rows} /></div>
                 </div>
               )}
             </div>
@@ -467,7 +460,8 @@ export default function WeldedSteel() {
     // Show immediately with what we already have
     setRelatedModal({
       product: { ...item, product_image: item.product_image || item.image, diagram_image: item.diagram_image || item.image },
-      relType
+      relType,
+      originalPartNumber: relType === "sprockets" ? item.part_number : null
     });
 
     if (!item.slug) return;
@@ -489,7 +483,8 @@ export default function WeldedSteel() {
             product_image: dbRec.product_image || item.image,
             diagram_image: dbRec.diagram_image || item.image,
           },
-          relType
+          relType,
+          originalPartNumber: relType === "sprockets" ? item.part_number : null
         });
       }
     } catch (e) {
@@ -620,6 +615,7 @@ export default function WeldedSteel() {
         <RelatedItemModal
           product={relatedModal.product}
           relType={relatedModal.relType}
+          originalPartNumber={relatedModal.originalPartNumber}
           onClose={() => setRelatedModal(null)}
         />
       )}
