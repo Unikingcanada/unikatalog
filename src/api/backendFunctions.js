@@ -13,3 +13,5 @@ export const oppProductHistory = base44.functions.oppProductHistory;
 export const bulkInsertMacRelated = base44.functions.bulkInsertMacRelated;
 export const pushChainRelated = base44.functions.pushChainRelated;
 export const updatePinSpecs = base44.functions.updatePinSpecs;
+export const upgradeAttachmentImages = base44.functions.upgradeAttachmentImages;
+export const updateAttachmentImages = base44.functions.updateAttachmentImages;

@@ -139,26 +139,30 @@ function ImageCarousel({ images }) {
       {/* Main image */}
       <div
         onClick={() => setLightbox(true)}
-        style={{ background: UNIKING_GRAY, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, minHeight: 220, cursor: "zoom-in", position: "relative" }}
+        style={{ background: UNIKING_GRAY, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, minHeight: 260, cursor: "zoom-in", position: "relative" }}
       >
-        <img src={imgs[idx]} alt="" style={{ maxWidth: "100%", maxHeight: 240, objectFit: "contain" }} />
+        <img src={imgs[idx]} alt="" style={{ maxWidth: "100%", maxHeight: 280, objectFit: "contain" }} />
         {imgs.length > 1 && (
-          <div style={{ position: "absolute", bottom: 10, right: 12, fontSize: 11, color: "#999", background: "rgba(255,255,255,0.8)", borderRadius: 4, padding: "2px 6px" }}>
+          <div style={{ position: "absolute", bottom: 10, right: 12, fontSize: 12, color: "#666", background: "rgba(255,255,255,0.9)", borderRadius: 4, padding: "3px 8px", fontWeight: 600 }}>
             {idx + 1} / {imgs.length}
           </div>
         )}
+        <div style={{ position: "absolute", bottom: 10, left: 12, fontSize: 11, color: "#999", background: "rgba(255,255,255,0.8)", borderRadius: 4, padding: "2px 6px" }}>
+          Click to enlarge
+        </div>
       </div>
       {/* Thumbnails */}
       {imgs.length > 1 && (
-        <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+        <div style={{ display: "flex", gap: 10, marginTop: 12 }}>
           {imgs.map((src, i) => (
             <div
               key={i}
               onClick={() => setIdx(i)}
               style={{
-                width: 60, height: 60, border: `2px solid ${i === idx ? UNIKING_RED : UNIKING_BORDER}`,
-                borderRadius: 6, overflow: "hidden", cursor: "pointer", background: UNIKING_GRAY,
-                display: "flex", alignItems: "center", justifyContent: "center", padding: 4, flexShrink: 0
+                width: 100, height: 90, border: `2px solid ${i === idx ? UNIKING_RED : UNIKING_BORDER}`,
+                borderRadius: 8, overflow: "hidden", cursor: "pointer", background: UNIKING_GRAY,
+                display: "flex", alignItems: "center", justifyContent: "center", padding: 8, flexShrink: 0,
+                boxShadow: i === idx ? "0 0 0 1px " + UNIKING_RED : "none",
               }}
             >
               <img src={src} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
@@ -362,10 +366,14 @@ function RelatedItemModal({ product: p, relType, onClose }) {
 
         {/* Body */}
         <div style={{ padding: "28px" }}>
-          {/* Image carousel + info */}
-          <div style={{ display: "grid", gridTemplateColumns: images.length > 0 ? "1fr 1fr" : "1fr", gap: 28, marginBottom: 28 }}>
-            {images.length > 0 && <ImageCarousel images={images} />}
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {/* Image + info */}
+          <div style={{ display: "flex", gap: 24, marginBottom: 24, flexWrap: "wrap" }}>
+            {images.length > 0 && (
+              <div style={{ flex: "0 0 260px", minWidth: 200 }}>
+                <ImageCarousel images={images} />
+              </div>
+            )}
+            <div style={{ flex: 1, minWidth: 200, display: "flex", flexDirection: "column", gap: 12 }}>
               {(p.description || p.name) && (
                 <div style={{ fontSize: 14, color: "#333", lineHeight: 1.8, borderLeft: `3px solid ${UNIKING_RED}`, paddingLeft: 14 }}>
                   {p.description || p.name}
@@ -383,7 +391,7 @@ function RelatedItemModal({ product: p, relType, onClose }) {
               )}
               {!hasSpecs && !p.description && !p.industry && !p.features?.length && (
                 <div style={{ fontSize: 13, color: "#888", fontStyle: "italic", paddingTop: 8 }}>
-                  Contact Uniking Canada for detailed specifications on this item.
+                  Contact Uniking Canada for full specifications.
                 </div>
               )}
             </div>
@@ -403,7 +411,14 @@ function RelatedItemModal({ product: p, relType, onClose }) {
               )}
               {(!hasMoreSpecs || activeSpecTab === "basic") && hasSpecs && (
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#999", marginBottom: 10 }}>Basic Specifications</div>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 10 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#999" }}>
+                      {relType === "sprockets" ? "Available Sizes" : "Basic Specifications"}
+                    </div>
+                    {relType === "sprockets" && (
+                      <div style={{ fontSize: 12, color: "#aaa" }}>— all tooth counts for this chain series</div>
+                    )}
+                  </div>
                   <div style={{ overflowX: "auto" }}><SpecTable headers={p.basic_headers} rows={p.basic_rows} /></div>
                 </div>
               )}
