@@ -3,6 +3,12 @@ import { UniCatalog, CatalogProduct, ElevatorBucket, DonghuaChain } from "@/api/
 
 const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics"]);
 const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket"]);
+const EXTERNAL_ROUTES = {
+  "Pintle Chain": "/SpecialChains",
+  "Long Link Chain": "/SpecialChains",
+  "Special Application Chain": "/SpecialChains",
+  "Welded Steel Chain": "/WeldedSteel",
+};
 
 const PRODUCT_TYPES = [
   { key: "Modular Belt", label: "Modular Plastic Belting", description: "Straight-running, radius, spiral and side-flexing modular plastic belt systems", filters: ["category", "style", "pitch_in", "hinge_style", "materials"] },
@@ -22,6 +28,9 @@ const PRODUCT_TYPES = [
   { key: "Conveyor Roller", label: "Conveyor Rollers", description: "Standard, lagging, motorized drive and specialty conveyor rollers", filters: ["style", "duty"] },
   { key: "Monitoring System", label: "4B Electronics & Monitoring", description: "Bucket elevator and conveyor safety monitoring systems and sensors", filters: ["style"] },
   { key: "Magnetic Conveyor", label: "Magnetic Conveyor", description: "Magnetic conveyor systems for ferrous material handling", filters: ["style"] },
+  { key: "Pintle Chain", label: "Steel Pintle Chain", description: "Open barrel pintle chains for spreaders, feeders, hay handling and forest product applications", filters: [] },
+  { key: "Long Link Chain", label: "Alloy Steel Long Link Chain", description: "Heavy-duty long link chains for car wash conveyors and forest product applications", filters: [] },
+  { key: "Special Application Chain", label: "Special Application Chain", description: "DLI scanner, waste water, paver and double-flex chains for specialized conveying needs", filters: [] },
 ];
 
 const TYPE_MAP = Object.fromEntries(PRODUCT_TYPES.map(t => [t.key, t]));
@@ -725,7 +734,7 @@ function TypeGrid({ types, counts, onSelect }) {
             style={{ background: hovered === t.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === t.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
             <div style={{ fontSize: 14, fontWeight: 700, color: hovered === t.key ? "#fff" : C.text }}>{t.label}</div>
             <div style={{ fontSize: 12, color: hovered === t.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{t.description}</div>
-            <div style={{ fontSize: 11, color: hovered === t.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>{counts[t.key] || 0} products</div>
+            <div style={{ fontSize: 11, color: hovered === t.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>{counts[t.key] ? `${counts[t.key]} products` : "View →"}</div>
           </div>
         ))}
       </div>
@@ -813,13 +822,16 @@ export default function Home() {
   }, []);
 
   const typeCounts = useMemo(() => { const c = {}; for (const p of allData) c[p.type] = (c[p.type] || 0) + 1; return c; }, [allData]);
-  const availableTypes = useMemo(() => PRODUCT_TYPES.filter(t => (typeCounts[t.key] || 0) > 0), [typeCounts]);
+  const availableTypes = useMemo(() => PRODUCT_TYPES.filter(t => (typeCounts[t.key] || 0) > 0 || !!EXTERNAL_ROUTES[t.key]), [typeCounts]);
   const typeProducts = useMemo(() => allData.filter(p => p.type === selectedType), [allData, selectedType]);
   const viewProducts = useMemo(() => selectedBrand ? typeProducts.filter(p => p.brand === selectedBrand) : typeProducts, [typeProducts, selectedBrand]);
   const isBrandGated = selectedType && BRAND_GATED.has(selectedType);
   const showBrand = selectedType && SHOW_BRAND.has(selectedType) && !selectedBrand;
 
-  function selectType(typeKey) { setSelectedType(typeKey); setSelectedBrand(null); setView(BRAND_GATED.has(typeKey) ? "brands" : "products"); }
+  function selectType(typeKey) {
+    if (EXTERNAL_ROUTES[typeKey]) { window.location.href = EXTERNAL_ROUTES[typeKey]; return; }
+    setSelectedType(typeKey); setSelectedBrand(null); setView(BRAND_GATED.has(typeKey) ? "brands" : "products");
+  }
   function selectBrand(brand) { setSelectedBrand(brand); setView("products"); }
   function navTo(level) {
     if (level === 0) { setView("home"); setSelectedType(null); setSelectedBrand(null); }
