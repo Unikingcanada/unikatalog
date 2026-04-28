@@ -21,6 +21,8 @@ export default function WeldedSteel() {
   const [loading, setLoading] = useState(false);
   const [activeRelTab, setActiveRelTab] = useState("pins");
   const [activeSpecTab, setActiveSpecTab] = useState("basic");
+  // Related item modal state
+  const [relatedModalProduct, setRelatedModalProduct] = useState(null);
 
   useEffect(() => {
     if (activeSubcat) {
@@ -36,6 +38,19 @@ export default function WeldedSteel() {
   }, [activeSubcat]);
 
   const subcatInfo = SUBCATEGORIES.find(s => s.key === activeSubcat);
+
+  // Handler: look up a related item by slug and open modal
+  const handleRelatedClick = async (item) => {
+    if (!item.slug) return;
+    try {
+      const results = await MacChainProduct.filter({ slug: item.slug });
+      if (results && results.length > 0) {
+        setRelatedModalProduct(results[0]);
+      }
+    } catch (e) {
+      console.error("Failed to load related product:", e);
+    }
+  };
 
   return (
     <div style={{ fontFamily: "'Segoe UI', Arial, sans-serif", minHeight: "100vh", background: "#fff", color: UNIKING_DARK }}>
@@ -116,7 +131,6 @@ export default function WeldedSteel() {
         {/* Product List View */}
         {activeSubcat && !selectedProduct && (
           <div style={{ paddingTop: 32 }}>
-            {/* Category header */}
             <div style={{ marginBottom: 24, paddingBottom: 16, borderBottom: `1px solid ${UNIKING_BORDER}` }}>
               <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 6 }}>{subcatInfo?.label}</div>
               <div style={{ fontSize: 14, color: "#666", lineHeight: 1.6 }}>{subcatInfo?.desc}</div>
@@ -129,7 +143,6 @@ export default function WeldedSteel() {
               <div style={{ textAlign: "center", padding: "60px 0", color: "#999" }}>Loading products...</div>
             ) : (
               <>
-                {/* Spec table overview */}
                 {products.length > 0 && products[0].basic_headers?.length > 0 && (
                   <div style={{ overflowX: "auto", marginBottom: 32 }}>
                     <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
@@ -159,7 +172,6 @@ export default function WeldedSteel() {
                   </div>
                 )}
 
-                {/* Product cards */}
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
                   {products.map(p => (
                     <div
@@ -177,9 +189,9 @@ export default function WeldedSteel() {
                       <div style={{ padding: "14px 16px" }}>
                         <div style={{ fontWeight: 800, fontSize: 16, color: UNIKING_RED, marginBottom: 4 }}>{p.part_number}</div>
                         {p.basic_rows?.[0]?.[1] && (
-                          <div style={{ fontSize: 12, color: "#666" }}>Pitch: {p.basic_rows[0][1]}"</div>
+                          <div style={{ fontSize: 11, color: "#999" }}>Pitch: {p.basic_rows[0][1]}"</div>
                         )}
-                        <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                        <div style={{ marginTop: 8, display: "flex", gap: 4, flexWrap: "wrap" }}>
                           {p.related_pins?.length > 0 && <span style={{ fontSize: 10, background: "#e8f4fd", color: "#1565c0", padding: "2px 6px", borderRadius: 10, fontWeight: 600 }}>{p.related_pins.length} PIN{p.related_pins.length > 1 ? "S" : ""}</span>}
                           {p.related_attachments?.length > 0 && <span style={{ fontSize: 10, background: "#e8f5e9", color: "#2e7d32", padding: "2px 6px", borderRadius: 10, fontWeight: 600 }}>{p.related_attachments.length} ATT</span>}
                           {p.related_sprockets?.length > 0 && <span style={{ fontSize: 10, background: "#fce4ec", color: "#c62828", padding: "2px 6px", borderRadius: 10, fontWeight: 600 }}>{p.related_sprockets.length} SPR</span>}
@@ -202,14 +214,23 @@ export default function WeldedSteel() {
             setActiveRelTab={setActiveRelTab}
             activeSpecTab={activeSpecTab}
             setActiveSpecTab={setActiveSpecTab}
+            onRelatedClick={handleRelatedClick}
           />
         )}
       </div>
+
+      {/* Related Item Modal */}
+      {relatedModalProduct && (
+        <RelatedItemModal
+          product={relatedModalProduct}
+          onClose={() => setRelatedModalProduct(null)}
+        />
+      )}
     </div>
   );
 }
 
-function ProductDetail({ product: p, onBack, activeRelTab, setActiveRelTab, activeSpecTab, setActiveSpecTab }) {
+function ProductDetail({ product: p, onBack, activeRelTab, setActiveRelTab, activeSpecTab, setActiveSpecTab, onRelatedClick }) {
   const UNIKING_RED = "#C41E3A";
   const UNIKING_DARK = "#1a1a1a";
   const UNIKING_BORDER = "#e0e0e0";
@@ -351,7 +372,7 @@ function ProductDetail({ product: p, onBack, activeRelTab, setActiveRelTab, acti
                 ) : (
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 16 }}>
                     {tab.items.map((item, i) => (
-                      <RelatedCard key={i} item={item} />
+                      <RelatedCard key={i} item={item} onClick={() => onRelatedClick(item)} />
                     ))}
                   </div>
                 )}
@@ -393,38 +414,34 @@ function SpecTable({ headers, rows }) {
   );
 }
 
-
-function RelatedCard({ item }) {
+function RelatedCard({ item, onClick }) {
   const UNIKING_RED = "#C41E3A";
   const UNIKING_BORDER = "#e0e0e0";
   const UNIKING_GRAY = "#f5f5f5";
-  const url = item.slug ? `https://macchain.com/products/${item.slug}` : null;
-
-  const handleClick = () => {
-    if (url) window.open(url, "_blank");
-  };
 
   return (
     <div
-      onClick={handleClick}
+      onClick={onClick}
       style={{
         border: `1px solid ${UNIKING_BORDER}`,
         borderRadius: 8,
         overflow: "hidden",
         background: "#fff",
         transition: "all 0.15s",
-        cursor: url ? "pointer" : "default",
+        cursor: "pointer",
         position: "relative",
       }}
       onMouseEnter={e => {
         e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.12)";
         e.currentTarget.style.borderColor = UNIKING_RED;
-        if (url) e.currentTarget.querySelector(".ext-hint").style.opacity = "1";
+        const hint = e.currentTarget.querySelector(".rel-hint");
+        if (hint) hint.style.opacity = "1";
       }}
       onMouseLeave={e => {
         e.currentTarget.style.boxShadow = "none";
         e.currentTarget.style.borderColor = UNIKING_BORDER;
-        if (url) e.currentTarget.querySelector(".ext-hint").style.opacity = "0";
+        const hint = e.currentTarget.querySelector(".rel-hint");
+        if (hint) hint.style.opacity = "0";
       }}
     >
       {item.image && (
@@ -435,24 +452,172 @@ function RelatedCard({ item }) {
       <div style={{ padding: "10px 12px" }}>
         <div style={{ fontWeight: 700, fontSize: 13, color: UNIKING_RED, marginBottom: 2 }}>{item.part_number}</div>
         <div style={{ fontSize: 11, color: "#888", lineHeight: 1.4 }}>{item.name || item.category}</div>
-        {url && (
-          <div
-            className="ext-hint"
-            style={{
-              fontSize: 10,
-              color: "#aaa",
-              marginTop: 6,
-              opacity: 0,
-              transition: "opacity 0.15s",
-              display: "flex",
-              alignItems: "center",
-              gap: 4,
-            }}
-          >
-            <span>View on Mac Chain</span>
-            <span style={{ fontSize: 10 }}>↗</span>
+        <div
+          className="rel-hint"
+          style={{
+            fontSize: 10,
+            color: UNIKING_RED,
+            marginTop: 6,
+            opacity: 0,
+            transition: "opacity 0.15s",
+            fontWeight: 600,
+          }}
+        >
+          View specs →
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Modal that shows full specs of a related item (pin, attachment, sprocket)
+function RelatedItemModal({ product: p, onClose }) {
+  const UNIKING_RED = "#C41E3A";
+  const UNIKING_DARK = "#1a1a1a";
+  const UNIKING_BORDER = "#e0e0e0";
+  const UNIKING_GRAY = "#f5f5f5";
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0,
+        background: "rgba(0,0,0,0.55)",
+        zIndex: 1000,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: 24,
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: "#fff",
+          borderRadius: 12,
+          maxWidth: 680,
+          width: "100%",
+          maxHeight: "88vh",
+          overflowY: "auto",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+        }}
+      >
+        {/* Modal Header */}
+        <div style={{ padding: "20px 24px 16px", borderBottom: `1px solid ${UNIKING_BORDER}`, display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 11, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
+              {p.category} — {p.subcategory}
+            </div>
+            <div style={{ fontSize: 22, fontWeight: 800, color: UNIKING_DARK }}>{p.part_number}</div>
           </div>
-        )}
+          <button
+            onClick={onClose}
+            style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, color: "#999", lineHeight: 1 }}
+          >
+            ×
+          </button>
+        </div>
+
+        {/* Modal Body */}
+        <div style={{ padding: "24px" }}>
+          {/* Image + description row */}
+          <div style={{ display: "grid", gridTemplateColumns: p.product_image ? "1fr 1fr" : "1fr", gap: 24, marginBottom: 24 }}>
+            {p.product_image && (
+              <div style={{ background: UNIKING_GRAY, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, minHeight: 160 }}>
+                <img src={p.product_image} alt={p.part_number} style={{ maxWidth: "100%", maxHeight: 180, objectFit: "contain" }} />
+              </div>
+            )}
+            <div>
+              {p.description && (
+                <div style={{ fontSize: 14, color: "#444", lineHeight: 1.7, marginBottom: 12, borderLeft: `3px solid ${UNIKING_RED}`, paddingLeft: 12 }}>
+                  {p.description}
+                </div>
+              )}
+              {p.industry && (
+                <div style={{ fontSize: 12, color: "#777", marginBottom: 8 }}>
+                  <strong>Industry:</strong> {p.industry}
+                </div>
+              )}
+              {p.features?.length > 0 && (
+                <ul style={{ margin: 0, padding: "0 0 0 18px", lineHeight: 1.9 }}>
+                  {p.features.map((f, i) => (
+                    <li key={i} style={{ fontSize: 13, color: "#444" }}>{f}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+
+          {/* Diagram */}
+          {p.diagram_image && p.diagram_image !== p.product_image && (
+            <div style={{ textAlign: "center", marginBottom: 24, padding: 16, border: `1px solid ${UNIKING_BORDER}`, borderRadius: 8 }}>
+              <div style={{ fontSize: 11, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Technical Drawing</div>
+              <img src={p.diagram_image} alt="diagram" style={{ maxWidth: "100%", maxHeight: 160, objectFit: "contain" }} />
+            </div>
+          )}
+
+          {/* Spec table */}
+          {p.basic_headers?.length > 0 && (
+            <div style={{ overflowX: "auto", marginBottom: 16 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>Specifications</div>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                <thead>
+                  <tr style={{ background: UNIKING_DARK, color: "#fff" }}>
+                    {p.basic_headers.map((h, i) => (
+                      <th key={i} style={{ padding: "8px 14px", textAlign: "left", fontWeight: 600, whiteSpace: "nowrap", fontSize: 12 }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {(p.basic_rows || []).map((row, ri) => (
+                    <tr key={ri} style={{ borderBottom: `1px solid ${UNIKING_BORDER}`, background: ri % 2 === 0 ? "#fff" : UNIKING_GRAY }}>
+                      {row.map((val, vi) => (
+                        <td key={vi} style={{ padding: "8px 14px", whiteSpace: "nowrap", fontWeight: vi === 0 ? 700 : 400, color: vi === 0 ? UNIKING_RED : UNIKING_DARK }}>
+                          {val}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* More specs */}
+          {p.more_headers?.length > 0 && (
+            <div style={{ overflowX: "auto" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10, marginTop: 16 }}>Additional Specifications</div>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                <thead>
+                  <tr style={{ background: UNIKING_DARK, color: "#fff" }}>
+                    {p.more_headers.map((h, i) => (
+                      <th key={i} style={{ padding: "8px 14px", textAlign: "left", fontWeight: 600, whiteSpace: "nowrap", fontSize: 12 }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {(p.more_rows || []).map((row, ri) => (
+                    <tr key={ri} style={{ borderBottom: `1px solid ${UNIKING_BORDER}`, background: ri % 2 === 0 ? "#fff" : UNIKING_GRAY }}>
+                      {row.map((val, vi) => (
+                        <td key={vi} style={{ padding: "8px 14px", whiteSpace: "nowrap", fontWeight: vi === 0 ? 700 : 400, color: vi === 0 ? UNIKING_RED : UNIKING_DARK }}>
+                          {val}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Close button */}
+          <div style={{ marginTop: 24, textAlign: "right" }}>
+            <button
+              onClick={onClose}
+              style={{ padding: "10px 24px", background: UNIKING_DARK, color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 13, fontWeight: 600 }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
