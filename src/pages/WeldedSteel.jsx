@@ -393,14 +393,39 @@ function SpecTable({ headers, rows }) {
   );
 }
 
+
 function RelatedCard({ item }) {
   const UNIKING_RED = "#C41E3A";
   const UNIKING_BORDER = "#e0e0e0";
   const UNIKING_GRAY = "#f5f5f5";
+  const url = item.slug ? `https://macchain.com/products/${item.slug}` : null;
+
+  const handleClick = () => {
+    if (url) window.open(url, "_blank");
+  };
+
   return (
-    <div style={{ border: `1px solid ${UNIKING_BORDER}`, borderRadius: 8, overflow: "hidden", background: "#fff", transition: "all 0.15s" }}
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.10)"; e.currentTarget.style.borderColor = UNIKING_RED; }}
-      onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = UNIKING_BORDER; }}
+    <div
+      onClick={handleClick}
+      style={{
+        border: `1px solid ${UNIKING_BORDER}`,
+        borderRadius: 8,
+        overflow: "hidden",
+        background: "#fff",
+        transition: "all 0.15s",
+        cursor: url ? "pointer" : "default",
+        position: "relative",
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.12)";
+        e.currentTarget.style.borderColor = UNIKING_RED;
+        if (url) e.currentTarget.querySelector(".ext-hint").style.opacity = "1";
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.boxShadow = "none";
+        e.currentTarget.style.borderColor = UNIKING_BORDER;
+        if (url) e.currentTarget.querySelector(".ext-hint").style.opacity = "0";
+      }}
     >
       {item.image && (
         <div style={{ background: UNIKING_GRAY, height: 100, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
@@ -410,6 +435,24 @@ function RelatedCard({ item }) {
       <div style={{ padding: "10px 12px" }}>
         <div style={{ fontWeight: 700, fontSize: 13, color: UNIKING_RED, marginBottom: 2 }}>{item.part_number}</div>
         <div style={{ fontSize: 11, color: "#888", lineHeight: 1.4 }}>{item.name || item.category}</div>
+        {url && (
+          <div
+            className="ext-hint"
+            style={{
+              fontSize: 10,
+              color: "#aaa",
+              marginTop: 6,
+              opacity: 0,
+              transition: "opacity 0.15s",
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+            }}
+          >
+            <span>View on Mac Chain</span>
+            <span style={{ fontSize: 10 }}>↗</span>
+          </div>
+        )}
       </div>
     </div>
   );
