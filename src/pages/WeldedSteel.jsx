@@ -41,11 +41,19 @@ export default function WeldedSteel() {
 
   // Handler: look up a related item by slug and open modal
   const handleRelatedClick = async (item) => {
+    // Show immediately with image+name we already have
+    setRelatedModalProduct({ ...item, product_image: item.product_image || item.image, diagram_image: item.diagram_image || item.image });
     if (!item.slug) return;
     try {
       const results = await MacChainProduct.filter({ slug: item.slug });
       if (results && results.length > 0) {
-        setRelatedModalProduct(results[0]);
+        const dbRec = results[0];
+        setRelatedModalProduct({
+          ...item,
+          ...dbRec,
+          product_image: dbRec.product_image || item.image,
+          diagram_image: dbRec.diagram_image || item.image,
+        });
       }
     } catch (e) {
       console.error("Failed to load related product:", e);
@@ -476,16 +484,19 @@ function RelatedItemModal({ product: p, onClose }) {
   const UNIKING_DARK = "#1a1a1a";
   const UNIKING_BORDER = "#e0e0e0";
   const UNIKING_GRAY = "#f5f5f5";
-  // Normalize: item data uses 'image', DB records use 'product_image'
+
+  // Normalize image fields — item data uses 'image', DB records use 'product_image'
   const mainImage = p.product_image || p.image;
-  const diagImage = p.diagram_image !== mainImage ? p.diagram_image : null;
+  const diagImage = (p.diagram_image && p.diagram_image !== mainImage) ? p.diagram_image : null;
+  const hasSpecs = p.basic_headers?.length > 0 && p.basic_rows?.length > 0;
+  const hasMoreSpecs = p.more_headers?.length > 0 && p.more_rows?.length > 0;
 
   return (
     <div
       onClick={onClose}
       style={{
         position: "fixed", inset: 0,
-        background: "rgba(0,0,0,0.55)",
+        background: "rgba(0,0,0,0.6)",
         zIndex: 1000,
         display: "flex", alignItems: "center", justifyContent: "center",
         padding: 24,
@@ -496,61 +507,55 @@ function RelatedItemModal({ product: p, onClose }) {
         style={{
           background: "#fff",
           borderRadius: 12,
-          maxWidth: 680,
+          maxWidth: 780,
           width: "100%",
-          maxHeight: "88vh",
+          maxHeight: "90vh",
           overflowY: "auto",
-          boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.35)",
         }}
       >
         {/* Modal Header */}
-        <div style={{ padding: "20px 24px 16px", borderBottom: `1px solid ${UNIKING_BORDER}`, display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ padding: "20px 28px 16px", borderBottom: `3px solid ${UNIKING_RED}`, display: "flex", alignItems: "flex-start", gap: 12, background: UNIKING_DARK }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 11, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
-              {p.category} — {p.subcategory}
+            <div style={{ fontSize: 11, color: "#aaa", textTransform: "uppercase", letterSpacing: 2, marginBottom: 6 }}>
+              {p.category || p.name} {p.subcategory ? `— ${p.subcategory}` : ""}
             </div>
-            <div style={{ fontSize: 22, fontWeight: 800, color: UNIKING_DARK }}>{p.part_number}</div>
+            <div style={{ fontSize: 26, fontWeight: 800, color: "#fff", letterSpacing: 0.5 }}>{p.part_number}</div>
           </div>
           <button
             onClick={onClose}
-            style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, color: "#999", lineHeight: 1 }}
+            style={{ background: "rgba(255,255,255,0.1)", border: "none", cursor: "pointer", fontSize: 20, color: "#fff", lineHeight: 1, borderRadius: 6, padding: "4px 10px", marginTop: 4 }}
           >
             ×
           </button>
         </div>
 
         {/* Modal Body */}
-        <div style={{ padding: "24px" }}>
-          {/* Image + description row */}
-          <div style={{ display: "grid", gridTemplateColumns: mainImage ? "1fr 1fr" : "1fr", gap: 24, marginBottom: 24 }}>
+        <div style={{ padding: "28px" }}>
+
+          {/* Top: image + info side by side */}
+          <div style={{ display: "grid", gridTemplateColumns: mainImage ? "1fr 1fr" : "1fr", gap: 28, marginBottom: 28 }}>
             {mainImage && (
-              <div style={{ background: UNIKING_GRAY, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, minHeight: 160 }}>
-                <img src={mainImage} alt={p.part_number} style={{ maxWidth: "100%", maxHeight: 180, objectFit: "contain" }} />
+              <div style={{ background: UNIKING_GRAY, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, minHeight: 200 }}>
+                <img src={mainImage} alt={p.part_number} style={{ maxWidth: "100%", maxHeight: 220, objectFit: "contain" }} />
               </div>
             )}
-            <div>
-              {p.description && (
-                <div style={{ fontSize: 14, color: "#444", lineHeight: 1.7, marginBottom: 12, borderLeft: `3px solid ${UNIKING_RED}`, paddingLeft: 12 }}>
-                  {p.description}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {/* Description / name */}
+              {(p.description || p.name) && (
+                <div style={{ fontSize: 15, color: "#333", lineHeight: 1.7, borderLeft: `3px solid ${UNIKING_RED}`, paddingLeft: 14 }}>
+                  {p.description || p.name}
                 </div>
               )}
-              {p.name && !p.description && (
-                <div style={{ fontSize: 14, color: "#444", lineHeight: 1.7, marginBottom: 12, borderLeft: `3px solid ${UNIKING_RED}`, paddingLeft: 12 }}>
-                  {p.name}
-                </div>
-              )}
-              {p.category && (
-                <div style={{ fontSize: 12, color: "#777", marginBottom: 6 }}>
-                  <strong>Category:</strong> {p.category}
-                </div>
-              )}
+              {/* Industry */}
               {p.industry && (
-                <div style={{ fontSize: 12, color: "#777", marginBottom: 8 }}>
-                  <strong>Industry:</strong> {p.industry}
+                <div style={{ fontSize: 13, color: "#555", background: UNIKING_GRAY, borderRadius: 6, padding: "8px 12px" }}>
+                  <span style={{ fontWeight: 700, color: UNIKING_DARK }}>Industry: </span>{p.industry}
                 </div>
               )}
+              {/* Features */}
               {p.features?.length > 0 && (
-                <ul style={{ margin: 0, padding: "0 0 0 18px", lineHeight: 1.9 }}>
+                <ul style={{ margin: 0, padding: "0 0 0 20px", lineHeight: 2 }}>
                   {p.features.map((f, i) => (
                     <li key={i} style={{ fontSize: 13, color: "#444" }}>{f}</li>
                   ))}
@@ -559,73 +564,84 @@ function RelatedItemModal({ product: p, onClose }) {
             </div>
           </div>
 
-          {/* Diagram */}
+          {/* Diagram image (if different from main) */}
           {diagImage && (
-            <div style={{ textAlign: "center", marginBottom: 24, padding: 16, border: `1px solid ${UNIKING_BORDER}`, borderRadius: 8 }}>
-              <div style={{ fontSize: 11, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Technical Drawing</div>
-              <img src={diagImage} alt="diagram" style={{ maxWidth: "100%", maxHeight: 160, objectFit: "contain" }} />
+            <div style={{ textAlign: "center", marginBottom: 24, padding: 16, border: `1px solid ${UNIKING_BORDER}`, borderRadius: 8, background: UNIKING_GRAY }}>
+              <div style={{ fontSize: 11, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>Technical Diagram</div>
+              <img src={diagImage} alt="diagram" style={{ maxWidth: "100%", maxHeight: 180, objectFit: "contain" }} />
             </div>
           )}
 
-          {/* Spec table */}
-          {p.basic_headers?.length > 0 && (
-            <div style={{ overflowX: "auto", marginBottom: 16 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>Specifications</div>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-                <thead>
-                  <tr style={{ background: UNIKING_DARK, color: "#fff" }}>
-                    {p.basic_headers.map((h, i) => (
-                      <th key={i} style={{ padding: "8px 14px", textAlign: "left", fontWeight: 600, whiteSpace: "nowrap", fontSize: 12 }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {(p.basic_rows || []).map((row, ri) => (
-                    <tr key={ri} style={{ borderBottom: `1px solid ${UNIKING_BORDER}`, background: ri % 2 === 0 ? "#fff" : UNIKING_GRAY }}>
-                      {row.map((val, vi) => (
-                        <td key={vi} style={{ padding: "8px 14px", whiteSpace: "nowrap", fontWeight: vi === 0 ? 700 : 400, color: vi === 0 ? UNIKING_RED : UNIKING_DARK }}>
-                          {val}
-                        </td>
+          {/* Basic Specs table */}
+          {hasSpecs && (
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#999", marginBottom: 12 }}>Basic Specs</div>
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                  <thead>
+                    <tr style={{ background: UNIKING_DARK, color: "#fff" }}>
+                      {p.basic_headers.map((h, i) => (
+                        <th key={i} style={{ padding: "10px 16px", textAlign: "left", fontWeight: 600, whiteSpace: "nowrap", fontSize: 12 }}>{h}</th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {p.basic_rows.map((row, ri) => (
+                      <tr key={ri} style={{ borderBottom: `1px solid ${UNIKING_BORDER}`, background: ri % 2 === 0 ? "#fff" : UNIKING_GRAY }}>
+                        {row.map((val, vi) => (
+                          <td key={vi} style={{ padding: "10px 16px", whiteSpace: "nowrap", fontWeight: vi === 0 ? 700 : 400, color: vi === 0 ? UNIKING_RED : UNIKING_DARK }}>
+                            {val}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
 
-          {/* More specs */}
-          {p.more_headers?.length > 0 && (
-            <div style={{ overflowX: "auto" }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10, marginTop: 16 }}>Additional Specifications</div>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-                <thead>
-                  <tr style={{ background: UNIKING_DARK, color: "#fff" }}>
-                    {p.more_headers.map((h, i) => (
-                      <th key={i} style={{ padding: "8px 14px", textAlign: "left", fontWeight: 600, whiteSpace: "nowrap", fontSize: 12 }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {(p.more_rows || []).map((row, ri) => (
-                    <tr key={ri} style={{ borderBottom: `1px solid ${UNIKING_BORDER}`, background: ri % 2 === 0 ? "#fff" : UNIKING_GRAY }}>
-                      {row.map((val, vi) => (
-                        <td key={vi} style={{ padding: "8px 14px", whiteSpace: "nowrap", fontWeight: vi === 0 ? 700 : 400, color: vi === 0 ? UNIKING_RED : UNIKING_DARK }}>
-                          {val}
-                        </td>
+          {/* More Specs table */}
+          {hasMoreSpecs && (
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#999", marginBottom: 12 }}>Additional Specifications</div>
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                  <thead>
+                    <tr style={{ background: UNIKING_DARK, color: "#fff" }}>
+                      {p.more_headers.map((h, i) => (
+                        <th key={i} style={{ padding: "10px 16px", textAlign: "left", fontWeight: 600, whiteSpace: "nowrap", fontSize: 12 }}>{h}</th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {p.more_rows.map((row, ri) => (
+                      <tr key={ri} style={{ borderBottom: `1px solid ${UNIKING_BORDER}`, background: ri % 2 === 0 ? "#fff" : UNIKING_GRAY }}>
+                        {row.map((val, vi) => (
+                          <td key={vi} style={{ padding: "10px 16px", whiteSpace: "nowrap", fontWeight: vi === 0 ? 700 : 400, color: vi === 0 ? UNIKING_RED : UNIKING_DARK }}>
+                            {val}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
 
-          {/* Close button */}
+          {/* No spec data fallback */}
+          {!hasSpecs && !mainImage && (
+            <div style={{ color: "#aaa", fontSize: 14, padding: "20px 0", textAlign: "center" }}>
+              No additional specification data available for this item.
+            </div>
+          )}
+
+          {/* Close */}
           <div style={{ marginTop: 24, textAlign: "right" }}>
             <button
               onClick={onClose}
-              style={{ padding: "10px 24px", background: UNIKING_DARK, color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 13, fontWeight: 600 }}
+              style={{ padding: "10px 28px", background: UNIKING_RED, color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 13, fontWeight: 700, letterSpacing: 0.5 }}
             >
               Close
             </button>

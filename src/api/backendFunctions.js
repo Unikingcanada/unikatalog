@@ -12,3 +12,4 @@ export const bulkUpdateCatalog = base44.functions.bulkUpdateCatalog;
 export const oppProductHistory = base44.functions.oppProductHistory;
 export const bulkInsertMacRelated = base44.functions.bulkInsertMacRelated;
 export const pushChainRelated = base44.functions.pushChainRelated;
+export const updatePinSpecs = base44.functions.updatePinSpecs;
