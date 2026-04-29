@@ -13,16 +13,18 @@ const EXTERNAL_ROUTES = {
 
 // ─── Chain grouping ──────────────────────────────────────────────────────────
 const CHAIN_SUBTYPE_KEYS = new Set([
-  "Table Top Chain", "ANSI/BS Chain", "Engineered Chain", "Cast Chain",
+  "ANSI/BS Chain", "Engineered Chain", "Cast Chain",
   "Welded Steel Chain", "Forged Chain", "Overhead Chain", "Sharptop Chain",
-  "Kiln Chain", "Thermoforming Chain", "Wire Mesh Belt", "Steel Hinged Belt",
-  "Conveyor Chain", "Pintle Chain", "Long Link Chain", "Special Application Chain",
+  "Kiln Chain", "Thermoforming Chain", "Conveyor Chain",
+  "Pintle Chain", "Long Link Chain", "Special Application Chain",
 ]);
 
 const PRODUCT_TYPES = [
   { key: "Modular Belt", label: "Modular Plastic Belting", description: "Straight-running, radius, spiral and side-flexing modular plastic belt systems", filters: ["category", "style", "pitch_in", "hinge_style", "materials"] },
   { key: "Elevator Bucket", label: "Elevator Buckets & Hardware", description: "Agricultural and industrial elevator buckets, belting, splices and hardware", filters: ["application", "discharge_type", "duty", "material", "profile"] },
   { key: "Table Top Chain", label: "Table Top Chain", description: "Straight-running and side-flexing table top chains in steel and plastic", filters: ["style", "materials", "duty"] },
+  { key: "Wire Mesh Belt", label: "Wire Mesh Belt", description: "Stainless and carbon steel wire mesh conveyor belts for food and industrial processing", filters: ["style", "materials", "duty"] },
+  { key: "Steel Hinged Belt", label: "Steel Hinged Belt", description: "Steel hinged slat and plate conveyor belts for chip and scrap handling", filters: ["style", "materials"] },
   { key: "ANSI/BS Chain", label: "ANSI / British Standard Chain", description: "Standard precision roller chains to ANSI and BS specifications", filters: ["style", "materials", "duty"] },
   { key: "Engineered Chain", label: "Engineered Chain", description: "Heavy-duty engineered steel chains for demanding industrial applications", filters: ["style", "materials", "duty"] },
   { key: "Cast Chain", label: "Cast Chain", description: "Malleable and ductile cast iron conveyor chains", filters: ["style", "materials"] },
@@ -32,8 +34,6 @@ const PRODUCT_TYPES = [
   { key: "Sharptop Chain", label: "Sharp Top Chain", description: "Sharp top and spike top chains for agricultural and forestry applications", filters: ["style", "materials"] },
   { key: "Kiln Chain", label: "Kiln Chain", description: "High-temperature kiln and dryer chains for cement and mineral processing", filters: ["style", "materials"] },
   { key: "Thermoforming Chain", label: "Thermoforming Chain", description: "Precision chains for plastic thermoforming and packaging machinery", filters: ["style", "materials"] },
-  { key: "Wire Mesh Belt", label: "Wire Mesh Belt", description: "Stainless and carbon steel wire mesh conveyor belts for food and industrial processing", filters: ["style", "materials", "duty"] },
-  { key: "Steel Hinged Belt", label: "Steel Hinged Belt", description: "Steel hinged slat and plate conveyor belts for chip and scrap handling", filters: ["style", "materials"] },
   { key: "Conveyor Roller", label: "Conveyor Rollers", description: "Standard, lagging, motorized drive and specialty conveyor rollers", filters: ["style", "duty"] },
   { key: "Monitoring System", label: "4B Electronics & Monitoring", description: "Bucket elevator and conveyor safety monitoring systems and sensors", filters: ["style"] },
   { key: "Magnetic Conveyor", label: "Magnetic Conveyor", description: "Magnetic conveyor systems for ferrous material handling", filters: ["style"] },
@@ -736,10 +736,10 @@ function TypeGrid({ types, counts, onSelect }) {
   const nonChainTypes = types.filter(t => !CHAIN_SUBTYPE_KEYS.has(t.key));
   const totalChainProducts = chainTypes.reduce((sum, t) => sum + (counts[t.key] || 0), 0);
 
-  // Build display list: non-chain types + one "Chain" mega card
+  // Build display list: Chain mega card first, then non-chain types
   const displayItems = [
+    { key: "__chain__", label: "Chain", description: "Roller chain, engineered, welded steel, pintle and specialty chains for all industrial applications", _isChain: true },
     ...nonChainTypes,
-    { key: "__chain__", label: "Chain", description: "Roller chain, engineered, welded steel, pintle, table top, and specialty chains for all industrial applications", _isChain: true },
   ];
 
   return (
