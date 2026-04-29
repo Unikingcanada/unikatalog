@@ -1245,10 +1245,16 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
               <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Sprockets</div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(180px,1fr))", gap:10 }}>
                 {(record.related_sprockets||[]).map((sp,i) => {
-                  const dbRecord = slugMap?.[sp.slug] || slugMap?.[sp.slug?.replace(/-\d+$/, "")] || null;
+                  // Try slug directly, then stripped (remove tooth count suffix)
                   const groupSlug = sp.slug?.replace(/-\d+$/, "");
-                  const groupRecord = slugMap?.[groupSlug] || null;
-                  const synthetic = dbRecord || groupRecord || {
+                  // Find sprocket DB record — must be product_type Sprocket
+                  const findSprocket = (key) => {
+                    const r = slugMap?.[key];
+                    return (r && r.product_type === "Sprocket") ? r : null;
+                  };
+                  const dbRecord = findSprocket(sp.slug) || findSprocket(groupSlug) || null;
+                  const groupRecord = null; // already handled above
+                  const synthetic = dbRecord || {
                     part_number: sp.part_number,
                     product_type: "Sprocket",
                     category: sp.category,
@@ -1297,7 +1303,7 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
                   };
                   return (
                     <RelatedCard key={i} item={pin} full={synthetic}
-                      onClick={() => onSelect({...synthetic, _specificPart: sp.part_number, _parentPart: record.part_number, _parentRecord: record})} />
+                      onClick={() => onSelect({...synthetic, _specificPart: pin.part_number, _parentPart: record.part_number, _parentRecord: record})} />
                   );
                 })}
               </div>
@@ -1328,7 +1334,7 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
                   };
                   return (
                     <RelatedCard key={i} item={att} full={synthetic}
-                      onClick={() => onSelect({...synthetic, _specificPart: sp.part_number, _parentPart: record.part_number, _parentRecord: record})} />
+                      onClick={() => onSelect({...synthetic, _specificPart: att.part_number, _parentPart: record.part_number, _parentRecord: record})} />
                   );
                 })}
               </div>
