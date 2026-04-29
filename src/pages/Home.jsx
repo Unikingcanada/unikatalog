@@ -1572,12 +1572,13 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchAll(Entity) {
-      let all = [], skip = 0;
+      let all = [], page = 1;
       while (true) {
-        const batch = await Entity.list({ limit: 200, skip });
+        const batch = await Entity.list({ per_page: 500, page });
+        if (!batch || batch.length === 0) break;
         all = all.concat(batch);
-        if (batch.length < 200) break;
-        skip += 200;
+        if (batch.length < 500) break;
+        page++;
       }
       return all;
     }
