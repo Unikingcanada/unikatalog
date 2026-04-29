@@ -1332,11 +1332,17 @@ function WeldedSeriesView({ rawMacRecords }) {
   const [hovered, setHovered] = useState(null);
 
   // Slug → full record lookup map
+  // Build separate maps: sprocket map takes priority for sprocket slugs
   const slugMap = useMemo(() => {
     const m = {};
+    // First pass: all records by slug
     for (const r of rawMacRecords || []) {
       if (r.slug) m[r.slug] = r;
-      if (r.part_number) m[r.part_number.toLowerCase()] = r;
+    }
+    // Second pass: sprockets overwrite chains when slug collides
+    for (const r of rawMacRecords || []) {
+      if (r.product_type === "Sprocket" && r.slug) m[r.slug] = r;
+      if (r.product_type === "Sprocket" && r.part_number) m[r.part_number.toLowerCase()] = r;
     }
     return m;
   }, [rawMacRecords]);
