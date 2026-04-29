@@ -1571,11 +1571,21 @@ export default function Home() {
   const [rawMacRecords, setRawMacRecords] = useState([]);
 
   useEffect(() => {
+    async function fetchAll(Entity) {
+      let all = [], page = 1;
+      while (true) {
+        const batch = await Entity.list({ page, per_page: 200 });
+        all = all.concat(batch);
+        if (batch.length < 200) break;
+        page++;
+      }
+      return all;
+    }
     async function load() {
       try {
         const [cat, elev, uni, dh, allied] = await Promise.all([
           CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list(),
-          DonghuaChain.list(), MacChainProduct.list()
+          DonghuaChain.list(), fetchAll(MacChainProduct)
         ]);
         setRawMacRecords(allied);
         setAllData([
