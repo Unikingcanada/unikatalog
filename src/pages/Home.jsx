@@ -961,7 +961,7 @@ const WELDED_SERIES_LABELS = {
   "Super Mac":        "Super Mac (WD-SM Series)",
 };
 
-function MacProductModal({ record, onClose }) {
+function MacProductModal({ record, slugMap, onSelect, onClose }) {
   const [tab, setTab] = useState("specs");
   if (!record) return null;
 
@@ -1060,49 +1060,69 @@ function MacProductModal({ record, onClose }) {
 
           {tab === "sprockets" && (
             <div>
-              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Sprockets</div>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(220px,1fr))", gap:10 }}>
-                {(record.related_sprockets||[]).map((sp,i) => (
-                  <div key={i} style={{ border:"1px solid "+C.border, borderRadius:8, padding:"12px 14px", background:C.bg }}>
-                    <div style={{ fontWeight:700, fontSize:14, color:C.text, marginBottom:4 }}>{sp.part_number || sp.number || JSON.stringify(sp).slice(0,40)}</div>
-                    {sp.teeth && <div style={{ fontSize:12, color:C.muted }}>Teeth: {sp.teeth}</div>}
-                    {sp.bore && <div style={{ fontSize:12, color:C.muted }}>Bore: {sp.bore}</div>}
-                    {sp.material && <div style={{ fontSize:12, color:C.muted }}>Material: {sp.material}</div>}
-                    {sp.description && <div style={{ fontSize:12, color:C.muted, marginTop:4 }}>{sp.description}</div>}
-                    {typeof sp === "string" && <div style={{ fontSize:12, color:C.muted }}>{sp}</div>}
-                  </div>
-                ))}
+              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Sprockets — click to view full specs</div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(200px,1fr))", gap:10 }}>
+                {(record.related_sprockets||[]).map((sp,i) => {
+                  const full = slugMap?.[sp.slug] || null;
+                  return (
+                    <div key={i}
+                      onClick={() => full && onSelect({...full, _parentPart: record.part_number, _parentRecord: record})}
+                      style={{ border:"1px solid "+C.border, borderRadius:8, padding:"12px 14px", background:C.bg, cursor: full ? "pointer" : "default", transition:"all 0.15s" }}
+                      onMouseEnter={e => { if(full){ e.currentTarget.style.background=C.navyMid; e.currentTarget.style.borderColor=C.navyMid; e.currentTarget.querySelector('.card-title').style.color="#fff"; }}}
+                      onMouseLeave={e => { e.currentTarget.style.background=C.bg; e.currentTarget.style.borderColor=C.border; if(e.currentTarget.querySelector('.card-title')) e.currentTarget.querySelector('.card-title').style.color=C.text; }}>
+                      {sp.image && <img src={sp.image} alt={sp.part_number} style={{ width:"100%", height:70, objectFit:"contain", marginBottom:8, borderRadius:4 }} />}
+                      <div className="card-title" style={{ fontWeight:700, fontSize:13, color:C.text, marginBottom:2 }}>{sp.part_number}</div>
+                      <div style={{ fontSize:12, color:C.muted }}>{sp.name || sp.category}</div>
+                      {full && <div style={{ fontSize:11, color:C.navy, marginTop:6, fontWeight:600 }}>View specs →</div>}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
 
           {tab === "pins" && (
             <div>
-              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Pins & Connecting Links</div>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(220px,1fr))", gap:10 }}>
-                {(record.related_pins||[]).map((pin,i) => (
-                  <div key={i} style={{ border:"1px solid "+C.border, borderRadius:8, padding:"12px 14px", background:C.bg }}>
-                    <div style={{ fontWeight:700, fontSize:14, color:C.text, marginBottom:4 }}>{pin.part_number || pin.number || JSON.stringify(pin).slice(0,40)}</div>
-                    {pin.description && <div style={{ fontSize:12, color:C.muted }}>{pin.description}</div>}
-                    {typeof pin === "string" && <div style={{ fontSize:12, color:C.muted }}>{pin}</div>}
-                  </div>
-                ))}
+              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Pins & Connecting Links — click to view full specs</div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(200px,1fr))", gap:10 }}>
+                {(record.related_pins||[]).map((pin,i) => {
+                  const full = slugMap?.[pin.slug] || null;
+                  return (
+                    <div key={i}
+                      onClick={() => full && onSelect({...full, _parentPart: record.part_number, _parentRecord: record})}
+                      style={{ border:"1px solid "+C.border, borderRadius:8, padding:"12px 14px", background:C.bg, cursor: full ? "pointer" : "default", transition:"all 0.15s" }}
+                      onMouseEnter={e => { if(full){ e.currentTarget.style.background=C.navyMid; e.currentTarget.style.borderColor=C.navyMid; }}}
+                      onMouseLeave={e => { e.currentTarget.style.background=C.bg; e.currentTarget.style.borderColor=C.border; }}>
+                      {pin.image && <img src={pin.image} alt={pin.part_number} style={{ width:"100%", height:70, objectFit:"contain", marginBottom:8, borderRadius:4 }} />}
+                      <div style={{ fontWeight:700, fontSize:13, color:C.text, marginBottom:2 }}>{pin.part_number}</div>
+                      <div style={{ fontSize:12, color:C.muted }}>{pin.name || pin.category}</div>
+                      {full && <div style={{ fontSize:11, color:C.navy, marginTop:6, fontWeight:600 }}>View specs →</div>}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
 
           {tab === "attachments" && (
             <div>
-              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Available Attachments</div>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(220px,1fr))", gap:10 }}>
-                {(record.related_attachments||[]).map((att,i) => (
-                  <div key={i} style={{ border:"1px solid "+C.border, borderRadius:8, padding:"12px 14px", background:C.bg }}>
-                    <div style={{ fontWeight:700, fontSize:14, color:C.text, marginBottom:4 }}>{att.part_number || att.number || JSON.stringify(att).slice(0,40)}</div>
-                    {att.description && <div style={{ fontSize:12, color:C.muted }}>{att.description}</div>}
-                    {att.type && <div style={{ fontSize:12, color:C.muted }}>Type: {att.type}</div>}
-                    {typeof att === "string" && <div style={{ fontSize:12, color:C.muted }}>{att}</div>}
-                  </div>
-                ))}
+              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Available Attachments — click to view full specs</div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(200px,1fr))", gap:10 }}>
+                {(record.related_attachments||[]).map((att,i) => {
+                  const full = slugMap?.[att.slug] || null;
+                  return (
+                    <div key={i}
+                      onClick={() => full && onSelect({...full, _parentPart: record.part_number, _parentRecord: record})}
+                      style={{ border:"1px solid "+C.border, borderRadius:8, padding:"12px 14px", background:C.bg, cursor: full ? "pointer" : "default", transition:"all 0.15s" }}
+                      onMouseEnter={e => { if(full){ e.currentTarget.style.background=C.navyMid; e.currentTarget.style.borderColor=C.navyMid; }}}
+                      onMouseLeave={e => { e.currentTarget.style.background=C.bg; e.currentTarget.style.borderColor=C.border; }}>
+                      {att.image && <img src={att.image} alt={att.part_number} style={{ width:"100%", height:70, objectFit:"contain", marginBottom:8, borderRadius:4 }} />}
+                      <div style={{ fontWeight:700, fontSize:13, color:C.text, marginBottom:2 }}>{att.part_number}</div>
+                      <div style={{ fontSize:12, color:C.muted }}>{att.name || att.category}</div>
+                      {full && <div style={{ fontSize:11, color:C.navy, marginTop:6, fontWeight:600 }}>View specs →</div>}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -1116,6 +1136,13 @@ function WeldedSeriesView({ rawMacRecords }) {
   const [selectedSeries, setSelectedSeries] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [hovered, setHovered] = useState(null);
+
+  // Slug → full record lookup map
+  const slugMap = useMemo(() => {
+    const m = {};
+    for (const r of rawMacRecords || []) { if (r.slug) m[r.slug] = r; }
+    return m;
+  }, [rawMacRecords]);
 
   // Only Welded Steel Chain category, product_type = Chain
   const weldedChains = useMemo(() => {
@@ -1190,7 +1217,7 @@ function WeldedSeriesView({ rawMacRecords }) {
         </div>
 
         {/* Product modal */}
-        {selectedRecord && <MacProductModal record={selectedRecord} onClose={() => setSelectedRecord(null)} />}
+        {selectedRecord && <MacProductModal record={selectedRecord} slugMap={slugMap} onSelect={setSelectedRecord} onClose={() => setSelectedRecord(null)} />}
       </div>
     );
   }
