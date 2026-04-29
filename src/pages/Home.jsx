@@ -961,11 +961,16 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacS
       {selected && selected._source !== "allied" && (
         <ProductModal product={selected} showBrand={showBrand} onClose={() => setSelected(null)} />
       )}
-      {selected && selected._source === "allied" && (() => {
-        const rawRec = rawMacSlugMap?.[selected.series?.toLowerCase()] || rawMacSlugMap?.[selected.id] || null;
-        const rec = rawRec || selected;
-        return <MacProductModal record={rec} slugMap={rawMacSlugMap||{}} sprocketMap={sprocketMap||{}} loadSprockets={loadSprockets||(() => {})} onSelect={r => setSelected({...r, _source:"allied"})} onClose={() => setSelected(null)} />;
-      })()}
+      {selected && selected._source === "allied" && (
+        <MacProductModal
+          record={rawMacSlugMap?.[selected.series?.toLowerCase()] || rawMacSlugMap?.[selected.id] || selected}
+          slugMap={rawMacSlugMap || {}}
+          sprocketMap={sprocketMap || {}}
+          loadSprockets={loadSprockets || (() => {})}
+          onSelect={r => setSelected({...r, _source: "allied"})}
+          onClose={() => setSelected(null)}
+        />
+      )}
     </div>
   );
 }
