@@ -1572,20 +1572,20 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchAll(Entity) {
-      let all = [], page = 1;
+      let all = [], skip = 0;
       while (true) {
-        const batch = await Entity.list({ page, per_page: 200 });
+        const batch = await Entity.list({ limit: 200, skip });
         all = all.concat(batch);
         if (batch.length < 200) break;
-        page++;
+        skip += 200;
       }
       return all;
     }
     async function load() {
       try {
         const [cat, elev, uni, dh, allied] = await Promise.all([
-          CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list(),
-          DonghuaChain.list(), fetchAll(MacChainProduct)
+          fetchAll(CatalogProduct), fetchAll(ElevatorBucket), fetchAll(UniCatalog),
+          fetchAll(DonghuaChain), fetchAll(MacChainProduct)
         ]);
         setRawMacRecords(allied);
         setAllData([
