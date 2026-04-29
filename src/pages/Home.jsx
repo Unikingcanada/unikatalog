@@ -994,6 +994,7 @@ function RelatedCard({ item, full, onClick }) {
 
 function MacProductModal({ record, slugMap, onSelect, onClose }) {
   const [tab, setTab] = useState("specs");
+  useEffect(() => { setTab("specs"); }, [record?.part_number]);
   if (!record) return null;
 
   const tabs = [
@@ -1094,10 +1095,26 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
               <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Sprockets</div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(180px,1fr))", gap:10 }}>
                 {(record.related_sprockets||[]).map((sp,i) => {
-                  const full = slugMap?.[sp.slug] || null;
+                  const dbRecord = slugMap?.[sp.slug] || null;
+                  const synthetic = dbRecord || {
+                    part_number: sp.part_number,
+                    product_type: "Sprocket",
+                    category: sp.category,
+                    subcategory: sp.name || sp.category,
+                    description: sp.name || sp.category,
+                    product_image: sp.image,
+                    features: [],
+                    basic_headers: [],
+                    basic_rows: [],
+                    more_headers: [],
+                    more_rows: [],
+                    related_sprockets: [],
+                    related_pins: [],
+                    related_attachments: [],
+                  };
                   return (
-                    <RelatedCard key={i} item={sp} full={full}
-                      onClick={() => full && onSelect({...full, _parentPart: record.part_number, _parentRecord: record})} />
+                    <RelatedCard key={i} item={sp} full={synthetic}
+                      onClick={() => onSelect({...synthetic, _parentPart: record.part_number, _parentRecord: record})} />
                   );
                 })}
               </div>
@@ -1109,10 +1126,26 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
               <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Pins & Connecting Links</div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(180px,1fr))", gap:10 }}>
                 {(record.related_pins||[]).map((pin,i) => {
-                  const full = slugMap?.[pin.slug] || null;
+                  const dbRecord = slugMap?.[pin.slug] || null;
+                  const synthetic = dbRecord || {
+                    part_number: pin.part_number,
+                    product_type: "Pin",
+                    category: pin.category,
+                    subcategory: pin.name || pin.category,
+                    description: pin.name || pin.category,
+                    product_image: pin.image,
+                    features: [],
+                    basic_headers: [],
+                    basic_rows: [],
+                    more_headers: [],
+                    more_rows: [],
+                    related_sprockets: [],
+                    related_pins: [],
+                    related_attachments: [],
+                  };
                   return (
-                    <RelatedCard key={i} item={pin} full={full}
-                      onClick={() => full && onSelect({...full, _parentPart: record.part_number, _parentRecord: record})} />
+                    <RelatedCard key={i} item={pin} full={synthetic}
+                      onClick={() => onSelect({...synthetic, _parentPart: record.part_number, _parentRecord: record})} />
                   );
                 })}
               </div>
@@ -1124,10 +1157,26 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
               <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Available Attachments</div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(180px,1fr))", gap:10 }}>
                 {(record.related_attachments||[]).map((att,i) => {
-                  const full = slugMap?.[att.slug] || null;
+                  const dbRecord = slugMap?.[att.slug] || null;
+                  const synthetic = dbRecord || {
+                    part_number: att.part_number,
+                    product_type: "Attachment",
+                    category: att.category,
+                    subcategory: att.name || att.category,
+                    description: att.name || att.category,
+                    product_image: att.image,
+                    features: [],
+                    basic_headers: [],
+                    basic_rows: [],
+                    more_headers: [],
+                    more_rows: [],
+                    related_sprockets: [],
+                    related_pins: [],
+                    related_attachments: [],
+                  };
                   return (
-                    <RelatedCard key={i} item={att} full={full}
-                      onClick={() => full && onSelect({...full, _parentPart: record.part_number, _parentRecord: record})} />
+                    <RelatedCard key={i} item={att} full={synthetic}
+                      onClick={() => onSelect({...synthetic, _parentPart: record.part_number, _parentRecord: record})} />
                   );
                 })}
               </div>
