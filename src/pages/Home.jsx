@@ -916,7 +916,7 @@ function FilterBar({ typeKey, allProducts, activeFilters, onChange }) {
 
 // ─── Product List ─────────────────────────────────────────────────────────────
 
-function ProductList({ typeKey, brand, products: allProducts, showBrand }) {
+function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacSlugMap, sprocketMap, loadSprockets }) {
   const [activeFilters, setActiveFilters] = useState({});
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
@@ -958,7 +958,14 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand }) {
           {filtered.map(p => <ProductCard key={p.id} product={p} showBrand={showBrand} onClick={setSelected} />)}
         </div>
       )}
-      {selected ? <ProductModal product={selected} showBrand={showBrand} onClose={() => setSelected(null)} /> : null}
+      {selected && selected._source !== "allied" && (
+        <ProductModal product={selected} showBrand={showBrand} onClose={() => setSelected(null)} />
+      )}
+      {selected && selected._source === "allied" && (() => {
+        const rawRec = rawMacSlugMap?.[selected.series?.toLowerCase()] || rawMacSlugMap?.[selected.id] || null;
+        const rec = rawRec || selected;
+        return <MacProductModal record={rec} slugMap={rawMacSlugMap||{}} sprocketMap={sprocketMap||{}} loadSprockets={loadSprockets||(() => {})} onSelect={r => setSelected({...r, _source:"allied"})} onClose={() => setSelected(null)} />;
+      })()}
     </div>
   );
 }
@@ -1343,40 +1350,10 @@ function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect
   );
 }
 
-function WeldedSeriesView({ rawMacRecords }) {
+function WeldedSeriesView({ rawMacRecords, sprocketMap, setSprocketMap, loadSprockets }) {
   const [selectedSeries, setSelectedSeries] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [hovered, setHovered] = useState(null);
-  // Lazy-loaded sprocket records — only fetched when a sprockets tab is opened
-  const [sprocketMap, setSprocketMap] = useState({});
-  const [sprocketsLoaded, setSprocketsLoaded] = useState(false);
-
-  const loadSprockets = async () => {
-    if (sprocketsLoaded) return;
-    setSprocketsLoaded(true); // prevent double-fetch
-    try {
-      let all = [], skip = 0;
-      while (true) {
-        const batch = await MacChainProduct.filter(
-          { product_type: "Sprocket" },
-          { limit: 200, skip }
-        );
-        all = all.concat(batch);
-        if (batch.length < 200) break;
-        skip += 200;
-      }
-      const m = {};
-      for (const r of all) {
-        if (r.slug) m[r.slug] = r;
-        // Also index by slug without tooth-count suffix (e.g. "wr132-8" → "wr132")
-        const parentSlug = r.slug?.replace(/-\d+$/, "");
-        if (parentSlug && parentSlug !== r.slug) m[parentSlug] = m[parentSlug] || r;
-        if (r.part_number) m[r.part_number.toLowerCase()] = r;
-      }
-      setSprocketMap(m);
-    } catch(e) { console.error("Sprocket load error:", e); }
-  };
-
   // Chain slug map (chains only — already loaded)
   const slugMap = useMemo(() => {
     const m = {};
@@ -1588,6 +1565,33 @@ export default function Home() {
   const [selectedAnsiSub, setSelectedAnsiSub] = useState(null);
   const [selectedWeldedSub, setSelectedWeldedSub] = useState(null);
   const [rawMacRecords, setRawMacRecords] = useState([]);
+  const [sprocketMap, setSprocketMap] = useState({});
+  const [sprocketsLoaded, setSprocketsLoaded] = useState(false);
+
+  const loadSprockets = React.useCallback(async () => {
+    if (sprocketsLoaded) return;
+    setSprocketsLoaded(true);
+    try {
+      let all = [], skip = 0;
+      while (true) {
+        const batch = await MacChainProduct.filter(
+          { product_type: "Sprocket" },
+          { limit: 200, skip }
+        );
+        all = all.concat(batch);
+        if (batch.length < 200) break;
+        skip += 200;
+      }
+      const m = {};
+      for (const r of all) {
+        if (r.slug) m[r.slug] = r;
+        const parentSlug = r.slug?.replace(/-\d+$/, "");
+        if (parentSlug && parentSlug !== r.slug) m[parentSlug] = m[parentSlug] || r;
+        if (r.part_number) m[r.part_number.toLowerCase()] = r;
+      }
+      setSprocketMap(m);
+    } catch(e) { console.error("Sprocket load error:", e); }
+  }, [sprocketsLoaded]);
 
   useEffect(() => {
     async function load() {
@@ -1609,6 +1613,16 @@ export default function Home() {
     }
     load();
   }, []);
+
+  const rawMacSlugMap = useMemo(() => {
+    const m = {};
+    for (const r of rawMacRecords || []) {
+      if (r.slug) m[r.slug] = r;
+      if (r.part_number) m[r.part_number.toLowerCase()] = r;
+      if (r.id) m[r.id] = r;
+    }
+    return m;
+  }, [rawMacRecords]);
 
   const typeCounts = useMemo(() => { const c = {}; for (const p of allData) c[p.type] = (c[p.type] || 0) + 1; return c; }, [allData]);
   const availableTypes = useMemo(() => PRODUCT_TYPES.filter(t => (typeCounts[t.key] || 0) > 0 || !!EXTERNAL_ROUTES[t.key]), [typeCounts]);
@@ -1687,11 +1701,11 @@ export default function Home() {
         ) : view === "ansi_subs" ? (
           <AnsiSubGrid allProducts={allData} onSelect={selectAnsiSub} />
         ) : view === "welded_products" ? (
-          <WeldedSeriesView rawMacRecords={rawMacRecords} />
+          <WeldedSeriesView rawMacRecords={rawMacRecords} sprocketMap={sprocketMap} setSprocketMap={setSprocketMap} loadSprockets={loadSprockets} />
         ) : view === "brands" ? (
           <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} />
         ) : (
-          <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} />
+          <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} rawMacSlugMap={rawMacSlugMap} sprocketMap={sprocketMap} loadSprockets={loadSprockets} />
         )}
       </div>
       <div style={{ borderTop: "1px solid " + C.border, padding: "14px 40px", textAlign: "center", fontSize: 11, color: "#cbd5e1" }}>
