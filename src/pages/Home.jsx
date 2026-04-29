@@ -220,6 +220,43 @@ function normalizeDonghuaChain(r) {
   };
 }
 
+// ─── Allied Locke / MacChain (Engineered Chain subcategories) ─────────────────
+
+const ENGINEERED_SUBCATEGORIES = [
+  { key: "SS Class Bushed Steel Chains",          label: "SS Class Bushed Steel Chains",             description: "Solid roller bushed steel conveyor chains — SS series" },
+  { key: "MSR Class Bushed Roller Steel Chains",  label: "MSR Class Bushed Roller Steel Chains",     description: "Bushed roller steel chains — 378RX to MSR4119" },
+  { key: "MXS Class Offset Steel Drive Chains",   label: "MXS Class Offset Steel Drive Chains",      description: "Offset sidebar steel drive chains — MXS series" },
+  { key: "Rivetless Drop Forged Chains",          label: "Rivetless Drop Forged / Bar Loop Chains",  description: "Drop forged rivetless and bar loop chains for heavy drag applications" },
+  { key: "Combination Chains",                    label: "Combination Chains",                       description: "Cast and wrought combination conveyor chains" },
+  { key: "Cast Manganese and Alloy Steel Chains", label: "Cast Manganese & Alloy Steel Chains",      description: "Cast manganese and alloy steel rivetless and drag chains" },
+];
+
+function normalizeAllied(r) {
+  const headers = Array.isArray(r.basic_headers) ? r.basic_headers : [];
+  const firstRow = Array.isArray(r.basic_rows) && r.basic_rows[0] ? r.basic_rows[0] : [];
+  const specs = {};
+  headers.forEach((h, i) => { if (firstRow[i] != null && firstRow[i] !== "") specs[h] = firstRow[i]; });
+  if (r.subcategory) specs["Category"] = r.subcategory;
+  if (r.industry) specs["Industry"] = r.industry;
+  return {
+    id: r.id, _source: "allied", type: "Engineered Chain",
+    brand: "",
+    series: r.part_number || "",
+    style: r.subcategory || r.product_type || "",
+    category: r.subcategory || "",
+    _subcategory: r.subcategory || r.product_type || "",
+    application: r.industry || "",
+    materials: "",
+    duty: "",
+    notes: Array.isArray(r.features) ? r.features.join(" · ") : (r.description || ""),
+    catalog_url: "", tech_doc_url: "",
+    image_url: r.product_image || "",
+    belt_data: null, sprocket_data: null,
+    specs,
+  };
+}
+
+
 function getFilterOptions(products, field) {
   const vals = new Set();
   for (const p of products) {
