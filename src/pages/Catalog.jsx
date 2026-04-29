@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { CatalogProduct, UniCatalog, ElevatorBucket, DonghuaChain } from "@/api/entities";
+import { CatalogProduct, UniCatalog, ElevatorBucket, DonghuaChain, MacChainProduct } from "@/api/entities";
 
 const NAVY = "#1a3a5c";
 
@@ -136,7 +136,7 @@ function printTearSheet(rec, type) {
   <div class="product-hero">
     ${rec.image_url ? `<img class="product-img" src="${rec.image_url}" alt="${rec.series}" />` : ""}
     <div>
-      <div class="product-type">${type}${rec.vendor ? " · " + rec.vendor : ""}</div>
+      <div class="product-type">${type}</div>
       <div class="product-name">${rec.series}</div>
       ${rec.style || rec.category ? `<div class="product-style">${rec.style || rec.category}</div>` : ""}
       <div class="tags">
@@ -301,7 +301,9 @@ function Modal({ rec, type, onClose }) {
     ["Min Width", rec.min_width_in ? rec.min_width_in + '"' : null],
     ["Open Area", rec.open_area], ["Hinge Style", rec.hinge_style],
     ["Pages", rec.page_range ? "pp. " + rec.page_range : null],
-  ] : [
+  ] : rec._isAllied ? (
+    (rec.basic_headers || []).map((h, i) => [h, (rec.basic_rows || [[]])[0]?.[i] ?? null])
+  ) : [
     ["Series", rec.series], ["Style", rec.style || rec.category],
     ["Vendor", rec.vendor], ["Duty", rec.duty], ["Application", rec.application],
     ["Model", rec.model_code], ["Sizes", rec.sizes_available],
@@ -416,8 +418,8 @@ export default function Catalog() {
   const [sel, setSel] = useState(null);
 
   useEffect(() => {
-    Promise.all([CatalogProduct.list(), UniCatalog.list(), ElevatorBucket.list(), DonghuaChain.list()])
-      .then(([intralox, uni, buckets, dh]) => {
+    Promise.all([CatalogProduct.list(), UniCatalog.list(), ElevatorBucket.list(), DonghuaChain.list(), MacChainProduct.list()])
+      .then(([intralox, uni, buckets, dh, allied]) => {
         const chainTypeMap = {
               "Drive Chain": "ANSI/BS Chain",
               "Conveyor Chain": "Conveyor Chain",
@@ -475,6 +477,16 @@ export default function Catalog() {
               r.tensile_strength_kn && ["Min Tensile (kN)", r.tensile_strength_kn],
               r.weight_kg_m && ["Weight (kg/m)", r.weight_kg_m],
             ].filter(Boolean))),
+          })),
+          ...allied.map(r => ({
+            ...r,
+            _type: "Engineered Chain",
+            series: r.part_number || "",
+            style: r.product_type || r.subcategory || "",
+            vendor: "",
+            image_url: r.product_image || "",
+            notes: r.description || "",
+            _isAllied: true,
           })),
         ]);
       })
