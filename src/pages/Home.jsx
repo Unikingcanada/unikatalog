@@ -10,6 +10,15 @@ const EXTERNAL_ROUTES = {
   "Welded Steel Chain": "/WeldedSteel",
 };
 
+
+// ─── Chain grouping ──────────────────────────────────────────────────────────
+const CHAIN_SUBTYPE_KEYS = new Set([
+  "Table Top Chain", "ANSI/BS Chain", "Engineered Chain", "Cast Chain",
+  "Welded Steel Chain", "Forged Chain", "Overhead Chain", "Sharptop Chain",
+  "Kiln Chain", "Thermoforming Chain", "Wire Mesh Belt", "Steel Hinged Belt",
+  "Conveyor Chain", "Pintle Chain", "Long Link Chain", "Special Application Chain",
+]);
+
 const PRODUCT_TYPES = [
   { key: "Modular Belt", label: "Modular Plastic Belting", description: "Straight-running, radius, spiral and side-flexing modular plastic belt systems", filters: ["category", "style", "pitch_in", "hinge_style", "materials"] },
   { key: "Elevator Bucket", label: "Elevator Buckets & Hardware", description: "Agricultural and industrial elevator buckets, belting, splices and hardware", filters: ["application", "discharge_type", "duty", "material", "profile"] },
@@ -721,6 +730,18 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand }) {
 
 function TypeGrid({ types, counts, onSelect }) {
   const [hovered, setHovered] = useState(null);
+
+  // Separate chain types from non-chain types
+  const chainTypes = types.filter(t => CHAIN_SUBTYPE_KEYS.has(t.key));
+  const nonChainTypes = types.filter(t => !CHAIN_SUBTYPE_KEYS.has(t.key));
+  const totalChainProducts = chainTypes.reduce((sum, t) => sum + (counts[t.key] || 0), 0);
+
+  // Build display list: non-chain types + one "Chain" mega card
+  const displayItems = [
+    ...nonChainTypes,
+    { key: "__chain__", label: "Chain", description: "Roller chain, engineered, welded steel, pintle, table top, and specialty chains for all industrial applications", _isChain: true },
+  ];
+
   return (
     <div>
       <div style={{ marginBottom: 28 }}>
@@ -728,13 +749,42 @@ function TypeGrid({ types, counts, onSelect }) {
         <div style={{ fontSize: 14, color: C.muted }}>Select a product category to browse specifications</div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
+        {displayItems.map(t => (
+          <div key={t.key} onClick={() => onSelect(t.key)} onMouseEnter={() => setHovered(t.key)} onMouseLeave={() => setHovered(null)}
+            style={{ background: hovered === t.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === t.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: hovered === t.key ? "#fff" : C.text }}>{t.label}</div>
+            <div style={{ fontSize: 12, color: hovered === t.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{t.description}</div>
+            <div style={{ fontSize: 11, color: hovered === t.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>
+              {t._isChain
+                ? `${chainTypes.length} subcategories · ${totalChainProducts} products`
+                : counts[t.key] ? `${counts[t.key]} products` : "View →"}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
+// ─── Chain Subcategory Grid ───────────────────────────────────────────────────
+
+function ChainSubGrid({ types, counts, onSelect }) {
+  const [hovered, setHovered] = useState(null);
+  return (
+    <div>
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontSize: 22, fontWeight: 800, color: C.text, marginBottom: 4 }}>Chain</div>
+        <div style={{ fontSize: 14, color: C.muted }}>Select a chain type to browse products</div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
         {types.map(t => (
           <div key={t.key} onClick={() => onSelect(t.key)} onMouseEnter={() => setHovered(t.key)} onMouseLeave={() => setHovered(null)}
             style={{ background: hovered === t.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === t.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
             <div style={{ fontSize: 14, fontWeight: 700, color: hovered === t.key ? "#fff" : C.text }}>{t.label}</div>
             <div style={{ fontSize: 12, color: hovered === t.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{t.description}</div>
-            <div style={{ fontSize: 11, color: hovered === t.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>{counts[t.key] ? `${counts[t.key]} products` : "View →"}</div>
+            <div style={{ fontSize: 11, color: hovered === t.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>
+              {counts[t.key] ? `${counts[t.key]} products` : "View →"}
+            </div>
           </div>
         ))}
       </div>
@@ -804,6 +854,7 @@ export default function Home() {
   const [view, setView] = useState("home");
   const [selectedType, setSelectedType] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(null);
+  const [inChainMenu, setInChainMenu] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -829,16 +880,20 @@ export default function Home() {
   const showBrand = selectedType && SHOW_BRAND.has(selectedType) && !selectedBrand;
 
   function selectType(typeKey) {
+    if (typeKey === "__chain__") { setInChainMenu(true); setView("chains"); return; }
     if (EXTERNAL_ROUTES[typeKey]) { window.location.href = EXTERNAL_ROUTES[typeKey]; return; }
     setSelectedType(typeKey); setSelectedBrand(null); setView(BRAND_GATED.has(typeKey) ? "brands" : "products");
   }
   function selectBrand(brand) { setSelectedBrand(brand); setView("products"); }
   function navTo(level) {
-    if (level === 0) { setView("home"); setSelectedType(null); setSelectedBrand(null); }
+    if (level === 0) { setView("home"); setSelectedType(null); setSelectedBrand(null); setInChainMenu(false); }
+    else if (level === 1 && inChainMenu && !selectedType) { /* already on chain menu */ }
+    else if (level === 1 && inChainMenu) { setView("chains"); setSelectedType(null); setSelectedBrand(null); }
     else if (level === 1 && isBrandGated) { setView("brands"); setSelectedBrand(null); }
   }
 
   const breadcrumbs = ["All Products"];
+  if (inChainMenu) breadcrumbs.push("Chain");
   if (selectedType) breadcrumbs.push(TYPE_MAP[selectedType]?.label || selectedType);
   if (selectedBrand) breadcrumbs.push(selectedBrand);
 
@@ -851,6 +906,12 @@ export default function Home() {
           <div style={{ textAlign: "center", padding: 80, color: C.muted, fontSize: 14 }}>Loading catalog...</div>
         ) : view === "home" ? (
           <TypeGrid types={availableTypes} counts={typeCounts} onSelect={selectType} />
+        ) : view === "chains" ? (
+          <ChainSubGrid
+            types={availableTypes.filter(t => CHAIN_SUBTYPE_KEYS.has(t.key))}
+            counts={typeCounts}
+            onSelect={selectType}
+          />
         ) : view === "brands" ? (
           <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} />
         ) : (
