@@ -899,19 +899,9 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const fetchAll = async (entity) => {
-          let results = [], page = 0, hasMore = true;
-          while (hasMore) {
-            const batch = await entity.list({ limit: 200, skip: page * 200 });
-            results = results.concat(batch);
-            hasMore = batch.length === 200;
-            page++;
-          }
-          return results;
-        };
         const [cat, elev, uni, dh, allied] = await Promise.all([
-          fetchAll(CatalogProduct), fetchAll(ElevatorBucket), fetchAll(UniCatalog),
-          fetchAll(DonghuaChain), fetchAll(MacChainProduct)
+          CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list(),
+          DonghuaChain.list(), MacChainProduct.list()
         ]);
         setAllData([
           ...cat.map(normalizeCatalogProduct),
