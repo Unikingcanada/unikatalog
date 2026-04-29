@@ -492,6 +492,137 @@ function printTearSheet(product) {
   w.document.close();
 }
 
+// ─── Mac Chain Tear Sheet ─────────────────────────────────────────────────────
+
+function printMacTearSheet(record) {
+  const w = window.open("", "_blank");
+  const date = new Date().toLocaleDateString("en-CA", { year:"numeric", month:"long", day:"numeric" });
+  const img = record.product_image || record.diagram_image || "";
+  const diagImg = record.diagram_image && record.diagram_image !== record.product_image ? record.diagram_image : "";
+
+  const basicHeaders = Array.isArray(record.basic_headers) ? record.basic_headers : [];
+  const basicRows = Array.isArray(record.basic_rows) ? record.basic_rows : [];
+  const moreHeaders = Array.isArray(record.more_headers) ? record.more_headers : [];
+  const moreRows = Array.isArray(record.more_rows) ? record.more_rows : [];
+  const features = Array.isArray(record.features) ? record.features : [];
+
+  const basicTable = basicHeaders.length && basicRows.length ? `
+  <div class="section-wrap">
+    <div class="section-title">Specifications</div>
+    <table>
+      <thead><tr>${basicHeaders.map(h => `<th>${h}</th>`).join("")}</tr></thead>
+      <tbody>${basicRows.map(row => `<tr>${(Array.isArray(row)?row:[]).map(v => `<td>${v != null ? v : "—"}</td>`).join("")}</tr>`).join("")}</tbody>
+    </table>
+  </div>` : "";
+
+  const moreTable = moreHeaders.length && moreRows.length ? `
+  <div class="section-wrap">
+    <div class="section-title">Additional Data</div>
+    <table>
+      <thead><tr>${moreHeaders.map(h => `<th>${h}</th>`).join("")}</tr></thead>
+      <tbody>${moreRows.map(row => `<tr>${(Array.isArray(row)?row:[]).map(v => `<td>${v != null ? v : "—"}</td>`).join("")}</tr>`).join("")}</tbody>
+    </table>
+  </div>` : "";
+
+  const featuresHtml = features.length ? `
+  <div class="section-wrap">
+    <div class="section-title">Key Features</div>
+    <ul style="margin:0;padding-left:18px;">
+      ${features.map(f => `<li style="font-size:12px;color:#334155;margin-bottom:4px;">${f}</li>`).join("")}
+    </ul>
+  </div>` : "";
+
+  w.document.write(`<!DOCTYPE html><html><head><title>Tear Sheet — ${record.part_number}</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',Arial,sans-serif; color:#111; background:#fff; }
+  @media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }
+  .header { background:#0f2340; color:#fff; padding:22px 32px; display:flex; align-items:center; justify-content:space-between; }
+  .header-title { font-size:22px; font-weight:800; letter-spacing:0.3px; }
+  .header-sub { font-size:12px; color:rgba(255,255,255,0.55); margin-top:3px; }
+  .header-meta { text-align:right; font-size:11px; color:rgba(255,255,255,0.45); }
+  .accent-bar { height:4px; background:linear-gradient(90deg,#2d8a4e,#1a3a5c); }
+  .body { padding:24px 32px; }
+  .product-hero { display:flex; gap:24px; align-items:flex-start; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid #e5e7eb; }
+  .product-img { width:150px; height:110px; object-fit:contain; border:1px solid #e5e7eb; border-radius:6px; padding:8px; background:#f8fafc; flex-shrink:0; }
+  .product-name { font-size:26px; font-weight:900; color:#0f2340; line-height:1.1; }
+  .product-type { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#2d8a4e; margin-bottom:6px; }
+  .product-sub { font-size:14px; color:#64748b; margin-top:4px; }
+  .desc-box { background:#f8fafc; border-left:3px solid #1a3a5c; border-radius:4px; padding:10px 14px; font-size:12px; color:#334155; line-height:1.7; margin-bottom:18px; }
+  .section-title { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#1a3a5c; margin-bottom:8px; padding-bottom:4px; border-bottom:2px solid #e2e8f0; }
+  .section-wrap { margin-bottom:20px; }
+  table { width:100%; border-collapse:collapse; font-size:11px; margin-top:6px; }
+  thead tr { background:#0f2340; }
+  thead th { padding:7px 10px; color:#fff; font-weight:700; text-align:left; white-space:nowrap; }
+  tbody tr:nth-child(even) { background:#f8fafc; }
+  tbody td { padding:6px 10px; border-bottom:1px solid #e5e7eb; color:#334155; }
+  tbody td:first-child { font-weight:600; color:#0f2340; }
+  .footer { margin-top:24px; padding-top:12px; border-top:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; }
+  .footer-left { font-size:10px; color:#94a3b8; }
+  .footer-right { font-size:10px; color:#94a3b8; text-align:right; }
+  .confidential { font-size:9px; text-transform:uppercase; letter-spacing:1px; color:#cbd5e1; }
+  .no-print { margin:16px 32px; display:flex; gap:10px; }
+  @media print { .no-print { display:none !important; } }
+  .btn { padding:8px 18px; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:700; }
+  .btn-primary { background:#0f2340; color:#fff; }
+  .btn-secondary { background:#f1f5f9; color:#334155; border:1px solid #e2e8f0; }
+</style></head><body>
+<div class="no-print">
+  <button class="btn btn-primary" onclick="window.print()">Print / Save PDF</button>
+  <button class="btn btn-secondary" onclick="window.close()">Close</button>
+</div>
+<div class="header">
+  <div>
+    <div class="header-title">UNIKING CANADA</div>
+    <div class="header-sub">Technical Product Reference</div>
+  </div>
+  <div class="header-meta">
+    <div style="font-size:13px;font-weight:700;color:#fff;">${record.part_number}</div>
+    <div>${record.product_type}${record.category ? " · " + record.category : ""}</div>
+    <div style="margin-top:4px;">${date}</div>
+  </div>
+</div>
+<div class="accent-bar"></div>
+<div class="body">
+  <div class="product-hero">
+    ${img ? `<img class="product-img" src="${img}" alt="${record.part_number}" />` : ""}
+    <div>
+      <div class="product-type">${record.product_type}${record.category ? " · " + record.category : ""}</div>
+      <div class="product-name">${record.part_number}</div>
+      ${record.subcategory ? `<div class="product-sub">${record.subcategory}</div>` : ""}
+    </div>
+  </div>
+
+  ${diagImg ? `
+  <div class="section-wrap">
+    <div class="section-title">Dimensional Drawing</div>
+    <div style="text-align:center;margin-bottom:8px;">
+      <img src="${diagImg}" alt="Dimensional Drawing" style="max-width:100%;max-height:260px;object-fit:contain;border:1px solid #e5e7eb;border-radius:6px;padding:10px;background:#f8fafc;" />
+    </div>
+  </div>` : ""}
+
+  ${record.description ? `<div class="desc-box">${record.description}</div>` : ""}
+
+  ${basicTable}
+  ${moreTable}
+  ${featuresHtml}
+
+  <div class="footer">
+    <div class="footer-left">
+      <div>Uniking Canada · info@unikingcanada.com</div>
+      <div class="confidential">Confidential — Internal Use Only</div>
+    </div>
+    <div class="footer-right">
+      <div>${record.part_number}${record.subcategory ? " / " + record.subcategory : ""}</div>
+      <div style="margin-top:2px;">No pricing information included</div>
+    </div>
+  </div>
+</div>
+</body></html>`);
+  w.document.close();
+}
+
+
 // ─── Sprocket Table ───────────────────────────────────────────────────────────
 
 function SprocketTable({ data }) {
@@ -1016,7 +1147,12 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
               <div style={{ fontSize:22, fontWeight:800, color:C.text }}>{record.part_number}</div>
               <div style={{ fontSize:13, color:C.muted, marginTop:3 }}>{record.subcategory} · {record.product_type}</div>
             </div>
-            <button onClick={onClose} style={{ background:"none", border:"none", fontSize:22, cursor:"pointer", color:C.muted, padding:"4px 8px" }}>×</button>
+            <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+              <button onClick={() => printMacTearSheet(record)} style={{ background:C.navy, border:"none", color:"#fff", padding:"6px 14px", borderRadius:6, cursor:"pointer", fontSize:11, fontWeight:700 }}>
+                Print Tear Sheet
+              </button>
+              <button onClick={onClose} style={{ background:"none", border:"none", fontSize:22, cursor:"pointer", color:C.muted, padding:"4px 8px" }}>×</button>
+            </div>
           </div>
           <div style={{ display:"flex", gap:8, marginBottom:0 }}>
             {tabs.map(t => (
@@ -1095,14 +1231,16 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
               <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Sprockets</div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(180px,1fr))", gap:10 }}>
                 {(record.related_sprockets||[]).map((sp,i) => {
-                  const dbRecord = slugMap?.[sp.slug] || null;
-                  const synthetic = dbRecord || {
+                  const dbRecord = slugMap?.[sp.slug] || slugMap?.[sp.slug?.replace(/-\d+$/, "")] || null;
+                  const groupSlug = sp.slug?.replace(/-\d+$/, "");
+                  const groupRecord = slugMap?.[groupSlug] || null;
+                  const synthetic = dbRecord || groupRecord || {
                     part_number: sp.part_number,
                     product_type: "Sprocket",
                     category: sp.category,
                     subcategory: sp.name || sp.category,
                     description: sp.name || sp.category,
-                    product_image: sp.image,
+                    product_image: sp.image || "https://macchain.com/uploads/product-images/_subcategoryImage/sprockets_millchain_abc.png",
                     features: [],
                     basic_headers: [],
                     basic_rows: [],
@@ -1196,7 +1334,10 @@ function WeldedSeriesView({ rawMacRecords }) {
   // Slug → full record lookup map
   const slugMap = useMemo(() => {
     const m = {};
-    for (const r of rawMacRecords || []) { if (r.slug) m[r.slug] = r; }
+    for (const r of rawMacRecords || []) {
+      if (r.slug) m[r.slug] = r;
+      if (r.part_number) m[r.part_number.toLowerCase()] = r;
+    }
     return m;
   }, [rawMacRecords]);
 
