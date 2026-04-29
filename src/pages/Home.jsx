@@ -231,6 +231,40 @@ const ENGINEERED_SUBCATEGORIES = [
   { key: "Cast Manganese and Alloy Steel Chains", label: "Cast Manganese & Alloy Steel Chains",      description: "Cast manganese and alloy steel rivetless and drag chains" },
 ];
 
+const ANSI_SUBCATEGORIES = [
+  { key: "ANSI Standard Roller Chains",        label: "ANSI Standard Roller Chains",       description: "Single, double and triple-strand ANSI precision roller chains (#25 to #240)" },
+  { key: "British Standard Roller Chains",     label: "British Standard Roller Chains",    description: "BS/ISO precision roller chains (06B to 40B, single and multi-strand)" },
+  { key: "Super Series Chains",                label: "Super Series Chains",               description: "Higher-strength Super Series ANSI roller chains with upgraded plate and pin" },
+  { key: "Armor Coat Chains",                  label: "Armor Coat Chains",                 description: "Corrosion-resistant armor coat coated roller chains" },
+  { key: "Self-Lube Chains",                   label: "Self-Lube Chains",                  description: "Oil-impregnated sintered bushing self-lubricating roller chains" },
+  { key: "Self-Lube Bushing Chains",           label: "Self-Lube Bushing Chains",          description: "Self-lubricating bushing chains for extended maintenance intervals" },
+  { key: "Nickel Plated Chains",               label: "Nickel Plated Chains",              description: "Nickel plated roller chains for corrosion and cosmetic applications" },
+  { key: "Hollow Pin Chains",                  label: "Hollow Pin Chains",                 description: "Hollow pin roller chains for attachment and cross-rod applications" },
+  { key: "Double Pitch Roller Chains",         label: "Double Pitch Roller Chains",        description: "C2040–C2160H double pitch chains for conveyor and slow-speed drive" },
+  { key: "O-Ring Chains",                      label: "O-Ring Chains",                     description: "O-ring sealed roller chains for reduced lubrication requirements" },
+  { key: "Side Bow Chains",                    label: "Side Bow Chains",                   description: "Flexible side bow roller chains for curved conveyor paths" },
+  { key: "Rollerless Chains",                  label: "Rollerless Chains",                 description: "Rollerless bushing chains for sliding rail and low-speed applications" },
+  { key: "Double Capacity Chains",             label: "Double Capacity Chains",            description: "Double capacity roller chains with increased tensile strength" },
+  { key: "XDO Chains",                         label: "XDO Chains",                        description: "Extended duty oversized sidebar chains for maximum load capacity" },
+  { key: "Solid Bushing/Solid Roller Chains",  label: "Solid Bushing / Solid Roller",      description: "Solid forged bushing and solid roller chains for heavy shock loads" },
+  { key: "Straight Sidebar Chains",            label: "Straight Sidebar Chains",           description: "Straight sidebar roller chains for reduced flex and precise alignment" },
+  { key: "Non-Standard Series Chains",         label: "Non-Standard Series Chains",        description: "Non-standard pitch roller chains including chain 85 and 105 series" },
+  { key: "Zinc Plated Chains",                 label: "Zinc Plated Chains",                description: "Zinc plated chains for light corrosion resistance" },
+  { key: "Citrus Chains",                      label: "Citrus Chains",                     description: "Stainless and carbon steel D-5 citrus conveyor chains" },
+];
+
+// Allied Locke precision roller chain subcategories → ANSI/BS Chain
+// MAC engineered classes → Engineered Chain
+const ALLIED_ANSI_SUBCATS = new Set([
+  "ANSI Standard Roller Chains", "British Standard Roller Chains",
+  "Armor Coat Chains", "Super Series Chains", "Self-Lube Chains",
+  "Self-Lube Bushing Chains", "Nickel Plated Chains", "Hollow Pin Chains",
+  "Double Pitch Roller Chains", "O-Ring Chains", "Side Bow Chains",
+  "Rollerless Chains", "Non-Standard Series Chains", "Double Capacity Chains",
+  "XDO Chains", "Solid Bushing/Solid Roller Chains", "Straight Sidebar Chains",
+  "Zinc Plated Chains", "Citrus Chains",
+]);
+
 function normalizeAllied(r) {
   const headers = Array.isArray(r.basic_headers) ? r.basic_headers : [];
   const firstRow = Array.isArray(r.basic_rows) && r.basic_rows[0] ? r.basic_rows[0] : [];
@@ -238,8 +272,11 @@ function normalizeAllied(r) {
   headers.forEach((h, i) => { if (firstRow[i] != null && firstRow[i] !== "") specs[h] = firstRow[i]; });
   if (r.subcategory) specs["Category"] = r.subcategory;
   if (r.industry) specs["Industry"] = r.industry;
+  // Allied Locke precision roller chain → ANSI/BS Chain; MAC engineered → Engineered Chain
+  const isAnsi = r.vendor === "Allied Locke" || ALLIED_ANSI_SUBCATS.has(r.subcategory);
+  const type = isAnsi ? "ANSI/BS Chain" : "Engineered Chain";
   return {
-    id: r.id, _source: "allied", type: "Engineered Chain",
+    id: r.id, _source: "allied", type,
     brand: "",
     series: r.part_number || "",
     style: r.subcategory || r.product_type || "",
@@ -855,6 +892,45 @@ function EngineeredSubGrid({ allProducts, onSelect }) {
   );
 }
 
+
+// ─── ANSI/BS Chain Subcategory Grid ──────────────────────────────────────────
+
+function AnsiSubGrid({ allProducts, onSelect }) {
+  const [hovered, setHovered] = useState(null);
+  const subCounts = useMemo(() => {
+    const c = {};
+    for (const p of allProducts) {
+      if (p.type === "ANSI/BS Chain" && p._source === "allied") {
+        const sub = p._subcategory || "Other";
+        c[sub] = (c[sub] || 0) + 1;
+      }
+    }
+    return c;
+  }, [allProducts]);
+
+  return (
+    <div>
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontSize: 22, fontWeight: 800, color: C.text, marginBottom: 4 }}>ANSI / British Standard Chain</div>
+        <div style={{ fontSize: 14, color: C.muted }}>Select a chain type to browse products</div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
+        {ANSI_SUBCATEGORIES.map(sub => (
+          <div key={sub.key} onClick={() => onSelect(sub.key)}
+            onMouseEnter={() => setHovered(sub.key)} onMouseLeave={() => setHovered(null)}
+            style={{ background: hovered === sub.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === sub.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: hovered === sub.key ? "#fff" : C.text }}>{sub.label}</div>
+            <div style={{ fontSize: 12, color: hovered === sub.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{sub.description}</div>
+            <div style={{ fontSize: 11, color: hovered === sub.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>
+              {subCounts[sub.key] ? `${subCounts[sub.key]} products` : "View →"}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Chain Subcategory Grid ───────────────────────────────────────────────────
 
 function ChainSubGrid({ types, counts, onSelect }) {
@@ -945,6 +1021,7 @@ export default function Home() {
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [inChainMenu, setInChainMenu] = useState(false);
   const [selectedEngineeredSub, setSelectedEngineeredSub] = useState(null);
+  const [selectedAnsiSub, setSelectedAnsiSub] = useState(null);
 
   useEffect(() => {
     async function load() {
@@ -972,28 +1049,36 @@ export default function Home() {
   const viewProducts = useMemo(() => {
     let prods = selectedBrand ? typeProducts.filter(p => p.brand === selectedBrand) : typeProducts;
     if (selectedEngineeredSub) prods = prods.filter(p => p._subcategory === selectedEngineeredSub);
+    if (selectedAnsiSub) prods = prods.filter(p => p._subcategory === selectedAnsiSub);
     return prods;
-  }, [typeProducts, selectedBrand, selectedEngineeredSub]);
+  }, [typeProducts, selectedBrand, selectedEngineeredSub, selectedAnsiSub]);
   const isBrandGated = selectedType && BRAND_GATED.has(selectedType);
   const showBrand = selectedType && SHOW_BRAND.has(selectedType) && !selectedBrand;
 
   function selectType(typeKey) {
     if (typeKey === "__chain__") { setInChainMenu(true); setView("chains"); return; }
     if (EXTERNAL_ROUTES[typeKey]) { window.location.href = EXTERNAL_ROUTES[typeKey]; return; }
-    if (typeKey === "Engineered Chain") { setSelectedType("Engineered Chain"); setSelectedEngineeredSub(null); setView("engineered_subs"); return; }
-    setSelectedType(typeKey); setSelectedBrand(null); setView(BRAND_GATED.has(typeKey) ? "brands" : "products");
+    if (typeKey === "Engineered Chain") { setSelectedType("Engineered Chain"); setSelectedEngineeredSub(null); setSelectedAnsiSub(null); setView("engineered_subs"); return; }
+    if (typeKey === "ANSI/BS Chain") { setSelectedType("ANSI/BS Chain"); setSelectedAnsiSub(null); setSelectedEngineeredSub(null); setView("ansi_subs"); return; }
+    setSelectedType(typeKey); setSelectedBrand(null); setSelectedAnsiSub(null); setView(BRAND_GATED.has(typeKey) ? "brands" : "products");
   }
   function selectEngineeredSub(subKey) {
     setSelectedEngineeredSub(subKey);
     setView("products");
   }
+  function selectAnsiSub(subKey) {
+    setSelectedAnsiSub(subKey);
+    setView("products");
+  }
   function selectBrand(brand) { setSelectedBrand(brand); setView("products"); }
   function navTo(level) {
-    if (level === 0) { setView("home"); setSelectedType(null); setSelectedBrand(null); setInChainMenu(false); setSelectedEngineeredSub(null); }
+    if (level === 0) { setView("home"); setSelectedType(null); setSelectedBrand(null); setInChainMenu(false); setSelectedEngineeredSub(null); setSelectedAnsiSub(null); }
     else if (level === 1 && inChainMenu && !selectedType) { /* already on chain menu */ }
     else if (level === 1 && inChainMenu && selectedType === "Engineered Chain" && selectedEngineeredSub) { setView("engineered_subs"); setSelectedEngineeredSub(null); }
-    else if (level === 1 && inChainMenu) { setView("chains"); setSelectedType(null); setSelectedBrand(null); setSelectedEngineeredSub(null); }
+    else if (level === 1 && inChainMenu && selectedType === "ANSI/BS Chain" && selectedAnsiSub) { setView("ansi_subs"); setSelectedAnsiSub(null); }
+    else if (level === 1 && inChainMenu) { setView("chains"); setSelectedType(null); setSelectedBrand(null); setSelectedEngineeredSub(null); setSelectedAnsiSub(null); }
     else if (level === 2 && inChainMenu && selectedType === "Engineered Chain" && selectedEngineeredSub) { setView("engineered_subs"); setSelectedEngineeredSub(null); }
+    else if (level === 2 && inChainMenu && selectedType === "ANSI/BS Chain" && selectedAnsiSub) { setView("ansi_subs"); setSelectedAnsiSub(null); }
     else if (level === 1 && isBrandGated) { setView("brands"); setSelectedBrand(null); }
   }
 
@@ -1001,6 +1086,7 @@ export default function Home() {
   if (inChainMenu) breadcrumbs.push("Chain");
   if (selectedType) breadcrumbs.push(TYPE_MAP[selectedType]?.label || selectedType);
   if (selectedEngineeredSub) breadcrumbs.push(ENGINEERED_SUBCATEGORIES.find(s => s.key === selectedEngineeredSub)?.label || selectedEngineeredSub);
+  if (selectedAnsiSub) breadcrumbs.push(ANSI_SUBCATEGORIES.find(s => s.key === selectedAnsiSub)?.label || selectedAnsiSub);
   if (selectedBrand) breadcrumbs.push(selectedBrand);
 
   return (
@@ -1020,6 +1106,8 @@ export default function Home() {
           />
         ) : view === "engineered_subs" ? (
           <EngineeredSubGrid allProducts={allData} onSelect={selectEngineeredSub} />
+        ) : view === "ansi_subs" ? (
+          <AnsiSubGrid allProducts={allData} onSelect={selectAnsiSub} />
         ) : view === "brands" ? (
           <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} />
         ) : (
