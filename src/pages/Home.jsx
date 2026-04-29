@@ -25,7 +25,7 @@ const PRODUCT_TYPES = [
   { key: "Table Top Chain", label: "Table Top Chain", description: "Straight-running and side-flexing table top chains in steel and plastic", filters: ["style", "materials", "duty"] },
   { key: "Wire Mesh Belt", label: "Wire Mesh Belt", description: "Stainless and carbon steel wire mesh conveyor belts for food and industrial processing", filters: ["style", "materials", "duty"] },
   { key: "Steel Hinged Belt", label: "Steel Hinged Belt", description: "Steel hinged slat and plate conveyor belts for chip and scrap handling", filters: ["style", "materials"] },
-  { key: "ANSI/BS Chain", label: "ANSI / British Standard Chain", description: "Standard precision roller chains to ANSI and BS specifications", filters: ["style", "materials", "duty"] },
+  { key: "ANSI/BS Chain", label: "Performance Roller Chain", description: "Precision roller chains to ANSI and BS specifications — standard, specialty and high-performance series", filters: ["style", "materials", "duty"] },
   { key: "Engineered Chain", label: "Engineered Chain", description: "Heavy-duty engineered steel chains for demanding industrial applications", filters: ["style", "materials", "duty"] },
   { key: "Cast Chain", label: "Cast Chain", description: "Malleable and ductile cast iron conveyor chains", filters: ["style", "materials"] },
   { key: "Welded Steel Chain", label: "Welded Steel Chain", description: "Welded steel drag and conveyor chains for bulk material handling", filters: ["style", "duty"] },
@@ -911,7 +911,7 @@ function AnsiSubGrid({ allProducts, onSelect }) {
   return (
     <div>
       <div style={{ marginBottom: 28 }}>
-        <div style={{ fontSize: 22, fontWeight: 800, color: C.text, marginBottom: 4 }}>ANSI / British Standard Chain</div>
+        <div style={{ fontSize: 22, fontWeight: 800, color: C.text, marginBottom: 4 }}>Performance Roller Chain</div>
         <div style={{ fontSize: 14, color: C.muted }}>Select a chain type to browse products</div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
