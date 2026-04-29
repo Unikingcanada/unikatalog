@@ -951,38 +951,267 @@ function AnsiSubGrid({ allProducts, onSelect }) {
 }
 
 
-// ─── Welded Steel Chain Subcategory Grid ─────────────────────────────────────
+// ─── Welded Steel Chain Series View ─────────────────────────────────────────
 
-function WeldedSubGrid({ allProducts, onSelect }) {
-  const [hovered, setHovered] = useState(null);
-  const subCounts = useMemo(() => {
-    const c = {};
-    for (const p of allProducts) {
-      if (p.type === "Welded Steel Chain") {
-        // Use the MAC category field stored in _subcategory
-        const sub = p._mac_category || p._subcategory || "Chain";
-        c[sub] = (c[sub] || 0) + 1;
-      }
-    }
-    return c;
-  }, [allProducts]);
+const WELDED_SERIES_LABELS = {
+  "Offset Sidebar":   "Offset Sidebar (WR Series)",
+  "Straight Sidebar": "Straight Sidebar (WRC Series)",
+  "Drag Chain":       "Drag Chain (WD Series)",
+  "Mega Mac":         "Mega Mac (WD-MM Series)",
+  "Super Mac":        "Super Mac (WD-SM Series)",
+};
+
+function MacProductModal({ record, onClose }) {
+  const [tab, setTab] = useState("specs");
+  if (!record) return null;
+
+  const tabs = [
+    { key: "specs", label: "Specifications" },
+    record.related_sprockets?.length > 0 && { key: "sprockets", label: `Sprockets (${record.related_sprockets.length})` },
+    record.related_pins?.length > 0 && { key: "pins", label: `Pins (${record.related_pins.length})` },
+    record.related_attachments?.length > 0 && { key: "attachments", label: `Attachments (${record.related_attachments.length})` },
+  ].filter(Boolean);
 
   return (
-    <div>
-      <div style={{ marginBottom: 28 }}>
-        <div style={{ fontSize: 22, fontWeight: 800, color: C.text, marginBottom: 4 }}>Welded Steel Chain</div>
-        <div style={{ fontSize: 14, color: C.muted }}>Select a chain type to browse products</div>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
-        {WELDED_SUBCATEGORIES.map(sub => (
-          <div key={sub.key} onClick={() => onSelect(sub.key)}
-            onMouseEnter={() => setHovered(sub.key)} onMouseLeave={() => setHovered(null)}
-            style={{ background: hovered === sub.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === sub.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: hovered === sub.key ? "#fff" : C.text }}>{sub.label}</div>
-            <div style={{ fontSize: 12, color: hovered === sub.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{sub.description}</div>
-            <div style={{ fontSize: 11, color: hovered === sub.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>
-              {subCounts[sub.key] ? `${subCounts[sub.key]} products` : "View →"}
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}
+      onClick={onClose}>
+      <div style={{ background:C.bgCard, borderRadius:12, maxWidth:900, width:"100%", maxHeight:"90vh", overflowY:"auto", boxShadow:"0 20px 60px rgba(0,0,0,0.4)" }}
+        onClick={e => e.stopPropagation()}>
+        {/* Header */}
+        <div style={{ padding:"20px 24px 0", borderBottom:"1px solid "+C.border }}>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:12 }}>
+            <div>
+              <div style={{ fontSize:22, fontWeight:800, color:C.text }}>{record.part_number}</div>
+              <div style={{ fontSize:13, color:C.muted, marginTop:3 }}>{record.subcategory} · {record.product_type}</div>
             </div>
+            <button onClick={onClose} style={{ background:"none", border:"none", fontSize:22, cursor:"pointer", color:C.muted, padding:"4px 8px" }}>×</button>
+          </div>
+          <div style={{ display:"flex", gap:8, marginBottom:0 }}>
+            {tabs.map(t => (
+              <button key={t.key} onClick={() => setTab(t.key)}
+                style={{ padding:"8px 16px", background: tab===t.key ? C.navy : "transparent", color: tab===t.key ? "#fff" : C.muted, border: tab===t.key ? "none" : "1px solid "+C.border, borderRadius:"6px 6px 0 0", cursor:"pointer", fontSize:13, fontWeight: tab===t.key ? 700 : 400, marginBottom:-1 }}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Body */}
+        <div style={{ padding:"20px 24px" }}>
+          {tab === "specs" && (
+            <div>
+              {/* Image + description */}
+              <div style={{ display:"flex", gap:20, marginBottom:20 }}>
+                {record.product_image && (
+                  <img src={record.product_image} alt={record.part_number}
+                    style={{ width:160, height:120, objectFit:"contain", borderRadius:8, background:C.bg, border:"1px solid "+C.border, padding:8, flexShrink:0 }} />
+                )}
+                <div>
+                  {record.description && <p style={{ fontSize:14, color:C.text, lineHeight:1.6, margin:0 }}>{record.description}</p>}
+                  {Array.isArray(record.features) && record.features.length > 0 && (
+                    <ul style={{ margin:"10px 0 0", paddingLeft:18 }}>
+                      {record.features.map((f,i) => <li key={i} style={{ fontSize:13, color:C.muted, marginBottom:4 }}>{f}</li>)}
+                    </ul>
+                  )}
+                </div>
+              </div>
+              {/* Main specs table */}
+              {Array.isArray(record.basic_headers) && record.basic_headers.length > 0 && Array.isArray(record.basic_rows) && record.basic_rows.length > 0 && (
+                <div style={{ overflowX:"auto", marginBottom:16 }}>
+                  <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>Specifications</div>
+                  <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
+                    <thead>
+                      <tr style={{ background:C.navy }}>
+                        {record.basic_headers.map((h,i) => <th key={i} style={{ padding:"8px 10px", color:"#fff", textAlign:"left", fontWeight:600, whiteSpace:"nowrap" }}>{h}</th>)}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {record.basic_rows.map((row, ri) => (
+                        <tr key={ri} style={{ background: ri%2===0 ? C.bg : C.bgCard, borderBottom:"1px solid "+C.border }}>
+                          {row.map((cell,ci) => <td key={ci} style={{ padding:"7px 10px", color:C.text, whiteSpace:"nowrap" }}>{cell}</td>)}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {/* More specs table */}
+              {Array.isArray(record.more_headers) && record.more_headers.length > 0 && Array.isArray(record.more_rows) && record.more_rows.length > 0 && (
+                <div style={{ overflowX:"auto" }}>
+                  <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>Additional Data</div>
+                  <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
+                    <thead>
+                      <tr style={{ background:C.navyMid }}>
+                        {record.more_headers.map((h,i) => <th key={i} style={{ padding:"8px 10px", color:"#fff", textAlign:"left", fontWeight:600, whiteSpace:"nowrap" }}>{h}</th>)}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {record.more_rows.map((row, ri) => (
+                        <tr key={ri} style={{ background: ri%2===0 ? C.bg : C.bgCard, borderBottom:"1px solid "+C.border }}>
+                          {row.map((cell,ci) => <td key={ci} style={{ padding:"7px 10px", color:C.text, whiteSpace:"nowrap" }}>{cell}</td>)}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+
+          {tab === "sprockets" && (
+            <div>
+              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Sprockets</div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(220px,1fr))", gap:10 }}>
+                {(record.related_sprockets||[]).map((sp,i) => (
+                  <div key={i} style={{ border:"1px solid "+C.border, borderRadius:8, padding:"12px 14px", background:C.bg }}>
+                    <div style={{ fontWeight:700, fontSize:14, color:C.text, marginBottom:4 }}>{sp.part_number || sp.number || JSON.stringify(sp).slice(0,40)}</div>
+                    {sp.teeth && <div style={{ fontSize:12, color:C.muted }}>Teeth: {sp.teeth}</div>}
+                    {sp.bore && <div style={{ fontSize:12, color:C.muted }}>Bore: {sp.bore}</div>}
+                    {sp.material && <div style={{ fontSize:12, color:C.muted }}>Material: {sp.material}</div>}
+                    {sp.description && <div style={{ fontSize:12, color:C.muted, marginTop:4 }}>{sp.description}</div>}
+                    {typeof sp === "string" && <div style={{ fontSize:12, color:C.muted }}>{sp}</div>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {tab === "pins" && (
+            <div>
+              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Pins & Connecting Links</div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(220px,1fr))", gap:10 }}>
+                {(record.related_pins||[]).map((pin,i) => (
+                  <div key={i} style={{ border:"1px solid "+C.border, borderRadius:8, padding:"12px 14px", background:C.bg }}>
+                    <div style={{ fontWeight:700, fontSize:14, color:C.text, marginBottom:4 }}>{pin.part_number || pin.number || JSON.stringify(pin).slice(0,40)}</div>
+                    {pin.description && <div style={{ fontSize:12, color:C.muted }}>{pin.description}</div>}
+                    {typeof pin === "string" && <div style={{ fontSize:12, color:C.muted }}>{pin}</div>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {tab === "attachments" && (
+            <div>
+              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Available Attachments</div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(220px,1fr))", gap:10 }}>
+                {(record.related_attachments||[]).map((att,i) => (
+                  <div key={i} style={{ border:"1px solid "+C.border, borderRadius:8, padding:"12px 14px", background:C.bg }}>
+                    <div style={{ fontWeight:700, fontSize:14, color:C.text, marginBottom:4 }}>{att.part_number || att.number || JSON.stringify(att).slice(0,40)}</div>
+                    {att.description && <div style={{ fontSize:12, color:C.muted }}>{att.description}</div>}
+                    {att.type && <div style={{ fontSize:12, color:C.muted }}>Type: {att.type}</div>}
+                    {typeof att === "string" && <div style={{ fontSize:12, color:C.muted }}>{att}</div>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function WeldedSeriesView({ rawMacRecords }) {
+  const [selectedSeries, setSelectedSeries] = useState(null);
+  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [hovered, setHovered] = useState(null);
+
+  // Only Welded Steel Chain category, product_type = Chain
+  const weldedChains = useMemo(() =>
+    rawMacRecords.filter(r => r.category === "Welded Steel Chain" && r.product_type === "Chain"),
+    [rawMacRecords]
+  );
+
+  // Group by subcategory (Offset Sidebar, Straight Sidebar, Drag Chain, Mega Mac, Super Mac)
+  const grouped = useMemo(() => {
+    const g = {};
+    for (const r of weldedChains) {
+      const sub = r.subcategory || "Other";
+      if (!g[sub]) g[sub] = [];
+      // Dedupe by part_number within group
+      if (!g[sub].find(x => x.part_number === r.part_number)) g[sub].push(r);
+    }
+    return g;
+  }, [weldedChains]);
+
+  const seriesOrder = ["Offset Sidebar", "Straight Sidebar", "Drag Chain", "Mega Mac", "Super Mac"];
+
+  // If a series is selected, show its chain cards
+  if (selectedSeries) {
+    const chains = grouped[selectedSeries] || [];
+    return (
+      <div>
+        {/* Back + heading */}
+        <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
+          <button onClick={() => setSelectedSeries(null)}
+            style={{ background:"none", border:"1px solid "+C.border, borderRadius:6, padding:"6px 14px", cursor:"pointer", fontSize:13, color:C.muted }}>
+            ← Back
+          </button>
+          <div>
+            <div style={{ fontSize:20, fontWeight:800, color:C.text }}>{WELDED_SERIES_LABELS[selectedSeries] || selectedSeries}</div>
+            <div style={{ fontSize:13, color:C.muted }}>{chains.length} chain series available</div>
+          </div>
+        </div>
+
+        {/* Chain cards grid */}
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(240px,1fr))", gap:14 }}>
+          {chains.map(chain => (
+            <div key={chain.id || chain.part_number}
+              onClick={() => setSelectedRecord(chain)}
+              onMouseEnter={() => setHovered(chain.part_number)}
+              onMouseLeave={() => setHovered(null)}
+              style={{ background: hovered===chain.part_number ? C.navyMid : C.bgCard, border:"1px solid "+(hovered===chain.part_number ? C.navyMid : C.border), borderRadius:10, padding:"16px 18px", cursor:"pointer", transition:"all 0.15s" }}>
+              {chain.product_image && (
+                <img src={chain.product_image} alt={chain.part_number}
+                  style={{ width:"100%", height:100, objectFit:"contain", borderRadius:6, background:C.bg, marginBottom:10, padding:6 }} />
+              )}
+              <div style={{ fontSize:15, fontWeight:800, color: hovered===chain.part_number ? "#fff" : C.text, marginBottom:4 }}>{chain.part_number}</div>
+              <div style={{ fontSize:12, color: hovered===chain.part_number ? "rgba(255,255,255,0.65)" : C.muted, marginBottom:8 }}>{chain.description?.slice(0,80)}{chain.description?.length>80?"...":""}</div>
+              <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
+                {chain.related_sprockets?.length > 0 && (
+                  <span style={{ fontSize:11, padding:"2px 8px", borderRadius:20, background: hovered===chain.part_number ? "rgba(255,255,255,0.15)" : C.bg, color: hovered===chain.part_number ? "#fff" : C.muted, border:"1px solid "+(hovered===chain.part_number ? "rgba(255,255,255,0.2)" : C.border) }}>
+                    {chain.related_sprockets.length} Sprockets
+                  </span>
+                )}
+                {chain.related_pins?.length > 0 && (
+                  <span style={{ fontSize:11, padding:"2px 8px", borderRadius:20, background: hovered===chain.part_number ? "rgba(255,255,255,0.15)" : C.bg, color: hovered===chain.part_number ? "#fff" : C.muted, border:"1px solid "+(hovered===chain.part_number ? "rgba(255,255,255,0.2)" : C.border) }}>
+                    {chain.related_pins.length} Pins
+                  </span>
+                )}
+                {chain.related_attachments?.length > 0 && (
+                  <span style={{ fontSize:11, padding:"2px 8px", borderRadius:20, background: hovered===chain.part_number ? "rgba(255,255,255,0.15)" : C.bg, color: hovered===chain.part_number ? "#fff" : C.muted, border:"1px solid "+(hovered===chain.part_number ? "rgba(255,255,255,0.2)" : C.border) }}>
+                    {chain.related_attachments.length} Attachments
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Product modal */}
+        {selectedRecord && <MacProductModal record={selectedRecord} onClose={() => setSelectedRecord(null)} />}
+      </div>
+    );
+  }
+
+  // Top-level: series type cards
+  return (
+    <div>
+      <div style={{ marginBottom:28 }}>
+        <div style={{ fontSize:22, fontWeight:800, color:C.text, marginBottom:4 }}>Welded Steel Chain</div>
+        <div style={{ fontSize:14, color:C.muted }}>Select a chain series to browse products, specifications, and compatible components</div>
+      </div>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(260px,1fr))", gap:14 }}>
+        {seriesOrder.filter(s => grouped[s]?.length > 0).map(sub => (
+          <div key={sub} onClick={() => setSelectedSeries(sub)}
+            onMouseEnter={() => setHovered(sub)} onMouseLeave={() => setHovered(null)}
+            style={{ background: hovered===sub ? C.navyMid : C.bgCard, border:"1px solid "+(hovered===sub ? C.navyMid : C.border), borderRadius:8, padding:"18px 20px", cursor:"pointer", transition:"all 0.15s" }}>
+            <div style={{ fontSize:14, fontWeight:700, color: hovered===sub ? "#fff" : C.text, marginBottom:4 }}>{WELDED_SERIES_LABELS[sub] || sub}</div>
+            <div style={{ fontSize:12, color: hovered===sub ? "rgba(255,255,255,0.6)" : C.muted, marginBottom:8 }}>
+              {grouped[sub].length} chain series
+            </div>
+            <div style={{ fontSize:11, color: hovered===sub ? "rgba(255,255,255,0.45)" : C.muted }}>Browse →</div>
           </div>
         ))}
       </div>
@@ -1082,6 +1311,7 @@ export default function Home() {
   const [selectedEngineeredSub, setSelectedEngineeredSub] = useState(null);
   const [selectedAnsiSub, setSelectedAnsiSub] = useState(null);
   const [selectedWeldedSub, setSelectedWeldedSub] = useState(null);
+  const [rawMacRecords, setRawMacRecords] = useState([]);
 
   useEffect(() => {
     async function load() {
@@ -1123,7 +1353,7 @@ export default function Home() {
     if (EXTERNAL_ROUTES[typeKey]) { window.location.href = EXTERNAL_ROUTES[typeKey]; return; }
     if (typeKey === "Engineered Chain") { setSelectedType("Engineered Chain"); setSelectedEngineeredSub(null); setSelectedAnsiSub(null); setView("engineered_subs"); return; }
     if (typeKey === "ANSI/BS Chain") { setSelectedType("ANSI/BS Chain"); setSelectedAnsiSub(null); setSelectedEngineeredSub(null); setSelectedWeldedSub(null); setView("ansi_subs"); return; }
-    if (typeKey === "Welded Steel Chain") { setSelectedType("Welded Steel Chain"); setSelectedWeldedSub(null); setSelectedAnsiSub(null); setSelectedEngineeredSub(null); setView("welded_subs"); return; }
+    if (typeKey === "Welded Steel Chain") { setSelectedType("Welded Steel Chain"); setSelectedWeldedSub(null); setSelectedAnsiSub(null); setSelectedEngineeredSub(null); setView("welded_products"); return; }
     setSelectedType(typeKey); setSelectedBrand(null); setSelectedAnsiSub(null); setSelectedWeldedSub(null); setView(BRAND_GATED.has(typeKey) ? "brands" : "products");
   }
   function selectEngineeredSub(subKey) {
@@ -1144,11 +1374,11 @@ export default function Home() {
     else if (level === 1 && inChainMenu && !selectedType) { /* already on chain menu */ }
     else if (level === 1 && inChainMenu && selectedType === "Engineered Chain" && selectedEngineeredSub) { setView("engineered_subs"); setSelectedEngineeredSub(null); }
     else if (level === 1 && inChainMenu && selectedType === "ANSI/BS Chain" && selectedAnsiSub) { setView("ansi_subs"); setSelectedAnsiSub(null); }
-    else if (level === 1 && inChainMenu && selectedType === "Welded Steel Chain" && selectedWeldedSub) { setView("welded_subs"); setSelectedWeldedSub(null); }
+    else if (level === 1 && inChainMenu && selectedType === "Welded Steel Chain") { setView("chains"); setSelectedType(null); setSelectedWeldedSub(null); }
     else if (level === 1 && inChainMenu) { setView("chains"); setSelectedType(null); setSelectedBrand(null); setSelectedEngineeredSub(null); setSelectedAnsiSub(null); setSelectedWeldedSub(null); }
     else if (level === 2 && inChainMenu && selectedType === "Engineered Chain" && selectedEngineeredSub) { setView("engineered_subs"); setSelectedEngineeredSub(null); }
     else if (level === 2 && inChainMenu && selectedType === "ANSI/BS Chain" && selectedAnsiSub) { setView("ansi_subs"); setSelectedAnsiSub(null); }
-    else if (level === 2 && inChainMenu && selectedType === "Welded Steel Chain" && selectedWeldedSub) { setView("welded_subs"); setSelectedWeldedSub(null); }
+
     else if (level === 1 && isBrandGated) { setView("brands"); setSelectedBrand(null); }
   }
 
@@ -1179,8 +1409,8 @@ export default function Home() {
           <EngineeredSubGrid allProducts={allData} onSelect={selectEngineeredSub} />
         ) : view === "ansi_subs" ? (
           <AnsiSubGrid allProducts={allData} onSelect={selectAnsiSub} />
-        ) : view === "welded_subs" ? (
-          <WeldedSubGrid allProducts={allData} onSelect={selectWeldedSub} />
+        ) : view === "welded_products" ? (
+          <WeldedSeriesView rawMacRecords={rawMacRecords} />
         ) : view === "brands" ? (
           <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} />
         ) : (
