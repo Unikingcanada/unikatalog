@@ -1355,16 +1355,22 @@ function WeldedSeriesView({ rawMacRecords }) {
     if (sprocketsLoaded) return;
     setSprocketsLoaded(true); // prevent double-fetch
     try {
-      let all = [], page = 1;
+      let all = [], skip = 0;
       while (true) {
-        const batch = await MacChainProduct.filter({ product_type: "Sprocket" }, page, 200);
+        const batch = await MacChainProduct.filter(
+          { product_type: "Sprocket" },
+          { limit: 200, skip }
+        );
         all = all.concat(batch);
         if (batch.length < 200) break;
-        page++;
+        skip += 200;
       }
       const m = {};
       for (const r of all) {
         if (r.slug) m[r.slug] = r;
+        // Also index by slug without tooth-count suffix (e.g. "wr132-8" → "wr132")
+        const parentSlug = r.slug?.replace(/-\d+$/, "");
+        if (parentSlug && parentSlug !== r.slug) m[parentSlug] = m[parentSlug] || r;
         if (r.part_number) m[r.part_number.toLowerCase()] = r;
       }
       setSprocketMap(m);
