@@ -916,7 +916,7 @@ function FilterBar({ typeKey, allProducts, activeFilters, onChange }) {
 
 // ─── Product List ─────────────────────────────────────────────────────────────
 
-function ProductList({ typeKey, brand, products: allProducts, showBrand }) {
+function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacRecords }) {
   const [activeFilters, setActiveFilters] = useState({});
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
@@ -958,7 +958,14 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand }) {
           {filtered.map(p => <ProductCard key={p.id} product={p} showBrand={showBrand} onClick={setSelected} />)}
         </div>
       )}
-      {selected ? <ProductModal product={selected} showBrand={showBrand} onClose={() => setSelected(null)} /> : null}
+      {(() => {
+        if (!selected) return null;
+        if (selected._source === "allied") {
+          const rawRecord = (rawMacRecords || []).find(r => r.id === selected.id) || null;
+          if (rawRecord) return <MacProductModal record={rawRecord} slugMap={{}} sprocketMap={{}} loadSprockets={() => {}} onSelect={() => {}} onClose={() => setSelected(null)} />;
+        }
+        return <ProductModal product={selected} showBrand={showBrand} onClose={() => setSelected(null)} />;
+      })()}
     </div>
   );
 }
@@ -1685,7 +1692,7 @@ export default function Home() {
         ) : view === "brands" ? (
           <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} />
         ) : (
-          <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} />
+          <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} rawMacRecords={rawMacRecords} />
         )}
       </div>
       <div style={{ borderTop: "1px solid " + C.border, padding: "14px 40px", textAlign: "center", fontSize: 11, color: "#cbd5e1" }}>
