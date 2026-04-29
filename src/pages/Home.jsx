@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { UniCatalog, CatalogProduct, ElevatorBucket, DonghuaChain } from "@/api/entities";
+import { UniCatalog, CatalogProduct, ElevatorBucket, DonghuaChain, MacChainProduct } from "@/api/entities";
 
 const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics"]);
 const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket"]);
@@ -766,6 +766,45 @@ function TypeGrid({ types, counts, onSelect }) {
   );
 }
 
+
+// ─── Engineered Chain Subcategory Grid ────────────────────────────────────────
+
+function EngineeredSubGrid({ allProducts, onSelect }) {
+  const [hovered, setHovered] = useState(null);
+  const subCounts = useMemo(() => {
+    const c = {};
+    for (const p of allProducts) {
+      if (p.type === "Engineered Chain" && p._source === "allied") {
+        const sub = p._subcategory || "Other";
+        c[sub] = (c[sub] || 0) + 1;
+      }
+    }
+    return c;
+  }, [allProducts]);
+
+  return (
+    <div>
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontSize: 22, fontWeight: 800, color: C.text, marginBottom: 4 }}>Engineered Chain</div>
+        <div style={{ fontSize: 14, color: C.muted }}>Select a chain class to browse products</div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
+        {ENGINEERED_SUBCATEGORIES.map(sub => (
+          <div key={sub.key} onClick={() => onSelect(sub.key)}
+            onMouseEnter={() => setHovered(sub.key)} onMouseLeave={() => setHovered(null)}
+            style={{ background: hovered === sub.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === sub.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: hovered === sub.key ? "#fff" : C.text }}>{sub.label}</div>
+            <div style={{ fontSize: 12, color: hovered === sub.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{sub.description}</div>
+            <div style={{ fontSize: 11, color: hovered === sub.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>
+              {subCounts[sub.key] ? `${subCounts[sub.key]} products` : "View →"}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Chain Subcategory Grid ───────────────────────────────────────────────────
 
 function ChainSubGrid({ types, counts, onSelect }) {
@@ -855,16 +894,31 @@ export default function Home() {
   const [selectedType, setSelectedType] = useState(null);
   const [selectedBrand, setSelectedBrand] = useState(null);
   const [inChainMenu, setInChainMenu] = useState(false);
+  const [selectedEngineeredSub, setSelectedEngineeredSub] = useState(null);
 
   useEffect(() => {
     async function load() {
       try {
-        const [cat, elev, uni, dh] = await Promise.all([CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list(), DonghuaChain.list()]);
+        const fetchAll = async (entity) => {
+          let results = [], page = 0, hasMore = true;
+          while (hasMore) {
+            const batch = await entity.list({ limit: 200, skip: page * 200 });
+            results = results.concat(batch);
+            hasMore = batch.length === 200;
+            page++;
+          }
+          return results;
+        };
+        const [cat, elev, uni, dh, allied] = await Promise.all([
+          fetchAll(CatalogProduct), fetchAll(ElevatorBucket), fetchAll(UniCatalog),
+          fetchAll(DonghuaChain), fetchAll(MacChainProduct)
+        ]);
         setAllData([
           ...cat.map(normalizeCatalogProduct),
           ...elev.map(normalizeElevatorBucket),
           ...uni.map(normalizeUniCatalog),
           ...dh.map(normalizeDonghuaChain),
+          ...allied.map(normalizeAllied),
         ]);
       } catch (e) { console.error("Catalog load error:", e); }
       finally { setLoading(false); }
@@ -875,26 +929,38 @@ export default function Home() {
   const typeCounts = useMemo(() => { const c = {}; for (const p of allData) c[p.type] = (c[p.type] || 0) + 1; return c; }, [allData]);
   const availableTypes = useMemo(() => PRODUCT_TYPES.filter(t => (typeCounts[t.key] || 0) > 0 || !!EXTERNAL_ROUTES[t.key]), [typeCounts]);
   const typeProducts = useMemo(() => allData.filter(p => p.type === selectedType), [allData, selectedType]);
-  const viewProducts = useMemo(() => selectedBrand ? typeProducts.filter(p => p.brand === selectedBrand) : typeProducts, [typeProducts, selectedBrand]);
+  const viewProducts = useMemo(() => {
+    let prods = selectedBrand ? typeProducts.filter(p => p.brand === selectedBrand) : typeProducts;
+    if (selectedEngineeredSub) prods = prods.filter(p => p._subcategory === selectedEngineeredSub);
+    return prods;
+  }, [typeProducts, selectedBrand, selectedEngineeredSub]);
   const isBrandGated = selectedType && BRAND_GATED.has(selectedType);
   const showBrand = selectedType && SHOW_BRAND.has(selectedType) && !selectedBrand;
 
   function selectType(typeKey) {
     if (typeKey === "__chain__") { setInChainMenu(true); setView("chains"); return; }
     if (EXTERNAL_ROUTES[typeKey]) { window.location.href = EXTERNAL_ROUTES[typeKey]; return; }
+    if (typeKey === "Engineered Chain") { setSelectedType("Engineered Chain"); setSelectedEngineeredSub(null); setView("engineered_subs"); return; }
     setSelectedType(typeKey); setSelectedBrand(null); setView(BRAND_GATED.has(typeKey) ? "brands" : "products");
+  }
+  function selectEngineeredSub(subKey) {
+    setSelectedEngineeredSub(subKey);
+    setView("products");
   }
   function selectBrand(brand) { setSelectedBrand(brand); setView("products"); }
   function navTo(level) {
-    if (level === 0) { setView("home"); setSelectedType(null); setSelectedBrand(null); setInChainMenu(false); }
+    if (level === 0) { setView("home"); setSelectedType(null); setSelectedBrand(null); setInChainMenu(false); setSelectedEngineeredSub(null); }
     else if (level === 1 && inChainMenu && !selectedType) { /* already on chain menu */ }
-    else if (level === 1 && inChainMenu) { setView("chains"); setSelectedType(null); setSelectedBrand(null); }
+    else if (level === 1 && inChainMenu && selectedType === "Engineered Chain" && selectedEngineeredSub) { setView("engineered_subs"); setSelectedEngineeredSub(null); }
+    else if (level === 1 && inChainMenu) { setView("chains"); setSelectedType(null); setSelectedBrand(null); setSelectedEngineeredSub(null); }
+    else if (level === 2 && inChainMenu && selectedType === "Engineered Chain" && selectedEngineeredSub) { setView("engineered_subs"); setSelectedEngineeredSub(null); }
     else if (level === 1 && isBrandGated) { setView("brands"); setSelectedBrand(null); }
   }
 
   const breadcrumbs = ["All Products"];
   if (inChainMenu) breadcrumbs.push("Chain");
   if (selectedType) breadcrumbs.push(TYPE_MAP[selectedType]?.label || selectedType);
+  if (selectedEngineeredSub) breadcrumbs.push(ENGINEERED_SUBCATEGORIES.find(s => s.key === selectedEngineeredSub)?.label || selectedEngineeredSub);
   if (selectedBrand) breadcrumbs.push(selectedBrand);
 
   return (
@@ -912,6 +978,8 @@ export default function Home() {
             counts={typeCounts}
             onSelect={selectType}
           />
+        ) : view === "engineered_subs" ? (
+          <EngineeredSubGrid allProducts={allData} onSelect={selectEngineeredSub} />
         ) : view === "brands" ? (
           <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} />
         ) : (
