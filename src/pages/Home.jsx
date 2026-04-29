@@ -232,9 +232,11 @@ const ENGINEERED_SUBCATEGORIES = [
 ];
 
 const WELDED_SUBCATEGORIES = [
-  { key: "Welded Steel Mill Chain",  label: "Welded Steel Mill Chain",  description: "WH and WR series welded steel mill chains for bulk material handling" },
-  { key: "Welded Steel Drag Chain",  label: "Welded Steel Drag Chain",  description: "WD series welded steel drag chains for scraper and drag conveyor applications" },
-  { key: "Welded Steel Chain",       label: "Other Welded Steel Chain", description: "Additional welded steel conveyor and attachment chains" },
+  { key: "Chain",                          label: "Welded Steel Chain",               description: "WR and WD series mill and drag chains for bulk material handling and log handling" },
+  { key: "Sprocket",                       label: "Sprockets",                        description: "Matched sprockets for WR and WD series welded steel chains" },
+  { key: "Pin",                            label: "Pins & Connecting Links",          description: "Standard and specialty pins for welded steel chain assembly and repair" },
+  { key: "Welded Steel Chain Attachments", label: "Chain Attachments",               description: "A, K, S, RF and RR series flight attachments for welded steel chain" },
+  { key: "Chain and Attachments",          label: "Chain with Attachments",           description: "Log cradles, slasher flights, side lift assemblies and configured chain sets" },
 ];
 
 const ANSI_SUBCATEGORIES = [
@@ -259,16 +261,9 @@ const ANSI_SUBCATEGORIES = [
   { key: "Citrus Chains",                      label: "Citrus Chains",                     description: "Stainless and carbon steel D-5 citrus conveyor chains" },
 ];
 
-// Allied Locke precision roller chain subcategories → ANSI/BS Chain
-// MAC engineered classes → Engineered Chain
-const ALLIED_ANSI_SUBCATS = new Set([
-  "ANSI Standard Roller Chains", "British Standard Roller Chains",
-  "Armor Coat Chains", "Super Series Chains", "Self-Lube Chains",
-  "Self-Lube Bushing Chains", "Nickel Plated Chains", "Hollow Pin Chains",
-  "Double Pitch Roller Chains", "O-Ring Chains", "Side Bow Chains",
-  "Rollerless Chains", "Non-Standard Series Chains", "Double Capacity Chains",
-  "XDO Chains", "Solid Bushing/Solid Roller Chains", "Straight Sidebar Chains",
-  "Zinc Plated Chains", "Citrus Chains",
+// Category-based type routing for Allied Locke + Mac Chain records
+const MAC_WELDED_CATEGORIES = new Set([
+  "Welded Steel Chain", "Sprocket", "Pin", "Attachment",
 ]);
 
 function normalizeAllied(r) {
@@ -278,16 +273,34 @@ function normalizeAllied(r) {
   headers.forEach((h, i) => { if (firstRow[i] != null && firstRow[i] !== "") specs[h] = firstRow[i]; });
   if (r.subcategory) specs["Category"] = r.subcategory;
   if (r.industry) specs["Industry"] = r.industry;
-  // Allied Locke precision roller chain → ANSI/BS Chain; MAC engineered → Engineered Chain
-  const isAnsi = r.vendor === "Allied Locke" || ALLIED_ANSI_SUBCATS.has(r.subcategory);
-  const type = isAnsi ? "ANSI/BS Chain" : "Engineered Chain";
+
+  // Route by category field — definitive source of truth
+  let type;
+  const cat = r.category || "";
+  if (cat === "High-End Roller Chain") {
+    type = "ANSI/BS Chain";
+  } else if (cat === "Engineered Chain") {
+    type = "Engineered Chain";
+  } else if (MAC_WELDED_CATEGORIES.has(cat)) {
+    type = "Welded Steel Chain";
+  } else if (cat === "Long Link Chain") {
+    type = "Long Link Chain";
+  } else if (cat === "Pintle Chain") {
+    type = "Pintle Chain";
+  } else if (cat === "Special Application Chain") {
+    type = "Special Application Chain";
+  } else {
+    type = "Engineered Chain"; // safe fallback
+  }
+
   return {
     id: r.id, _source: "allied", type,
     brand: "",
     series: r.part_number || "",
     style: r.subcategory || r.product_type || "",
-    category: r.subcategory || "",
+    category: r.subcategory || cat,
     _subcategory: r.subcategory || r.product_type || "",
+    _mac_category: cat || "",
     application: r.industry || "",
     materials: "",
     duty: "",
@@ -946,12 +959,9 @@ function WeldedSubGrid({ allProducts, onSelect }) {
     const c = {};
     for (const p of allProducts) {
       if (p.type === "Welded Steel Chain") {
-        const sub = p._subcategory || p.style || "Welded Steel Chain";
-        // Normalize to our three buckets
-        const bucket = sub.includes("Mill") ? "Welded Steel Mill Chain"
-          : sub.includes("Drag") ? "Welded Steel Drag Chain"
-          : "Welded Steel Chain";
-        c[bucket] = (c[bucket] || 0) + 1;
+        // Use the MAC category field stored in _subcategory
+        const sub = p._mac_category || p._subcategory || "Chain";
+        c[sub] = (c[sub] || 0) + 1;
       }
     }
     return c;
@@ -1101,12 +1111,7 @@ export default function Home() {
     if (selectedEngineeredSub) prods = prods.filter(p => p._subcategory === selectedEngineeredSub);
     if (selectedAnsiSub) prods = prods.filter(p => p._subcategory === selectedAnsiSub);
     if (selectedWeldedSub) {
-      prods = prods.filter(p => {
-        const sub = p._subcategory || p.style || "";
-        if (selectedWeldedSub === "Welded Steel Mill Chain") return sub.includes("Mill");
-        if (selectedWeldedSub === "Welded Steel Drag Chain") return sub.includes("Drag");
-        return !sub.includes("Mill") && !sub.includes("Drag");
-      });
+      prods = prods.filter(p => (p._mac_category || p._subcategory || "Chain") === selectedWeldedSub);
     }
     return prods;
   }, [typeProducts, selectedBrand, selectedEngineeredSub, selectedAnsiSub]);
