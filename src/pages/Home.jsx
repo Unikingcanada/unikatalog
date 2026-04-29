@@ -1118,10 +1118,10 @@ function WeldedSeriesView({ rawMacRecords }) {
   const [hovered, setHovered] = useState(null);
 
   // Only Welded Steel Chain category, product_type = Chain
-  const weldedChains = useMemo(() =>
-    rawMacRecords.filter(r => r.category === "Welded Steel Chain" && r.product_type === "Chain"),
-    [rawMacRecords]
-  );
+  const weldedChains = useMemo(() => {
+    if (!rawMacRecords || rawMacRecords.length === 0) return [];
+    return rawMacRecords.filter(r => r.category === "Welded Steel Chain" && r.product_type === "Chain");
+  }, [rawMacRecords]);
 
   // Group by subcategory (Offset Sidebar, Straight Sidebar, Drag Chain, Mega Mac, Super Mac)
   const grouped = useMemo(() => {
@@ -1196,6 +1196,13 @@ function WeldedSeriesView({ rawMacRecords }) {
   }
 
   // Top-level: series type cards
+  if (weldedChains.length === 0) return (
+    <div style={{ padding:40, textAlign:"center", color:C.muted }}>
+      <div style={{ fontSize:32, marginBottom:12 }}>⛓</div>
+      <div style={{ fontSize:16, fontWeight:600 }}>Loading Welded Steel Chain data...</div>
+    </div>
+  );
+
   return (
     <div>
       <div style={{ marginBottom:28 }}>
@@ -1320,6 +1327,7 @@ export default function Home() {
           CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list(),
           DonghuaChain.list(), MacChainProduct.list()
         ]);
+        setRawMacRecords(allied);
         setAllData([
           ...cat.map(normalizeCatalogProduct),
           ...elev.map(normalizeElevatorBucket),
