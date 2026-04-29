@@ -916,7 +916,7 @@ function FilterBar({ typeKey, allProducts, activeFilters, onChange }) {
 
 // ─── Product List ─────────────────────────────────────────────────────────────
 
-function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacSlugMap, sprocketMap, loadSprockets }) {
+function ProductList({ typeKey, brand, products: allProducts, showBrand }) {
   const [activeFilters, setActiveFilters] = useState({});
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
@@ -958,14 +958,7 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacS
           {filtered.map(p => <ProductCard key={p.id} product={p} showBrand={showBrand} onClick={setSelected} />)}
         </div>
       )}
-      {selected && selected._source !== "allied" && (
-        <ProductModal product={selected} showBrand={showBrand} onClose={() => setSelected(null)} />
-      )}
-      {selected && selected._source === "allied" && (() => {
-        const rawRec = rawMacSlugMap?.[selected.series?.toLowerCase()] || rawMacSlugMap?.[selected.id] || null;
-        const rec = rawRec || selected;
-        return <MacProductModal record={rec} slugMap={rawMacSlugMap||{}} sprocketMap={sprocketMap||{}} loadSprockets={loadSprockets||(() => {})} onSelect={r => setSelected({...r, _source:"allied"})} onClose={() => setSelected(null)} />;
-      })()}
+      {selected ? <ProductModal product={selected} showBrand={showBrand} onClose={() => setSelected(null)} /> : null}
     </div>
   );
 }
@@ -1130,7 +1123,7 @@ function RelatedCard({ item, full, onClick }) {
   );
 }
 
-function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect, onClose }) {
+function MacProductModal({ record, slugMap, onSelect, onClose }) {
   const [tab, setTab] = useState("specs");
   useEffect(() => { setTab("specs"); }, [record?.part_number]);
   if (!record) return null;
@@ -1247,17 +1240,20 @@ function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect
             </div>
           )}
 
-          {tab === "sprockets" && (() => { loadSprockets(); return (
+          {tab === "sprockets" && (
             <div>
               <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Sprockets</div>
-              {Object.keys(sprocketMap).length === 0 && (
-                <div style={{ fontSize:13, color:C.muted, padding:"12px 0" }}>Loading sprocket data...</div>
-              )}
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(180px,1fr))", gap:10 }}>
                 {(record.related_sprockets||[]).map((sp,i) => {
-                  // Strip tooth-count suffix to get parent sprocket slug
+                  // Try slug directly, then stripped (remove tooth count suffix)
                   const groupSlug = sp.slug?.replace(/-\d+$/, "");
-                  const dbRecord = sprocketMap[sp.slug] || sprocketMap[groupSlug] || sprocketMap[sp.part_number?.toLowerCase()] || null;
+                  // Find sprocket DB record — must be product_type Sprocket
+                  const findSprocket = (key) => {
+                    const r = slugMap?.[key];
+                    return (r && r.product_type === "Sprocket") ? r : null;
+                  };
+                  const dbRecord = findSprocket(sp.slug) || findSprocket(groupSlug) || null;
+                  const groupRecord = null; // already handled above
                   const synthetic = dbRecord || {
                     part_number: sp.part_number,
                     product_type: "Sprocket",
@@ -1281,7 +1277,7 @@ function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect
                 })}
               </div>
             </div>
-          ); })() }
+          )}
 
           {tab === "pins" && (
             <div>
@@ -1350,15 +1346,23 @@ function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect
   );
 }
 
-function WeldedSeriesView({ rawMacRecords, sprocketMap, setSprocketMap, loadSprockets }) {
+function WeldedSeriesView({ rawMacRecords }) {
   const [selectedSeries, setSelectedSeries] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [hovered, setHovered] = useState(null);
-  // Chain slug map (chains only — already loaded)
+
+  // Slug → full record lookup map
+  // Build separate maps: sprocket map takes priority for sprocket slugs
   const slugMap = useMemo(() => {
     const m = {};
+    // First pass: all records by slug
     for (const r of rawMacRecords || []) {
       if (r.slug) m[r.slug] = r;
+    }
+    // Second pass: sprockets overwrite chains when slug collides
+    for (const r of rawMacRecords || []) {
+      if (r.product_type === "Sprocket" && r.slug) m[r.slug] = r;
+      if (r.product_type === "Sprocket" && r.part_number) m[r.part_number.toLowerCase()] = r;
     }
     return m;
   }, [rawMacRecords]);
@@ -1436,7 +1440,7 @@ function WeldedSeriesView({ rawMacRecords, sprocketMap, setSprocketMap, loadSpro
         </div>
 
         {/* Product modal */}
-        {selectedRecord && <MacProductModal record={selectedRecord} slugMap={slugMap} sprocketMap={sprocketMap} loadSprockets={loadSprockets} onSelect={setSelectedRecord} onClose={() => setSelectedRecord(null)} />}
+        {selectedRecord && <MacProductModal record={selectedRecord} slugMap={slugMap} onSelect={setSelectedRecord} onClose={() => setSelectedRecord(null)} />}
       </div>
     );
   }
@@ -1565,30 +1569,23 @@ export default function Home() {
   const [selectedAnsiSub, setSelectedAnsiSub] = useState(null);
   const [selectedWeldedSub, setSelectedWeldedSub] = useState(null);
   const [rawMacRecords, setRawMacRecords] = useState([]);
-  const [sprocketMap, setSprocketMap] = useState({});
-
-  const loadSprocketsRef = React.useRef(false);
-  const loadSprockets = React.useCallback(() => {
-    if (loadSprocketsRef.current) return;
-    loadSprocketsRef.current = true;
-    // rawMacRecords already contains sprockets — just index them
-    const m = {};
-    for (const r of rawMacRecords) {
-      if (r.product_type !== "Sprocket") continue;
-      if (r.slug) m[r.slug] = r;
-      const parentSlug = r.slug?.replace(/-\d+$/, "");
-      if (parentSlug && parentSlug !== r.slug) m[parentSlug] = m[parentSlug] || r;
-      if (r.part_number) m[r.part_number.toLowerCase()] = r;
-    }
-    setSprocketMap(m);
-  }, [rawMacRecords]);
 
   useEffect(() => {
+    async function fetchAll(Entity) {
+      let all = [], page = 1;
+      while (true) {
+        const batch = await Entity.list({ page, per_page: 200 });
+        all = all.concat(batch);
+        if (batch.length < 200) break;
+        page++;
+      }
+      return all;
+    }
     async function load() {
       try {
         const [cat, elev, uni, dh, allied] = await Promise.all([
           CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list(),
-          DonghuaChain.list(), MacChainProduct.list()
+          DonghuaChain.list(), fetchAll(MacChainProduct)
         ]);
         setRawMacRecords(allied);
         setAllData([
@@ -1603,16 +1600,6 @@ export default function Home() {
     }
     load();
   }, []);
-
-  const rawMacSlugMap = useMemo(() => {
-    const m = {};
-    for (const r of rawMacRecords || []) {
-      if (r.slug) m[r.slug] = r;
-      if (r.part_number) m[r.part_number.toLowerCase()] = r;
-      if (r.id) m[r.id] = r;
-    }
-    return m;
-  }, [rawMacRecords]);
 
   const typeCounts = useMemo(() => { const c = {}; for (const p of allData) c[p.type] = (c[p.type] || 0) + 1; return c; }, [allData]);
   const availableTypes = useMemo(() => PRODUCT_TYPES.filter(t => (typeCounts[t.key] || 0) > 0 || !!EXTERNAL_ROUTES[t.key]), [typeCounts]);
@@ -1691,11 +1678,11 @@ export default function Home() {
         ) : view === "ansi_subs" ? (
           <AnsiSubGrid allProducts={allData} onSelect={selectAnsiSub} />
         ) : view === "welded_products" ? (
-          <WeldedSeriesView rawMacRecords={rawMacRecords} sprocketMap={sprocketMap} setSprocketMap={setSprocketMap} loadSprockets={loadSprockets} />
+          <WeldedSeriesView rawMacRecords={rawMacRecords} />
         ) : view === "brands" ? (
           <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} />
         ) : (
-          <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} rawMacSlugMap={rawMacSlugMap} sprocketMap={sprocketMap} loadSprockets={loadSprockets} />
+          <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} />
         )}
       </div>
       <div style={{ borderTop: "1px solid " + C.border, padding: "14px 40px", textAlign: "center", fontSize: 11, color: "#cbd5e1" }}>
