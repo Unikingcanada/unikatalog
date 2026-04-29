@@ -1144,7 +1144,7 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
         <div style={{ padding:"20px 24px 0", borderBottom:"1px solid "+C.border }}>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:12 }}>
             <div>
-              <div style={{ fontSize:22, fontWeight:800, color:C.text }}>{record.part_number}</div>
+              <div style={{ fontSize:22, fontWeight:800, color:C.text }}>{record._specificPart || record.part_number}</div>
               <div style={{ fontSize:13, color:C.muted, marginTop:3 }}>{record.subcategory} · {record.product_type}</div>
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:8 }}>
@@ -1184,7 +1184,12 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
                 </div>
               </div>
               {/* Main specs table */}
-              {Array.isArray(record.basic_headers) && record.basic_headers.length > 0 && Array.isArray(record.basic_rows) && record.basic_rows.length > 0 && (
+              {Array.isArray(record.basic_headers) && record.basic_headers.length > 0 && Array.isArray(record.basic_rows) && record.basic_rows.length > 0 && (() => {
+                const filteredBasic = record._specificPart
+                  ? record.basic_rows.filter(row => row[0] === record._specificPart)
+                  : record.basic_rows;
+                const displayRows = filteredBasic.length > 0 ? filteredBasic : record.basic_rows;
+                return (
                 <div style={{ overflowX:"auto", marginBottom:16 }}>
                   <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>Specifications</div>
                   <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
@@ -1194,7 +1199,7 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {record.basic_rows.map((row, ri) => (
+                      {displayRows.map((row, ri) => (
                         <tr key={ri} style={{ background: ri%2===0 ? C.bg : C.bgCard, borderBottom:"1px solid "+C.border }}>
                           {row.map((cell,ci) => <td key={ci} style={{ padding:"7px 10px", color:C.text, whiteSpace:"nowrap" }}>{cell}</td>)}
                         </tr>
@@ -1202,9 +1207,15 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
                     </tbody>
                   </table>
                 </div>
-              )}
+                );
+              })()}
               {/* More specs table */}
-              {Array.isArray(record.more_headers) && record.more_headers.length > 0 && Array.isArray(record.more_rows) && record.more_rows.length > 0 && (
+              {Array.isArray(record.more_headers) && record.more_headers.length > 0 && Array.isArray(record.more_rows) && record.more_rows.length > 0 && (() => {
+                const filteredMore = record._specificPart
+                  ? record.more_rows.filter(row => row[0] === record._specificPart)
+                  : record.more_rows;
+                const displayMoreRows = filteredMore.length > 0 ? filteredMore : record.more_rows;
+                return (
                 <div style={{ overflowX:"auto" }}>
                   <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>Additional Data</div>
                   <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
@@ -1214,7 +1225,7 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {record.more_rows.map((row, ri) => (
+                      {displayMoreRows.map((row, ri) => (
                         <tr key={ri} style={{ background: ri%2===0 ? C.bg : C.bgCard, borderBottom:"1px solid "+C.border }}>
                           {row.map((cell,ci) => <td key={ci} style={{ padding:"7px 10px", color:C.text, whiteSpace:"nowrap" }}>{cell}</td>)}
                         </tr>
@@ -1222,7 +1233,8 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
                     </tbody>
                   </table>
                 </div>
-              )}
+                );
+              })()}
             </div>
           )}
 
@@ -1252,7 +1264,7 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
                   };
                   return (
                     <RelatedCard key={i} item={sp} full={synthetic}
-                      onClick={() => onSelect({...synthetic, _parentPart: record.part_number, _parentRecord: record})} />
+                      onClick={() => onSelect({...synthetic, _specificPart: sp.part_number, _parentPart: record.part_number, _parentRecord: record})} />
                   );
                 })}
               </div>
@@ -1283,7 +1295,7 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
                   };
                   return (
                     <RelatedCard key={i} item={pin} full={synthetic}
-                      onClick={() => onSelect({...synthetic, _parentPart: record.part_number, _parentRecord: record})} />
+                      onClick={() => onSelect({...synthetic, _specificPart: sp.part_number, _parentPart: record.part_number, _parentRecord: record})} />
                   );
                 })}
               </div>
@@ -1314,7 +1326,7 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
                   };
                   return (
                     <RelatedCard key={i} item={att} full={synthetic}
-                      onClick={() => onSelect({...synthetic, _parentPart: record.part_number, _parentRecord: record})} />
+                      onClick={() => onSelect({...synthetic, _specificPart: sp.part_number, _parentPart: record.part_number, _parentRecord: record})} />
                   );
                 })}
               </div>
