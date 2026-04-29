@@ -251,6 +251,7 @@ function normalizeAllied(r) {
     notes: Array.isArray(r.features) ? r.features.join(" · ") : (r.description || ""),
     catalog_url: "", tech_doc_url: "",
     image_url: r.product_image || "",
+    diagram_image: r.diagram_image || "",
     belt_data: null, sprocket_data: null,
     specs,
   };
@@ -376,6 +377,13 @@ function printTearSheet(product) {
     </div>
   </div>
 
+  ${product.diagram_image ? `
+  <div class="section-wrap">
+    <div class="section-title">Dimensional Drawing</div>
+    <div style="text-align:center; margin-bottom:8px;">
+      <img src="${product.diagram_image}" alt="Dimensional Drawing" style="max-width:100%; max-height:280px; object-fit:contain; border:1px solid #e5e7eb; border-radius:6px; padding:10px; background:#f8fafc;" />
+    </div>
+  </div>` : ""}
   ${product.notes ? `<div class="notes-box">${product.notes}</div>` : ""}
 
   ${specs.length ? `
@@ -577,6 +585,11 @@ function ProductModal({ product, showBrand, onClose }) {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-end", flexShrink: 0 }}>
               <button onClick={onClose} style={{ background: "rgba(255,255,255,0.12)", border: "none", color: "#fff", width: 30, height: 30, borderRadius: 6, cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
+              {product.diagram_image ? (
+                <a href={product.diagram_image} target="_blank" rel="noopener noreferrer" style={{ background: "rgba(45,137,78,0.3)", border: "1px solid rgba(45,137,78,0.6)", color: "#fff", padding: "5px 12px", borderRadius: 6, cursor: "pointer", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap", textDecoration: "none", display: "block", textAlign: "center" }}>
+                  Drawing
+                </a>
+              ) : null}
               <button onClick={() => printTearSheet(product)} style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", color: "#fff", padding: "5px 12px", borderRadius: 6, cursor: "pointer", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap" }}>
                 Print Tear Sheet
               </button>
