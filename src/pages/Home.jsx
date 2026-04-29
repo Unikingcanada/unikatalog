@@ -1123,7 +1123,7 @@ function RelatedCard({ item, full, onClick }) {
   );
 }
 
-function MacProductModal({ record, slugMap, onSelect, onClose }) {
+function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect, onClose }) {
   const [tab, setTab] = useState("specs");
   useEffect(() => { setTab("specs"); }, [record?.part_number]);
   if (!record) return null;
@@ -1240,20 +1240,17 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
             </div>
           )}
 
-          {tab === "sprockets" && (
+          {tab === "sprockets" && (() => { loadSprockets(); return (
             <div>
               <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Sprockets</div>
+              {Object.keys(sprocketMap).length === 0 && (
+                <div style={{ fontSize:13, color:C.muted, padding:"12px 0" }}>Loading sprocket data...</div>
+              )}
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(180px,1fr))", gap:10 }}>
                 {(record.related_sprockets||[]).map((sp,i) => {
-                  // Try slug directly, then stripped (remove tooth count suffix)
+                  // Strip tooth-count suffix to get parent sprocket slug
                   const groupSlug = sp.slug?.replace(/-\d+$/, "");
-                  // Find sprocket DB record — must be product_type Sprocket
-                  const findSprocket = (key) => {
-                    const r = slugMap?.[key];
-                    return (r && r.product_type === "Sprocket") ? r : null;
-                  };
-                  const dbRecord = findSprocket(sp.slug) || findSprocket(groupSlug) || null;
-                  const groupRecord = null; // already handled above
+                  const dbRecord = sprocketMap[sp.slug] || sprocketMap[groupSlug] || sprocketMap[sp.part_number?.toLowerCase()] || null;
                   const synthetic = dbRecord || {
                     part_number: sp.part_number,
                     product_type: "Sprocket",
@@ -1277,7 +1274,7 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
                 })}
               </div>
             </div>
-          )}
+          ); })() }
 
           {tab === "pins" && (
             <div>
@@ -1350,19 +1347,35 @@ function WeldedSeriesView({ rawMacRecords }) {
   const [selectedSeries, setSelectedSeries] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [hovered, setHovered] = useState(null);
+  // Lazy-loaded sprocket records — only fetched when a sprockets tab is opened
+  const [sprocketMap, setSprocketMap] = useState({});
+  const [sprocketsLoaded, setSprocketsLoaded] = useState(false);
 
-  // Slug → full record lookup map
-  // Build separate maps: sprocket map takes priority for sprocket slugs
+  const loadSprockets = async () => {
+    if (sprocketsLoaded) return;
+    setSprocketsLoaded(true); // prevent double-fetch
+    try {
+      let all = [], page = 1;
+      while (true) {
+        const batch = await MacChainProduct.filter({ product_type: "Sprocket" }, page, 200);
+        all = all.concat(batch);
+        if (batch.length < 200) break;
+        page++;
+      }
+      const m = {};
+      for (const r of all) {
+        if (r.slug) m[r.slug] = r;
+        if (r.part_number) m[r.part_number.toLowerCase()] = r;
+      }
+      setSprocketMap(m);
+    } catch(e) { console.error("Sprocket load error:", e); }
+  };
+
+  // Chain slug map (chains only — already loaded)
   const slugMap = useMemo(() => {
     const m = {};
-    // First pass: all records by slug
     for (const r of rawMacRecords || []) {
       if (r.slug) m[r.slug] = r;
-    }
-    // Second pass: sprockets overwrite chains when slug collides
-    for (const r of rawMacRecords || []) {
-      if (r.product_type === "Sprocket" && r.slug) m[r.slug] = r;
-      if (r.product_type === "Sprocket" && r.part_number) m[r.part_number.toLowerCase()] = r;
     }
     return m;
   }, [rawMacRecords]);
@@ -1440,7 +1453,7 @@ function WeldedSeriesView({ rawMacRecords }) {
         </div>
 
         {/* Product modal */}
-        {selectedRecord && <MacProductModal record={selectedRecord} slugMap={slugMap} onSelect={setSelectedRecord} onClose={() => setSelectedRecord(null)} />}
+        {selectedRecord && <MacProductModal record={selectedRecord} slugMap={slugMap} sprocketMap={sprocketMap} loadSprockets={loadSprockets} onSelect={setSelectedRecord} onClose={() => setSelectedRecord(null)} />}
       </div>
     );
   }
@@ -1571,21 +1584,11 @@ export default function Home() {
   const [rawMacRecords, setRawMacRecords] = useState([]);
 
   useEffect(() => {
-    async function fetchAll(Entity) {
-      let all = [], page = 1;
-      while (true) {
-        const batch = await Entity.list({ page, per_page: 200 });
-        all = all.concat(batch);
-        if (batch.length < 200) break;
-        page++;
-      }
-      return all;
-    }
     async function load() {
       try {
         const [cat, elev, uni, dh, allied] = await Promise.all([
           CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list(),
-          DonghuaChain.list(), fetchAll(MacChainProduct)
+          DonghuaChain.list(), MacChainProduct.list()
         ]);
         setRawMacRecords(allied);
         setAllData([
