@@ -1154,14 +1154,16 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
               <button onClick={onClose} style={{ background:"none", border:"none", fontSize:22, cursor:"pointer", color:C.muted, padding:"4px 8px" }}>×</button>
             </div>
           </div>
-          <div style={{ display:"flex", gap:8, marginBottom:0 }}>
-            {tabs.map(t => (
-              <button key={t.key} onClick={() => setTab(t.key)}
-                style={{ padding:"8px 16px", background: tab===t.key ? C.navy : "transparent", color: tab===t.key ? "#fff" : C.muted, border: tab===t.key ? "none" : "1px solid "+C.border, borderRadius:"6px 6px 0 0", cursor:"pointer", fontSize:13, fontWeight: tab===t.key ? 700 : 400, marginBottom:-1 }}>
-                {t.label}
-              </button>
-            ))}
-          </div>
+          {tabs.length > 1 && (
+            <div style={{ display:"flex", gap:8, marginBottom:0 }}>
+              {tabs.map(t => (
+                <button key={t.key} onClick={() => setTab(t.key)}
+                  style={{ padding:"8px 16px", background: tab===t.key ? C.navy : "transparent", color: tab===t.key ? "#fff" : C.muted, border: tab===t.key ? "none" : "1px solid "+C.border, borderRadius:"6px 6px 0 0", cursor:"pointer", fontSize:13, fontWeight: tab===t.key ? 700 : 400, marginBottom:-1 }}>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Body */}
