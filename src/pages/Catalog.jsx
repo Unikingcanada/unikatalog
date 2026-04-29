@@ -418,7 +418,17 @@ export default function Catalog() {
   const [sel, setSel] = useState(null);
 
   useEffect(() => {
-    Promise.all([CatalogProduct.list(), UniCatalog.list(), ElevatorBucket.list(), DonghuaChain.list(), MacChainProduct.list()])
+    const fetchAll = async (entity) => {
+      let results = [], page = 0, hasMore = true;
+      while (hasMore) {
+        const batch = await entity.list({ limit: 200, skip: page * 200 });
+        results = results.concat(batch);
+        hasMore = batch.length === 200;
+        page++;
+      }
+      return results;
+    };
+    Promise.all([fetchAll(CatalogProduct), fetchAll(UniCatalog), fetchAll(ElevatorBucket), fetchAll(DonghuaChain), fetchAll(MacChainProduct)])
       .then(([intralox, uni, buckets, dh, allied]) => {
         const chainTypeMap = {
               "Drive Chain": "ANSI/BS Chain",
