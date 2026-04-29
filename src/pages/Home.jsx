@@ -961,6 +961,37 @@ const WELDED_SERIES_LABELS = {
   "Super Mac":        "Super Mac (WD-SM Series)",
 };
 
+// ─── Related Item Card (sprockets, pins, attachments) ────────────────────────
+
+function RelatedCard({ item, full, onClick }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        border: "1px solid " + (hov && full ? C.navyMid : C.border),
+        borderRadius: 8,
+        padding: "12px 14px",
+        background: hov && full ? C.navyMid : C.bg,
+        cursor: full ? "pointer" : "default",
+        transition: "all 0.15s",
+      }}>
+      {item.image && (
+        <img src={item.image} alt={item.part_number}
+          style={{ width:"100%", height:65, objectFit:"contain", marginBottom:8, borderRadius:4 }} />
+      )}
+      <div style={{ fontWeight:700, fontSize:13, color: hov && full ? "#fff" : C.text, marginBottom:2 }}>
+        {item.part_number}
+      </div>
+      <div style={{ fontSize:12, color: hov && full ? "rgba(255,255,255,0.65)" : C.muted }}>
+        {item.name || item.category}
+      </div>
+    </div>
+  );
+}
+
 function MacProductModal({ record, slugMap, onSelect, onClose }) {
   const [tab, setTab] = useState("specs");
   if (!record) return null;
@@ -1060,21 +1091,13 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
 
           {tab === "sprockets" && (
             <div>
-              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Sprockets — click to view full specs</div>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(200px,1fr))", gap:10 }}>
+              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Sprockets</div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(180px,1fr))", gap:10 }}>
                 {(record.related_sprockets||[]).map((sp,i) => {
                   const full = slugMap?.[sp.slug] || null;
                   return (
-                    <div key={i}
-                      onClick={() => full && onSelect({...full, _parentPart: record.part_number, _parentRecord: record})}
-                      style={{ border:"1px solid "+C.border, borderRadius:8, padding:"12px 14px", background:C.bg, cursor: full ? "pointer" : "default", transition:"all 0.15s" }}
-                      onMouseEnter={e => { if(full){ e.currentTarget.style.background=C.navyMid; e.currentTarget.style.borderColor=C.navyMid; e.currentTarget.querySelector('.card-title').style.color="#fff"; }}}
-                      onMouseLeave={e => { e.currentTarget.style.background=C.bg; e.currentTarget.style.borderColor=C.border; if(e.currentTarget.querySelector('.card-title')) e.currentTarget.querySelector('.card-title').style.color=C.text; }}>
-                      {sp.image && <img src={sp.image} alt={sp.part_number} style={{ width:"100%", height:70, objectFit:"contain", marginBottom:8, borderRadius:4 }} />}
-                      <div className="card-title" style={{ fontWeight:700, fontSize:13, color:C.text, marginBottom:2 }}>{sp.part_number}</div>
-                      <div style={{ fontSize:12, color:C.muted }}>{sp.name || sp.category}</div>
-                      {full && <div style={{ fontSize:11, color:C.navy, marginTop:6, fontWeight:600 }}>View specs →</div>}
-                    </div>
+                    <RelatedCard key={i} item={sp} full={full}
+                      onClick={() => full && onSelect({...full, _parentPart: record.part_number, _parentRecord: record})} />
                   );
                 })}
               </div>
@@ -1083,21 +1106,13 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
 
           {tab === "pins" && (
             <div>
-              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Pins & Connecting Links — click to view full specs</div>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(200px,1fr))", gap:10 }}>
+              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Compatible Pins & Connecting Links</div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(180px,1fr))", gap:10 }}>
                 {(record.related_pins||[]).map((pin,i) => {
                   const full = slugMap?.[pin.slug] || null;
                   return (
-                    <div key={i}
-                      onClick={() => full && onSelect({...full, _parentPart: record.part_number, _parentRecord: record})}
-                      style={{ border:"1px solid "+C.border, borderRadius:8, padding:"12px 14px", background:C.bg, cursor: full ? "pointer" : "default", transition:"all 0.15s" }}
-                      onMouseEnter={e => { if(full){ e.currentTarget.style.background=C.navyMid; e.currentTarget.style.borderColor=C.navyMid; }}}
-                      onMouseLeave={e => { e.currentTarget.style.background=C.bg; e.currentTarget.style.borderColor=C.border; }}>
-                      {pin.image && <img src={pin.image} alt={pin.part_number} style={{ width:"100%", height:70, objectFit:"contain", marginBottom:8, borderRadius:4 }} />}
-                      <div style={{ fontWeight:700, fontSize:13, color:C.text, marginBottom:2 }}>{pin.part_number}</div>
-                      <div style={{ fontSize:12, color:C.muted }}>{pin.name || pin.category}</div>
-                      {full && <div style={{ fontSize:11, color:C.navy, marginTop:6, fontWeight:600 }}>View specs →</div>}
-                    </div>
+                    <RelatedCard key={i} item={pin} full={full}
+                      onClick={() => full && onSelect({...full, _parentPart: record.part_number, _parentRecord: record})} />
                   );
                 })}
               </div>
@@ -1106,21 +1121,13 @@ function MacProductModal({ record, slugMap, onSelect, onClose }) {
 
           {tab === "attachments" && (
             <div>
-              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Available Attachments — click to view full specs</div>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(200px,1fr))", gap:10 }}>
+              <div style={{ fontSize:12, fontWeight:700, color:C.muted, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Available Attachments</div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(180px,1fr))", gap:10 }}>
                 {(record.related_attachments||[]).map((att,i) => {
                   const full = slugMap?.[att.slug] || null;
                   return (
-                    <div key={i}
-                      onClick={() => full && onSelect({...full, _parentPart: record.part_number, _parentRecord: record})}
-                      style={{ border:"1px solid "+C.border, borderRadius:8, padding:"12px 14px", background:C.bg, cursor: full ? "pointer" : "default", transition:"all 0.15s" }}
-                      onMouseEnter={e => { if(full){ e.currentTarget.style.background=C.navyMid; e.currentTarget.style.borderColor=C.navyMid; }}}
-                      onMouseLeave={e => { e.currentTarget.style.background=C.bg; e.currentTarget.style.borderColor=C.border; }}>
-                      {att.image && <img src={att.image} alt={att.part_number} style={{ width:"100%", height:70, objectFit:"contain", marginBottom:8, borderRadius:4 }} />}
-                      <div style={{ fontWeight:700, fontSize:13, color:C.text, marginBottom:2 }}>{att.part_number}</div>
-                      <div style={{ fontSize:12, color:C.muted }}>{att.name || att.category}</div>
-                      {full && <div style={{ fontSize:11, color:C.navy, marginTop:6, fontWeight:600 }}>View specs →</div>}
-                    </div>
+                    <RelatedCard key={i} item={att} full={full}
+                      onClick={() => full && onSelect({...full, _parentPart: record.part_number, _parentRecord: record})} />
                   );
                 })}
               </div>
