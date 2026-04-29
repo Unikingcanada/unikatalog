@@ -3,12 +3,7 @@ import { UniCatalog, CatalogProduct, ElevatorBucket, DonghuaChain, MacChainProdu
 
 const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics"]);
 const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket"]);
-const EXTERNAL_ROUTES = {
-  "Pintle Chain": "/SpecialChains",
-  "Long Link Chain": "/SpecialChains",
-  "Special Application Chain": "/SpecialChains",
-  "Welded Steel Chain": "/WeldedSteel",
-};
+const EXTERNAL_ROUTES = {};
 
 
 // ─── Chain grouping ──────────────────────────────────────────────────────────
@@ -130,6 +125,7 @@ function normalizeUniCatalog(r) {
     id: r.id, _source: "unicatalog", type,
     brand: SHOW_BRAND.has(type) ? (r.vendor || "") : "",
     series: displayName, style: displayStyle, category: displayStyle,
+    _subcategory: r.series || displayStyle || "",
     application: r.application || "", materials: r.materials || "", material: r.materials || "",
     duty: r.duty || "", notes: [r.features, r.notes].filter(Boolean).join(" "),
     catalog_url: r.catalog_url || "", tech_doc_url: r.tech_doc_url || "",
@@ -183,7 +179,11 @@ function normalizeDonghuaChain(r) {
   } else if (r.chain_type === "Conveyor Chain") {
     type = "Conveyor Chain";
   } else if (r.chain_type === "Agricultural Chain") {
-    type = "Engineered Chain";
+    if (r.series && r.series.includes("Pintle")) {
+      type = "Pintle Chain";
+    } else {
+      type = "Engineered Chain";
+    }
   } else {
     type = "Engineered Chain";
   }
@@ -229,6 +229,12 @@ const ENGINEERED_SUBCATEGORIES = [
   { key: "Rivetless Drop Forged Chains",          label: "Rivetless Drop Forged / Bar Loop Chains",  description: "Drop forged rivetless and bar loop chains for heavy drag applications" },
   { key: "Combination Chains",                    label: "Combination Chains",                       description: "Cast and wrought combination conveyor chains" },
   { key: "Cast Manganese and Alloy Steel Chains", label: "Cast Manganese & Alloy Steel Chains",      description: "Cast manganese and alloy steel rivetless and drag chains" },
+];
+
+const WELDED_SUBCATEGORIES = [
+  { key: "Welded Steel Mill Chain",  label: "Welded Steel Mill Chain",  description: "WH and WR series welded steel mill chains for bulk material handling" },
+  { key: "Welded Steel Drag Chain",  label: "Welded Steel Drag Chain",  description: "WD series welded steel drag chains for scraper and drag conveyor applications" },
+  { key: "Welded Steel Chain",       label: "Other Welded Steel Chain", description: "Additional welded steel conveyor and attachment chains" },
 ];
 
 const ANSI_SUBCATEGORIES = [
@@ -931,6 +937,49 @@ function AnsiSubGrid({ allProducts, onSelect }) {
   );
 }
 
+
+// ─── Welded Steel Chain Subcategory Grid ─────────────────────────────────────
+
+function WeldedSubGrid({ allProducts, onSelect }) {
+  const [hovered, setHovered] = useState(null);
+  const subCounts = useMemo(() => {
+    const c = {};
+    for (const p of allProducts) {
+      if (p.type === "Welded Steel Chain") {
+        const sub = p._subcategory || p.style || "Welded Steel Chain";
+        // Normalize to our three buckets
+        const bucket = sub.includes("Mill") ? "Welded Steel Mill Chain"
+          : sub.includes("Drag") ? "Welded Steel Drag Chain"
+          : "Welded Steel Chain";
+        c[bucket] = (c[bucket] || 0) + 1;
+      }
+    }
+    return c;
+  }, [allProducts]);
+
+  return (
+    <div>
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontSize: 22, fontWeight: 800, color: C.text, marginBottom: 4 }}>Welded Steel Chain</div>
+        <div style={{ fontSize: 14, color: C.muted }}>Select a chain type to browse products</div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
+        {WELDED_SUBCATEGORIES.map(sub => (
+          <div key={sub.key} onClick={() => onSelect(sub.key)}
+            onMouseEnter={() => setHovered(sub.key)} onMouseLeave={() => setHovered(null)}
+            style={{ background: hovered === sub.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === sub.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: hovered === sub.key ? "#fff" : C.text }}>{sub.label}</div>
+            <div style={{ fontSize: 12, color: hovered === sub.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{sub.description}</div>
+            <div style={{ fontSize: 11, color: hovered === sub.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>
+              {subCounts[sub.key] ? `${subCounts[sub.key]} products` : "View →"}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Chain Subcategory Grid ───────────────────────────────────────────────────
 
 function ChainSubGrid({ types, counts, onSelect }) {
@@ -1022,6 +1071,7 @@ export default function Home() {
   const [inChainMenu, setInChainMenu] = useState(false);
   const [selectedEngineeredSub, setSelectedEngineeredSub] = useState(null);
   const [selectedAnsiSub, setSelectedAnsiSub] = useState(null);
+  const [selectedWeldedSub, setSelectedWeldedSub] = useState(null);
 
   useEffect(() => {
     async function load() {
@@ -1050,6 +1100,14 @@ export default function Home() {
     let prods = selectedBrand ? typeProducts.filter(p => p.brand === selectedBrand) : typeProducts;
     if (selectedEngineeredSub) prods = prods.filter(p => p._subcategory === selectedEngineeredSub);
     if (selectedAnsiSub) prods = prods.filter(p => p._subcategory === selectedAnsiSub);
+    if (selectedWeldedSub) {
+      prods = prods.filter(p => {
+        const sub = p._subcategory || p.style || "";
+        if (selectedWeldedSub === "Welded Steel Mill Chain") return sub.includes("Mill");
+        if (selectedWeldedSub === "Welded Steel Drag Chain") return sub.includes("Drag");
+        return !sub.includes("Mill") && !sub.includes("Drag");
+      });
+    }
     return prods;
   }, [typeProducts, selectedBrand, selectedEngineeredSub, selectedAnsiSub]);
   const isBrandGated = selectedType && BRAND_GATED.has(selectedType);
@@ -1059,8 +1117,9 @@ export default function Home() {
     if (typeKey === "__chain__") { setInChainMenu(true); setView("chains"); return; }
     if (EXTERNAL_ROUTES[typeKey]) { window.location.href = EXTERNAL_ROUTES[typeKey]; return; }
     if (typeKey === "Engineered Chain") { setSelectedType("Engineered Chain"); setSelectedEngineeredSub(null); setSelectedAnsiSub(null); setView("engineered_subs"); return; }
-    if (typeKey === "ANSI/BS Chain") { setSelectedType("ANSI/BS Chain"); setSelectedAnsiSub(null); setSelectedEngineeredSub(null); setView("ansi_subs"); return; }
-    setSelectedType(typeKey); setSelectedBrand(null); setSelectedAnsiSub(null); setView(BRAND_GATED.has(typeKey) ? "brands" : "products");
+    if (typeKey === "ANSI/BS Chain") { setSelectedType("ANSI/BS Chain"); setSelectedAnsiSub(null); setSelectedEngineeredSub(null); setSelectedWeldedSub(null); setView("ansi_subs"); return; }
+    if (typeKey === "Welded Steel Chain") { setSelectedType("Welded Steel Chain"); setSelectedWeldedSub(null); setSelectedAnsiSub(null); setSelectedEngineeredSub(null); setView("welded_subs"); return; }
+    setSelectedType(typeKey); setSelectedBrand(null); setSelectedAnsiSub(null); setSelectedWeldedSub(null); setView(BRAND_GATED.has(typeKey) ? "brands" : "products");
   }
   function selectEngineeredSub(subKey) {
     setSelectedEngineeredSub(subKey);
@@ -1070,15 +1129,21 @@ export default function Home() {
     setSelectedAnsiSub(subKey);
     setView("products");
   }
+  function selectWeldedSub(subKey) {
+    setSelectedWeldedSub(subKey);
+    setView("products");
+  }
   function selectBrand(brand) { setSelectedBrand(brand); setView("products"); }
   function navTo(level) {
-    if (level === 0) { setView("home"); setSelectedType(null); setSelectedBrand(null); setInChainMenu(false); setSelectedEngineeredSub(null); setSelectedAnsiSub(null); }
+    if (level === 0) { setView("home"); setSelectedType(null); setSelectedBrand(null); setInChainMenu(false); setSelectedEngineeredSub(null); setSelectedAnsiSub(null); setSelectedWeldedSub(null); }
     else if (level === 1 && inChainMenu && !selectedType) { /* already on chain menu */ }
     else if (level === 1 && inChainMenu && selectedType === "Engineered Chain" && selectedEngineeredSub) { setView("engineered_subs"); setSelectedEngineeredSub(null); }
     else if (level === 1 && inChainMenu && selectedType === "ANSI/BS Chain" && selectedAnsiSub) { setView("ansi_subs"); setSelectedAnsiSub(null); }
-    else if (level === 1 && inChainMenu) { setView("chains"); setSelectedType(null); setSelectedBrand(null); setSelectedEngineeredSub(null); setSelectedAnsiSub(null); }
+    else if (level === 1 && inChainMenu && selectedType === "Welded Steel Chain" && selectedWeldedSub) { setView("welded_subs"); setSelectedWeldedSub(null); }
+    else if (level === 1 && inChainMenu) { setView("chains"); setSelectedType(null); setSelectedBrand(null); setSelectedEngineeredSub(null); setSelectedAnsiSub(null); setSelectedWeldedSub(null); }
     else if (level === 2 && inChainMenu && selectedType === "Engineered Chain" && selectedEngineeredSub) { setView("engineered_subs"); setSelectedEngineeredSub(null); }
     else if (level === 2 && inChainMenu && selectedType === "ANSI/BS Chain" && selectedAnsiSub) { setView("ansi_subs"); setSelectedAnsiSub(null); }
+    else if (level === 2 && inChainMenu && selectedType === "Welded Steel Chain" && selectedWeldedSub) { setView("welded_subs"); setSelectedWeldedSub(null); }
     else if (level === 1 && isBrandGated) { setView("brands"); setSelectedBrand(null); }
   }
 
@@ -1087,6 +1152,7 @@ export default function Home() {
   if (selectedType) breadcrumbs.push(TYPE_MAP[selectedType]?.label || selectedType);
   if (selectedEngineeredSub) breadcrumbs.push(ENGINEERED_SUBCATEGORIES.find(s => s.key === selectedEngineeredSub)?.label || selectedEngineeredSub);
   if (selectedAnsiSub) breadcrumbs.push(ANSI_SUBCATEGORIES.find(s => s.key === selectedAnsiSub)?.label || selectedAnsiSub);
+  if (selectedWeldedSub) breadcrumbs.push(WELDED_SUBCATEGORIES.find(s => s.key === selectedWeldedSub)?.label || selectedWeldedSub);
   if (selectedBrand) breadcrumbs.push(selectedBrand);
 
   return (
@@ -1108,6 +1174,8 @@ export default function Home() {
           <EngineeredSubGrid allProducts={allData} onSelect={selectEngineeredSub} />
         ) : view === "ansi_subs" ? (
           <AnsiSubGrid allProducts={allData} onSelect={selectAnsiSub} />
+        ) : view === "welded_subs" ? (
+          <WeldedSubGrid allProducts={allData} onSelect={selectWeldedSub} />
         ) : view === "brands" ? (
           <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} />
         ) : (
