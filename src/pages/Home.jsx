@@ -1566,32 +1566,22 @@ export default function Home() {
   const [selectedWeldedSub, setSelectedWeldedSub] = useState(null);
   const [rawMacRecords, setRawMacRecords] = useState([]);
   const [sprocketMap, setSprocketMap] = useState({});
-  const [sprocketsLoaded, setSprocketsLoaded] = useState(false);
 
-  const loadSprockets = React.useCallback(async () => {
-    if (sprocketsLoaded) return;
-    setSprocketsLoaded(true);
-    try {
-      let all = [], skip = 0;
-      while (true) {
-        const batch = await MacChainProduct.filter(
-          { product_type: "Sprocket" },
-          { limit: 200, skip }
-        );
-        all = all.concat(batch);
-        if (batch.length < 200) break;
-        skip += 200;
-      }
-      const m = {};
-      for (const r of all) {
-        if (r.slug) m[r.slug] = r;
-        const parentSlug = r.slug?.replace(/-\d+$/, "");
-        if (parentSlug && parentSlug !== r.slug) m[parentSlug] = m[parentSlug] || r;
-        if (r.part_number) m[r.part_number.toLowerCase()] = r;
-      }
-      setSprocketMap(m);
-    } catch(e) { console.error("Sprocket load error:", e); }
-  }, [sprocketsLoaded]);
+  const loadSprocketsRef = React.useRef(false);
+  const loadSprockets = React.useCallback(() => {
+    if (loadSprocketsRef.current) return;
+    loadSprocketsRef.current = true;
+    // rawMacRecords already contains sprockets — just index them
+    const m = {};
+    for (const r of rawMacRecords) {
+      if (r.product_type !== "Sprocket") continue;
+      if (r.slug) m[r.slug] = r;
+      const parentSlug = r.slug?.replace(/-\d+$/, "");
+      if (parentSlug && parentSlug !== r.slug) m[parentSlug] = m[parentSlug] || r;
+      if (r.part_number) m[r.part_number.toLowerCase()] = r;
+    }
+    setSprocketMap(m);
+  }, [rawMacRecords]);
 
   useEffect(() => {
     async function load() {
