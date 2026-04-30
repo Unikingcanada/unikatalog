@@ -2035,11 +2035,11 @@ export default function Home() {
     async function load() {
       try {
         const [cat, elev, uni] = await Promise.all([
-          CatalogProduct.list({}, { limit: 500 }), ElevatorBucket.list({}, { limit: 500 }), UniCatalog.list({}, { limit: 500 }),
+          CatalogProduct.filter({}, 1, 500), ElevatorBucket.filter({}, 1, 500), UniCatalog.filter({}, 1, 500),
         ]);
         let allied = [];
         try {
-          allied = await MacChainProduct.list({}, { limit: 500 });
+          allied = await MacChainProduct.filter({}, 1, 500);
         } catch(e2) { console.error("MacChain load error:", e2); }
         setRawMacRecords(allied);
         setAllData([
