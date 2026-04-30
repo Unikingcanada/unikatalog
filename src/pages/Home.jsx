@@ -260,6 +260,7 @@ const ANSI_SUBCATEGORIES = [
   { key: "Non-Standard Series Chains",         label: "Non-Standard Series Chains",        description: "Non-standard pitch roller chains including chain 85 and 105 series" },
   { key: "Zinc Plated Chains",                 label: "Zinc Plated Chains",                description: "Zinc plated chains for light corrosion resistance" },
   { key: "Citrus Chains",                      label: "Citrus Chains",                     description: "Stainless and carbon steel D-5 citrus conveyor chains" },
+  { key: "ANSI Roller Chain Attachments",      label: "ANSI Chain Attachments",            description: "Standard bent, straight, extended pin, wide contour, and double pitch attachments (#35 to #160)" },
 ];
 
 // Category-based type routing for Allied Locke + Mac Chain records
