@@ -372,7 +372,7 @@ export default function RFQCart() {
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "Arial,sans-serif" }}>
       <div style={{ background: NAVY, height: 56, display: "flex", alignItems: "center", padding: "0 20px", justifyContent: "space-between" }}>
         <a href={createPageUrl("Home")} style={{ color: "#93c5fd", fontSize: 13, fontWeight: 600, textDecoration: "none" }}>← Back to Catalog</a>
-        <span style={{ color: "#fff", fontSize: 13, fontWeight: 800, letterSpacing: "0.5px" }}>UNIKING CANADA</span>
+        <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style={{ maxHeight: 26, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.9 }} alt="Uniking Canada" />
         <span style={{ width: 80 }} />
       </div>
 

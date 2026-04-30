@@ -479,10 +479,7 @@ function printTearSheet(product) {
 </div>
 <div class="header">
   <div class="header-left">
-    <div>
-      <div class="header-title">UNIKING CANADA</div>
-      <div class="header-sub">Technical Product Reference</div>
-    </div>
+    <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style="max-height:38px;width:auto;filter:brightness(0) invert(1);opacity:0.92;" alt="Uniking Canada" />
   </div>
   <div class="header-meta">
     <div style="font-size:13px;font-weight:700;color:#fff;">${product.series}</div>
@@ -552,7 +549,8 @@ function printTearSheet(product) {
 
   <div class="footer">
     <div class="footer-left">
-      <div>Uniking Canada · 1-800-xxx-xxxx · info@unikingcanada.com</div>
+      <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style="max-height:20px;width:auto;opacity:0.65;margin-bottom:4px;" alt="Uniking Canada" /><br/>
+      <div>unikingcanada.com · rfq@unikingcanada.com</div>
       <div class="confidential">Confidential — Internal Use Only</div>
     </div>
     <div class="footer-right">
@@ -649,9 +647,8 @@ function printMacTearSheet(record) {
   <button class="btn btn-secondary" onclick="window.close()">Close</button>
 </div>
 <div class="header">
-  <div>
-    <div class="header-title">UNIKING CANADA</div>
-    <div class="header-sub">Technical Product Reference</div>
+  <div class="header-left">
+    <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style="max-height:38px;width:auto;filter:brightness(0) invert(1);opacity:0.92;" alt="Uniking Canada" />
   </div>
   <div class="header-meta">
     <div style="font-size:13px;font-weight:700;color:#fff;">${record.part_number}</div>
@@ -686,7 +683,8 @@ function printMacTearSheet(record) {
 
   <div class="footer">
     <div class="footer-left">
-      <div>Uniking Canada · info@unikingcanada.com</div>
+      <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style="max-height:20px;width:auto;opacity:0.65;margin-bottom:4px;" alt="Uniking Canada" /><br/>
+      <div>unikingcanada.com · rfq@unikingcanada.com</div>
       <div class="confidential">Confidential — Internal Use Only</div>
     </div>
     <div class="footer-right">
@@ -1734,7 +1732,7 @@ function TopBar() {
   return (
     <div style={{ background: C.navy, height: 56, display: "flex", alignItems: "center", padding: "0 40px", justifyContent: "space-between", flexShrink: 0 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <span style={{ color: "#fff", fontWeight: 800, fontSize: 15, letterSpacing: "0.5px" }}>UNIKING CANADA</span>
+        <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style={{ maxHeight: 28, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.9 }} alt="Uniking Canada" />
         <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 13 }}>/</span>
         <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 13 }}>Product Catalog</span>
       </div>
