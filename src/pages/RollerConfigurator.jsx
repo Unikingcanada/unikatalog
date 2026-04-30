@@ -21,6 +21,7 @@ const C = {
 const SERIES = [
   {
     id: "1100",
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/246bc1c7c_1100.png",
     name: "Series 1100",
     subtitle: "Light Duty Gravity Roller",
     duty: "Light",
@@ -80,6 +81,7 @@ const SERIES = [
   },
   {
     id: "1200",
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/680e08774_1200.png",
     name: "Series 1200",
     subtitle: "Metal Conveyor Roller",
     duty: "Light-Medium",
@@ -129,6 +131,7 @@ const SERIES = [
   },
   {
     id: "1450",
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/7dc919535_1450.png",
     name: "Series 1450",
     subtitle: "Heavy Duty Conveyor Roller",
     duty: "Heavy",
@@ -164,6 +167,7 @@ const SERIES = [
   },
   {
     id: "1700",
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/c5a9a72e8_1700.png",
     name: "Series 1700",
     subtitle: "Universal Conveyor Roller",
     duty: "Medium-Heavy",
@@ -255,6 +259,7 @@ const SERIES = [
   },
   {
     id: "1800",
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/9d1a08bfd_1800.png",
     name: "Series 1800",
     subtitle: "Precision Heavy Duty Roller",
     duty: "Heavy",
@@ -303,6 +308,7 @@ const SERIES = [
   },
   {
     id: "1940",
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/0669fa155_1940.png",
     name: "Series 1940 / 1960",
     subtitle: "Heavy Duty Welded Roller",
     duty: "Heavy",
@@ -337,6 +343,7 @@ const SERIES = [
   },
   {
     id: "3400_3500",
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/ee09e3abd_3400_3500.png",
     name: "Series 3400 / 3500",
     subtitle: "Sprocket Driven (Welded) Roller",
     duty: "Medium-Heavy",
@@ -382,6 +389,7 @@ const SERIES = [
   },
   {
     id: "3800",
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/2fd992fb2_3800.png",
     name: "Series 3800",
     subtitle: "Slip Drive / Direct Drive Roller",
     duty: "Light-Medium",
@@ -428,6 +436,7 @@ const SERIES = [
   },
   {
     id: "1300",
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/d936037e8_1300.png",
     name: "Series 1300 / 1350 / 1400",
     subtitle: "Tapered Curve Roller",
     duty: "Light-Medium",
@@ -678,8 +687,13 @@ function ConfigWizard({ series, onClose, onAddToRFQ }) {
 </div>
 <div class="gold-bar"></div>
 <div class="body">
-  <div class="title">${s.name} — ${s.subtitle}</div>
-  <div class="subtitle">${s.duty} Duty · ${s.driveType}</div>
+  <div style="display:flex;align-items:center;gap:24px;margin-bottom:20px">
+    ${s.image_url ? `<img src="${s.image_url}" style="height:80px;object-fit:contain;background:#f8fafc;border-radius:8px;padding:8px;border:1px solid #e2e8f0" alt="${s.name}" crossorigin="anonymous" />` : ""}
+    <div>
+      <div class="title">${s.name} — ${s.subtitle}</div>
+      <div class="subtitle">${s.duty} Duty · ${s.driveType}</div>
+    </div>
+  </div>
   <div class="part-code-box">
     <div class="part-code-label">Interroll Part Code</div>
     ${partCode}
