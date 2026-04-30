@@ -637,20 +637,118 @@ function ConfigWizard({ series, onClose, onAddToRFQ }) {
   const steps = ["Bearing", "Tube", "Shaft", "Length & Qty", "Review"];
   const s = series;
 
-  function handleAddToCart() {
-    if (onAddToRFQ && partCode) {
-      onAddToRFQ({
-        series: s.name,
-        bearing: `${bearing.code} — ${bearing.dia} ${bearing.note || ""}`,
-        tube: `${tube.code} — ${tube.material} ${tube.finish} ${tube.note || ""}`,
-        shaft: `${shaft.code} — ${shaft.dia} ${shaft.type}`,
-        length: length + "\" BF",
-        qty,
-        partCode,
-        notes,
-      });
-      setDone(true);
+  function handlePrintTearSheet() {
+    const rl = (parseFloat(length) - 0.12).toFixed(2);
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Roller Spec Sheet — ${s.name}</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; color: #1e293b; }
+  .header { background: #0F2340; color: #fff; padding: 28px 40px; display: flex; justify-content: space-between; align-items: center; }
+  .logo-text { font-size: 22px; font-weight: 900; letter-spacing: 0.5px; }
+  .logo-sub { font-size: 11px; color: #C9A84C; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+  .gold-bar { height: 4px; background: #C9A84C; }
+  .body { padding: 32px 40px; }
+  .title { font-size: 20px; font-weight: 800; color: #0F2340; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #64748b; margin-bottom: 24px; }
+  .part-code-box { background: #0F2340; color: #e8c96d; font-family: 'Courier New', monospace; font-size: 24px; font-weight: 800; padding: 18px 24px; border-radius: 10px; margin-bottom: 28px; letter-spacing: 1px; }
+  .part-code-label { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+  th { background: #f1f5f9; color: #475569; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 14px; text-align: left; border-bottom: 2px solid #e2e8f0; }
+  td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid #f1f5f9; }
+  td:first-child { font-weight: 600; color: #475569; width: 35%; }
+  .tag { display: inline-block; background: #e0f2fe; color: #0369a1; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin: 2px; }
+  .footer { margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 16px; font-size: 11px; color: #94a3b8; display: flex; justify-content: space-between; }
+  .warn { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 16px; font-size: 11px; color: #92400e; margin-bottom: 20px; }
+  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <div class="logo-text">UNIKING CANADA</div>
+    <div class="logo-sub">Interroll Authorized Partner — Conveyor Roller</div>
+  </div>
+  <div style="text-align:right; font-size:12px; color:rgba(255,255,255,0.6)">
+    Spec Sheet<br/>Generated: ${new Date().toLocaleDateString('en-CA')}
+  </div>
+</div>
+<div class="gold-bar"></div>
+<div class="body">
+  <div class="title">${s.name} — ${s.subtitle}</div>
+  <div class="subtitle">${s.duty} Duty · ${s.driveType}</div>
+  <div class="part-code-box">
+    <div class="part-code-label">Interroll Part Code</div>
+    ${partCode}
+  </div>
+  <div class="warn">⚠ Pricing not included. Contact Uniking Canada for a formal quotation: <strong>514-886-5270 · sales@unikingcanada.com</strong></div>
+  <table>
+    <tr><th colspan="2">Configuration Details</th></tr>
+    <tr><td>Bearing Assembly</td><td><strong>${bearing?.code}</strong> — Ø ${bearing?.dia}, Shaft: ${bearing?.shaftDia}<br/><span style="color:#64748b;font-size:12px">${bearing?.note || ""}</span></td></tr>
+    <tr><td>Tube</td><td><strong>${tube?.code}</strong> — ${tube?.material}, ${tube?.finish} finish, Wall: ${tube?.wall || "—"}<br/><span style="color:#64748b;font-size:12px">${tube?.note || ""}</span></td></tr>
+    <tr><td>Shaft</td><td><strong>${shaft?.code}</strong> — ${shaft?.dia}, ${shaft?.type}<br/><span style="color:#64748b;font-size:12px">Material: ${shaft?.material} · Extension: ${shaft?.ext}</span></td></tr>
+    <tr><td>Between Frames (BF)</td><td><strong>${length}"</strong></td></tr>
+    <tr><td>Roller Length (RL)</td><td><strong>${rl}"</strong> (BF − 0.12")</td></tr>
+    <tr><td>Quantity Requested</td><td><strong>${qty} pc${qty > 1 ? "s" : ""}</strong></td></tr>
+    ${notes ? `<tr><td>Special Notes</td><td>${notes}</td></tr>` : ""}
+  </table>
+  <table>
+    <tr><th colspan="2">Series Technical Data</th></tr>
+    <tr><td>Max Load Capacity</td><td>${s.maxLoad}</td></tr>
+    <tr><td>Max Conveyor Speed</td><td>${s.maxSpeed}</td></tr>
+    <tr><td>Bearing Type</td><td>${s.bearingType}</td></tr>
+    <tr><td>Temperature Range</td><td>${s.tempRange}</td></tr>
+    <tr><td>Typical Applications</td><td>${s.applications.join(", ")}</td></tr>
+  </table>
+  <div class="footer">
+    <span>Uniking Canada Inc. · 12985 Rue Brault, Mirabel, QC J7J 0W2 · 514-886-5270 · www.unikingcanada.com</span>
+    <span>Source: Interroll Conveyor Roller Catalog</span>
+  </div>
+</div>
+</body>
+</html>`;
+    const win = window.open("", "_blank");
+    if (win) {
+      win.document.write(html);
+      win.document.close();
+      setTimeout(() => win.print(), 400);
     }
+  }
+
+  function handleAddToCart() {
+    if (!partCode) return;
+    const item = {
+      cartId: "roller_" + Date.now(),
+      id: "roller_" + Date.now(),
+      _source: "custom",
+      name: `${s.name} — ${partCode}`,
+      series: s.name,
+      type: "Conveyor Roller",
+      style: s.subtitle,
+      category: s.duty,
+      image_url: "",
+      materials: tube?.material || "",
+      quantity: qty,
+      unit: "Each",
+      notes: [
+        `Part Code: ${partCode}`,
+        `Bearing: ${bearing?.code} — Ø ${bearing?.dia}, ${bearing?.shaftDia}`,
+        `Tube: ${tube?.code} — ${tube?.material} ${tube?.finish}${tube?.note ? " (" + tube.note + ")" : ""}`,
+        `Shaft: ${shaft?.code} — ${shaft?.dia} ${shaft?.type}`,
+        `Between Frames: ${length}"`,
+        notes ? `Notes: ${notes}` : ""
+      ].filter(Boolean).join("\n"),
+    };
+    try {
+      const existing = JSON.parse(localStorage.getItem("uniking_rfq_cart") || "[]");
+      const updated = [...existing, item];
+      localStorage.setItem("uniking_rfq_cart", JSON.stringify(updated));
+      window.dispatchEvent(new Event("rfq_cart_updated"));
+    } catch(e) { console.error(e); }
+    setDone(true);
   }
 
   if (done) {
@@ -861,11 +959,13 @@ function ConfigWizard({ series, onClose, onAddToRFQ }) {
             <div style={{ fontFamily: "monospace", fontSize: 22, fontWeight: 800, color: C.goldLight, letterSpacing: "1px" }}>{partCode}</div>
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 8 }}>Bearing.Tube.Shaft-Length</div>
           </div>
-          {/* CAD link */}
-          <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, padding: "10px 16px", marginBottom: 20, fontSize: 12, color: "#1e40af" }}>
-            <strong>CAD Drawings Available:</strong> Interroll provides 3D PDF, 2D DWG, IGES, STEP and SAT formats.
-            <a href="https://www.interroll.com/resources/cad-download" target="_blank" rel="noreferrer"
-              style={{ color: "#1d4ed8", fontWeight: 700, marginLeft: 8 }}>Download from Interroll →</a>
+          {/* Print Tear Sheet */}
+          <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "10px 16px", marginBottom: 20, fontSize: 12, color: "#166534", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+            <span><strong>Print Spec Sheet:</strong> Generate a branded, pricing-free roller spec sheet for this configuration.</span>
+            <button onClick={() => handlePrintTearSheet()}
+              style={{ padding: "7px 16px", background: "#166534", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 12, fontWeight: 700, whiteSpace: "nowrap" }}>
+              Print Tear Sheet
+            </button>
           </div>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <button onClick={() => setStep(3)} style={{ padding: "10px 20px", background: "none", border: "1px solid " + C.border, borderRadius: 8, cursor: "pointer", fontSize: 14, color: C.muted }}>← Edit</button>
