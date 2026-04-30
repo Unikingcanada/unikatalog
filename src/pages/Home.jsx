@@ -13,8 +13,8 @@ function stripVendor(text) {
 }
 
 
-const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics"]);
-const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket"]);
+const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics", "Plastic Chain", "Metal Chain"]);
+const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket", "Plastic Chain", "Metal Chain"]);
 const EXTERNAL_ROUTES = {};
 
 
@@ -29,7 +29,8 @@ const CHAIN_SUBTYPE_KEYS = new Set([
 const PRODUCT_TYPES = [
   { key: "Modular Belt", label: "Modular Plastic Belting", description: "Straight-running, radius, spiral and side-flexing modular plastic belt systems", filters: ["category", "style", "pitch_in", "hinge_style", "materials"] },
   { key: "Elevator Bucket", label: "Elevator Buckets & Hardware", description: "Agricultural and industrial elevator buckets, belting, splices and hardware", filters: ["application", "discharge_type", "duty", "material", "profile"] },
-  { key: "Table Top Chain", label: "Table Top Chain", description: "Straight-running and side-flexing table top chains in steel and plastic", filters: ["style", "materials", "duty"] },
+  { key: "Plastic Chain", label: "Plastic Chains", description: "Straight-running and side-flexing plastic conveyor chains", filters: ["style", "materials", "duty"] },
+  { key: "Metal Chain", label: "Metal Chains", description: "Stainless steel and carbon steel slat-top and side-flexing conveyor chains", filters: ["style", "materials", "duty"] },
   { key: "Wire Mesh Belt", label: "Wire Mesh Belt", description: "Stainless and carbon steel wire mesh conveyor belts for food and industrial processing", filters: ["style", "materials", "duty"] },
   { key: "Steel Hinged Belt", label: "Steel Hinged Belt", description: "Steel hinged slat and plate conveyor belts for chip and scrap handling", filters: ["style", "materials"] },
   { key: "ANSI/BS Chain", label: "Performance Roller Chain", description: "Precision roller chains to ANSI and BS specifications — standard, specialty and high-performance series", filters: ["style", "materials", "duty"] },
@@ -118,7 +119,7 @@ function normalizeElevatorBucket(r) {
 
 const UNI_TYPE_REMAP = { "Modular Plastic Belt": "Modular Belt" };
 
-const CHAIN_TYPE_KEYS = new Set(["ANSI/BS Chain","Conveyor Chain","Engineered Chain","Cast Chain","Welded Steel Chain","Forged Chain","Overhead Chain","Sharptop Chain","Kiln Chain","Thermoforming Chain","Table Top Chain"]);
+const CHAIN_TYPE_KEYS = new Set(["ANSI/BS Chain","Conveyor Chain","Engineered Chain","Cast Chain","Welded Steel Chain","Forged Chain","Overhead Chain","Sharptop Chain","Kiln Chain","Thermoforming Chain","Plastic Chain","Metal Chain"]);
 
 function normalizeUniCatalog(r) {
   const rawType = r.product_type || "General";
