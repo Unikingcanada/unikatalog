@@ -2027,6 +2027,8 @@ export default function Home() {
   const [selectedAnsiSub, setSelectedAnsiSub] = useState(null);
   const [selectedWeldedSub, setSelectedWeldedSub] = useState(null);
   const [rawMacRecords, setRawMacRecords] = useState([]);
+  const [globalSearch, setGlobalSearch] = useState("");
+  const [globalSelected, setGlobalSelected] = useState(null);
 
   useEffect(() => {
     async function load() {
@@ -2053,6 +2055,44 @@ export default function Home() {
   }, []);
 
   const typeCounts = useMemo(() => { const c = {}; for (const p of allData) c[p.type] = (c[p.type] || 0) + 1; return c; }, [allData]);
+
+  const globalResults = useMemo(() => {
+    const q = globalSearch.trim().toLowerCase();
+    if (!q) return [];
+    function searchStr(p) {
+      return [p.series, p.type, p.style, p.category, p.notes, p.materials, p.application, p.brand, p.duty, p.discharge_type].filter(Boolean).join(" ").toLowerCase();
+    }
+    function fuzzyScore(str, pattern) {
+      let score = 0, si = 0, pi = 0, consecutive = 0;
+      while (si < str.length && pi < pattern.length) {
+        if (str[si] === pattern[pi]) {
+          consecutive++;
+          score += consecutive * 2;
+          if (si === 0 || str[si-1] === " " || str[si-1] === "-") score += 5;
+          if (si === 0) score += 8;
+          pi++;
+        } else { consecutive = 0; }
+        si++;
+      }
+      if (pi < pattern.length) return -1;
+      score -= str.length * 0.1;
+      return score;
+    }
+    const words = q.split(/\s+/);
+    const scored = allData.map(p => {
+      const str = searchStr(p);
+      if (words.length > 1) {
+        const allFuzzy = words.every(w => fuzzyScore(str, w) >= 0);
+        if (!allFuzzy) return null;
+        const total = words.reduce((acc, w) => acc + Math.max(fuzzyScore(str, w), 0), 0);
+        return { p, score: total };
+      }
+      const s = fuzzyScore(str, q);
+      if (s < 0) return null;
+      return { p, score: s };
+    }).filter(Boolean);
+    return scored.sort((a, b) => b.score - a.score).slice(0, 40).map(s => s.p);
+  }, [globalSearch, allData]);
   const availableTypes = useMemo(() => PRODUCT_TYPES.filter(t => (typeCounts[t.key] || 0) > 0 || !!EXTERNAL_ROUTES[t.key]), [typeCounts]);
   const typeProducts = useMemo(() => allData.filter(p => p.type === selectedType), [allData, selectedType]);
   const viewProducts = useMemo(() => {
@@ -2117,7 +2157,70 @@ export default function Home() {
         {loading ? (
           <div style={{ textAlign: "center", padding: 80, color: C.muted, fontSize: 14 }}>Loading catalog...</div>
         ) : view === "home" ? (
-          <TypeGrid types={availableTypes} counts={typeCounts} onSelect={selectType} />
+          <div>
+            {/* Global Search Bar */}
+            <div style={{ marginBottom: 32 }}>
+              <div style={{ position: "relative", maxWidth: 560, margin: "0 auto" }}>
+                <span style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", fontSize: 18, color: "#94a3b8", pointerEvents: "none" }}>🔍</span>
+                <input
+                  value={globalSearch}
+                  onChange={e => { setGlobalSearch(e.target.value); setGlobalSelected(null); }}
+                  placeholder="Search all products — series, type, material, application…"
+                  style={{ width: "100%", boxSizing: "border-box", padding: "14px 16px 14px 46px", borderRadius: 12, border: "1.5px solid " + (globalSearch ? C.navyMid : C.border), fontSize: 15, outline: "none", background: "#fff", boxShadow: globalSearch ? "0 4px 16px rgba(26,58,92,0.10)" : "0 1px 4px rgba(0,0,0,0.05)", transition: "border 0.15s, box-shadow 0.15s", color: C.text }}
+                />
+                {globalSearch && (
+                  <button onClick={() => { setGlobalSearch(""); setGlobalSelected(null); }}
+                    style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", fontSize: 18, color: "#94a3b8", lineHeight: 1 }}>×</button>
+                )}
+              </div>
+
+              {/* Search results */}
+              {globalSearch.trim() && (
+                <div style={{ maxWidth: 560, margin: "8px auto 0", background: "#fff", borderRadius: 12, border: "1.5px solid " + C.border, boxShadow: "0 8px 32px rgba(15,35,64,0.12)", overflow: "hidden" }}>
+                  {globalResults.length === 0 ? (
+                    <div style={{ padding: "20px 20px", textAlign: "center", color: C.muted, fontSize: 14 }}>No products found for "{globalSearch}"</div>
+                  ) : (
+                    <>
+                      <div style={{ padding: "10px 16px 8px", fontSize: 11, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", borderBottom: "1px solid #f1f5f9" }}>
+                        {globalResults.length} result{globalResults.length !== 1 ? "s" : ""}
+                      </div>
+                      <div style={{ maxHeight: 420, overflowY: "auto" }}>
+                        {globalResults.map((p, i) => (
+                          <div key={p.id + i} onClick={() => { setGlobalSelected(p); setGlobalSearch(""); }}
+                            onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
+                            onMouseLeave={e => e.currentTarget.style.background = "#fff"}
+                            style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 16px", borderBottom: i < globalResults.length - 1 ? "1px solid #f8fafc" : "none", cursor: "pointer", background: "#fff", transition: "background 0.1s" }}>
+                            {p.image_url ? (
+                              <img src={p.image_url} alt="" style={{ width: 44, height: 38, objectFit: "contain", borderRadius: 6, background: "#f8fafc", flexShrink: 0 }} onError={e => e.target.style.display = "none"} />
+                            ) : (
+                              <div style={{ width: 44, height: 38, borderRadius: 6, background: "#f1f5f9", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: "#cbd5e1" }}>⛓</div>
+                            )}
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ fontSize: 13, fontWeight: 700, color: C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.series}</div>
+                              <div style={{ fontSize: 11, color: C.muted, marginTop: 1 }}>
+                                {p.type}{p.brand ? " · " + p.brand : ""}{p.style ? " · " + p.style : ""}{p.category ? " · " + p.category : ""}
+                              </div>
+                            </div>
+                            <span style={{ fontSize: 11, color: C.navyMid, fontWeight: 700, whiteSpace: "nowrap" }}>View →</span>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <TypeGrid types={availableTypes} counts={typeCounts} onSelect={selectType} />
+
+            {/* Global search result modal */}
+            {globalSelected && (() => {
+              const rawRecord = globalSelected._source === "mac" || globalSelected._source === "allied"
+                ? rawMacRecords.find(r => r.id === globalSelected.id) || null : null;
+              if (rawRecord) return <MacProductModal record={rawRecord} slugMap={{}} sprocketMap={{}} loadSprockets={() => {}} onSelect={r => setGlobalSelected(r)} onClose={() => setGlobalSelected(null)} />;
+              return <ProductModal product={globalSelected} showBrand={true} onClose={() => setGlobalSelected(null)} />;
+            })()}
+          </div>
         ) : view === "chains" ? (
           <ChainSubGrid
             types={availableTypes.filter(t => CHAIN_SUBTYPE_KEYS.has(t.key))}
