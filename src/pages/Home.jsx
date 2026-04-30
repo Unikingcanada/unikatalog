@@ -357,8 +357,7 @@ function printTearSheet(product) {
   const sprocketLabels = { type:"Type", material:"Material", teeth:"Teeth", pitch_dia_in:"Pitch Dia (in)", pitch_dia_mm:"Pitch Dia (mm)", outer_dia_in:"Outer Dia (in)", outer_dia_mm:"Outer Dia (mm)", hub_width_in:"Hub Width (in)", hub_width_mm:"Hub Width (mm)" };
   const activeSprocketCols = sprocketCols.filter(k => sprocketRows.some(r => r[k] != null && r[k] !== ""));
 
-  const w = window.open("", "_blank");
-  w.document.write(`<!DOCTYPE html><html><head><title>Tear Sheet — ${product.series}</title>
+  const __html = `<!DOCTYPE html><html><head><title>Tear Sheet — ${product.series}</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; background: #fff; }
@@ -489,14 +488,15 @@ function printTearSheet(product) {
     </div>
   </div>
 </div>
-</body></html>`);
-  w.document.close();
+</body></html>`;
+  const __blob1 = new Blob([__html], {type:'text/html'});
+  const __url1 = URL.createObjectURL(__blob1);
+  window.open(__url1, '_blank');
 }
 
 // ─── Mac Chain Tear Sheet ─────────────────────────────────────────────────────
 
 function printMacTearSheet(record) {
-  const w = window.open("", "_blank");
   const date = new Date().toLocaleDateString("en-CA", { year:"numeric", month:"long", day:"numeric" });
   const img = record.product_image || record.diagram_image || "";
   const diagImg = record.diagram_image && record.diagram_image !== record.product_image ? record.diagram_image : "";
@@ -533,7 +533,7 @@ function printMacTearSheet(record) {
     </ul>
   </div>` : "";
 
-  w.document.write(`<!DOCTYPE html><html><head><title>Tear Sheet — ${record.part_number}</title>
+  const __macHtml = `<!DOCTYPE html><html><head><title>Tear Sheet — ${record.part_number}</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'Segoe UI',Arial,sans-serif; color:#111; background:#fff; }
@@ -619,8 +619,10 @@ function printMacTearSheet(record) {
     </div>
   </div>
 </div>
-</body></html>`);
-  w.document.close();
+</body></html>`;
+  const __blob2 = new Blob([__macHtml], {type:'text/html'});
+  const __url2 = URL.createObjectURL(__blob2);
+  window.open(__url2, '_blank');
 }
 
 
