@@ -1625,10 +1625,13 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const [cat, elev, uni, allied] = await Promise.all([
+        const [cat, elev, uni] = await Promise.all([
           CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list(),
-          MacChainProduct.filter({}, 1, 500)
         ]);
+        let allied = [];
+        try {
+          allied = await MacChainProduct.list();
+        } catch(e2) { console.error("MacChain load error:", e2); }
         setRawMacRecords(allied);
         setAllData([
           ...cat.map(normalizeCatalogProduct),
