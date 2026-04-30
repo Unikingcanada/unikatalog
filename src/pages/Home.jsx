@@ -1625,19 +1625,9 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        async function fetchAllMac() {
-          let all = [], skip = 0, hasMore = true;
-          while (hasMore) {
-            const batch = await MacChainProduct.list({ limit: 200, skip });
-            all = all.concat(batch);
-            hasMore = batch.length === 200;
-            skip += 200;
-          }
-          return all;
-        }
         const [cat, elev, uni, allied] = await Promise.all([
           CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list(),
-          fetchAllMac()
+          MacChainProduct.filter({}, { limit: 500 })
         ]);
         setRawMacRecords(allied);
         setAllData([
