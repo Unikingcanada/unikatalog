@@ -583,13 +583,13 @@ function SeriesCard({ s, onSelect }) {
         display: "flex", alignItems: "center", justifyContent: "center",
         borderBottom: `3px solid ${hov ? s.color : "#e2e8f0"}`, transition: "border-color 0.18s",
       }}>
-        {s.photo_url && !imgErr ? (
+        {s.image_url && !imgErr ? (
           <img
-            src={s.photo_url}
+            src={s.image_url}
             alt={s.name}
             onError={() => setImgErr(true)}
             style={{
-              width: "100%", height: "100%", objectFit: "cover",
+              maxWidth: "85%", maxHeight: "85%", objectFit: "contain",
               transition: "transform 0.3s ease",
               transform: hov ? "scale(1.05)" : "scale(1)",
             }}
