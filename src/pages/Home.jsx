@@ -1368,9 +1368,31 @@ const WELDED_SERIES_LABELS = {
 
 function RelatedCard({ item, full, onClick }) {
   const [hov, setHov] = useState(false);
+  const [added, setAdded] = useState(() => getRFQCart().some(i => i.id === (full?.id || item.part_number)));
+  useEffect(() => {
+    const update = () => setAdded(getRFQCart().some(i => i.id === (full?.id || item.part_number)));
+    window.addEventListener("rfq_cart_updated", update);
+    return () => window.removeEventListener("rfq_cart_updated", update);
+  }, [full, item.part_number]);
+
+  function handleAddRFQ(e) {
+    e.stopPropagation();
+    if (added) { window.location.href = createPageUrl("RFQCart"); return; }
+    addToRFQCart({
+      id: full?.id || item.part_number,
+      _source: "mac",
+      series: item.part_number,
+      type: full?.product_type || item.category || "Related Item",
+      style: item.name || item.category || "",
+      category: item.category || "",
+      image_url: item.image || full?.product_image || "",
+      materials: "", application: "",
+    });
+    setAdded(true);
+  }
+
   return (
     <div
-      onClick={onClick}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
@@ -1378,20 +1400,61 @@ function RelatedCard({ item, full, onClick }) {
         borderRadius: 8,
         padding: "12px 14px",
         background: hov && full ? C.navyMid : C.bg,
-        cursor: full ? "pointer" : "default",
         transition: "all 0.15s",
+        display: "flex", flexDirection: "column",
       }}>
       {item.image && (
-        <img src={item.image} alt={item.part_number}
-          style={{ width:"100%", height:65, objectFit:"contain", marginBottom:8, borderRadius:4 }} />
+        <img src={item.image} alt={item.part_number} onClick={onClick}
+          style={{ width:"100%", height:65, objectFit:"contain", marginBottom:8, borderRadius:4, cursor: full ? "pointer" : "default" }} />
       )}
-      <div style={{ fontWeight:700, fontSize:13, color: hov && full ? "#fff" : C.text, marginBottom:2 }}>
+      <div onClick={onClick} style={{ fontWeight:700, fontSize:13, color: hov && full ? "#fff" : C.text, marginBottom:2, cursor: full ? "pointer" : "default", flex:1 }}>
         {item.part_number}
       </div>
-      <div style={{ fontSize:12, color: hov && full ? "rgba(255,255,255,0.65)" : C.muted }}>
+      <div onClick={onClick} style={{ fontSize:12, color: hov && full ? "rgba(255,255,255,0.65)" : C.muted, marginBottom:8, cursor: full ? "pointer" : "default" }}>
         {item.name || item.category}
       </div>
+      <button onClick={handleAddRFQ}
+        style={{ width:"100%", padding:"5px 8px", borderRadius:5, fontSize:11, fontWeight:700, cursor:"pointer",
+          border: added ? "1px solid #16a34a" : "1px solid #2563eb",
+          background: added ? "#f0fdf4" : (hov && full ? "rgba(255,255,255,0.15)" : "#eff6ff"),
+          color: added ? "#16a34a" : (hov && full ? "#fff" : "#2563eb"),
+          transition:"all 0.15s" }}>
+        {added ? "✓ In RFQ" : "+ Add to RFQ"}
+      </button>
     </div>
+  );
+}
+
+function RFQButtonMac({ record }) {
+  const [added, setAdded] = useState(() => getRFQCart().some(i => i.id === record.id));
+  useEffect(() => {
+    const update = () => setAdded(getRFQCart().some(i => i.id === record.id));
+    window.addEventListener("rfq_cart_updated", update);
+    return () => window.removeEventListener("rfq_cart_updated", update);
+  }, [record.id]);
+  function handle() {
+    if (added) { window.location.href = createPageUrl("RFQCart"); return; }
+    addToRFQCart({
+      id: record.id,
+      _source: "mac",
+      series: record.part_number,
+      type: record.product_type || record.category || "",
+      style: record.subcategory || "",
+      category: record.category || "",
+      image_url: record.product_image || "",
+      materials: "", application: "",
+    });
+    setAdded(true);
+  }
+  return (
+    <button onClick={handle}
+      style={{ padding:"6px 14px", borderRadius:6, fontSize:11, fontWeight:700, cursor:"pointer",
+        border: added ? "1px solid #16a34a" : "1px solid #2563eb",
+        background: added ? "#f0fdf4" : "#eff6ff",
+        color: added ? "#16a34a" : "#2563eb",
+        whiteSpace:"nowrap", transition:"all 0.15s" }}>
+      {added ? "✓ In RFQ" : "+ Add to RFQ"}
+    </button>
   );
 }
 
@@ -1419,7 +1482,8 @@ function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect
               <div style={{ fontSize:22, fontWeight:800, color:C.text }}>{record._specificPart || record.part_number}</div>
               <div style={{ fontSize:13, color:C.muted, marginTop:3 }}>{record.subcategory} · {record.product_type}</div>
             </div>
-            <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
+              <RFQButtonMac record={record} />
               <button onClick={() => printMacTearSheet(record)} style={{ background:C.navy, border:"none", color:"#fff", padding:"6px 14px", borderRadius:6, cursor:"pointer", fontSize:11, fontWeight:700 }}>
                 Print Tear Sheet
               </button>
@@ -1615,9 +1679,90 @@ function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect
   );
 }
 
+// ─── Welded Chain Card (grid) ─────────────────────────────────────────────────
+function WeldedChainCard({ chain, hovered, setHovered, onSelect }) {
+  const isHov = hovered === chain.part_number;
+  const [added, setAdded] = useState(() => getRFQCart().some(i => i.id === chain.id));
+  useEffect(() => {
+    const update = () => setAdded(getRFQCart().some(i => i.id === chain.id));
+    window.addEventListener("rfq_cart_updated", update);
+    return () => window.removeEventListener("rfq_cart_updated", update);
+  }, [chain.id]);
+  function handleRFQ(e) {
+    e.stopPropagation();
+    if (added) { window.location.href = createPageUrl("RFQCart"); return; }
+    addToRFQCart({ id: chain.id, _source:"mac", series: chain.part_number, type: chain.product_type || chain.category || "", style: chain.subcategory || "", category: chain.category || "", image_url: chain.product_image || "", materials:"", application:"" });
+    setAdded(true);
+  }
+  return (
+    <div onMouseEnter={() => setHovered(chain.part_number)} onMouseLeave={() => setHovered(null)}
+      style={{ background: isHov ? C.navyMid : C.bgCard, border:"1px solid "+(isHov ? C.navyMid : C.border), borderRadius:10, overflow:"hidden", transition:"all 0.15s", display:"flex", flexDirection:"column" }}>
+      {chain.product_image && (
+        <div onClick={() => onSelect(chain)} style={{ cursor:"pointer", background:C.bg, borderBottom:"1px solid #f1f5f9", padding:8, display:"flex", alignItems:"center", justifyContent:"center", height:110 }}>
+          <img src={chain.product_image} alt={chain.part_number} style={{ maxHeight:98, maxWidth:"86%", objectFit:"contain" }} />
+        </div>
+      )}
+      <div onClick={() => onSelect(chain)} style={{ padding:"14px 16px", flex:1, cursor:"pointer" }}>
+        <div style={{ fontSize:15, fontWeight:800, color: isHov ? "#fff" : C.text, marginBottom:4 }}>{chain.part_number}</div>
+        <div style={{ fontSize:12, color: isHov ? "rgba(255,255,255,0.65)" : C.muted, marginBottom:8 }}>{stripVendor(chain.description)?.slice(0,80)}{stripVendor(chain.description)?.length>80?"...":""}</div>
+        <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
+          {chain.related_sprockets?.length > 0 && <span style={{ fontSize:11, padding:"2px 8px", borderRadius:20, background: isHov ? "rgba(255,255,255,0.15)" : C.bg, color: isHov ? "#fff" : C.muted, border:"1px solid "+(isHov ? "rgba(255,255,255,0.2)" : C.border) }}>{chain.related_sprockets.length} Sprockets</span>}
+          {chain.related_pins?.length > 0 && <span style={{ fontSize:11, padding:"2px 8px", borderRadius:20, background: isHov ? "rgba(255,255,255,0.15)" : C.bg, color: isHov ? "#fff" : C.muted, border:"1px solid "+(isHov ? "rgba(255,255,255,0.2)" : C.border) }}>{chain.related_pins.length} Pins</span>}
+          {chain.related_attachments?.length > 0 && <span style={{ fontSize:11, padding:"2px 8px", borderRadius:20, background: isHov ? "rgba(255,255,255,0.15)" : C.bg, color: isHov ? "#fff" : C.muted, border:"1px solid "+(isHov ? "rgba(255,255,255,0.2)" : C.border) }}>{chain.related_attachments.length} Attachments</span>}
+        </div>
+      </div>
+      <div style={{ padding:"8px 16px", borderTop:"1px solid "+(isHov ? "rgba(255,255,255,0.1)" : C.bg), display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+        <span onClick={() => onSelect(chain)} style={{ fontSize:11, fontWeight:600, color: isHov ? "rgba(255,255,255,0.7)" : C.navyMid, cursor:"pointer" }}>View Specs ›</span>
+        <button onClick={handleRFQ} style={{ padding:"4px 10px", borderRadius:5, fontSize:11, fontWeight:700, cursor:"pointer", border: added ? "1px solid #16a34a" : "1px solid #2563eb", background: added ? "#f0fdf4" : (isHov ? "rgba(255,255,255,0.15)" : "#eff6ff"), color: added ? "#16a34a" : (isHov ? "#fff" : "#2563eb"), transition:"all 0.15s" }}>
+          {added ? "✓ In RFQ" : "+ Add to RFQ"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Welded Chain Row (list view) ─────────────────────────────────────────────
+function WeldedChainRow({ chain, onSelect }) {
+  const [hov, setHov] = useState(false);
+  const [added, setAdded] = useState(() => getRFQCart().some(i => i.id === chain.id));
+  useEffect(() => {
+    const update = () => setAdded(getRFQCart().some(i => i.id === chain.id));
+    window.addEventListener("rfq_cart_updated", update);
+    return () => window.removeEventListener("rfq_cart_updated", update);
+  }, [chain.id]);
+  function handleRFQ(e) {
+    e.stopPropagation();
+    if (added) { window.location.href = createPageUrl("RFQCart"); return; }
+    addToRFQCart({ id: chain.id, _source:"mac", series: chain.part_number, type: chain.product_type || chain.category || "", style: chain.subcategory || "", category: chain.category || "", image_url: chain.product_image || "", materials:"", application:"" });
+    setAdded(true);
+  }
+  return (
+    <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{ background: C.bgCard, border:"1px solid "+(hov ? C.navyMid : C.border), borderRadius:8, display:"flex", alignItems:"center", overflow:"hidden", transition:"all 0.15s", boxShadow: hov ? "0 2px 10px rgba(26,58,92,0.07)" : "none" }}>
+      <div style={{ width:3, alignSelf:"stretch", background:C.navyMid, flexShrink:0 }} />
+      {chain.product_image && (
+        <div onClick={() => onSelect(chain)} style={{ width:64, height:56, display:"flex", alignItems:"center", justifyContent:"center", background:"#f8fafc", borderRight:"1px solid #f1f5f9", flexShrink:0, cursor:"pointer" }}>
+          <img src={chain.product_image} alt="" style={{ maxHeight:48, maxWidth:56, objectFit:"contain" }} onError={e => e.target.style.display="none"} />
+        </div>
+      )}
+      <div onClick={() => onSelect(chain)} style={{ flex:1, padding:"10px 14px", cursor:"pointer", minWidth:0 }}>
+        <div style={{ fontSize:14, fontWeight:800, color:C.text }}>{chain.part_number}</div>
+        <div style={{ fontSize:12, color:C.muted, marginTop:2 }}>{chain.subcategory}{chain.product_type ? " · " + chain.product_type : ""}</div>
+      </div>
+      <div style={{ display:"flex", alignItems:"center", gap:8, padding:"0 14px", flexShrink:0 }}>
+        <button onClick={handleRFQ} style={{ padding:"5px 10px", borderRadius:5, fontSize:11, fontWeight:700, cursor:"pointer", border: added ? "1px solid #16a34a" : "1px solid #2563eb", background: added ? "#f0fdf4" : "#eff6ff", color: added ? "#16a34a" : "#2563eb", whiteSpace:"nowrap" }}>
+          {added ? "✓ In RFQ" : "+ RFQ"}
+        </button>
+        <span onClick={() => onSelect(chain)} style={{ fontSize:11, fontWeight:600, color:C.navyMid, whiteSpace:"nowrap", cursor:"pointer" }}>View ›</span>
+      </div>
+    </div>
+  );
+}
+
 function WeldedSeriesView({ rawMacRecords }) {
   const [selectedSeries, setSelectedSeries] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [weldedView, setWeldedView] = useState("grid");
   const [hovered, setHovered] = useState(null);
   // Lazy-loaded sprocket records — only fetched when a sprockets tab is opened
   const [sprocketMap, setSprocketMap] = useState({});
@@ -1689,40 +1834,25 @@ function WeldedSeriesView({ rawMacRecords }) {
           </div>
         </div>
 
-        {/* Chain cards grid */}
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(240px,1fr))", gap:14 }}>
-          {chains.map(chain => (
-            <div key={chain.id || chain.part_number}
-              onClick={() => setSelectedRecord(chain)}
-              onMouseEnter={() => setHovered(chain.part_number)}
-              onMouseLeave={() => setHovered(null)}
-              style={{ background: hovered===chain.part_number ? C.navyMid : C.bgCard, border:"1px solid "+(hovered===chain.part_number ? C.navyMid : C.border), borderRadius:10, padding:"16px 18px", cursor:"pointer", transition:"all 0.15s" }}>
-              {chain.product_image && (
-                <img src={chain.product_image} alt={chain.part_number}
-                  style={{ width:"100%", height:100, objectFit:"contain", borderRadius:6, background:C.bg, marginBottom:10, padding:6 }} />
-              )}
-              <div style={{ fontSize:15, fontWeight:800, color: hovered===chain.part_number ? "#fff" : C.text, marginBottom:4 }}>{chain.part_number}</div>
-              <div style={{ fontSize:12, color: hovered===chain.part_number ? "rgba(255,255,255,0.65)" : C.muted, marginBottom:8 }}>{stripVendor(chain.description)?.slice(0,80)}{stripVendor(chain.description)?.length>80?"...":""}</div>
-              <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
-                {chain.related_sprockets?.length > 0 && (
-                  <span style={{ fontSize:11, padding:"2px 8px", borderRadius:20, background: hovered===chain.part_number ? "rgba(255,255,255,0.15)" : C.bg, color: hovered===chain.part_number ? "#fff" : C.muted, border:"1px solid "+(hovered===chain.part_number ? "rgba(255,255,255,0.2)" : C.border) }}>
-                    {chain.related_sprockets.length} Sprockets
-                  </span>
-                )}
-                {chain.related_pins?.length > 0 && (
-                  <span style={{ fontSize:11, padding:"2px 8px", borderRadius:20, background: hovered===chain.part_number ? "rgba(255,255,255,0.15)" : C.bg, color: hovered===chain.part_number ? "#fff" : C.muted, border:"1px solid "+(hovered===chain.part_number ? "rgba(255,255,255,0.2)" : C.border) }}>
-                    {chain.related_pins.length} Pins
-                  </span>
-                )}
-                {chain.related_attachments?.length > 0 && (
-                  <span style={{ fontSize:11, padding:"2px 8px", borderRadius:20, background: hovered===chain.part_number ? "rgba(255,255,255,0.15)" : C.bg, color: hovered===chain.part_number ? "#fff" : C.muted, border:"1px solid "+(hovered===chain.part_number ? "rgba(255,255,255,0.2)" : C.border) }}>
-                    {chain.related_attachments.length} Attachments
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
+        {/* View toggle */}
+        <div style={{ display:"flex", justifyContent:"flex-end", marginBottom:12 }}>
+          <ViewToggle view={weldedView} onChange={setWeldedView} />
         </div>
+
+        {/* Chain cards/list */}
+        {weldedView === "grid" ? (
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(240px,1fr))", gap:14 }}>
+            {chains.map(chain => (
+              <WeldedChainCard key={chain.id || chain.part_number} chain={chain} hovered={hovered} setHovered={setHovered} onSelect={setSelectedRecord} />
+            ))}
+          </div>
+        ) : (
+          <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+            {chains.map(chain => (
+              <WeldedChainRow key={chain.id || chain.part_number} chain={chain} onSelect={setSelectedRecord} />
+            ))}
+          </div>
+        )}
 
         {/* Product modal */}
         {selectedRecord && <MacProductModal record={selectedRecord} slugMap={slugMap} sprocketMap={sprocketMap} loadSprockets={loadSprockets} onSelect={setSelectedRecord} onClose={() => setSelectedRecord(null)} />}
