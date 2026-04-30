@@ -1,5 +1,9 @@
+// v2 - images + belt data + sorted series
 import { useState, useEffect, useMemo } from "react";
-import { CatalogProduct, UniCatalog, ElevatorBucket, DonghuaChain, MacChainProduct } from "@/api/entities";
+import { UniCatalog } from "@/api/entities";
+import { CatalogProduct } from "@/api/entities";
+import { ElevatorBucket } from "@/api/entities";
+import { MacChainProduct } from "@/api/entities";
 
 const NAVY = "#1a3a5c";
 
@@ -25,12 +29,6 @@ const TYPE_META = {
   "Monitoring System":      { color: "#047857", bg: "#d1fae5" },
 };
 
-function parseJSON(raw) {
-  if (!raw) return null;
-  if (typeof raw === "object") return raw;
-  try { return JSON.parse(raw); } catch (e) { return null; }
-}
-
 function getBucketType(b) {
   const p = (b.profile || "").toLowerCase();
   const s = (b.series || "").toLowerCase();
@@ -39,238 +37,49 @@ function getBucketType(b) {
   return "Elevator Bucket";
 }
 
-function sortSeries(a, b) {
-  const na = parseFloat((a.series || "").replace(/[^\d.]/g, "")) || 0;
-  const nb = parseFloat((b.series || "").replace(/[^\d.]/g, "")) || 0;
-  if (na !== nb) return na - nb;
-  return (a.style || "").localeCompare(b.style || "");
-}
-
-// ─── Tear Sheet ───────────────────────────────────────────────────────────────
-
-function printTearSheet(rec, type) {
-  const tm = TYPE_META[type] || { color: NAVY, bg: "#f3f4f6" };
-  const isIntralox = !!rec.pitch_in;
-
-  const specs = isIntralox ? [
-    ["Belt Category", rec.category], ["Style", rec.style],
-    ["Pitch", rec.pitch_in ? rec.pitch_in + '" (' + rec.pitch_mm + 'mm)' : null],
-    ["Min Belt Width", rec.min_width_in ? rec.min_width_in + '"' : null],
-    ["Open Area", rec.open_area], ["Hinge Style", rec.hinge_style],
-    ["Materials", rec.materials],
-  ] : [
-    ["Series", rec.series], ["Style", rec.style || rec.category],
-    ["Vendor", rec.vendor], ["Duty", rec.duty], ["Application", rec.application],
-    ["Model", rec.model_code], ["Sizes Available", rec.sizes_available],
-  ];
-  const filteredSpecs = specs.filter(([, v]) => v && String(v) !== "null");
-
-  const beltRows = parseJSON(rec.belt_data) || [];
-  const sprocketRows = parseJSON(rec.sprocket_data) || [];
-
-  const beltCols = ["material","strength_lbf","strength_nm","temp_min_f","temp_max_f","mass_lbft2","mass_kgm2"];
-  const beltLabels = { material:"Material", strength_lbf:"Strength (lbf)", strength_nm:"Strength (N/m)", temp_min_f:"Min °F", temp_max_f:"Max °F", mass_lbft2:"lb/ft²", mass_kgm2:"kg/m²" };
-  const activeBeltCols = beltCols.filter(k => beltRows.some(r => r[k] != null && r[k] !== ""));
-
-  const sprocketCols = ["type","material","teeth","pitch_dia_in","pitch_dia_mm","outer_dia_in","outer_dia_mm","hub_width_in","hub_width_mm"];
-  const sprocketLabels = { type:"Type", material:"Material", teeth:"Teeth", pitch_dia_in:"Pitch Dia (in)", pitch_dia_mm:"Pitch Dia (mm)", outer_dia_in:"Outer Dia (in)", outer_dia_mm:"Outer Dia (mm)", hub_width_in:"Hub W (in)", hub_width_mm:"Hub W (mm)" };
-  const activeSprocketCols = sprocketCols.filter(k => sprocketRows.some(r => r[k] != null && r[k] !== ""));
-
-  const w = window.open("", "_blank");
-  w.document.write(`<!DOCTYPE html><html><head><title>Tear Sheet — ${rec.series}</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; background: #fff; }
-  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } .no-print { display: none !important; } }
-  .header { background: #0f2340; color: #fff; padding: 22px 32px; display: flex; justify-content: space-between; align-items: center; }
-  .header-title { font-size: 22px; font-weight: 800; }
-  .header-sub { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 3px; }
-  .header-meta { text-align: right; font-size: 11px; color: rgba(255,255,255,0.45); }
-  .accent-bar { height: 4px; background: linear-gradient(90deg, ${tm.color}, #1a3a5c); }
-  .body { padding: 24px 32px; }
-  .product-hero { display: flex; gap: 24px; align-items: flex-start; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb; }
-  .product-img { width: 140px; height: 100px; object-fit: contain; border: 1px solid #e5e7eb; border-radius: 6px; padding: 6px; background: #f8fafc; flex-shrink: 0; }
-  .product-name { font-size: 26px; font-weight: 900; color: #0f2340; line-height: 1.1; }
-  .product-type { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: ${tm.color}; margin-bottom: 6px; }
-  .product-style { font-size: 14px; color: #64748b; margin-top: 4px; }
-  .tags { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-  .tag { background: ${tm.bg}; color: ${tm.color}; border-radius: 99px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
-  .notes-box { background: #f8fafc; border-left: 3px solid #1a3a5c; border-radius: 4px; padding: 10px 14px; font-size: 12px; color: #334155; line-height: 1.7; margin-bottom: 18px; }
-  .section-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #1a3a5c; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 2px solid #e2e8f0; }
-  .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 20px; }
-  .spec-cell { background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 5px; padding: 7px 10px; }
-  .spec-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #94a3b8; margin-bottom: 2px; }
-  .spec-value { font-size: 12px; font-weight: 600; color: #0f2340; }
-  table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px; }
-  thead tr { background: #0f2340; }
-  thead th { padding: 7px 10px; color: #fff; font-weight: 700; text-align: left; white-space: nowrap; }
-  tbody tr:nth-child(even) { background: #f8fafc; }
-  tbody td { padding: 6px 10px; border-bottom: 1px solid #e5e7eb; color: #334155; }
-  tbody td:first-child { font-weight: 600; color: #0f2340; }
-  .section-wrap { margin-bottom: 20px; }
-  .footer { margin-top: 24px; padding-top: 12px; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
-  .footer-left { font-size: 10px; color: #94a3b8; }
-  .footer-right { font-size: 10px; color: #94a3b8; text-align: right; }
-  .no-print { margin: 16px 32px; display: flex; gap: 10px; }
-  .btn { padding: 8px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; }
-  .btn-primary { background: #0f2340; color: #fff; }
-  .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
-</style></head><body>
-<div class="no-print">
-  <button class="btn btn-primary" onclick="window.print()">Print / Save PDF</button>
-  <button class="btn btn-secondary" onclick="window.close()">Close</button>
-</div>
-<div class="header">
-  <div>
-    <div class="header-title">UNIKING CANADA</div>
-    <div class="header-sub">Technical Product Reference</div>
-  </div>
-  <div class="header-meta">
-    <div style="font-size:13px;font-weight:700;color:#fff;">${rec.series}</div>
-    <div>${type}</div>
-    <div style="margin-top:4px;">${new Date().toLocaleDateString("en-CA", { year:"numeric", month:"long", day:"numeric" })}</div>
-  </div>
-</div>
-<div class="accent-bar"></div>
-<div class="body">
-  <div class="product-hero">
-    ${rec.image_url ? `<img class="product-img" src="${rec.image_url}" alt="${rec.series}" />` : ""}
-    <div>
-      <div class="product-type">${type}</div>
-      <div class="product-name">${rec.series}</div>
-      ${rec.style || rec.category ? `<div class="product-style">${rec.style || rec.category}</div>` : ""}
-      <div class="tags">
-        ${rec.pitch_in ? `<span class="tag">${rec.pitch_in}" pitch</span>` : ""}
-        ${rec.hinge_style ? `<span class="tag">${rec.hinge_style}</span>` : ""}
-        ${rec.open_area ? `<span class="tag">${rec.open_area} open</span>` : ""}
-      </div>
-    </div>
-  </div>
-
-  ${rec.notes ? `<div class="notes-box">${rec.notes}</div>` : ""}
-
-  ${filteredSpecs.length ? `
-  <div class="section-wrap">
-    <div class="section-title">Specifications</div>
-    <div class="specs-grid">
-      ${filteredSpecs.map(([l, v]) => `<div class="spec-cell"><div class="spec-label">${l}</div><div class="spec-value">${v}</div></div>`).join("")}
-    </div>
-  </div>` : ""}
-
-  ${beltRows.length && activeBeltCols.length ? `
-  <div class="section-wrap">
-    <div class="section-title">Belt Data — Material Properties</div>
-    <table>
-      <thead><tr>${activeBeltCols.map(k => `<th>${beltLabels[k]}</th>`).join("")}</tr></thead>
-      <tbody>${beltRows.map(row => `<tr>${activeBeltCols.map(k => `<td>${row[k] != null ? row[k] : "—"}</td>`).join("")}</tr>`).join("")}</tbody>
-    </table>
-  </div>` : ""}
-
-  ${sprocketRows.length && activeSprocketCols.length ? `
-  <div class="section-wrap">
-    <div class="section-title">Compatible Sprockets</div>
-    <table>
-      <thead><tr>${activeSprocketCols.map(k => `<th>${sprocketLabels[k]}</th>`).join("")}</tr></thead>
-      <tbody>${sprocketRows.map(row => `<tr>${activeSprocketCols.map(k => `<td>${row[k] != null ? row[k] : "—"}</td>`).join("")}</tr>`).join("")}</tbody>
-    </table>
-  </div>` : ""}
-
-  ${(rec.catalog_url || rec.tech_doc_url || rec.cad_url) ? `
-  <div class="section-wrap">
-    <div class="section-title">Technical Resources</div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;">
-      ${rec.catalog_url ? `<a href="${rec.catalog_url}" style="font-size:12px;color:#1a3a5c;font-weight:600;">View Catalog PDF</a>` : ""}
-      ${rec.tech_doc_url ? `<a href="${rec.tech_doc_url}" style="font-size:12px;color:#1a3a5c;font-weight:600;">Technical Documentation</a>` : ""}
-      ${rec.cad_url ? `<a href="${rec.cad_url}" style="font-size:12px;color:#1a3a5c;font-weight:600;">CAD Drawing</a>` : ""}
-    </div>
-  </div>` : ""}
-
-  <div class="footer">
-    <div class="footer-left">
-      <div>Uniking Canada · info@unikingcanada.com</div>
-      <div style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#cbd5e1;margin-top:2px;">Confidential — Internal Use Only · No pricing information included</div>
-    </div>
-    <div class="footer-right">
-      <div>${rec.series}${rec.style ? " / " + rec.style : ""}</div>
-    </div>
-  </div>
-</div>
-</body></html>`);
-  w.document.close();
-}
-
-// ─── Sprocket Table ───────────────────────────────────────────────────────────
-
-function SprocketTable({ data }) {
-  const rows = parseJSON(data);
-  if (!Array.isArray(rows) || !rows.length) return <div style={{ color: "#6b7280", fontSize: 13 }}>No sprocket data available for this series.</div>;
-
-  const cols = ["type","material","teeth","pitch_dia_in","pitch_dia_mm","outer_dia_in","outer_dia_mm","hub_width_in","hub_width_mm"];
-  const labels = { type:"Type", material:"Material", teeth:"Teeth", pitch_dia_in:"Pitch Dia (in)", pitch_dia_mm:"Pitch Dia (mm)", outer_dia_in:"Outer Dia (in)", outer_dia_mm:"Outer Dia (mm)", hub_width_in:"Hub W (in)", hub_width_mm:"Hub W (mm)" };
-  const active = cols.filter(k => rows.some(r => r[k] != null && r[k] !== ""));
-
-  const groups = {};
-  for (const row of rows) {
-    const t = row.type || "One-Piece";
-    if (!groups[t]) groups[t] = [];
-    groups[t].push(row);
-  }
-
+function Badge({ label, bg = "#f3f4f6", color = "#374151", xs }) {
   return (
-    <div>
-      {Object.entries(groups).map(([grpType, grpRows]) => (
-        <div key={grpType} style={{ marginBottom: 16 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8, color: NAVY, marginBottom: 6 }}>{grpType} Sprockets</div>
-          <div style={{ overflowX: "auto", borderRadius: 8, border: "1px solid #e5e7eb" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
-              <thead>
-                <tr style={{ background: NAVY }}>
-                  {active.filter(k => k !== "type").map(k => (
-                    <th key={k} style={{ padding: "8px 10px", color: "#fff", fontWeight: 700, textAlign: "left", whiteSpace: "nowrap" }}>{labels[k]}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {grpRows.map((row, i) => (
-                  <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid #e5e7eb" }}>
-                    {active.filter(k => k !== "type").map(k => (
-                      <td key={k} style={{ padding: "7px 10px", color: k === "material" ? NAVY : "#374151", fontWeight: k === "material" ? 700 : 400, whiteSpace: "nowrap" }}>
-                        {row[k] != null ? String(row[k]) : "—"}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      ))}
-    </div>
+    <span style={{ display: "inline-flex", alignItems: "center", padding: xs ? "1px 7px" : "3px 10px",
+      borderRadius: 99, background: bg, color, fontSize: xs ? 10 : 11, fontWeight: 700, whiteSpace: "nowrap" }}>
+      {label}
+    </span>
   );
 }
 
-// ─── Belt Data Table ──────────────────────────────────────────────────────────
+function BeltDataTable({ beltData }) {
+  if (!beltData) return null;
+  let rows = [];
+  try { rows = typeof beltData === "string" ? JSON.parse(beltData) : beltData; } catch { return null; }
+  if (!rows.length) return null;
 
-function BeltDataTable({ data }) {
-  const rows = parseJSON(data);
-  if (!Array.isArray(rows) || !rows.length) return null;
-  const keys = ["material","strength_lbf","strength_nm","temp_min_f","temp_max_f","mass_lbft2","mass_kgm2"];
-  const labels = { material:"Material", strength_lbf:"Strength (lbf)", strength_nm:"Strength (N/m)", temp_min_f:"Min °F", temp_max_f:"Max °F", mass_lbft2:"lb/ft²", mass_kgm2:"kg/m²" };
-  const cols = keys.filter(k => rows.some(r => r[k] != null && r[k] !== ""));
+  const cols = [
+    { key: "material", label: "Material" },
+    { key: "strength_lbf", label: "Strength (lbf)" },
+    { key: "strength_nm", label: "Strength (N/m)" },
+    { key: "temp_min_f", label: "Min Temp (°F)" },
+    { key: "temp_max_f", label: "Max Temp (°F)" },
+    { key: "mass_lbft2", label: "Mass (lb/ft²)" },
+    { key: "mass_kgm2", label: "Mass (kg/m²)" },
+  ].filter(c => rows.some(r => r[c.key] != null && r[c.key] !== ""));
+
   return (
-    <div style={{ overflowX: "auto", borderRadius: 8, border: "1px solid #e5e7eb" }}>
+    <div style={{ overflowX: "auto" }}>
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
         <thead>
           <tr style={{ background: NAVY }}>
-            {cols.map(k => <th key={k} style={{ padding: "8px 10px", color: "#fff", fontWeight: 700, textAlign: "left", whiteSpace: "nowrap" }}>{labels[k]}</th>)}
+            {cols.map(c => (
+              <th key={c.key} style={{ padding: "8px 10px", color: "#fff", fontWeight: 700,
+                textAlign: "left", whiteSpace: "nowrap", fontSize: 11 }}>{c.label}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
           {rows.map((row, i) => (
             <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid #e5e7eb" }}>
-              {cols.map(k => (
-                <td key={k} style={{ padding: "7px 10px", color: k === "material" ? NAVY : "#374151", fontWeight: k === "material" ? 700 : 400, whiteSpace: "nowrap" }}>
-                  {row[k] != null ? String(row[k]) : "—"}
+              {cols.map(c => (
+                <td key={c.key} style={{ padding: "7px 10px", color: c.key === "material" ? NAVY : "#374151",
+                  fontWeight: c.key === "material" ? 700 : 400, whiteSpace: "nowrap" }}>
+                  {row[c.key] != null ? String(row[c.key]) : "—"}
                 </td>
               ))}
             </tr>
@@ -281,122 +90,318 @@ function BeltDataTable({ data }) {
   );
 }
 
-// ─── Modal ────────────────────────────────────────────────────────────────────
+function Card({ rec, type, onClick }) {
+  const tm = TYPE_META[type] || { color: NAVY, bg: "#f3f4f6" };
+  const hasImage = !!rec.image_url;
+
+  return (
+    <div onClick={onClick}
+      style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb",
+        cursor: "pointer", display: "flex", flexDirection: "column", overflow: "hidden",
+        transition: "transform .15s, box-shadow .15s" }}
+      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,.10)"; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}>
+
+      <div style={{ height: 4, background: `linear-gradient(90deg,${tm.color},${tm.color}66)` }} />
+
+      {/* Product Image */}
+      {hasImage && (
+        <div style={{ background: "#f8fafc", borderBottom: "1px solid #f1f5f9",
+          display: "flex", alignItems: "center", justifyContent: "center", height: 130, overflow: "hidden" }}>
+          <img src={rec.image_url} alt={rec.series}
+            style={{ maxHeight: 120, maxWidth: "100%", objectFit: "contain", padding: "8px" }}
+            onError={e => { e.target.style.display = "none"; }} />
+        </div>
+      )}
+
+      <div style={{ padding: "12px 14px", flex: 1, display: "flex", flexDirection: "column", gap: 5 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 6 }}>
+          <Badge label={type} bg={tm.bg} color={tm.color} xs />
+          {rec.pitch_in && (
+            <span style={{ fontSize: 10, color: "#9ca3af" }}>{rec.pitch_in}" pitch</span>
+          )}
+        </div>
+
+        <div style={{ fontSize: 13, fontWeight: 800, color: NAVY, lineHeight: 1.25 }}>
+          {rec.series || rec.name || "—"}
+        </div>
+        {(rec.style || rec.category) && (
+          <div style={{ fontSize: 11, color: "#6b7280" }}>{rec.style || rec.category}</div>
+        )}
+
+        <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+          {rec.hinge_style && <Badge label={rec.hinge_style} bg="#f9fafb" color="#374151" xs />}
+          {rec.open_area && rec.open_area !== "0%" && <Badge label={`${rec.open_area} open`} bg="#f0fdf4" color="#15803d" xs />}
+          {rec.duty && !rec.hinge_style && <Badge label={rec.duty} bg="#f9fafb" color="#374151" xs />}
+        </div>
+
+        {(rec.notes || rec.materials || rec.material) && (
+          <div style={{ fontSize: 11, color: "#6b7280", lineHeight: 1.5,
+            display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+            {rec.notes || rec.materials || rec.material}
+          </div>
+        )}
+      </div>
+
+      <div style={{ padding: "8px 14px", borderTop: "1px solid #f3f4f6",
+        display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span style={{ fontSize: 10, color: "#d1d5db" }}>
+          {rec.page_range ? `pp. ${rec.page_range}` : ""}
+        </span>
+        <span style={{ fontSize: 11, color: tm.color, fontWeight: 700 }}>Details →</span>
+      </div>
+    </div>
+  );
+}
+
+function MacSpecTable({ headers, rows }) {
+  if (!headers || !rows || !headers.length) return null;
+  let parsedHeaders = headers, parsedRows = rows;
+  try { if (typeof headers === "string") parsedHeaders = JSON.parse(headers); } catch {}
+  try { if (typeof rows === "string") parsedRows = JSON.parse(rows); } catch {}
+  if (!parsedHeaders.length || !parsedRows.length) return null;
+  return (
+    <div style={{ overflowX: "auto" }}>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+        <thead>
+          <tr style={{ background: NAVY }}>
+            {parsedHeaders.map((h, i) => (
+              <th key={i} style={{ padding: "8px 10px", color: "#fff", fontWeight: 700,
+                textAlign: "left", whiteSpace: "nowrap", fontSize: 11 }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {parsedRows.map((row, i) => (
+            <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid #e5e7eb" }}>
+              {(Array.isArray(row) ? row : parsedHeaders.map(h => row[h])).map((cell, j) => (
+                <td key={j} style={{ padding: "7px 10px", color: j === 0 ? NAVY : "#374151",
+                  fontWeight: j === 0 ? 700 : 400, whiteSpace: "nowrap" }}>
+                  {cell != null ? String(cell) : "—"}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 function Modal({ rec, type, onClose }) {
-  const [tab, setTab] = useState("specs");
+  const [tab, setTab] = useState("overview");
   if (!rec) return null;
   const tm = TYPE_META[type] || { color: NAVY, bg: "#f3f4f6" };
-  const isIntralox = !!rec.pitch_in;
 
-  const hasBelt = !!(parseJSON(rec.belt_data)?.length);
-  const hasSprocket = !!(parseJSON(rec.sprocket_data)?.length);
+  const isIntralox = !!rec.pitch_in;
+  const isBucket = type === "Elevator Bucket";
+  const isMac = rec._src === "mac";
+
+  let beltRows = [];
+  if (rec.belt_data) {
+    try { beltRows = typeof rec.belt_data === "string" ? JSON.parse(rec.belt_data) : rec.belt_data; } catch {}
+  }
+  const hasBeltData = beltRows.length > 0;
+
+  let parsedSpecs = null;
+  if (rec.key_specs) { try { parsedSpecs = JSON.parse(rec.key_specs); } catch {} }
 
   const matStr = rec.materials || rec.material || "";
   const mats = matStr.split(/[,/]/).map(m => m.trim()).filter(Boolean);
 
   const specs = isIntralox ? [
     ["Series", rec.series], ["Category", rec.category], ["Style", rec.style],
-    ["Pitch", rec.pitch_in ? rec.pitch_in + '" (' + rec.pitch_mm + 'mm)' : null],
-    ["Min Width", rec.min_width_in ? rec.min_width_in + '"' : null],
+    ["Pitch", rec.pitch_in ? `${rec.pitch_in}" (${rec.pitch_mm}mm)` : "—"],
+    ["Min Width", rec.min_width_in ? `${rec.min_width_in}"` : "—"],
     ["Open Area", rec.open_area], ["Hinge Style", rec.hinge_style],
-    ["Pages", rec.page_range ? "pp. " + rec.page_range : null],
-  ] : rec._isAllied ? (
-    (rec.basic_headers || []).map((h, i) => [h, (rec.basic_rows || [[]])[0]?.[i] ?? null])
-  ) : [
+    ["Pages", rec.page_range ? `pp. ${rec.page_range}` : "—"],
+  ] : isMac ? [] : [
     ["Series", rec.series], ["Style", rec.style || rec.category],
-    ["Vendor", rec.vendor], ["Duty", rec.duty], ["Application", rec.application],
-    ["Model", rec.model_code], ["Sizes", rec.sizes_available],
-    ["Pages", rec.page_range ? "pp. " + rec.page_range : null],
+    ["Vendor", rec.vendor], ["Duty", rec.duty],
+    ["Application", rec.application],
+    ["Model / Part No.", rec.model_code],
+    ["Sizes Available", rec.sizes_available],
+    ["Pages", rec.page_range ? `pp. ${rec.page_range}` : "—"],
   ];
 
+  const hasMacSpecs = isMac && rec.basic_headers && rec.basic_rows;
+  const hasMacMore = isMac && rec.more_headers && rec.more_rows;
+
   const tabs = [
-    ["specs", "Specs"],
-    mats.length ? ["mats", "Materials"] : null,
-    hasBelt ? ["belt", "Belt Data"] : null,
-    hasSprocket ? ["sprockets", "Sprockets"] : null,
-    (rec.catalog_url || rec.tech_doc_url || rec.cad_url) ? ["res", "Resources"] : null,
+    hasMacSpecs ? ["macspecs", "Specifications"] : ["overview", "Specs"],
+    hasMacMore && ["macmore", "More Specs"],
+    mats.length > 0 && !isMac && ["materials", "Materials"],
+    hasBeltData && ["beltdata", "Belt Data"],
+    parsedSpecs && ["keyspecs", "Key Specs"],
+    isBucket && rec.bucket_sizes && ["sizes", "Sizes"],
+    (rec.catalog_url || rec.tech_doc_url || rec.cad_url) && ["resources", "Resources"],
   ].filter(Boolean);
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.5)", zIndex: 999, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }} onClick={onClose}>
-      <div style={{ background: "#fff", borderRadius: 16, width: "100%", maxWidth: 720, maxHeight: "92vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.55)", zIndex: 1000,
+      display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }} onClick={onClose}>
+      <div style={{ background: "#fff", borderRadius: 16, width: "100%", maxWidth: 700,
+        maxHeight: "93vh", overflowY: "auto" }} onClick={e => e.stopPropagation()}>
 
         {/* Header */}
-        <div style={{ background: "linear-gradient(135deg,#1a3a5c,#2d5986)", borderRadius: "16px 16px 0 0", padding: "18px 20px 16px", position: "relative" }}>
-          <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-            {rec.image_url ? (
-              <div style={{ background: "rgba(255,255,255,.1)", borderRadius: 8, padding: 6, flexShrink: 0, width: 110, height: 80, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <img src={rec.image_url} alt="" style={{ maxWidth: 100, maxHeight: 72, objectFit: "contain" }} onError={e => { e.target.parentElement.style.display = "none"; }} />
+        <div style={{ background: `linear-gradient(135deg,${NAVY},#2d5986)`,
+          borderRadius: "16px 16px 0 0", padding: "20px 22px 16px", position: "relative" }}>
+          <button onClick={onClose} style={{ position: "absolute", top: 12, right: 14,
+            background: "rgba(255,255,255,.15)", border: "none", borderRadius: "50%",
+            width: 32, height: 32, cursor: "pointer", color: "#fff", fontSize: 16 }}>✕</button>
+
+          <div style={{ display: "flex", gap: 8, marginBottom: 10, flexWrap: "wrap" }}>
+            <Badge label={type} bg={tm.bg} color={tm.color} />
+            {rec.vendor && <Badge label={rec.vendor} bg="rgba(255,255,255,.15)" color="#fff" />}
+          </div>
+
+          <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+            {rec.image_url && (
+              <div style={{ background: "rgba(255,255,255,.1)", borderRadius: 10, padding: 8,
+                flexShrink: 0, width: 120, height: 90, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <img src={rec.image_url} alt={rec.series}
+                  style={{ maxWidth: 110, maxHeight: 80, objectFit: "contain" }}
+                  onError={e => { e.target.parentElement.style.display = "none"; }} />
               </div>
-            ) : null}
-            <div style={{ flex: 1 }}>
-              <div style={{ display: "flex", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
-                <span style={{ background: tm.bg, color: tm.color, padding: "2px 9px", borderRadius: 99, fontSize: 11, fontWeight: 700 }}>{type}</span>
-                {rec.vendor ? <span style={{ background: "rgba(255,255,255,.15)", color: "#fff", padding: "2px 9px", borderRadius: 99, fontSize: 11, fontWeight: 700 }}>{rec.vendor}</span> : null}
+            )}
+            <div>
+              <div style={{ fontSize: 21, fontWeight: 900, color: "#fff", lineHeight: 1.15 }}>{isMac ? (rec.part_number || rec.series) : rec.series}</div>
+              {(rec.style || rec.category) && (
+                <div style={{ fontSize: 13, color: "rgba(255,255,255,.65)", marginTop: 4 }}>{rec.style || rec.category}</div>
+              )}
+              <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
+                {rec.pitch_in && <Badge label={`${rec.pitch_in}" pitch`} bg="rgba(255,255,255,.15)" color="#fff" />}
+                {rec.hinge_style && <Badge label={rec.hinge_style} bg="rgba(255,255,255,.15)" color="#fff" />}
+                {rec.open_area && <Badge label={`${rec.open_area} open`} bg="rgba(255,255,255,.15)" color="#fff" />}
               </div>
-              <div style={{ fontSize: 20, fontWeight: 900, color: "#fff", lineHeight: 1.2 }}>{rec.series}</div>
-              {rec.style || rec.category ? <div style={{ fontSize: 12, color: "rgba(255,255,255,.6)", marginTop: 3 }}>{rec.style || rec.category}</div> : null}
-              <div style={{ display: "flex", gap: 5, marginTop: 7, flexWrap: "wrap" }}>
-                {rec.pitch_in ? <span style={{ background: "rgba(255,255,255,.15)", color: "#fff", padding: "2px 8px", borderRadius: 99, fontSize: 10, fontWeight: 700 }}>{rec.pitch_in}" pitch</span> : null}
-                {rec.hinge_style ? <span style={{ background: "rgba(255,255,255,.15)", color: "#fff", padding: "2px 8px", borderRadius: 99, fontSize: 10, fontWeight: 700 }}>{rec.hinge_style}</span> : null}
-                {rec.open_area ? <span style={{ background: "rgba(255,255,255,.15)", color: "#fff", padding: "2px 8px", borderRadius: 99, fontSize: 10, fontWeight: 700 }}>{rec.open_area} open</span> : null}
-              </div>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0, alignItems: "flex-end" }}>
-              <button onClick={onClose} style={{ background: "rgba(255,255,255,.15)", border: "none", borderRadius: "50%", width: 30, height: 30, cursor: "pointer", color: "#fff", fontSize: 15 }}>✕</button>
-              <button onClick={() => printTearSheet(rec, type)} style={{ background: "rgba(255,255,255,.15)", border: "1px solid rgba(255,255,255,.3)", color: "#fff", padding: "5px 12px", borderRadius: 6, cursor: "pointer", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap" }}>
-                Print Tear Sheet
-              </button>
             </div>
           </div>
         </div>
 
-        {rec.notes ? <div style={{ margin: "12px 18px 0", padding: "10px 13px", background: "#f8fafc", borderRadius: 8, borderLeft: "3px solid " + tm.color, fontSize: 13, color: "#374151", lineHeight: 1.7 }}>{rec.notes}</div> : null}
+        {/* Notes */}
+        {(rec.notes || rec.description) && (
+          <div style={{ margin: "14px 20px 0", fontSize: 13, color: "#374151", lineHeight: 1.7,
+            padding: "10px 14px", background: "#f8fafc", borderRadius: 8, borderLeft: `3px solid ${tm.color}` }}>
+            {rec.notes || rec.description}
+          </div>
+        )}
+
+        {/* Features */}
+        {rec.features && (
+          <div style={{ margin: "10px 20px 0" }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>Features</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              {(Array.isArray(rec.features) ? rec.features : rec.features.split(";")).map((f, i) => f && f.trim() && (
+                <span key={i} style={{ fontSize: 11, padding: "3px 9px", borderRadius: 99,
+                  background: tm.bg, color: tm.color, fontWeight: 600 }}>✓ {typeof f === "string" ? f.trim() : f}</span>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Tabs */}
-        <div style={{ display: "flex", borderBottom: "2px solid #f3f4f6", margin: "12px 18px 0", overflowX: "auto" }}>
+        <div style={{ display: "flex", borderBottom: "2px solid #f3f4f6", margin: "14px 20px 0", overflowX: "auto" }}>
           {tabs.map(([id, label]) => (
-            <button key={id} onClick={() => setTab(id)} style={{ padding: "7px 13px", border: "none", background: "none", cursor: "pointer", fontSize: 12, fontWeight: 700, whiteSpace: "nowrap", color: tab === id ? tm.color : "#9ca3af", borderBottom: tab === id ? "2px solid " + tm.color : "2px solid transparent", marginBottom: -2 }}>
+            <button key={id} onClick={() => setTab(id)}
+              style={{ padding: "8px 14px", border: "none", background: "none", cursor: "pointer",
+                fontSize: 12, fontWeight: 700, whiteSpace: "nowrap",
+                color: tab === id ? tm.color : "#9ca3af",
+                borderBottom: tab === id ? `2px solid ${tm.color}` : "2px solid transparent", marginBottom: -2 }}>
               {label}
             </button>
           ))}
         </div>
 
-        {/* Tab Content */}
-        <div style={{ padding: "14px 18px 22px" }}>
-          {tab === "specs" && (
+        <div style={{ padding: "16px 20px 24px" }}>
+
+          {/* Mac Specs */}
+          {tab === "macspecs" && (
+            <MacSpecTable headers={rec.basic_headers} rows={rec.basic_rows} />
+          )}
+          {tab === "macmore" && (
+            <MacSpecTable headers={rec.more_headers} rows={rec.more_rows} />
+          )}
+
+          {/* Overview */}
+          {tab === "overview" && (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-              {specs.filter(([, v]) => v && v !== "null").map(([l, v]) => (
-                <div key={l} style={{ padding: "9px 11px", background: "#f8fafc", borderRadius: 8, border: "1px solid #f1f5f9" }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: .5, marginBottom: 2 }}>{l}</div>
+              {specs.filter(([, v]) => v && v !== "—" && v !== "null").map(([l, v]) => (
+                <div key={l} style={{ padding: "10px 12px", background: "#f8fafc", borderRadius: 8, border: "1px solid #f1f5f9" }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: .5, marginBottom: 3 }}>{l}</div>
                   <div style={{ fontSize: 13, color: NAVY, fontWeight: 600 }}>{v}</div>
                 </div>
               ))}
             </div>
           )}
-          {tab === "mats" && (
+
+          {/* Materials */}
+          {tab === "materials" && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {mats.map((m, i) => <span key={i} style={{ padding: "7px 14px", borderRadius: 99, background: tm.bg, color: tm.color, fontWeight: 700, fontSize: 13 }}>{m}</span>)}
+              {mats.map((m, i) => (
+                <span key={i} style={{ padding: "8px 14px", borderRadius: 99, background: tm.bg,
+                  color: tm.color, fontWeight: 700, fontSize: 13 }}>{m}</span>
+              ))}
             </div>
           )}
-          {tab === "belt" && (
+
+          {/* Belt Data */}
+          {tab === "beltdata" && (
             <div>
-              <p style={{ fontSize: 12, color: "#6b7280", marginBottom: 10 }}>Mechanical properties per material. Strength per metre of belt width.</p>
-              <BeltDataTable data={rec.belt_data} />
+              <div style={{ fontSize: 12, color: "#6b7280", marginBottom: 12, lineHeight: 1.6 }}>
+                Mechanical properties per material option. Strength ratings are per metre of belt width.
+              </div>
+              <BeltDataTable beltData={rec.belt_data} />
             </div>
           )}
-          {tab === "sprockets" && (
-            <div>
-              <p style={{ fontSize: 12, color: "#6b7280", marginBottom: 14 }}>All belts in the {rec.series} use the same sprocket family. Sprockets are shared across all styles within this series.</p>
-              <SprocketTable data={rec.sprocket_data} />
+
+          {/* Key Specs */}
+          {tab === "keyspecs" && parsedSpecs && (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              {Object.entries(parsedSpecs).map(([k, v]) => (
+                <div key={k} style={{ padding: "10px 12px", background: "#f8fafc", borderRadius: 8 }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: .5, marginBottom: 3 }}>
+                    {k.replace(/_/g, " ")}
+                  </div>
+                  <div style={{ fontSize: 13, color: NAVY, fontWeight: 600 }}>{String(v)}</div>
+                </div>
+              ))}
             </div>
           )}
-          {tab === "res" && (
+
+          {/* Sizes */}
+          {tab === "sizes" && rec.bucket_sizes && (
+            <div style={{ fontSize: 13, color: "#374151", lineHeight: 1.8, whiteSpace: "pre-wrap" }}>
+              {rec.bucket_sizes}
+            </div>
+          )}
+
+          {/* Resources */}
+          {tab === "resources" && (
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {rec.catalog_url ? <a href={rec.catalog_url} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 14px", background: "#f8fafc", borderRadius: 10, border: "1px solid #e5e7eb", color: NAVY, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>View Catalog PDF</a> : null}
-              {rec.tech_doc_url ? <a href={rec.tech_doc_url} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 14px", background: "#f8fafc", borderRadius: 10, border: "1px solid #e5e7eb", color: NAVY, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>Technical Documentation</a> : null}
-              {rec.cad_url ? <a href={rec.cad_url} target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 14px", background: "#f8fafc", borderRadius: 10, border: "1px solid #e5e7eb", color: NAVY, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>CAD Drawing</a> : null}
+              {rec.catalog_url && (
+                <a href={rec.catalog_url} target="_blank" rel="noreferrer"
+                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px",
+                    background: "#f8fafc", borderRadius: 10, border: "1px solid #e5e7eb",
+                    color: NAVY, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
+                  <span style={{ fontSize: 18 }}>📄</span> View Catalog PDF
+                </a>
+              )}
+              {rec.tech_doc_url && (
+                <a href={rec.tech_doc_url} target="_blank" rel="noreferrer"
+                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px",
+                    background: "#f8fafc", borderRadius: 10, border: "1px solid #e5e7eb",
+                    color: NAVY, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
+                  <span style={{ fontSize: 18 }}>📐</span> Technical Documentation
+                </a>
+              )}
+              {rec.cad_url && (
+                <a href={rec.cad_url} target="_blank" rel="noreferrer"
+                  style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px 16px",
+                    background: "#f8fafc", borderRadius: 10, border: "1px solid #e5e7eb",
+                    color: NAVY, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
+                  <span style={{ fontSize: 18 }}>📁</span> CAD Drawing
+                </a>
+              )}
             </div>
           )}
         </div>
@@ -405,212 +410,190 @@ function Modal({ rec, type, onClose }) {
   );
 }
 
-// ─── Root ─────────────────────────────────────────────────────────────────────
-
 export default function Catalog() {
-  const [all, setAll] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [typeF, setTypeF] = useState("All");
-  const [seriesF, setSeriesF] = useState("All");
-  const [hingeF, setHingeF] = useState("All");
-  const [pitchF, setPitchF] = useState("All");
-  const [sel, setSel] = useState(null);
+  const [typeFilter, setTypeFilter] = useState("All");
+  const [seriesFilter, setSeriesFilter] = useState("All");
+  const [hingeFilter, setHingeFilter] = useState("All");
+  const [pitchFilter, setPitchFilter] = useState("All");
+  const [selected, setSelected] = useState(null);
+  const [selectedType, setSelectedType] = useState(null);
 
   useEffect(() => {
-    const fetchAll = async (entity) => {
-      let results = [], page = 0, hasMore = true;
-      while (hasMore) {
-        const batch = await entity.list({ limit: 200, skip: page * 200 });
-        results = results.concat(batch);
-        hasMore = batch.length === 200;
-        page++;
-      }
-      return results;
-    };
-    Promise.all([fetchAll(CatalogProduct), fetchAll(UniCatalog), fetchAll(ElevatorBucket), fetchAll(DonghuaChain), fetchAll(MacChainProduct)])
-      .then(([intralox, uni, buckets, dh, allied]) => {
-        const chainTypeMap = {
-              "Drive Chain": "ANSI/BS Chain",
-              "Conveyor Chain": "Conveyor Chain",
-              "Engineering Chain": "Engineered Chain",
-              "Agricultural Chain": "Engineered Chain",
-            };
-            const weldedSeries = new Set(["Welded Steel Mill Chain","Welded Steel Drag Chain"]);
-        setAll([
-          ...intralox.map(r => ({ ...r, _type: r.category || "Modular Plastic Belt" })),
-          ...uni.map(r => {
-            const chainTypes = new Set(["ANSI/BS Chain","Conveyor Chain","Engineered Chain","Cast Chain","Welded Steel Chain","Forged Chain","Overhead Chain","Sharptop Chain","Kiln Chain","Thermoforming Chain","Table Top Chain"]);
-            const isChain = chainTypes.has(r.product_type);
-            return {
-              ...r,
-              _type: r.product_type,
-              series: isChain && r.model_code ? r.model_code : (r.series || ""),
-              style: isChain && r.model_code ? (r.series || r.style || "") : (r.style || ""),
-            };
-          }),
-          ...buckets.map(r => ({ ...r, _type: getBucketType(r) })),
-          ...dh.map(r => ({
-            ...r,
-            _type: weldedSeries.has(r.series) ? "Welded Steel Chain" : (chainTypeMap[r.chain_type] || "ANSI/BS Chain"),
-            series: r.ansi_no || r.bs_no || r.iso_no || r.chain_no || "",
-            style: r.series || r.chain_type || "",
-            materials: r.materials || "Carbon Steel",
-            vendor: "",
-            notes: r.notes || "",
-            catalog_url: r.catalog_url || "",
-            image_url: {
-                  "A Series Short Pitch Precision Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
-                  "B Series Short Pitch Precision Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
-                  "Heavy Duty Series Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
-                  "SH Series High Strength Heavy Duty Short Pitch Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
-                  "SP Series High Strength Short Pitch Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
-                  "X3 Series High Performance B Series Roller Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
-                  "Double Pitch Transmission Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
-                  "Bush Chain (Custom Pitch)": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f3be249e7_generated_image.png",
-                  "Welded Steel Mill Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/b0fcc4e6b_generated_image.png",
-                  "Welded Steel Drag Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/b0fcc4e6b_generated_image.png",
-                  "Engineering Steel Bush Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/a95633a32_generated_image.png",
-                  "S Type Steel Agricultural Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9def24712_generated_image.png",
-                  "CA Type Steel Agricultural Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9def24712_generated_image.png",
-                  "Combine Harvester Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9def24712_generated_image.png",
-                  "Steel Pintle Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9def24712_generated_image.png",
-                  "Palm Oil Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/37623535e_generated_image.png",
-                  "Sugar Mill Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/37623535e_generated_image.png",
-                  "Block Chain": "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9781c628a_generated_image.png",
-                }[r.series] || "",
-            key_specs: JSON.stringify(Object.fromEntries([
-              r.pitch_mm && ["Pitch (mm)", r.pitch_mm],
-              r.roller_dia_mm && ["Roller Dia. (mm)", r.roller_dia_mm],
-              r.inner_width_mm && ["Inner Width (mm)", r.inner_width_mm],
-              r.pin_dia_mm && ["Pin Dia. (mm)", r.pin_dia_mm],
-              r.tensile_strength_kn && ["Min Tensile (kN)", r.tensile_strength_kn],
-              r.weight_kg_m && ["Weight (kg/m)", r.weight_kg_m],
-            ].filter(Boolean))),
-          })),
-          ...allied.map(r => ({
-            ...r,
-            _type: "Engineered Chain",
-            series: r.part_number || "",
-            style: r.product_type || r.subcategory || "",
-            vendor: "",
-            image_url: r.product_image || "",
-            notes: r.description || "",
-            _isAllied: true,
-          })),
+    async function load() {
+      try {
+        async function fetchAllMac() {
+          let all = [], page = 0, more = true;
+          while (more) {
+            const batch = await MacChainProduct.list({ page_size: 200, page });
+            all = [...all, ...batch];
+            more = batch.length === 200;
+            page++;
+          }
+          return all;
+        }
+        const [intralox, unicatalog, buckets, macChains] = await Promise.all([
+          CatalogProduct.list(),
+          UniCatalog.list(),
+          ElevatorBucket.list(),
+          fetchAllMac(),
         ]);
-      })
-      .catch(e => console.error(e))
-      .finally(() => setLoading(false));
+        const combined = [
+          ...intralox.map(r => ({ ...r, _src: "intralox", _type: r.category || "Modular Plastic Belt" })),
+          ...unicatalog.map(r => ({ ...r, _src: "uni", _type: r.product_type })),
+          ...buckets.map(r => ({ ...r, _src: "bucket", _type: getBucketType(r) })),
+          ...macChains.map(r => ({
+            ...r,
+            _src: "mac",
+            _type: "Engineered Chain",
+            vendor: "",  // suppress vendor branding
+            series: r.part_number || r.series,
+            style: r.subcategory || r.category,
+            image_url: r.product_image || r.image_url,
+          })),
+        ];
+        setAllProducts(combined);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
   }, []);
 
-  const types = useMemo(() => ["All", ...Array.from(new Set(all.map(p => p._type).filter(Boolean))).sort()], [all]);
-  const seriesOpts = useMemo(() => {
-    const base = typeF === "All" ? all : all.filter(p => p._type === typeF);
-    const s = Array.from(new Set(base.map(p => p.series).filter(Boolean)));
-    s.sort((a, b) => { const na = parseFloat(a.replace(/[^\d.]/g, "")) || 0, nb = parseFloat(b.replace(/[^\d.]/g, "")) || 0; return na !== nb ? na - nb : a.localeCompare(b); });
-    return ["All", ...s];
-  }, [all, typeF]);
-  const hingeOpts = useMemo(() => ["All", ...Array.from(new Set(all.filter(p => p.hinge_style).map(p => p.hinge_style))).sort()], [all]);
-  const pitchOpts = useMemo(() => {
-    const s = Array.from(new Set(all.filter(p => p.pitch_in).map(p => p.pitch_in + '"')));
-    s.sort((a, b) => parseFloat(a) - parseFloat(b));
-    return ["All", ...s];
-  }, [all]);
+  const types = useMemo(() => {
+    const s = new Set(allProducts.map(p => p._type).filter(Boolean));
+    return ["All", ...Array.from(s).sort()];
+  }, [allProducts]);
+
+  const seriesOptions = useMemo(() => {
+    const filtered = typeFilter === "All" ? allProducts : allProducts.filter(p => p._type === typeFilter);
+    const s = new Set(filtered.map(p => p.series).filter(Boolean));
+    return ["All", ...Array.from(s).sort((a, b) => {
+      const na = parseFloat(a.replace(/\D/g, "")) || 0;
+      const nb = parseFloat(b.replace(/\D/g, "")) || 0;
+      return na - nb || a.localeCompare(b);
+    })];
+  }, [allProducts, typeFilter]);
+
+  const hingeOptions = useMemo(() => {
+    const s = new Set(allProducts.filter(p => p.hinge_style).map(p => p.hinge_style));
+    return ["All", ...Array.from(s).sort()];
+  }, [allProducts]);
+
+  const pitchOptions = useMemo(() => {
+    const s = new Set(allProducts.filter(p => p.pitch_in).map(p => `${p.pitch_in}"`));
+    return ["All", ...Array.from(s).sort((a, b) => parseFloat(a) - parseFloat(b))];
+  }, [allProducts]);
 
   const filtered = useMemo(() => {
-    let list = all;
-    if (typeF !== "All") list = list.filter(p => p._type === typeF);
-    if (seriesF !== "All") list = list.filter(p => p.series === seriesF);
-    if (hingeF !== "All") list = list.filter(p => p.hinge_style === hingeF);
-    if (pitchF !== "All") list = list.filter(p => (p.pitch_in + '"') === pitchF);
+    let list = allProducts;
+    if (typeFilter !== "All") list = list.filter(p => p._type === typeFilter);
+    if (seriesFilter !== "All") list = list.filter(p => p.series === seriesFilter);
+    if (hingeFilter !== "All") list = list.filter(p => p.hinge_style === hingeFilter);
+    if (pitchFilter !== "All") list = list.filter(p => `${p.pitch_in}"` === pitchFilter);
     if (search.trim()) {
       const q = search.toLowerCase();
-      list = list.filter(p => [p.series, p.style, p.category, p.notes, p.materials, p.search_tags, p.application].some(f => f && f.toLowerCase().includes(q)));
+      list = list.filter(p =>
+        [p.series, p.style, p.category, p.notes, p.materials, p.search_tags, p.application, p.part_number, p.subcategory, p.description]
+          .some(f => f && f.toLowerCase().includes(q))
+      );
     }
-    return [...list].sort(sortSeries);
-  }, [all, typeF, seriesF, hingeF, pitchF, search]);
+    return list.sort((a, b) => {
+      const na = parseFloat((a.series || "").replace(/\D/g, "")) || 0;
+      const nb = parseFloat((b.series || "").replace(/\D/g, "")) || 0;
+      return na - nb || (a.style || "").localeCompare(b.style || "");
+    });
+  }, [allProducts, typeFilter, seriesFilter, hingeFilter, pitchFilter, search]);
 
-  const hasFilters = typeF !== "All" || seriesF !== "All" || hingeF !== "All" || pitchF !== "All" || search;
+  // Group by series for display
+  const grouped = useMemo(() => {
+    if (typeFilter === "All" || seriesFilter !== "All") return null;
+    const map = {};
+    filtered.forEach(p => {
+      const key = p.series || "Other";
+      if (!map[key]) map[key] = [];
+      map[key].push(p);
+    });
+    return map;
+  }, [filtered, typeFilter, seriesFilter]);
 
-  function Sel({ value, onChange, options, label }) {
-    return (
-      <select value={value} onChange={e => onChange(e.target.value)} style={{ padding: "8px 11px", borderRadius: 8, border: "1px solid #d1d5db", fontSize: 13, color: NAVY, background: "#fff", cursor: "pointer" }}>
-        <option value="All">{label}</option>
-        {options.filter(o => o !== "All").map(o => <option key={o} value={o}>{o}</option>)}
-      </select>
-    );
-  }
+  const Sel = ({ value, onChange, options, label }) => (
+    <select value={value} onChange={e => onChange(e.target.value)}
+      style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #d1d5db", fontSize: 13,
+        color: NAVY, background: "#fff", cursor: "pointer", fontWeight: value !== "All" ? 700 : 400 }}>
+      <option value="All">{label}</option>
+      {options.filter(o => o !== "All").map(o => <option key={o} value={o}>{o}</option>)}
+    </select>
+  );
 
   return (
     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
-      <div style={{ background: NAVY, padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56, boxShadow: "0 2px 8px rgba(0,0,0,.18)" }}>
+
+      {/* Top Bar */}
+      <div style={{ background: NAVY, padding: "0 24px", display: "flex", alignItems: "center",
+        justifyContent: "space-between", height: 56, boxShadow: "0 2px 8px rgba(0,0,0,.18)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <a href="/" style={{ color: "rgba(255,255,255,.5)", textDecoration: "none", fontSize: 12 }}>Home</a>
-          <span style={{ color: "rgba(255,255,255,.3)" }}>/ </span>
+          <span style={{ color: "rgba(255,255,255,.3)", fontSize: 12 }}>/</span>
           <span style={{ color: "#fff", fontSize: 13, fontWeight: 700 }}>Product Catalog</span>
         </div>
-        <span style={{ fontSize: 11, color: "rgba(255,255,255,.45)" }}>{loading ? "Loading..." : filtered.length + " products"}</span>
+        <div style={{ fontSize: 11, color: "rgba(255,255,255,.45)" }}>
+          {loading ? "Loading..." : `${filtered.length} products`}
+        </div>
       </div>
 
-      <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "13px 24px" }}>
+      {/* Search + Filters */}
+      <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "14px 24px" }}>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", maxWidth: 1200, margin: "0 auto" }}>
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search series, style, application, material..." style={{ flex: 1, minWidth: 220, padding: "8px 13px", borderRadius: 8, border: "1px solid #d1d5db", fontSize: 13, outline: "none" }} />
-          <Sel value={typeF} onChange={v => { setTypeF(v); setSeriesF("All"); }} options={types} label="All Types" />
-          {seriesOpts.length > 2 && <Sel value={seriesF} onChange={setSeriesF} options={seriesOpts} label="All Series" />}
-          {hingeOpts.length > 2 && <Sel value={hingeF} onChange={setHingeF} options={hingeOpts} label="Hinge Style" />}
-          {pitchOpts.length > 2 && <Sel value={pitchF} onChange={setPitchF} options={pitchOpts} label="Pitch" />}
-          {hasFilters && (
-            <button onClick={() => { setTypeF("All"); setSeriesF("All"); setHingeF("All"); setPitchF("All"); setSearch(""); }} style={{ padding: "8px 13px", borderRadius: 8, border: "1px solid #d1d5db", background: "#f9fafb", cursor: "pointer", fontSize: 13, color: "#6b7280" }}>
+          <input
+            value={search} onChange={e => setSearch(e.target.value)}
+            placeholder="Search series, style, application, material..."
+            style={{ flex: 1, minWidth: 240, padding: "8px 14px", borderRadius: 8,
+              border: "1px solid #d1d5db", fontSize: 13, outline: "none" }}
+          />
+          <Sel value={typeFilter} onChange={v => { setTypeFilter(v); setSeriesFilter("All"); }} options={types} label="All Types" />
+          {seriesOptions.length > 2 && (
+            <Sel value={seriesFilter} onChange={setSeriesFilter} options={seriesOptions} label="All Series" />
+          )}
+          {hingeFilter !== "All" || hingeOptions.length > 2 ? (
+            <Sel value={hingeFilter} onChange={setHingeFilter} options={hingeOptions} label="Hinge Style" />
+          ) : null}
+          {pitchOptions.length > 2 && (
+            <Sel value={pitchFilter} onChange={setPitchFilter} options={pitchOptions} label="Pitch" />
+          )}
+          {(typeFilter !== "All" || seriesFilter !== "All" || hingeFilter !== "All" || pitchFilter !== "All" || search) && (
+            <button onClick={() => { setTypeFilter("All"); setSeriesFilter("All"); setHingeFilter("All"); setPitchFilter("All"); setSearch(""); }}
+              style={{ padding: "8px 14px", borderRadius: 8, border: "1px solid #d1d5db",
+                background: "#f9fafb", cursor: "pointer", fontSize: 13, color: "#6b7280" }}>
               Clear
             </button>
           )}
         </div>
       </div>
 
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "22px" }}>
+      {/* Content */}
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px" }}>
         {loading ? (
           <div style={{ textAlign: "center", padding: 80, color: "#9ca3af", fontSize: 14 }}>Loading catalog...</div>
         ) : filtered.length === 0 ? (
-          <div style={{ textAlign: "center", padding: 80, color: "#9ca3af", fontSize: 14 }}>No products found.</div>
+          <div style={{ textAlign: "center", padding: 80, color: "#9ca3af", fontSize: 14 }}>No products match your search.</div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(230px,1fr))", gap: 14 }}>
-            {filtered.map((rec, i) => {
-              const tm = TYPE_META[rec._type] || { color: NAVY, bg: "#f3f4f6" };
-              return (
-                <div key={rec.id || i} onClick={() => setSel(rec)} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e5e7eb", cursor: "pointer", display: "flex", flexDirection: "column", overflow: "hidden", transition: "transform .15s,box-shadow .15s" }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,.10)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}>
-                  <div style={{ height: 4, background: "linear-gradient(90deg," + tm.color + "," + tm.color + "66)" }} />
-                  {rec.image_url ? (
-                    <div style={{ background: "#f8fafc", borderBottom: "1px solid #f1f5f9", height: 128, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-                      <img src={rec.image_url} alt="" style={{ maxHeight: 116, maxWidth: "88%", objectFit: "contain" }} onError={e => { e.target.parentElement.style.display = "none"; }} />
-                    </div>
-                  ) : null}
-                  <div style={{ padding: "11px 13px", flex: 1, display: "flex", flexDirection: "column", gap: 4 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 5 }}>
-                      <span style={{ background: tm.bg, color: tm.color, padding: "1px 7px", borderRadius: 99, fontSize: 10, fontWeight: 700, whiteSpace: "nowrap" }}>{rec._type}</span>
-                      {rec.pitch_in ? <span style={{ fontSize: 10, color: "#9ca3af" }}>{rec.pitch_in}"</span> : null}
-                    </div>
-                    <div style={{ fontSize: 13, fontWeight: 800, color: NAVY, lineHeight: 1.25 }}>{rec.series || "—"}</div>
-                    {(rec.style || rec.category) ? <div style={{ fontSize: 11, color: "#6b7280" }}>{rec.style || rec.category}</div> : null}
-                    <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                      {rec.hinge_style ? <span style={{ background: "#f9fafb", color: "#374151", padding: "1px 6px", borderRadius: 99, fontSize: 10, fontWeight: 600 }}>{rec.hinge_style}</span> : null}
-                      {rec.open_area && rec.open_area !== "0%" ? <span style={{ background: "#f0fdf4", color: "#15803d", padding: "1px 6px", borderRadius: 99, fontSize: 10, fontWeight: 600 }}>{rec.open_area} open</span> : null}
-                    </div>
-                  </div>
-                  <div style={{ padding: "7px 13px", borderTop: "1px solid #f3f4f6", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: 10, color: "#d1d5db" }}>{rec.page_range ? "pp." + rec.page_range : ""}</span>
-                    <span style={{ fontSize: 11, color: tm.color, fontWeight: 700 }}>Details →</span>
-                  </div>
-                </div>
-              );
-            })}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 16 }}>
+            {filtered.map((rec, i) => (
+              <Card key={rec.id || i} rec={rec} type={rec._type}
+                onClick={() => { setSelected(rec); setSelectedType(rec._type); }} />
+            ))}
           </div>
         )}
       </div>
 
-      {sel ? <Modal rec={sel} type={sel._type} onClose={() => setSel(null)} /> : null}
+      {selected && (
+        <Modal rec={selected} type={selectedType} onClose={() => setSelected(null)} />
+      )}
     </div>
   );
 }

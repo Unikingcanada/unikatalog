@@ -1593,16 +1593,16 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const [cat, elev, uni, dh, allied] = await Promise.all([
+        const [cat, elev, uni, allied] = await Promise.all([
           CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list(),
-          DonghuaChain.list(), MacChainProduct.list()
+          MacChainProduct.list()
         ]);
         setRawMacRecords(allied);
         setAllData([
           ...cat.map(normalizeCatalogProduct),
           ...elev.map(normalizeElevatorBucket),
           ...uni.map(normalizeUniCatalog),
-          ...dh.map(normalizeDonghuaChain),
+          // Donghua hidden from UI (data preserved in DB)
           ...allied.map(normalizeAllied),
         ]);
       } catch (e) { console.error("Catalog load error:", e); }
