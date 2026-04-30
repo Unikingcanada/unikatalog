@@ -241,7 +241,7 @@ const WELDED_SUBCATEGORIES = [
 
 const ANSI_SUBCATEGORIES = [
   { key: "ANSI Roller Chain",                  label: "ANSI Roller Chain",                 description: "Single strand, heavy series, and multiple strand ANSI precision roller chains (#25 to #240)" },
-  { key: "ANSI Standard Roller Chains",        label: "ANSI Standard Roller Chains",       description: "Single, double and triple-strand ANSI precision roller chains (#25 to #240)" },
+  { key: "ANSI Roller Chain Attachments",      label: "ANSI Chain Attachments",            description: "Standard bent, straight, extended pin, wide contour, and double pitch attachments (#35 to #160)" },
   { key: "British Standard Roller Chains",     label: "British Standard Roller Chains",    description: "BS/ISO precision roller chains (06B to 40B, single and multi-strand)" },
   { key: "Super Series Chains",                label: "Super Series Chains",               description: "Higher-strength Super Series ANSI roller chains with upgraded plate and pin" },
   { key: "Armor Coat Chains",                  label: "Armor Coat Chains",                 description: "Corrosion-resistant armor coat coated roller chains" },
@@ -260,7 +260,6 @@ const ANSI_SUBCATEGORIES = [
   { key: "Non-Standard Series Chains",         label: "Non-Standard Series Chains",        description: "Non-standard pitch roller chains including chain 85 and 105 series" },
   { key: "Zinc Plated Chains",                 label: "Zinc Plated Chains",                description: "Zinc plated chains for light corrosion resistance" },
   { key: "Citrus Chains",                      label: "Citrus Chains",                     description: "Stainless and carbon steel D-5 citrus conveyor chains" },
-  { key: "ANSI Roller Chain Attachments",      label: "ANSI Chain Attachments",            description: "Standard bent, straight, extended pin, wide contour, and double pitch attachments (#35 to #160)" },
 ];
 
 // Category-based type routing for Allied Locke + Mac Chain records
