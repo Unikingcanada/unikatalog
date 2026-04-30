@@ -1181,9 +1181,41 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacR
 
   const filtered = useMemo(() => {
     let list = applyFilters(allProducts, activeFilters);
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      list = list.filter(p => [p.series, p.style, p.category, p.notes, p.materials, p.application].some(f => f && f.toLowerCase().includes(q)));
+    const q = search.trim().toLowerCase();
+    if (q) {
+      function searchStr(p) {
+        return [p.series, p.style, p.category, p.notes, p.materials, p.application, p.type].filter(Boolean).join(" ").toLowerCase();
+      }
+      function fuzzyScore(str, pattern) {
+        let score = 0, si = 0, pi = 0, consecutive = 0;
+        while (si < str.length && pi < pattern.length) {
+          if (str[si] === pattern[pi]) {
+            consecutive++;
+            score += consecutive * 2;
+            if (si === 0 || str[si-1] === " " || str[si-1] === "-") score += 5;
+            if (si === 0) score += 8;
+            pi++;
+          } else { consecutive = 0; }
+          si++;
+        }
+        if (pi < pattern.length) return -1;
+        score -= str.length * 0.1;
+        return score;
+      }
+      const words = q.split(/\s+/);
+      const scored = list.map(p => {
+        const str = searchStr(p);
+        if (words.length > 1) {
+          const allFuzzy = words.every(w => fuzzyScore(str, w) >= 0);
+          if (!allFuzzy) return null;
+          const total = words.reduce((acc, w) => acc + Math.max(fuzzyScore(str, w), 0), 0);
+          return { p, score: total };
+        }
+        const s = fuzzyScore(str, q);
+        if (s < 0) return null;
+        return { p, score: s };
+      }).filter(Boolean);
+      return scored.sort((a, b) => b.score - a.score).map(s => s.p);
     }
     return list.sort((a, b) => {
       const na = parseFloat((a.series || "").replace(/[^\d.]/g, "")) || 0;

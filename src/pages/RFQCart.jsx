@@ -117,11 +117,67 @@ function AddProductPanel({ cartItems, onAdd, onClose }) {
   const cartIds = new Set(cartItems.map(i => i.id + "_" + (i._source || "")));
 
   const filtered = useMemo(() => {
-    if (!query.trim()) return [];
-    const q = query.toLowerCase();
-    return allProducts
-      .filter(p => [p.series, p.type, p.style, p.category, p.materials].some(f => f && f.toLowerCase().includes(q)))
-      .slice(0, 30);
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+
+    // Build searchable string for each product
+    function searchStr(p) {
+      return [p.series, p.type, p.style, p.category, p.materials, p.application]
+        .filter(Boolean).join(" ").toLowerCase();
+    }
+
+    // Fuzzy score: rewards consecutive matches and word-boundary matches
+    function fuzzyScore(str, pattern) {
+      let score = 0, si = 0, pi = 0, lastMatch = -1, consecutive = 0;
+      while (si < str.length && pi < pattern.length) {
+        if (str[si] === pattern[pi]) {
+          // Bonus for consecutive chars
+          consecutive++;
+          score += consecutive * 2;
+          // Bonus for word boundary (start of word)
+          if (si === 0 || str[si - 1] === " " || str[si - 1] === "-") score += 5;
+          // Bonus for matching at start of string
+          if (si === 0) score += 8;
+          lastMatch = si;
+          pi++;
+        } else {
+          consecutive = 0;
+        }
+        si++;
+      }
+      // All pattern chars matched?
+      if (pi < pattern.length) return -1;
+      // Penalise long gaps
+      score -= str.length * 0.1;
+      return score;
+    }
+
+    const words = q.split(/\s+/);
+
+    const scored = allProducts.map(p => {
+      const str = searchStr(p);
+      // Multi-word: each word must match somewhere
+      if (words.length > 1) {
+        const allMatch = words.every(w => str.includes(w));
+        if (!allMatch) {
+          // Try fuzzy for each word
+          const allFuzzy = words.every(w => fuzzyScore(str, w) >= 0);
+          if (!allFuzzy) return null;
+        }
+        // Score = sum of individual word scores
+        const total = words.reduce((acc, w) => acc + Math.max(fuzzyScore(str, w), 0), 0);
+        return { product: p, score: total };
+      }
+      // Single word fuzzy
+      const s = fuzzyScore(str, q);
+      if (s < 0) return null;
+      return { product: p, score: s };
+    }).filter(Boolean);
+
+    return scored
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 30)
+      .map(s => s.product);
   }, [query, allProducts]);
 
   function handleAdd(product) {
