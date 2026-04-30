@@ -1627,7 +1627,7 @@ export default function Home() {
       try {
         const [cat, elev, uni, allied] = await Promise.all([
           CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list(),
-          MacChainProduct.filter({}, { limit: 500 })
+          MacChainProduct.filter({}, 1, 500)
         ]);
         setRawMacRecords(allied);
         setAllData([
