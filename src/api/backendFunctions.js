@@ -18,3 +18,4 @@ export const updateAttachmentImages = base44.functions.updateAttachmentImages;
 export const updateAttachmentSpecs = base44.functions.updateAttachmentSpecs;
 export const bulkUpdateRecords = base44.functions.bulkUpdateRecords;
 export const bulkCreateRecords = base44.functions.bulkCreateRecords;
+export const sendRFQEmail = base44.functions.sendRFQEmail;
