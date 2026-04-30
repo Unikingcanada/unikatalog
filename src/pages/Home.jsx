@@ -1056,6 +1056,71 @@ function ProductCard({ product, showBrand, onClick }) {
   );
 }
 
+
+// ─── Product List Row (list view) ────────────────────────────────────────────
+
+function ProductListRow({ product, showBrand, onClick }) {
+  const [hovered, setHovered] = useState(false);
+  const [added, setAdded] = useState(() => getRFQCart().some(i => i.id === product.id));
+  const topSpecs = Object.entries(product.specs)
+    .filter(([, v]) => v != null && v !== "" && v !== "N/A" && String(v) !== "undefined")
+    .slice(0, 4);
+
+  useEffect(() => {
+    const update = () => setAdded(getRFQCart().some(i => i.id === product.id));
+    window.addEventListener("rfq_cart_updated", update);
+    return () => window.removeEventListener("rfq_cart_updated", update);
+  }, [product.id]);
+
+  function handleAddRFQ(e) {
+    e.stopPropagation();
+    if (added) { window.location.href = createPageUrl("RFQCart"); return; }
+    addToRFQCart(product);
+    setAdded(true);
+  }
+
+  return (
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ background: C.bgCard, borderRadius: 8, border: "1px solid " + (hovered ? C.navyMid : C.border), boxShadow: hovered ? "0 2px 10px rgba(26,58,92,0.07)" : "none", transition: "border-color 0.13s, box-shadow 0.13s", display: "flex", alignItems: "center", gap: 0, overflow: "hidden", cursor: "pointer" }}>
+      {/* Accent bar */}
+      <div style={{ width: 3, alignSelf: "stretch", background: C.navyMid, flexShrink: 0 }} />
+      {/* Image */}
+      {product.image_url ? (
+        <div onClick={() => onClick(product)} style={{ width: 64, height: 56, display: "flex", alignItems: "center", justifyContent: "center", background: "#f8fafc", borderRight: "1px solid #f1f5f9", flexShrink: 0 }}>
+          <img src={product.image_url} alt="" style={{ maxHeight: 48, maxWidth: 56, objectFit: "contain" }} onError={e => { e.target.parentElement.style.display = "none"; }} />
+        </div>
+      ) : null}
+      {/* Name + specs */}
+      <div onClick={() => onClick(product)} style={{ flex: 1, padding: "10px 14px", minWidth: 0 }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+          {showBrand && product.brand ? (
+            <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", color: C.navyMid, background: "#eef3f8", padding: "1px 6px", borderRadius: 3 }}>{product.brand}</span>
+          ) : null}
+          <span style={{ fontSize: 14, fontWeight: 800, color: C.text }}>{product.series}</span>
+          {product.style && product.style !== product.series ? <span style={{ fontSize: 12, color: C.muted }}>{product.style}</span> : null}
+        </div>
+        {topSpecs.length > 0 ? (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 5 }}>
+            {topSpecs.map(([k, v]) => (
+              <span key={k} style={{ fontSize: 11, color: C.slate }}>
+                <span style={{ color: C.muted }}>{k}: </span>
+                <span style={{ fontWeight: 600 }}>{String(v).length > 22 ? String(v).slice(0, 22) + "…" : String(v)}</span>
+              </span>
+            ))}
+          </div>
+        ) : null}
+      </div>
+      {/* Actions */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 14px", flexShrink: 0 }}>
+        <button onClick={handleAddRFQ} style={{ padding: "5px 10px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: added ? "1px solid #16a34a" : "1px solid #2563eb", background: added ? "#f0fdf4" : "#eff6ff", color: added ? "#16a34a" : "#2563eb", whiteSpace: "nowrap", transition: "all 0.15s" }}>
+          {added ? "✓ In RFQ" : "+ RFQ"}
+        </button>
+        <span onClick={() => onClick(product)} style={{ fontSize: 11, fontWeight: 600, color: C.navyMid, whiteSpace: "nowrap" }}>View ›</span>
+      </div>
+    </div>
+  );
+}
+
 // ─── Filter Bar ───────────────────────────────────────────────────────────────
 
 function FilterBar({ typeKey, allProducts, activeFilters, onChange }) {
@@ -1088,12 +1153,31 @@ function FilterBar({ typeKey, allProducts, activeFilters, onChange }) {
   );
 }
 
+// ─── View Toggle Button ───────────────────────────────────────────────────────
+
+function ViewToggle({ view, onChange }) {
+  return (
+    <div style={{ display: "flex", border: "1px solid " + C.border, borderRadius: 7, overflow: "hidden" }}>
+      {[
+        { key: "grid", icon: "⊞", title: "Card view" },
+        { key: "list", icon: "☰", title: "List view" },
+      ].map(({ key, icon, title }) => (
+        <button key={key} title={title} onClick={() => onChange(key)}
+          style={{ padding: "6px 11px", background: view === key ? C.navy : "#fff", color: view === key ? "#fff" : C.muted, border: "none", cursor: "pointer", fontSize: 15, fontWeight: 700, transition: "background 0.15s, color 0.15s", borderRight: key === "grid" ? "1px solid " + C.border : "none" }}>
+          {icon}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 // ─── Product List ─────────────────────────────────────────────────────────────
 
 function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacRecords }) {
   const [activeFilters, setActiveFilters] = useState({});
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
+  const [viewMode, setViewMode] = useState("grid");
 
   const filtered = useMemo(() => {
     let list = applyFilters(allProducts, activeFilters);
@@ -1121,15 +1205,22 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacR
           <div style={{ fontSize: 19, fontWeight: 800, color: C.text }}>{TYPE_MAP[typeKey]?.label || typeKey}{brand ? " — " + brand : ""}</div>
           <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{filtered.length} product{filtered.length !== 1 ? "s" : ""}</div>
         </div>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..."
-          style={{ padding: "8px 13px", border: "1px solid " + C.border, borderRadius: 6, fontSize: 13, outline: "none", width: 220 }} />
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search..."
+            style={{ padding: "8px 13px", border: "1px solid " + C.border, borderRadius: 6, fontSize: 13, outline: "none", width: 180 }} />
+          <ViewToggle view={viewMode} onChange={setViewMode} />
+        </div>
       </div>
       <FilterBar typeKey={typeKey} allProducts={allProducts} activeFilters={activeFilters} onChange={handleFilter} />
       {filtered.length === 0 ? (
         <div style={{ textAlign: "center", padding: 60, color: C.muted, fontSize: 14 }}>No products match your filters.</div>
-      ) : (
+      ) : viewMode === "grid" ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 14 }}>
           {filtered.map(p => <ProductCard key={p.id} product={p} showBrand={showBrand} onClick={setSelected} />)}
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          {filtered.map(p => <ProductListRow key={p.id} product={p} showBrand={showBrand} onClick={setSelected} />)}
         </div>
       )}
       {(() => {
