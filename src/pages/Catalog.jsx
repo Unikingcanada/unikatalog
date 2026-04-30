@@ -17,6 +17,7 @@ const TYPE_META = {
   "Table Top Chain":        { color: "#0e7490", bg: "#cffafe" },
   "ANSI/BS Chain":          { color: "#4338ca", bg: "#e0e7ff" },
   "ANSI Roller Chain":      { color: "#3730a3", bg: "#e0e7ff" },
+  "ANSI Roller Chain Attachments": { color: "#6d28d9", bg: "#ede9fe" },
   "Cast Chain":             { color: "#7f1d1d", bg: "#fee2e2" },
   "Engineered Chain":       { color: "#1d4ed8", bg: "#dbeafe" },
   "Forged Chain":           { color: "#92400e", bg: "#ffedd5" },
@@ -448,7 +449,7 @@ export default function Catalog() {
           ...macChains.map(r => ({
             ...r,
             _src: "mac",
-            _type: r.product_type === "ANSI Roller Chain" ? "ANSI Roller Chain" : "Engineered Chain",
+            _type: r.product_type === "ANSI Roller Chain" ? "ANSI Roller Chain" : r.product_type === "ANSI Roller Chain Attachments" ? "ANSI Roller Chain Attachments" : "Engineered Chain",
             vendor: "",  // suppress vendor branding
             series: r.part_number || r.series,
             style: r.subcategory || r.category,
@@ -504,9 +505,22 @@ export default function Catalog() {
       );
     }
     return list.sort((a, b) => {
-      const na = parseFloat((a.series || "").replace(/\D/g, "")) || 0;
-      const nb = parseFloat((b.series || "").replace(/\D/g, "")) || 0;
-      return na - nb || (a.style || "").localeCompare(b.style || "");
+      // Parse part number: base numeric + strand suffix (-2, -3, -4)
+      const parsePN = (s) => {
+        const str = (s || "").trim();
+        const m = str.match(/^(\d+(?:\.\d+)?)(.*)/);
+        if (!m) return [0, 0, str];
+        const base = parseFloat(m[1]);
+        const rest = m[2] || "";
+        const strand = rest.match(/-(\d+)$/);
+        const strandNum = strand ? parseInt(strand[1]) : 1;
+        return [base, strandNum, rest];
+      };
+      const [an, as2, ar] = parsePN(a.series);
+      const [bn, bs2, br] = parsePN(b.series);
+      if (an !== bn) return an - bn;
+      if (as2 !== bs2) return as2 - bs2;
+      return ar.localeCompare(br);
     });
   }, [allProducts, typeFilter, seriesFilter, hingeFilter, pitchFilter, search]);
 
