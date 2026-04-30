@@ -1625,9 +1625,20 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
+        // Paginated fetch for MacChainProduct (162+ records)
+        async function fetchAllMac() {
+          let page = 1, all = [], hasMore = true;
+          while (hasMore) {
+            const batch = await MacChainProduct.list({ page_size: 200, page });
+            all = all.concat(batch);
+            hasMore = batch.length === 200;
+            page++;
+          }
+          return all;
+        }
         const [cat, elev, uni, allied] = await Promise.all([
           CatalogProduct.list(), ElevatorBucket.list(), UniCatalog.list(),
-          MacChainProduct.list()
+          fetchAllMac()
         ]);
         setRawMacRecords(allied);
         setAllData([
