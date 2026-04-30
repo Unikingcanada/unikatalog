@@ -427,11 +427,11 @@ export default function Catalog() {
     async function load() {
       try {
         async function fetchAllMac() {
-          let all = [], page = 0, more = true;
+          let all = [], page = 1, more = true;
           while (more) {
-            const batch = await MacChainProduct.list({ page_size: 200, page });
+            const batch = await MacChainProduct.list({ page_size: 500, page });
             all = [...all, ...batch];
-            more = batch.length === 200;
+            more = batch.length === 500;
             page++;
           }
           return all;
