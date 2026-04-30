@@ -1,6 +1,18 @@
 import { useState, useEffect, useMemo } from "react";
 import { UniCatalog, CatalogProduct, ElevatorBucket, DonghuaChain, MacChainProduct } from "@/api/entities";
 
+// ─── Strip vendor name from any displayed text ────────────────────────────────
+function stripVendor(text) {
+  if (!text) return text;
+  return text
+    .replace(/Allied[\s\-]?Locke[\s\S]*?(\||$)/gi, '')
+    .replace(/Allied[\s\-]?Locke/gi, '')
+    .replace(/\|\s*$/, '')
+    .replace(/^\s*\|\s*/, '')
+    .trim();
+}
+
+
 const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics"]);
 const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket"]);
 const EXTERNAL_ROUTES = {};
@@ -305,7 +317,7 @@ function normalizeAllied(r) {
     application: r.industry || "",
     materials: "",
     duty: "",
-    notes: Array.isArray(r.features) ? r.features.join(" · ") : (r.description || ""),
+    notes: Array.isArray(r.features) ? r.features.map(stripVendor).join(" · ") : stripVendor(r.description || ""),
     catalog_url: "", tech_doc_url: "",
     image_url: r.product_image || "",
     diagram_image: r.diagram_image || "",
@@ -440,7 +452,7 @@ function printTearSheet(product) {
       <img src="${product.diagram_image}" alt="Dimensional Drawing" style="max-width:100%; max-height:280px; object-fit:contain; border:1px solid #e5e7eb; border-radius:6px; padding:10px; background:#f8fafc;" />
     </div>
   </div>` : ""}
-  ${product.notes ? `<div class="notes-box">${product.notes}</div>` : ""}
+  ${product.notes ? `<div class="notes-box">${stripVendor(product.notes)}</div>` : ""}
 
   ${specs.length ? `
   <div class="section-wrap">
@@ -529,7 +541,7 @@ function printMacTearSheet(record) {
   <div class="section-wrap">
     <div class="section-title">Key Features</div>
     <ul style="margin:0;padding-left:18px;">
-      ${features.map(f => `<li style="font-size:12px;color:#334155;margin-bottom:4px;">${f}</li>`).join("")}
+      ${features.map(f => `<li style="font-size:12px;color:#334155;margin-bottom:4px;">${stripVendor(f)}</li>`).join("")}
     </ul>
   </div>` : "";
 
@@ -602,7 +614,7 @@ function printMacTearSheet(record) {
     </div>
   </div>` : ""}
 
-  ${record.description ? `<div class="desc-box">${record.description}</div>` : ""}
+  ${record.description ? `<div class="desc-box">${stripVendor(record.description)}</div>` : ""}
 
   ${basicTable}
   ${moreTable}
@@ -802,9 +814,9 @@ function ProductModal({ product, showBrand, onClose }) {
         <div style={{ padding: "20px 26px 24px", overflowY: "auto" }}>
           {tab === "specs" && (
             <div>
-              {product.notes ? (
+              {product.notes && stripVendor(product.notes) ? (
                 <div style={{ marginBottom: 16, fontSize: 13, color: C.slate, lineHeight: 1.75, background: C.bg, padding: "12px 14px", borderRadius: 6, borderLeft: "3px solid " + C.navyMid }}>
-                  {product.notes}
+                  {stripVendor(product.notes)}
                 </div>
               ) : null}
               <div style={{ border: "1px solid " + C.border, borderRadius: 6, overflow: "hidden" }}>
@@ -1187,10 +1199,10 @@ function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect
                     style={{ width:160, height:120, objectFit:"contain", borderRadius:8, background:C.bg, border:"1px solid "+C.border, padding:8, flexShrink:0 }} />
                 )}
                 <div>
-                  {record.description && <p style={{ fontSize:14, color:C.text, lineHeight:1.6, margin:0 }}>{record.description}</p>}
+                  {record.description && <p style={{ fontSize:14, color:C.text, lineHeight:1.6, margin:0 }}>{stripVendor(record.description)}</p>}
                   {Array.isArray(record.features) && record.features.length > 0 && (
                     <ul style={{ margin:"10px 0 0", paddingLeft:18 }}>
-                      {record.features.map((f,i) => <li key={i} style={{ fontSize:13, color:C.muted, marginBottom:4 }}>{f}</li>)}
+                      {record.features.map((f,i) => <li key={i} style={{ fontSize:13, color:C.muted, marginBottom:4 }}>{stripVendor(f)}</li>)}
                     </ul>
                   )}
                 </div>
@@ -1440,7 +1452,7 @@ function WeldedSeriesView({ rawMacRecords }) {
                   style={{ width:"100%", height:100, objectFit:"contain", borderRadius:6, background:C.bg, marginBottom:10, padding:6 }} />
               )}
               <div style={{ fontSize:15, fontWeight:800, color: hovered===chain.part_number ? "#fff" : C.text, marginBottom:4 }}>{chain.part_number}</div>
-              <div style={{ fontSize:12, color: hovered===chain.part_number ? "rgba(255,255,255,0.65)" : C.muted, marginBottom:8 }}>{chain.description?.slice(0,80)}{chain.description?.length>80?"...":""}</div>
+              <div style={{ fontSize:12, color: hovered===chain.part_number ? "rgba(255,255,255,0.65)" : C.muted, marginBottom:8 }}>{stripVendor(chain.description)?.slice(0,80)}{stripVendor(chain.description)?.length>80?"...":""}</div>
               <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
                 {chain.related_sprockets?.length > 0 && (
                   <span style={{ fontSize:11, padding:"2px 8px", borderRadius:20, background: hovered===chain.part_number ? "rgba(255,255,255,0.15)" : C.bg, color: hovered===chain.part_number ? "#fff" : C.muted, border:"1px solid "+(hovered===chain.part_number ? "rgba(255,255,255,0.2)" : C.border) }}>
