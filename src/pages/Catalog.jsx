@@ -427,10 +427,10 @@ export default function Catalog() {
     async function load() {
       try {
         const [intralox, unicatalog, buckets, macChains] = await Promise.all([
-          CatalogProduct.list(),
-          UniCatalog.list(),
-          ElevatorBucket.list(),
-          MacChainProduct.list(),
+          CatalogProduct.list({}, { limit: 500 }),
+          UniCatalog.list({}, { limit: 500 }),
+          ElevatorBucket.list({}, { limit: 500 }),
+          MacChainProduct.filter({}, 1, 500),
         ]);
         const combined = [
           ...intralox.map(r => ({ ...r, _src: "intralox", _type: r.category || "Modular Plastic Belt" })),
