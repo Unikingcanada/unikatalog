@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { createPageUrl } from "@/utils";
 import { UniCatalog, CatalogProduct, ElevatorBucket, DonghuaChain, MacChainProduct } from "@/api/entities";
 
 // ─── Strip vendor name from any displayed text ────────────────────────────────
@@ -63,6 +64,51 @@ const C = {
   slate: "#334155", muted: "#64748b", border: "#e2e8f0",
   bg: "#f8fafc", bgCard: "#ffffff", text: "#0f172a",
 };
+// ─── RFQ Cart Helpers ─────────────────────────────────────────────────────────
+function getRFQCart() {
+  try { return JSON.parse(localStorage.getItem("uniking_rfq_cart") || "[]"); } catch { return []; }
+}
+function saveRFQCart(items) {
+  localStorage.setItem("uniking_rfq_cart", JSON.stringify(items));
+  window.dispatchEvent(new Event("rfq_cart_updated"));
+}
+function addToRFQCart(product) {
+  const cart = getRFQCart();
+  const exists = cart.find(i => i.id === product.id && i._source === product._source);
+  if (exists) return false;
+  cart.push({
+    cartId: product.id + "_" + Date.now(),
+    id: product.id, _source: product._source,
+    series: product.series, name: product.series,
+    type: product.type, style: product.style || product.category || "",
+    category: product.category || "", image_url: product.image_url || "",
+    materials: product.materials || "", application: product.application || "",
+    quantity: 1, unit: "Feet", notes: "",
+  });
+  saveRFQCart(cart);
+  return true;
+}
+
+function FloatingRFQButton() {
+  const [count, setCount] = useState(() => getRFQCart().length);
+  const [pulse, setPulse] = useState(false);
+  useEffect(() => {
+    const update = () => { const n = getRFQCart().length; if (n > count) setPulse(true); setCount(n); setTimeout(() => setPulse(false), 600); };
+    window.addEventListener("rfq_cart_updated", update);
+    return () => window.removeEventListener("rfq_cart_updated", update);
+  }, [count]);
+  if (count === 0) return null;
+  return (
+    <a href={createPageUrl("RFQCart")} style={{ textDecoration: "none" }}>
+      <div style={{ position: "fixed", bottom: 28, right: 28, zIndex: 9999, background: "#0f2340", color: "#fff", borderRadius: 50, width: 60, height: 60, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(15,35,64,0.35)", cursor: "pointer", transform: pulse ? "scale(1.15)" : "scale(1)", transition: "transform 0.2s", border: "2px solid #2563eb" }}>
+        <span style={{ fontSize: 22 }}>📋</span>
+        <div style={{ position: "absolute", top: -6, right: -6, background: "#2563eb", color: "#fff", borderRadius: "50%", width: 22, height: 22, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, border: "2px solid #fff" }}>{count}</div>
+      </div>
+    </a>
+  );
+}
+
+
 
 function parseJSON(raw) {
   if (!raw) return null;
@@ -958,20 +1004,34 @@ function ProductModal({ product, showBrand, onClose }) {
 
 function ProductCard({ product, showBrand, onClick }) {
   const [hovered, setHovered] = useState(false);
+  const [added, setAdded] = useState(() => getRFQCart().some(i => i.id === product.id));
   const topSpecs = Object.entries(product.specs)
     .filter(([, v]) => v != null && v !== "" && v !== "N/A" && String(v) !== "undefined")
     .slice(0, 3);
 
+  useEffect(() => {
+    const update = () => setAdded(getRFQCart().some(i => i.id === product.id));
+    window.addEventListener("rfq_cart_updated", update);
+    return () => window.removeEventListener("rfq_cart_updated", update);
+  }, [product.id]);
+
+  function handleAddRFQ(e) {
+    e.stopPropagation();
+    if (added) { window.location.href = createPageUrl("RFQCart"); return; }
+    addToRFQCart(product);
+    setAdded(true);
+  }
+
   return (
-    <div onClick={() => onClick(product)} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ background: C.bgCard, borderRadius: 8, cursor: "pointer", border: "1px solid " + (hovered ? C.navyMid : C.border), boxShadow: hovered ? "0 4px 16px rgba(26,58,92,0.09)" : "none", transition: "border-color 0.13s, box-shadow 0.13s", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      style={{ background: C.bgCard, borderRadius: 8, border: "1px solid " + (hovered ? C.navyMid : C.border), boxShadow: hovered ? "0 4px 16px rgba(26,58,92,0.09)" : "none", transition: "border-color 0.13s, box-shadow 0.13s", display: "flex", flexDirection: "column", overflow: "hidden" }}>
       <div style={{ height: 3, background: C.navyMid, flexShrink: 0 }} />
       {product.image_url ? (
-        <div style={{ background: "#f8fafc", borderBottom: "1px solid #f1f5f9", height: 110, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+        <div onClick={() => onClick(product)} style={{ background: "#f8fafc", borderBottom: "1px solid #f1f5f9", height: 110, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", cursor: "pointer" }}>
           <img src={product.image_url} alt="" style={{ maxHeight: 98, maxWidth: "86%", objectFit: "contain" }} onError={e => { e.target.parentElement.style.display = "none"; }} />
         </div>
       ) : null}
-      <div style={{ padding: "13px 15px", flex: 1, display: "flex", flexDirection: "column", gap: 5 }}>
+      <div onClick={() => onClick(product)} style={{ padding: "13px 15px", flex: 1, display: "flex", flexDirection: "column", gap: 5, cursor: "pointer" }}>
         {showBrand && product.brand ? (
           <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", color: C.navyMid, background: "#eef3f8", padding: "2px 7px", borderRadius: 3, alignSelf: "flex-start" }}>{product.brand}</span>
         ) : null}
@@ -988,8 +1048,11 @@ function ProductCard({ product, showBrand, onClick }) {
           </div>
         ) : null}
       </div>
-      <div style={{ borderTop: "1px solid " + C.bg, padding: "8px 15px", background: hovered ? "#f1f5f9" : C.bgCard, transition: "background 0.13s" }}>
-        <span style={{ fontSize: 11, fontWeight: 600, color: C.navyMid }}>View Specifications ›</span>
+      <div style={{ borderTop: "1px solid " + C.bg, padding: "8px 15px", background: hovered ? "#f1f5f9" : C.bgCard, transition: "background 0.13s", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span onClick={() => onClick(product)} style={{ fontSize: 11, fontWeight: 600, color: C.navyMid, cursor: "pointer" }}>View Specifications ›</span>
+        <button onClick={handleAddRFQ} style={{ padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: added ? "1px solid #16a34a" : "1px solid #2563eb", background: added ? "#f0fdf4" : "#eff6ff", color: added ? "#16a34a" : "#2563eb", whiteSpace: "nowrap", transition: "all 0.15s" }}>
+          {added ? "✓ In RFQ" : "+ Add to RFQ"}
+        </button>
       </div>
     </div>
   );
@@ -1662,6 +1725,12 @@ function BrandGrid({ products, typeDef, onSelect }) {
 // ─── Top Bar ──────────────────────────────────────────────────────────────────
 
 function TopBar() {
+  const [cartCount, setCartCount] = useState(() => getRFQCart().length);
+  useEffect(() => {
+    const update = () => setCartCount(getRFQCart().length);
+    window.addEventListener("rfq_cart_updated", update);
+    return () => window.removeEventListener("rfq_cart_updated", update);
+  }, []);
   return (
     <div style={{ background: C.navy, height: 56, display: "flex", alignItems: "center", padding: "0 40px", justifyContent: "space-between", flexShrink: 0 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -1669,7 +1738,12 @@ function TopBar() {
         <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 13 }}>/</span>
         <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 13 }}>Product Catalog</span>
       </div>
-      <span style={{ color: "rgba(255,255,255,0.25)", fontSize: 11, letterSpacing: "1px", textTransform: "uppercase" }}>Confidential · Internal Use Only</span>
+      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <a href={createPageUrl("RFQCart")} style={{ display: "flex", alignItems: "center", gap: 7, textDecoration: "none", background: cartCount > 0 ? "#2563eb" : "rgba(255,255,255,0.1)", color: "#fff", padding: "7px 14px", borderRadius: 7, fontSize: 12, fontWeight: 700, border: "1px solid " + (cartCount > 0 ? "#3b82f6" : "rgba(255,255,255,0.2)"), transition: "background 0.2s" }}>
+          <span>📋</span>
+          <span>RFQ Cart{cartCount > 0 ? ` (${cartCount})` : ""}</span>
+        </a>
+      </div>
     </div>
   );
 }
@@ -1812,8 +1886,9 @@ export default function Home() {
         )}
       </div>
       <div style={{ borderTop: "1px solid " + C.border, padding: "14px 40px", textAlign: "center", fontSize: 11, color: "#cbd5e1" }}>
-        Uniking Canada · Technical Product Reference · Confidential — Internal Use Only
+        Uniking Canada · Technical Product Reference · <a href={createPageUrl("RFQCart")} style={{ color: "#93c5fd", textDecoration: "none", fontWeight: 600 }}>Submit an RFQ →</a>
       </div>
+      <FloatingRFQButton />
     </div>
   );
 }
