@@ -22,6 +22,7 @@ const SERIES = [
   {
     id: "1100",
     image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/246bc1c7c_1100.png",
+    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/4853544ff_generated_image.png",
     name: "Series 1100",
     subtitle: "Light Duty Gravity Roller",
     duty: "Light",
@@ -82,6 +83,7 @@ const SERIES = [
   {
     id: "1200",
     image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/680e08774_1200.png",
+    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/a2a6c7834_generated_image.png",
     name: "Series 1200",
     subtitle: "Metal Conveyor Roller",
     duty: "Light-Medium",
@@ -132,6 +134,7 @@ const SERIES = [
   {
     id: "1450",
     image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/7dc919535_1450.png",
+    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/00a8dd683_generated_image.png",
     name: "Series 1450",
     subtitle: "Heavy Duty Conveyor Roller",
     duty: "Heavy",
@@ -168,6 +171,7 @@ const SERIES = [
   {
     id: "1700",
     image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/c5a9a72e8_1700.png",
+    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9ecc6b84f_generated_image.png",
     name: "Series 1700",
     subtitle: "Universal Conveyor Roller",
     duty: "Medium-Heavy",
@@ -260,6 +264,7 @@ const SERIES = [
   {
     id: "1800",
     image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/9d1a08bfd_1800.png",
+    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f22fe3b4d_generated_image.png",
     name: "Series 1800",
     subtitle: "Precision Heavy Duty Roller",
     duty: "Heavy",
@@ -309,6 +314,7 @@ const SERIES = [
   {
     id: "1940",
     image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/0669fa155_1940.png",
+    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/50b0a464c_generated_image.png",
     name: "Series 1940 / 1960",
     subtitle: "Heavy Duty Welded Roller",
     duty: "Heavy",
@@ -344,6 +350,7 @@ const SERIES = [
   {
     id: "3400_3500",
     image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/ee09e3abd_3400_3500.png",
+    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/7306a6a02_generated_image.png",
     name: "Series 3400 / 3500",
     subtitle: "Sprocket Driven (Welded) Roller",
     duty: "Medium-Heavy",
@@ -390,6 +397,7 @@ const SERIES = [
   {
     id: "3800",
     image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/2fd992fb2_3800.png",
+    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/2ffac20a3_generated_image.png",
     name: "Series 3800",
     subtitle: "Slip Drive / Direct Drive Roller",
     duty: "Light-Medium",
@@ -437,6 +445,7 @@ const SERIES = [
   {
     id: "1300",
     image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/d936037e8_1300.png",
+    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/279c675a3_generated_image.png",
     name: "Series 1300 / 1350 / 1400",
     subtitle: "Tapered Curve Roller",
     duty: "Light-Medium",
@@ -555,40 +564,84 @@ function TopBar() {
 // ─── SERIES CARD ─────────────────────────────────────────────────────────────
 function SeriesCard({ s, onSelect }) {
   const [hov, setHov] = useState(false);
+  const [imgErr, setImgErr] = useState(false);
   return (
     <div
       onClick={() => onSelect(s)}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        background: "#fff", borderRadius: 14, border: `2px solid ${hov ? s.color : C.border}`,
-        padding: "20px", cursor: "pointer", transition: "all 0.18s",
-        boxShadow: hov ? `0 8px 24px ${s.color}22` : "0 1px 4px rgba(0,0,0,0.06)",
-        transform: hov ? "translateY(-2px)" : "none",
+        background: "#fff", borderRadius: 16, border: `2px solid ${hov ? s.color : C.border}`,
+        overflow: "hidden", cursor: "pointer", transition: "all 0.18s",
+        boxShadow: hov ? `0 12px 32px ${s.color}28` : "0 1px 4px rgba(0,0,0,0.06)",
+        transform: hov ? "translateY(-3px)" : "none",
       }}>
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 12 }}>
-        <div style={{ width: 44, height: 44, borderRadius: 10, background: s.color + "18", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, color: s.color, flexShrink: 0 }}>{s.icon}</div>
-        <div>
-          <div style={{ fontSize: 15, fontWeight: 800, color: C.text }}>{s.name}</div>
+
+      {/* Product photo area — like Interroll website */}
+      <div style={{
+        height: 180, background: "#f1f5f9", overflow: "hidden", position: "relative",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        borderBottom: `3px solid ${hov ? s.color : "#e2e8f0"}`, transition: "border-color 0.18s",
+      }}>
+        {s.photo_url && !imgErr ? (
+          <img
+            src={s.photo_url}
+            alt={s.name}
+            onError={() => setImgErr(true)}
+            style={{
+              width: "100%", height: "100%", objectFit: "cover",
+              transition: "transform 0.3s ease",
+              transform: hov ? "scale(1.05)" : "scale(1)",
+            }}
+          />
+        ) : (
+          <div style={{ fontSize: 52, color: s.color + "60" }}>{s.icon}</div>
+        )}
+        {/* duty badge overlay */}
+        <div style={{
+          position: "absolute", top: 12, left: 12,
+          background: s.color, color: "#fff",
+          fontSize: 10, fontWeight: 800, padding: "3px 10px",
+          borderRadius: 20, textTransform: "uppercase", letterSpacing: "0.5px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+        }}>{s.duty} Duty</div>
+      </div>
+
+      {/* Card body */}
+      <div style={{ padding: "16px 18px 18px" }}>
+        <div style={{ marginBottom: 10 }}>
+          <div style={{ fontSize: 16, fontWeight: 800, color: C.text }}>{s.name}</div>
           <div style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>{s.subtitle}</div>
         </div>
-      </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 12 }}>
-        {s.tags.map(t => (
-          <span key={t} style={{ background: s.color + "18", color: s.color, fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20, letterSpacing: "0.3px" }}>{t}</span>
-        ))}
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, fontSize: 11 }}>
-        <div><span style={{ color: C.muted }}>Max Load:</span><br /><span style={{ fontWeight: 600, color: C.text }}>{s.maxLoad}</span></div>
-        <div><span style={{ color: C.muted }}>Max Speed:</span><br /><span style={{ fontWeight: 600, color: C.text }}>{s.maxSpeed}</span></div>
-        <div><span style={{ color: C.muted }}>Drive:</span><br /><span style={{ fontWeight: 600, color: C.text }}>{s.driveType}</span></div>
-        <div><span style={{ color: C.muted }}>Tube Range:</span><br /><span style={{ fontWeight: 600, color: C.text }}>{s.tubeRange}</span></div>
-      </div>
-      <div style={{ marginTop: 14, padding: "8px 12px", background: s.color + "0f", borderRadius: 8, fontSize: 11, color: C.muted }}>
-        <strong style={{ color: C.text }}>Applications: </strong>{s.applications.join(", ")}
-      </div>
-      <div style={{ marginTop: 12, textAlign: "right" }}>
-        <span style={{ color: s.color, fontSize: 12, fontWeight: 700 }}>Configure →</span>
+
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 12 }}>
+          {s.tags.map(t => (
+            <span key={t} style={{ background: s.color + "18", color: s.color, fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20, letterSpacing: "0.3px" }}>{t}</span>
+          ))}
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 12px", fontSize: 11, marginBottom: 12 }}>
+          <div><span style={{ color: C.muted }}>Max Load</span><br /><span style={{ fontWeight: 700, color: C.text, fontSize: 12 }}>{s.maxLoad}</span></div>
+          <div><span style={{ color: C.muted }}>Max Speed</span><br /><span style={{ fontWeight: 700, color: C.text, fontSize: 12 }}>{s.maxSpeed}</span></div>
+          <div><span style={{ color: C.muted }}>Drive Type</span><br /><span style={{ fontWeight: 700, color: C.text, fontSize: 12 }}>{s.driveType}</span></div>
+          <div><span style={{ color: C.muted }}>Tube Range</span><br /><span style={{ fontWeight: 700, color: C.text, fontSize: 12 }}>{s.tubeRange}</span></div>
+        </div>
+
+        <div style={{ padding: "8px 10px", background: s.color + "0d", borderRadius: 8, fontSize: 11, color: C.muted, marginBottom: 12 }}>
+          <strong style={{ color: C.text }}>Applications: </strong>{s.applications.join(", ")}
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ fontSize: 11, color: C.muted }}>{s.bearingType.split("(")[0].trim()}</div>
+          <div style={{
+            background: hov ? s.color : "transparent",
+            color: hov ? "#fff" : s.color,
+            border: `1.5px solid ${s.color}`,
+            padding: "6px 16px", borderRadius: 8,
+            fontSize: 12, fontWeight: 700,
+            transition: "all 0.18s",
+          }}>Configure →</div>
+        </div>
       </div>
     </div>
   );
