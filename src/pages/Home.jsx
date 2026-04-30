@@ -1626,12 +1626,12 @@ export default function Home() {
     async function load() {
       try {
         async function fetchAllMac() {
-          let all = [], page = 1, hasMore = true;
+          let all = [], skip = 0, hasMore = true;
           while (hasMore) {
-            const batch = await MacChainProduct.list({ page_size: 500, page });
+            const batch = await MacChainProduct.list({ limit: 200, skip });
             all = all.concat(batch);
-            hasMore = batch.length === 500;
-            page++;
+            hasMore = batch.length === 200;
+            skip += 200;
           }
           return all;
         }
