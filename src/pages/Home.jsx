@@ -319,8 +319,22 @@ function normalizeAllied(r) {
     duty: "",
     notes: Array.isArray(r.features) ? r.features.map(stripVendor).join(" · ") : stripVendor(r.description || ""),
     catalog_url: "", tech_doc_url: "",
-    image_url: r.product_image || "",
-    diagram_image: r.diagram_image || "",
+    image_url: (() => {
+      const a = r.product_image || "";
+      const b = r.diagram_image || "";
+      // Prefer the live photo (URL contains "Picture") over the drawing
+      if (a && /picture/i.test(a)) return a;
+      if (b && /picture/i.test(b)) return b;
+      return a || b;
+    })(),
+    diagram_image: (() => {
+      const a = r.product_image || "";
+      const b = r.diagram_image || "";
+      // diagram_image = the one that's NOT the live photo
+      if (a && /picture/i.test(a)) return b;
+      if (b && /picture/i.test(b)) return a;
+      return b || a;
+    })(),
     belt_data: null, sprocket_data: null,
     specs,
   };
@@ -510,8 +524,11 @@ function printTearSheet(product) {
 
 function printMacTearSheet(record) {
   const date = new Date().toLocaleDateString("en-CA", { year:"numeric", month:"long", day:"numeric" });
-  const img = record.product_image || record.diagram_image || "";
-  const diagImg = record.diagram_image && record.diagram_image !== record.product_image ? record.diagram_image : "";
+  // Prefer the live photo (URL contains "Picture") over the drawing sketch
+  const _a = record.product_image || "";
+  const _b = record.diagram_image || "";
+  const img = (_a && /picture/i.test(_a)) ? _a : (_b && /picture/i.test(_b)) ? _b : (_a || _b);
+  const diagImg = img === _a ? (_b !== _a ? _b : "") : (_a !== _b ? _a : "");
 
   const basicHeaders = Array.isArray(record.basic_headers) ? record.basic_headers : [];
   const basicRows = Array.isArray(record.basic_rows) ? record.basic_rows : [];
