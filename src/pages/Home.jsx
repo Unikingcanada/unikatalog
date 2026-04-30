@@ -142,7 +142,7 @@ function normalizeUniCatalog(r) {
     application: r.application || "", materials: r.materials || "", material: r.materials || "",
     duty: r.duty || "", notes: [r.features, r.notes].filter(Boolean).join(" "),
     catalog_url: r.catalog_url || "", tech_doc_url: r.tech_doc_url || "",
-    image_url: r.image_url || "", belt_data: null, sprocket_data: null,
+    image_url: r.image_url || "", belt_data: r.belt_data || null, sprocket_data: r.sprocket_data || null,
     specs: { "Model": r.model_code || null, "Series": r.series || null, "Style": r.style || null, "Application": r.application || null, "Materials": r.materials || null, "Duty": r.duty || null, ...cleanSpecs },
   };
 }
@@ -659,14 +659,36 @@ function printMacTearSheet(record) {
 // ─── Sprocket Table ───────────────────────────────────────────────────────────
 
 function SprocketTable({ data }) {
-  const rows = parseJSON(data);
-  if (!Array.isArray(rows) || !rows.length) return <div style={{ color: C.muted, fontSize: 13 }}>No sprocket data available for this series.</div>;
+  const parsed = parseJSON(data);
+  if (!parsed) return <div style={{ color: C.muted, fontSize: 13 }}>No sprocket data available for this series.</div>;
+
+  // New format: { types: [{label, note, headers, rows}], compatible_series, sprocket_pages }
+  if (!Array.isArray(parsed) && parsed.types) {
+    const { types, sprocket_pages } = parsed;
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        {sprocket_pages && (
+          <div style={{ fontSize: 12, color: C.muted }}>Catalog pages: {sprocket_pages}</div>
+        )}
+        {types.map((t, ti) => (
+          <div key={ti}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 4 }}>{t.label}</div>
+            {t.note && <div style={{ fontSize: 11, color: C.muted, marginBottom: 6 }}>{t.note}</div>}
+            <SimpleDataTable headers={t.headers} rows={t.rows} firstColBold={true} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // Legacy format: plain array of objects (Intralox CatalogProduct style)
+  const rows = Array.isArray(parsed) ? parsed : [];
+  if (!rows.length) return <div style={{ color: C.muted, fontSize: 13 }}>No sprocket data available for this series.</div>;
 
   const cols = ["type","material","teeth","pitch_dia_in","pitch_dia_mm","outer_dia_in","outer_dia_mm","hub_width_in","hub_width_mm"];
   const labels = { type:"Type", material:"Material", teeth:"Teeth", pitch_dia_in:"Pitch Dia (in)", pitch_dia_mm:"Pitch Dia (mm)", outer_dia_in:"Outer Dia (in)", outer_dia_mm:"Outer Dia (mm)", hub_width_in:"Hub W (in)", hub_width_mm:"Hub W (mm)" };
   const active = cols.filter(k => rows.some(r => r[k] != null && r[k] !== ""));
 
-  // Group by type
   const groups = {};
   for (const row of rows) {
     const t = row.type || "One-Piece";
@@ -709,32 +731,88 @@ function SprocketTable({ data }) {
 
 // ─── Belt Data Table ──────────────────────────────────────────────────────────
 
-function BeltDataTable({ data }) {
-  const rows = parseJSON(data);
-  if (!Array.isArray(rows) || !rows.length) return null;
-  const keys = ["material","strength_lbf","strength_nm","temp_min_f","temp_max_f","mass_lbft2","mass_kgm2"];
-  const labels = { material:"Material", strength_lbf:"Strength (lbf)", strength_nm:"Strength (N/m)", temp_min_f:"Min °F", temp_max_f:"Max °F", mass_lbft2:"lb/ft²", mass_kgm2:"kg/m²" };
-  const cols = keys.filter(k => rows.some(r => r[k] != null && r[k] !== ""));
+// ─── Simple row table renderer ────────────────────────────────────────────────
+function SimpleDataTable({ headers, rows, firstColBold }) {
+  if (!headers || !rows || !rows.length) return null;
   return (
-    <div style={{ overflowX: "auto", borderRadius: 6, border: "1px solid " + C.border }}>
+    <div style={{ overflowX: "auto", borderRadius: 6, border: "1px solid " + C.border, marginBottom: 2 }}>
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
         <thead>
           <tr style={{ background: C.navyMid }}>
-            {cols.map(k => <th key={k} style={{ padding: "8px 10px", color: "#fff", fontWeight: 700, textAlign: "left", whiteSpace: "nowrap" }}>{labels[k]}</th>)}
+            {headers.map((h, i) => <th key={i} style={{ padding: "8px 10px", color: "#fff", fontWeight: 700, textAlign: "left", whiteSpace: "nowrap" }}>{h}</th>)}
           </tr>
         </thead>
         <tbody>
           {rows.map((row, i) => (
             <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid " + C.border }}>
-              {cols.map(k => (
-                <td key={k} style={{ padding: "7px 10px", color: k === "material" ? C.navyMid : C.text, fontWeight: k === "material" ? 700 : 400, whiteSpace: "nowrap" }}>
-                  {row[k] != null ? String(row[k]) : "—"}
+              {row.map((cell, j) => (
+                <td key={j} style={{ padding: "7px 10px", color: (firstColBold && j === 0) ? C.navyMid : C.text, fontWeight: (firstColBold && j === 0) ? 700 : 400, whiteSpace: "nowrap" }}>
+                  {cell != null ? String(cell) : "—"}
                 </td>
               ))}
             </tr>
           ))}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+function BeltDataTable({ data }) {
+  const parsed = parseJSON(data);
+  if (!parsed) return null;
+
+  // Legacy format: plain array of objects (Intralox CatalogProduct style)
+  if (Array.isArray(parsed)) {
+    if (!parsed.length) return null;
+    const keys = ["material","strength_lbf","strength_nm","temp_min_f","temp_max_f","mass_lbft2","mass_kgm2"];
+    const labels = { material:"Material", strength_lbf:"Strength (lbf)", strength_nm:"Strength (N/m)", temp_min_f:"Min °F", temp_max_f:"Max °F", mass_lbft2:"lb/ft²", mass_kgm2:"kg/m²" };
+    const cols = keys.filter(k => parsed.some(r => r[k] != null && r[k] !== ""));
+    return (
+      <div style={{ overflowX: "auto", borderRadius: 6, border: "1px solid " + C.border }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+          <thead>
+            <tr style={{ background: C.navyMid }}>
+              {cols.map(k => <th key={k} style={{ padding: "8px 10px", color: "#fff", fontWeight: 700, textAlign: "left", whiteSpace: "nowrap" }}>{labels[k]}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {parsed.map((row, i) => (
+              <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid " + C.border }}>
+                {cols.map(k => (
+                  <td key={k} style={{ padding: "7px 10px", color: k === "material" ? C.navyMid : C.text, fontWeight: k === "material" ? 700 : 400, whiteSpace: "nowrap" }}>
+                    {row[k] != null ? String(row[k]) : "—"}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  // New grouped format: { headers, groups: [{label, rows}], variants: [{label, headers, rows, note}] }
+  const { headers, groups, variants } = parsed;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      {groups && groups.map((grp, gi) => (
+        <div key={gi}>
+          <div style={{ fontWeight: 700, fontSize: 13, color: C.navyMid, marginBottom: 6, paddingLeft: 2 }}>{grp.label}</div>
+          <SimpleDataTable headers={headers} rows={grp.rows} firstColBold={false} />
+        </div>
+      ))}
+      {variants && variants.length > 0 && (
+        <div>
+          <div style={{ fontWeight: 700, fontSize: 13, color: C.slate, marginBottom: 10, borderTop: "1px solid " + C.border, paddingTop: 14 }}>Variants</div>
+          {variants.map((v, vi) => (
+            <div key={vi} style={{ marginBottom: 16 }}>
+              <div style={{ fontWeight: 600, fontSize: 12, color: C.muted, marginBottom: 5 }}>{v.label}{v.note ? <span style={{ fontWeight: 400, marginLeft: 8 }}>— {v.note}</span> : ""}</div>
+              <SimpleDataTable headers={v.headers || headers} rows={v.rows} firstColBold={false} />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -765,12 +843,14 @@ function ProductModal({ product, showBrand, onClose }) {
   if (!product) return null;
   const typeDef = TYPE_MAP[product.type];
 
-  const hasBelt = !!(parseJSON(product.belt_data)?.length);
-  const hasSprocket = !!(parseJSON(product.sprocket_data)?.length);
+  const parsedBeltData = parseJSON(product.belt_data);
+  const hasBelt = !!(parsedBeltData && (Array.isArray(parsedBeltData) ? parsedBeltData.length : (parsedBeltData.groups?.length || parsedBeltData.rows?.length)));
+  const parsedSprocketData = parseJSON(product.sprocket_data);
+  const hasSprocket = !!(parsedSprocketData && (Array.isArray(parsedSprocketData) ? parsedSprocketData.length : parsedSprocketData.types?.length));
 
   const tabs = [
     ["specs", "Specifications"],
-    hasBelt ? ["belt", "Belt Data"] : null,
+    hasBelt ? ["belt", parsedBeltData && !Array.isArray(parsedBeltData) ? "Materials" : "Belt Data"] : null,
     hasSprocket ? ["sprockets", "Sprockets"] : null,
     (product.catalog_url || product.tech_doc_url) ? ["docs", "Documents"] : null,
   ].filter(Boolean);
