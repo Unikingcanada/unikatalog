@@ -16,6 +16,7 @@ const TYPE_META = {
   "Steel Hinged Belt":      { color: "#374151", bg: "#f3f4f6" },
   "Table Top Chain":        { color: "#0e7490", bg: "#cffafe" },
   "ANSI/BS Chain":          { color: "#4338ca", bg: "#e0e7ff" },
+  "ANSI Roller Chain":      { color: "#3730a3", bg: "#e0e7ff" },
   "Cast Chain":             { color: "#7f1d1d", bg: "#fee2e2" },
   "Engineered Chain":       { color: "#1d4ed8", bg: "#dbeafe" },
   "Forged Chain":           { color: "#92400e", bg: "#ffedd5" },
@@ -447,7 +448,7 @@ export default function Catalog() {
           ...macChains.map(r => ({
             ...r,
             _src: "mac",
-            _type: "Engineered Chain",
+            _type: r.product_type === "ANSI Roller Chain" ? "ANSI Roller Chain" : "Engineered Chain",
             vendor: "",  // suppress vendor branding
             series: r.part_number || r.series,
             style: r.subcategory || r.category,

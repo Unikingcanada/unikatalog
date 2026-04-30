@@ -240,6 +240,7 @@ const WELDED_SUBCATEGORIES = [
 ];
 
 const ANSI_SUBCATEGORIES = [
+  { key: "ANSI Roller Chain",                  label: "ANSI Roller Chain",                 description: "Single strand, heavy series, and multiple strand ANSI precision roller chains (#25 to #240)" },
   { key: "ANSI Standard Roller Chains",        label: "ANSI Standard Roller Chains",       description: "Single, double and triple-strand ANSI precision roller chains (#25 to #240)" },
   { key: "British Standard Roller Chains",     label: "British Standard Roller Chains",    description: "BS/ISO precision roller chains (06B to 40B, single and multi-strand)" },
   { key: "Super Series Chains",                label: "Super Series Chains",               description: "Higher-strength Super Series ANSI roller chains with upgraded plate and pin" },
