@@ -16,7 +16,8 @@ function stripVendor(text) {
 
 const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics", "Plastic Chain", "Metal Chain"]);
 const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket", "Plastic Chain", "Metal Chain"]);
-const EXTERNAL_ROUTES = {};
+const EXTERNAL_ROUTES = {
+  "Conveyor Rollers": "/RollerConfigurator",};
 
 
 // ─── Chain grouping ──────────────────────────────────────────────────────────
@@ -43,7 +44,7 @@ const PRODUCT_TYPES = [
   { key: "Sharptop Chain", label: "Sharp Top Chain", description: "Sharp top and spike top chains for agricultural and forestry applications", filters: ["style", "materials"] },
   { key: "Kiln Chain", label: "Kiln Chain", description: "High-temperature kiln and dryer chains for cement and mineral processing", filters: ["style", "materials"] },
   { key: "Thermoforming Chain", label: "Thermoforming Chain", description: "Precision chains for plastic thermoforming and packaging machinery", filters: ["style", "materials"] },
-  { key: "Conveyor Roller", label: "Conveyor Rollers", description: "Standard, lagging, motorized drive and specialty conveyor rollers", filters: ["style", "duty"] },
+  { key: "Conveyor Rollers", label: "Conveyor Rollers", description: "Standard, lagging, motorized drive and specialty conveyor rollers", filters: ["style", "duty"] },
   { key: "Monitoring System", label: "4B Electronics & Monitoring", description: "Bucket elevator and conveyor safety monitoring systems and sensors", filters: ["style"] },
   { key: "Magnetic Conveyor", label: "Magnetic Conveyor", description: "Magnetic conveyor systems for ferrous material handling", filters: ["style"] },
   { key: "Pintle Chain", label: "Steel Pintle Chain", description: "Open barrel pintle chains for spreaders, feeders, hay handling and forest product applications", filters: [] },

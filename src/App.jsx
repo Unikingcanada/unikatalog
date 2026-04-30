@@ -1,16 +1,18 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import RFQCart from './pages/RFQCart';
+import RollerConfigurator from './pages/RollerConfigurator';
 import Home from './pages/Home';
 import Catalog from './pages/Catalog';
+import RFQCart from './pages/RFQCart';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/Home" replace />} />
-        <Route path="/RFQCart" element={<RFQCart />} />
+        <Route path="/RollerConfigurator" element={<RollerConfigurator />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/Catalog" element={<Catalog />} />
+        <Route path="/RFQCart" element={<RFQCart />} />
       </Routes>
     </BrowserRouter>
   )
