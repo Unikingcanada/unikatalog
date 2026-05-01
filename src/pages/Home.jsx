@@ -2039,14 +2039,11 @@ export default function Home() {
         ]);
         let allied = [];
         try {
-          allied = [];
-          let macPage = 1;
-          while (true) {
-            const batch = await MacChainProduct.filter({}, macPage, 500);
-            allied = allied.concat(batch);
-            if (batch.length < 500) break;
-            macPage++;
-          }
+          const [macBatch1, macBatch2] = await Promise.all([
+            MacChainProduct.filter({}, 1, 500),
+            MacChainProduct.filter({}, 2, 500),
+          ]);
+          allied = [...macBatch1, ...macBatch2];
         } catch(e2) { console.error("MacChain load error:", e2); }
         setRawMacRecords(allied);
         setAllData([

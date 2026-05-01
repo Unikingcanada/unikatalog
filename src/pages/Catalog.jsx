@@ -436,14 +436,11 @@ export default function Catalog() {
           UniCatalog.filter({}, 1, 500),
           ElevatorBucket.filter({}, 1, 500),
         ]);
-        let macChains = [];
-        let macPage = 1;
-        while (true) {
-          const batch = await MacChainProduct.filter({}, macPage, 500);
-          macChains = macChains.concat(batch);
-          if (batch.length < 500) break;
-          macPage++;
-        }
+        const [macBatch1, macBatch2] = await Promise.all([
+          MacChainProduct.filter({}, 1, 500),
+          MacChainProduct.filter({}, 2, 500),
+        ]);
+        const macChains = [...macBatch1, ...macBatch2];
         const combined = [
           ...intralox.map(r => ({ ...r, _src: "intralox", _type: r.category || "Modular Plastic Belt" })),
           ...unicatalog.map(r => ({ ...r, _src: "uni", _type: r.product_type })),
