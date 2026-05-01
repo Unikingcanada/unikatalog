@@ -5,6 +5,7 @@ export const ElevatorBucket = base44.entities.ElevatorBucket;
 export const UniCatalog = base44.entities.UniCatalog;
 export const DonghuaChain = base44.entities.DonghuaChain;
 export const MacChainProduct = base44.entities.MacChainProduct;
+export const ForgedChain = base44.entities.ForgedChain;
 
 // auth sdk:
 export const User = base44.auth;

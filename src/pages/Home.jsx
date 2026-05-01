@@ -17,7 +17,9 @@ function stripVendor(text) {
 const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics", "Plastic Chain", "Metal Chain"]);
 const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket", "Plastic Chain", "Metal Chain"]);
 const EXTERNAL_ROUTES = {
-  "Conveyor Rollers": "/RollerConfigurator",};
+  "Conveyor Rollers": "/RollerConfigurator",
+  "Forged Chain": "/ForgedChainConfigurator",
+};
 
 
 // ─── Chain grouping ──────────────────────────────────────────────────────────
