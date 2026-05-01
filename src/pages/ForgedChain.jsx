@@ -53,8 +53,8 @@ function toMM(val, imperial) {
   return imperial ? String(Math.round(n * IN_TO_MM * 10) / 10) : String(n);
 }
 
-function getRFQCart() { try { return JSON.parse(localStorage.getItem("rfq_cart")||"[]"); } catch { return []; } }
-function saveRFQCart(c) { localStorage.setItem("rfq_cart", JSON.stringify(c)); }
+function getRFQCart() { try { return JSON.parse(localStorage.getItem("uniking_rfq_cart")||"[]"); } catch { return []; } }
+function saveRFQCart(c) { localStorage.setItem("uniking_rfq_cart", JSON.stringify(c)); window.dispatchEvent(new Event("rfq_cart_updated")); }
 function addToRFQ(item) {
   const cart = getRFQCart();
   cart.push({ ...item, id: Date.now() });
