@@ -1896,10 +1896,17 @@ function WeldedSeriesView({ rawMacRecords }) {
   }
 
   // Top-level: series type cards
-  if (weldedChains.length === 0) return (
+  if (!rawMacRecords || rawMacRecords.length === 0) return (
     <div style={{ padding:40, textAlign:"center", color:C.muted }}>
       <div style={{ fontSize:32, marginBottom:12 }}>⛓</div>
       <div style={{ fontSize:16, fontWeight:600 }}>Loading Welded Steel Chain data...</div>
+    </div>
+  );
+  if (weldedChains.length === 0) return (
+    <div style={{ padding:40, textAlign:"center", color:C.muted }}>
+      <div style={{ fontSize:32, marginBottom:12 }}>⛓</div>
+      <div style={{ fontSize:16, fontWeight:600, marginBottom:8 }}>No Welded Steel Chain records found</div>
+      <div style={{ fontSize:13 }}>Check that MacChainProduct records have category = "Welded Steel Chain"</div>
     </div>
   );
 
@@ -2041,10 +2048,9 @@ export default function Home() {
         ]);
         let allied = [];
         try {
-          const [macBatch1, macBatch2] = await Promise.all([
-            MacChainProduct.filter({}, 1, 500),
-            MacChainProduct.filter({}, 2, 500),
-          ]);
+          // Fetch pages until empty — safe against APIs that error on empty pages
+          const safeFetch = async (page) => { try { return await MacChainProduct.filter({}, page, 500); } catch { return []; } };
+          const [macBatch1, macBatch2] = await Promise.all([safeFetch(1), safeFetch(2)]);
           allied = [...macBatch1, ...macBatch2];
         } catch(e2) { console.error("MacChain load error:", e2); }
         setRawMacRecords(allied);
