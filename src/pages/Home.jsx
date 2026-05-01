@@ -2048,10 +2048,10 @@ export default function Home() {
         ]);
         let allied = [];
         try {
-          // Fetch pages until empty — safe against APIs that error on empty pages
-          const safeFetch = async (page) => { try { return await MacChainProduct.filter({}, page, 500); } catch { return []; } };
-          const [macBatch1, macBatch2] = await Promise.all([safeFetch(1), safeFetch(2)]);
-          allied = [...macBatch1, ...macBatch2];
+          // Fetch all pages — safe wrapper returns [] on error/empty
+          const safeFetch = async (page) => { try { const r = await MacChainProduct.filter({}, page, 500); return r || []; } catch { return []; } };
+          const [b1, b2, b3] = await Promise.all([safeFetch(1), safeFetch(2), safeFetch(3)]);
+          allied = [...b1, ...b2, ...b3];
         } catch(e2) { console.error("MacChain load error:", e2); }
         setRawMacRecords(allied);
         setAllData([
