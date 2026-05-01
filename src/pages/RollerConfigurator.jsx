@@ -847,58 +847,247 @@ function DetailModal({ s, onClose, onConfigure, fmt, metric }) {
 
 // ─── CONFIGURE MODAL ─────────────────────────────────────────────────────────
 // ─── ROLLER DRAWING SVG ─────────────────────────────────────────────────────
-function RollerDrawing({ tubeDia_mm, rl_mm, shaftType, hasDrive, metric }) {
+function RollerDrawing({ tubeDia_mm, rl_mm, shaftType, hasDrive, driveLabel, metric, grooveCount, groovePositions, isConical, sleeveType, seriesColor }) {
+  // ── Layout constants ────────────────────────────────────────────────────────
+  const SVG_W = 560;
+  const SVG_H = 170;
+  const cx = SVG_W / 2;
+  const cy = 80;
+
+  // ── Roller geometry ─────────────────────────────────────────────────────────
   const rl = parseFloat(rl_mm) || 500;
   const dia = parseFloat(tubeDia_mm) || 50;
-  const scale = Math.min(260 / rl, 3.5);
-  const bodyW = Math.max(rl * scale, 60);
-  const bodyH = Math.min(Math.max(dia * scale * 1.2, 18), 52);
-  const shaftExt = shaftType && shaftType.toLowerCase().includes("spring") ? 18 : 12;
-  const totalW = bodyW + shaftExt * 2 + 20;
-  const cx = totalW / 2;
-  const cy = 45;
+  // Map RL to a fixed visual width (min 180, max 360) regardless of real size
+  const BODY_W = Math.min(Math.max(180, Math.min(360, rl * 0.55)), 360);
+  // Map diameter to visual height (min 24, max 58)
+  const BODY_H_R = Math.min(Math.max(24, dia * 0.8), 58); // right end (larger if conical)
+  const BODY_H_L = isConical ? Math.max(BODY_H_R * 0.55, 14) : BODY_H_R; // left end narrower for conical
+
+  const bodyX = cx - BODY_W / 2;
+  const bodyXR = cx + BODY_W / 2;
+
+  // Roller top/bottom outline (trapezoid if conical, rect if straight)
+  const topL = cy - BODY_H_L / 2;
+  const topR = cy - BODY_H_R / 2;
+  const botL = cy + BODY_H_L / 2;
+  const botR = cy + BODY_H_R / 2;
+
+  // ── Shaft geometry ──────────────────────────────────────────────────────────
   const isSpring = shaftType && shaftType.toLowerCase().includes("spring");
-  const rlLabel = metric ? `RL = ${rl} mm` : `RL = ${(rl/25.4).toFixed(2)}"`;
+  const isFemale = shaftType && shaftType.toLowerCase().includes("female");
+  const SHAFT_W = Math.min(BODY_H_L * 0.25, 8);
+  const SHAFT_EXT_L = 36;
+  const SHAFT_EXT_R = hasDrive ? 0 : 36;
+  const shaftY = cy;
+
+  // Drive head geometry
+  const DRIVE_W = 18;
+  const DRIVE_H = BODY_H_R + 18;
+
+  // ── Groove positions (visual x offsets along body) ──────────────────────────
+  const grooveLabels = ["A", "B", "C", "D"];
+  const activeGrooves = grooveCount > 0 ? grooveLabels.slice(0, grooveCount) : [];
+  // Distribute grooves evenly if no custom positions entered
+  const grooveXs = activeGrooves.map((lbl, i) => {
+    const pos = groovePositions && groovePositions[lbl] ? parseFloat(groovePositions[lbl]) : null;
+    if (pos && rl > 0) return bodyX + (pos / rl) * BODY_W;
+    // fallback: evenly spaced
+    return bodyX + ((i + 1) / (activeGrooves.length + 1)) * BODY_W;
+  });
+
+  // ── Labels ──────────────────────────────────────────────────────────────────
+  const rlLabel = rl_mm ? (metric ? `RL = ${Math.round(rl)} mm` : `RL = ${(rl/25.4).toFixed(2)}"`) : "RL = ?";
   const diaLabel = metric ? `Ø${dia} mm` : `Ø${(dia/25.4).toFixed(3)}"`;
-  const elAgl = metric ? `EL = AGL = RL + ${isSpring ? "10 / 26" : "10"} mm` : `EL = AGL = RL + ${isSpring ? "0.4\" / 1.0\"" : "0.4\""}`; 
+  const accent = seriesColor || "#0F2340";
+
+  // EL/AGL hint
+  let elHint = "";
+  if (rl_mm) {
+    if (hasDrive) elHint = `EL ≈ RL + 40 mm`;
+    else if (isSpring) elHint = `EL = RL+10 mm · AGL = RL+26 mm`;
+    else elHint = `EL = AGL = RL + 10 mm`;
+  }
 
   return (
-    <svg width="100%" viewBox={`0 0 ${totalW} 90`} style={{ display: "block", overflow: "visible" }}>
+    <svg width="100%" viewBox={`0 0 ${SVG_W} ${SVG_H}`} style={{ display: "block" }}>
       <defs>
-        <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-          <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/>
+        {/* Arrow markers */}
+        <marker id="rdArr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 Z" fill="#94a3b8"/>
         </marker>
-        <marker id="arrl" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse">
-          <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/>
+        <marker id="rdArrL" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto">
+          <path d="M7,0 L0,3.5 L7,7 Z" fill="#94a3b8"/>
         </marker>
+        <marker id="rdArrV" markerWidth="7" markerHeight="7" refX="3.5" refY="6" orient="auto">
+          <path d="M0,0 L3.5,7 L7,0 Z" fill="#94a3b8"/>
+        </marker>
+        <marker id="rdArrVL" markerWidth="7" markerHeight="7" refX="3.5" refY="1" orient="auto">
+          <path d="M0,7 L3.5,0 L7,7 Z" fill="#94a3b8"/>
+        </marker>
+        {/* Body gradient */}
+        <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#e2e8f0"/>
+          <stop offset="40%" stopColor="#cbd5e1"/>
+          <stop offset="100%" stopColor="#94a3b8"/>
+        </linearGradient>
+        {/* Sleeve gradient (orange for rubber, etc.) */}
+        <linearGradient id="sleeveGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#fed7aa"/>
+          <stop offset="50%" stopColor="#f97316"/>
+          <stop offset="100%" stopColor="#c2410c"/>
+        </linearGradient>
+        {/* Drive head gradient */}
+        <linearGradient id="driveGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#93c5fd"/>
+          <stop offset="50%" stopColor="#3b82f6"/>
+          <stop offset="100%" stopColor="#1d4ed8"/>
+        </linearGradient>
       </defs>
-      {/* Shaft left */}
-      <line x1={cx - bodyW/2 - shaftExt} y1={cy} x2={cx - bodyW/2} y2={cy} stroke="#64748b" strokeWidth={Math.min(bodyH * 0.18, 6)} strokeLinecap="round"/>
-      {/* Shaft right */}
-      <line x1={cx + bodyW/2} y1={cy} x2={cx + bodyW/2 + shaftExt} y2={cy} stroke="#64748b" strokeWidth={Math.min(bodyH * 0.18, 6)} strokeLinecap="round"/>
-      {/* Spring indicators */}
-      {isSpring && <>
-        <circle cx={cx - bodyW/2 - shaftExt + 5} cy={cy} r={4} fill="none" stroke="#f59e0b" strokeWidth={1.5}/>
-        <circle cx={cx + bodyW/2 + shaftExt - 5} cy={cy} r={4} fill="none" stroke="#f59e0b" strokeWidth={1.5}/>
-      </>}
-      {/* Drive head indicator */}
-      {hasDrive && <>
-        <rect x={cx + bodyW/2 + shaftExt - 2} y={cy - bodyH/2 - 6} width={10} height={bodyH + 12} rx={3} fill="#3b82f6" opacity={0.8}/>
-        <text x={cx + bodyW/2 + shaftExt + 14} y={cy + 4} fontSize={7} fill="#3b82f6" fontWeight="700">Drive</text>
-      </>}
-      {/* Roller body */}
-      <rect x={cx - bodyW/2} y={cy - bodyH/2} width={bodyW} height={bodyH} rx={bodyH * 0.15} fill="#cbd5e1" stroke="#475569" strokeWidth={1.5}/>
-      {/* Bearing caps */}
-      <rect x={cx - bodyW/2} y={cy - bodyH/2 + 2} width={9} height={bodyH - 4} rx={2} fill="#334155" opacity={0.75}/>
-      <rect x={cx + bodyW/2 - 9} y={cy - bodyH/2 + 2} width={9} height={bodyH - 4} rx={2} fill="#334155" opacity={0.75}/>
-      {/* RL dimension line */}
-      <line x1={cx - bodyW/2} y1={cy + bodyH/2 + 10} x2={cx + bodyW/2} y2={cy + bodyH/2 + 10} stroke="#94a3b8" strokeWidth={1} markerEnd="url(#arr)" markerStart="url(#arrl)"/>
-      <text x={cx} y={cy + bodyH/2 + 20} textAnchor="middle" fontSize={8} fill="#64748b" fontWeight="600">{rlLabel}</text>
-      {/* Diameter label */}
-      <line x1={cx - bodyW/2 - 14} y1={cy - bodyH/2} x2={cx - bodyW/2 - 14} y2={cy + bodyH/2} stroke="#94a3b8" strokeWidth={1} markerEnd="url(#arr)" markerStart="url(#arrl)"/>
-      <text x={cx - bodyW/2 - 28} y={cy + 3} textAnchor="middle" fontSize={7.5} fill="#64748b" transform={`rotate(-90,${cx - bodyW/2 - 28},${cy})`}>{diaLabel}</text>
-      {/* EL formula label */}
-      <text x={cx} y={12} textAnchor="middle" fontSize={7.5} fill="#94a3b8">{elAgl}</text>
+
+      {/* ── Left shaft ─────────────────────────────────────────────────── */}
+      <line
+        x1={bodyX - SHAFT_EXT_L} y1={shaftY}
+        x2={bodyX} y2={shaftY}
+        stroke="#475569" strokeWidth={SHAFT_W} strokeLinecap="round"
+      />
+      {/* Spring clip left */}
+      {isSpring && (
+        <g>
+          <rect x={bodyX - SHAFT_EXT_L + 4} y={shaftY - 7} width={10} height={14} rx={2} fill="#fef3c7" stroke="#f59e0b" strokeWidth={1.5}/>
+          <line x1={bodyX - SHAFT_EXT_L + 7} y1={shaftY - 7} x2={bodyX - SHAFT_EXT_L + 7} y2={shaftY + 7} stroke="#f59e0b" strokeWidth={1.2}/>
+          <line x1={bodyX - SHAFT_EXT_L + 10} y1={shaftY - 7} x2={bodyX - SHAFT_EXT_L + 10} y2={shaftY + 7} stroke="#f59e0b" strokeWidth={1.2}/>
+          <text x={bodyX - SHAFT_EXT_L + 9} y={shaftY + 19} textAnchor="middle" fontSize={7} fill="#92400e" fontWeight="700">spring</text>
+        </g>
+      )}
+      {/* Female thread icon left */}
+      {isFemale && (
+        <g>
+          <circle cx={bodyX - 10} cy={shaftY} r={6} fill="none" stroke="#64748b" strokeWidth={1.5} strokeDasharray="2,2"/>
+        </g>
+      )}
+
+      {/* ── Right shaft or drive head ────────────────────────────────────── */}
+      {hasDrive ? (
+        <g>
+          {/* Short stub shaft into drive head */}
+          <line x1={bodyXR} y1={shaftY} x2={bodyXR + 8} y2={shaftY} stroke="#475569" strokeWidth={SHAFT_W} strokeLinecap="round"/>
+          {/* Drive head block */}
+          <rect x={bodyXR + 8} y={cy - DRIVE_H/2} width={DRIVE_W} height={DRIVE_H} rx={4} fill="url(#driveGrad)" stroke="#1d4ed8" strokeWidth={1.5}/>
+          {/* Sprocket teeth hint — tick marks above drive head */}
+          {[0.2, 0.5, 0.8].map((t, i) => (
+            <line key={i}
+              x1={bodyXR + 8 + DRIVE_W * t} y1={cy - DRIVE_H/2 - 6}
+              x2={bodyXR + 8 + DRIVE_W * t} y2={cy - DRIVE_H/2}
+              stroke="#93c5fd" strokeWidth={2.5} strokeLinecap="round"
+            />
+          ))}
+          {[0.2, 0.5, 0.8].map((t, i) => (
+            <line key={"b"+i}
+              x1={bodyXR + 8 + DRIVE_W * t} y1={cy + DRIVE_H/2}
+              x2={bodyXR + 8 + DRIVE_W * t} y2={cy + DRIVE_H/2 + 6}
+              stroke="#93c5fd" strokeWidth={2.5} strokeLinecap="round"
+            />
+          ))}
+          <text x={bodyXR + 8 + DRIVE_W/2} y={cy + 3} textAnchor="middle" fontSize={6.5} fill="#fff" fontWeight="800">DRIVE</text>
+          {/* Drive label below */}
+          {driveLabel && (
+            <text x={bodyXR + 8 + DRIVE_W/2} y={cy + DRIVE_H/2 + 12} textAnchor="middle" fontSize={6.5} fill="#3b82f6" fontWeight="700">{driveLabel.length > 14 ? driveLabel.slice(0,14)+"…" : driveLabel}</text>
+          )}
+        </g>
+      ) : (
+        <g>
+          {/* Right shaft */}
+          <line x1={bodyXR} y1={shaftY} x2={bodyXR + SHAFT_EXT_R} y2={shaftY} stroke="#475569" strokeWidth={SHAFT_W} strokeLinecap="round"/>
+          {isSpring && (
+            <g>
+              <rect x={bodyXR + SHAFT_EXT_R - 14} y={shaftY - 7} width={10} height={14} rx={2} fill="#fef3c7" stroke="#f59e0b" strokeWidth={1.5}/>
+              <line x1={bodyXR + SHAFT_EXT_R - 11} y1={shaftY - 7} x2={bodyXR + SHAFT_EXT_R - 11} y2={shaftY + 7} stroke="#f59e0b" strokeWidth={1.2}/>
+              <line x1={bodyXR + SHAFT_EXT_R - 8} y1={shaftY - 7} x2={bodyXR + SHAFT_EXT_R - 8} y2={shaftY + 7} stroke="#f59e0b" strokeWidth={1.2}/>
+            </g>
+          )}
+        </g>
+      )}
+
+      {/* ── Sleeve layer (drawn before body so body sits on top at ends) ──── */}
+      {sleeveType && sleeveType !== "None" && (
+        <polygon
+          points={`${bodyX},${topL - 5} ${bodyXR},${topR - 5} ${bodyXR},${botR + 5} ${bodyX},${botL + 5}`}
+          fill="url(#sleeveGrad)" opacity={0.7} stroke="#ea580c" strokeWidth={1}
+        />
+      )}
+
+      {/* ── Roller body (trapezoid polygon) ─────────────────────────────── */}
+      <polygon
+        points={`${bodyX},${topL} ${bodyXR},${topR} ${bodyXR},${botR} ${bodyX},${botL}`}
+        fill="url(#bodyGrad)" stroke="#475569" strokeWidth={2}
+      />
+
+      {/* ── Bearing caps (left + right) ───────────────────────────────────── */}
+      <rect x={bodyX} y={topL + 2} width={12} height={BODY_H_L - 4} rx={2} fill="#334155" opacity={0.85}/>
+      <rect x={bodyXR - 12} y={topR + 2} width={12} height={BODY_H_R - 4} rx={2} fill="#334155" opacity={0.85}/>
+
+      {/* ── Groove markers ────────────────────────────────────────────────── */}
+      {grooveXs.map((gx, i) => {
+        // Interpolate height at this x position for conical
+        const frac = (gx - bodyX) / BODY_W;
+        const hTop = topL + (topR - topL) * frac;
+        const hBot = botL + (botR - botL) * frac;
+        const gH = hBot - hTop;
+        return (
+          <g key={i}>
+            {/* Groove channel line */}
+            <line x1={gx} y1={hTop - 1} x2={gx} y2={hBot + 1} stroke={accent} strokeWidth={3} strokeLinecap="round" opacity={0.9}/>
+            {/* Groove label */}
+            <text x={gx} y={hTop - 7} textAnchor="middle" fontSize={7.5} fill={accent} fontWeight="800">{grooveLabels[i]}</text>
+            {/* Position label below if entered */}
+            {groovePositions && groovePositions[grooveLabels[i]] && (
+              <text x={gx} y={hBot + 14} textAnchor="middle" fontSize={6.5} fill="#64748b">{groovePositions[grooveLabels[i]]}mm</text>
+            )}
+          </g>
+        );
+      })}
+
+      {/* ── Conical label ─────────────────────────────────────────────────── */}
+      {isConical && (
+        <text x={cx} y={topL - 8} textAnchor="middle" fontSize={7} fill="#7c3aed" fontWeight="700">▲ CONICAL / TAPERED</text>
+      )}
+
+      {/* ── Sleeve label ─────────────────────────────────────────────────── */}
+      {sleeveType && sleeveType !== "None" && (
+        <text x={cx} y={botR + 22} textAnchor="middle" fontSize={7} fill="#ea580c" fontWeight="700">Sleeve: {sleeveType}</text>
+      )}
+
+      {/* ── RL dimension line (below body) ────────────────────────────────── */}
+      <line
+        x1={bodyX} y1={botR + (isConical ? 8 : 6)}
+        x2={bodyXR} y2={botR + (isConical ? 8 : 6)}
+        stroke="#94a3b8" strokeWidth={1}
+        markerEnd="url(#rdArr)" markerStart="url(#rdArrL)"
+      />
+      <text x={cx} y={botR + 20} textAnchor="middle" fontSize={8.5} fill="#475569" fontWeight="700">{rlLabel}</text>
+
+      {/* ── Diameter dimension line (left side) ────────────────────────────── */}
+      <line
+        x1={bodyX - 22} y1={topL}
+        x2={bodyX - 22} y2={botL}
+        stroke="#94a3b8" strokeWidth={1}
+        markerEnd="url(#rdArr)" markerStart="url(#rdArrL)"
+      />
+      <text
+        x={bodyX - 34} y={cy + 3}
+        textAnchor="middle" fontSize={7.5} fill="#475569"
+        transform={`rotate(-90, ${bodyX - 34}, ${cy})`}
+      >{diaLabel}</text>
+
+      {/* ── EL/AGL hint (top right) ────────────────────────────────────────── */}
+      {elHint && (
+        <text x={SVG_W - 8} y={14} textAnchor="end" fontSize={7.5} fill="#94a3b8">{elHint}</text>
+      )}
+
+      {/* ── "Not configured" placeholder text ─────────────────────────────── */}
+      {!rl_mm && !tubeDia_mm && (
+        <text x={cx} y={cy + 4} textAnchor="middle" fontSize={10} fill="#cbd5e1" fontWeight="600">Select options to see live preview</text>
+      )}
     </svg>
   );
 }
@@ -1109,6 +1298,24 @@ function ConfigModal({ s, onClose, fmt, metric }) {
 
         <div style={{ padding: "16px 24px 24px" }}>
 
+          {/* ── LIVE ROLLER PREVIEW ─────────────────────────────── */}
+          <div style={{ background: "#0F2340", borderRadius: 10, padding: "14px 14px 10px", marginBottom: 16, border: "1px solid rgba(255,255,255,0.08)" }}>
+            <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 6, textAlign: "center" }}>Live Schematic Preview</div>
+            <RollerDrawing
+              tubeDia_mm={selectedTube ? selectedTube.tube_mm : null}
+              rl_mm={rl_mm || null}
+              shaftType={shaft || ""}
+              hasDrive={!!drive}
+              driveLabel={drive}
+              metric={metric}
+              grooveCount={grooveCount}
+              groovePositions={groovePositions}
+              isConical={selectedTube && selectedTube.conicity ? true : false}
+              sleeveType={sleeve && sleeve !== "None" ? sleeve : null}
+              seriesColor={s.color}
+            />
+          </div>
+
           {/* Tube */}
           <SLabel>1. Select Tube</SLabel>
           <select style={sel} value={tube || ""} onChange={e => { setTube(e.target.value); setMaterial(null); setDrive(null); }}>
@@ -1210,20 +1417,6 @@ function ConfigModal({ s, onClose, fmt, metric }) {
               ) : (
                 <span>EL = AGL = <strong>{metric ? `${Math.round(parseFloat(rl_mm) + 10)} mm` : `${((parseFloat(rl_mm)+10)/25.4).toFixed(2)}"`}</strong></span>
               )}
-            </div>
-          )}
-
-          {/* Live Roller Drawing */}
-          {rl_mm && selectedTube && (
-            <div style={{ marginTop: 14, background: "#f8fafc", borderRadius: 10, padding: "14px 12px 8px", border: "1px solid " + C.border }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 10, textAlign: "center" }}>Roller Preview (Schematic)</div>
-              <RollerDrawing
-                tubeDia_mm={selectedTube.tube_mm}
-                rl_mm={rl_mm}
-                shaftType={shaft || ""}
-                hasDrive={!!drive}
-                metric={metric}
-              />
             </div>
           )}
 
