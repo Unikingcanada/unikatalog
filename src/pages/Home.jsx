@@ -1794,14 +1794,29 @@ function WeldedChainRow({ chain, onSelect }) {
   );
 }
 
-function WeldedSeriesView({ rawMacRecords }) {
+function WeldedSeriesView({ rawMacRecords: _unused }) {
   const [selectedSeries, setSelectedSeries] = useState(null);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [weldedView, setWeldedView] = useState("grid");
   const [hovered, setHovered] = useState(null);
+  const [rawMacRecords, setRawMacRecords] = useState(null); // null = loading, [] = empty
   // Lazy-loaded sprocket records — only fetched when a sprockets tab is opened
   const [sprocketMap, setSprocketMap] = useState({});
   const [sprocketsLoaded, setSprocketsLoaded] = useState(false);
+
+  // Fetch Welded Steel Chain records directly on mount
+  useEffect(() => {
+    async function fetchWelded() {
+      try {
+        const chains = await MacChainProduct.filter({ category: "Welded Steel Chain" }, 1, 500);
+        setRawMacRecords(chains || []);
+      } catch(e) {
+        console.error("WeldedSeriesView fetch error:", e);
+        setRawMacRecords([]);
+      }
+    }
+    fetchWelded();
+  }, []);
 
   const loadSprockets = async () => {
     if (sprocketsLoaded) return;
@@ -1896,7 +1911,7 @@ function WeldedSeriesView({ rawMacRecords }) {
   }
 
   // Top-level: series type cards
-  if (!rawMacRecords || rawMacRecords.length === 0) return (
+  if (rawMacRecords === null) return (
     <div style={{ padding:40, textAlign:"center", color:C.muted }}>
       <div style={{ fontSize:32, marginBottom:12 }}>⛓</div>
       <div style={{ fontSize:16, fontWeight:600 }}>Loading Welded Steel Chain data...</div>
@@ -1905,8 +1920,7 @@ function WeldedSeriesView({ rawMacRecords }) {
   if (weldedChains.length === 0) return (
     <div style={{ padding:40, textAlign:"center", color:C.muted }}>
       <div style={{ fontSize:32, marginBottom:12 }}>⛓</div>
-      <div style={{ fontSize:16, fontWeight:600, marginBottom:8 }}>No Welded Steel Chain records found</div>
-      <div style={{ fontSize:13 }}>Check that MacChainProduct records have category = "Welded Steel Chain"</div>
+      <div style={{ fontSize:16, fontWeight:600, marginBottom:8 }}>No chain records found</div>
     </div>
   );
 
