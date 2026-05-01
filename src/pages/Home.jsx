@@ -2039,7 +2039,7 @@ export default function Home() {
         ]);
         let allied = [];
         try {
-          allied = await MacChainProduct.filter({}, 1, 500);
+          allied = await MacChainProduct.filter({ product_type: "Chain" }, 1, 500);
         } catch(e2) { console.error("MacChain load error:", e2); }
         setRawMacRecords(allied);
         setAllData([

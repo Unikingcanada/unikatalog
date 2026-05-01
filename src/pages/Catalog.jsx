@@ -435,7 +435,7 @@ export default function Catalog() {
           CatalogProduct.filter({}, 1, 500),
           UniCatalog.filter({}, 1, 500),
           ElevatorBucket.filter({}, 1, 500),
-          MacChainProduct.filter({}, 1, 500),
+          MacChainProduct.filter({ product_type: "Chain" }, 1, 500),
         ]);
         const combined = [
           ...intralox.map(r => ({ ...r, _src: "intralox", _type: r.category || "Modular Plastic Belt" })),
