@@ -108,11 +108,16 @@ function Card({ rec, type, onClick }) {
 
       {/* Product Image */}
       {hasImage && (
-        <div style={{ background: "#f8fafc", borderBottom: "1px solid #f1f5f9",
-          display: "flex", alignItems: "center", justifyContent: "center", height: 130, overflow: "hidden" }}>
+        <div style={{ background: "#f0f4f8", borderBottom: "1px solid #e5e7eb",
+          height: 160, overflow: "hidden", position: "relative" }}>
           <img src={rec.image_url} alt={rec.series}
-            style={{ maxHeight: 120, maxWidth: "100%", objectFit: "contain", padding: "8px" }}
-            onError={e => { e.target.style.display = "none"; }} />
+            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
+            onError={e => { e.target.parentNode.style.display = "none"; }} />
+          {rec.page_range && (
+            <div style={{ position: "absolute", bottom: 6, right: 8, background: "rgba(0,0,0,0.45)", color: "#fff", fontSize: 9, padding: "2px 6px", borderRadius: 8 }}>
+              pp. {rec.page_range}
+            </div>
+          )}
         </div>
       )}
 

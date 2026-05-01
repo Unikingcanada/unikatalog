@@ -1,558 +1,409 @@
 import { useState, useMemo } from "react";
 import { createPageUrl } from "@/utils";
 
-// ─── BRAND COLORS ─────────────────────────────────────────────────────────────
 const C = {
-  navy: "#0F2340",
-  navyMid: "#1a3a5c",
-  navyLight: "#2a5080",
-  gold: "#C9A84C",
-  goldLight: "#e8c96d",
-  bg: "#f8fafc",
-  card: "#ffffff",
-  border: "#e2e8f0",
-  text: "#1e293b",
-  muted: "#64748b",
-  green: "#16a34a",
-  amber: "#d97706",
+  navy: "#0F2340", navyMid: "#1a3a5c", navyLight: "#2a5080",
+  gold: "#C9A84C", goldLight: "#e8c96d",
+  bg: "#f8fafc", card: "#ffffff", border: "#e2e8f0",
+  text: "#1e293b", muted: "#64748b",
 };
 
-// ─── SERIES DATA ──────────────────────────────────────────────────────────────
+// ─── UNIT CONVERSION ──────────────────────────────────────────────────────────
+function useUnits() {
+  const [metric, setMetric] = useState(true);
+  const fmt = {
+    load: (n) => metric ? `${n} N` : `${Math.round(n / 4.448)} lbf`,
+    speed: (ms) => metric ? `${ms} m/s` : `${Math.round(ms * 196.85)} fpm`,
+    temp: (c) => metric ? `${c}°C` : `${Math.round(c * 9/5 + 32)}°F`,
+    dia: (mm) => metric ? `Ø${mm} mm` : `Ø${(mm / 25.4).toFixed(3)}"`,
+    len: (mm) => metric ? `${mm} mm` : `${(mm / 25.4).toFixed(2)}"`,
+  };
+  return { metric, setMetric, fmt };
+}
+
+// ─── REAL INTERROLL DATA (from 2026 catalog) ─────────────────────────────────
 const SERIES = [
   {
     id: "1100",
-    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/246bc1c7c_1100.png",
-    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/4853544ff_generated_image.png",
     name: "Series 1100",
-    subtitle: "Light Duty Gravity Roller",
+    subtitle: "Gravity Conveyor Roller",
+    platform: "1100",
     duty: "Light",
-    driveType: "Gravity",
-    bearingType: "Plastic (stainless steel balls)",
-    maxLoad: "Up to ~20 lbs depending on length",
-    maxSpeed: "15 fpm – gravity only",
-    tubeRange: "0.62\" – 1.90\"",
-    tempRange: "Up to 150°F",
-    applications: ["Gravity conveyors", "Light parcels", "Washdown environments"],
-    tags: ["Gravity", "Light Duty", "Corrosion Resistant"],
     color: "#3b82f6",
-    icon: "○",
-    bearings: [
-      { code: "1.113", dia: "0.62\"", wall: ".035\"", shaftDia: ".192\" dia", housing: "Acetal", note: "Balls Stainless" },
-      { code: "1.101", dia: "0.75\"", wall: ".035/.060\"", shaftDia: ".250\" dia", housing: "Acetal", note: "Balls Stainless" },
-      { code: "1.105", dia: "1.12\"", wall: ".050/.070\"", shaftDia: ".192\" dia", housing: "Acetal", note: "Balls Stainless" },
-      { code: "1.107", dia: "1.12\"", wall: ".050/.070\"", shaftDia: ".250\" dia", housing: "Acetal", note: "Balls Stainless" },
-      { code: "1.109", dia: "1.12\"", wall: ".050/.070\"", shaftDia: ".312\" dia", housing: "Acetal", note: "Balls Stainless" },
-      { code: "1.111", dia: "1.12\"", wall: ".050/.070\"", shaftDia: ".312\" hex", housing: "Acetal", note: "Balls Stainless" },
-      { code: "1.131", dia: "1.90\"", wall: ".065\"", shaftDia: ".437\" hex", housing: "Polypropylene", note: "Balls Stainless" },
-      { code: "1.133", dia: "1.90\"", wall: ".110\"", shaftDia: ".437\" hex", housing: "Polypropylene", note: "Balls Stainless" },
-      { code: "1.151", dia: "1.90\"", wall: ".065\"", shaftDia: ".312/.375 hex", housing: "Polypropylene", note: "Balls Stainless" },
-      { code: "1.153", dia: "1.90\"", wall: ".110\"", shaftDia: ".312/.375 hex", housing: "Polypropylene", note: "Balls Stainless" },
+    driveType: "Gravity / Push",
+    bearingType: "Polymer housing, steel or stainless balls",
+    maxLoad_N: 350,
+    maxSpeed_ms: 0.3,
+    temp_min_C: -5, temp_max_C: 40,
+    tubes_mm: ["Ø16×1", "Ø20×1.5", "Ø30×1.2", "Ø40×1.2", "Ø50×1.5"],
+    materials: ["Zinc-plated steel", "Stainless steel", "Aluminum", "PVC"],
+    shaft_options: ["Spring-loaded", "Fixed", "Female thread M6", "Male thread", "Flatted"],
+    antistatic: true,
+    applications: ["Gravity conveyors", "Light parcels", "Food & washdown (FDA grease)", "Push conveyors"],
+    tags: ["Gravity", "Light Duty", "Food Grade"],
+    sleeve_options: ["PVC sleeve", "PU sleeve", "Lagging"],
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/643c8bc1a_1100_p32_i0.jpeg",
+    notes: "PVC tube: avoid sustained heavy load above +30°C. For food sector — FDA-compliant grease standard.",
+    page_range: "32–37",
+    load_table: [
+      { tube: "Ø16×1 Stainless", shaft_mm: 5, loads: { 200: 30, 400: 10, 600: null } },
+      { tube: "Ø20×1.5 Stainless", shaft_mm: 6, loads: { 200: 70, 400: 25, 600: null } },
+      { tube: "Ø30×1.2 Zinc-plated", shaft_mm: 8, loads: { 200: 150, 400: 55, 600: 25 } },
+      { tube: "Ø40×1.2 Zinc-plated", shaft_mm: 10, loads: { 200: 250, 400: 100, 600: 50 } },
+      { tube: "Ø50×1.5 Zinc-plated", shaft_mm: 12, loads: { 200: 350, 400: 150, 600: 80, 800: 50 } },
     ],
-    tubes: [
-      { code: "S16", dia: "0.62\"", wall: ".035\"", material: "Stainless Steel", finish: "Polished" },
-      { code: "S19", dia: "0.75\"", wall: ".035\"", material: "Stainless Steel", finish: "Polished" },
-      { code: "V20", dia: "0.78\"", wall: ".060\"", material: "PVC", finish: "Gray", note: "Max 15\" length" },
-      { code: "A21", dia: "0.75\"", wall: ".035\"", material: "Aluminum", finish: "Anodized" },
-      { code: "A29", dia: "1.12\"", wall: ".050\"", material: "Aluminum", finish: "Anodized" },
-      { code: "V30", dia: "1.18\"", wall: ".070\"", material: "PVC", finish: "Gray", note: "Max 22\" length" },
-      { code: "A49", dia: "1.90\"", wall: ".065\"", material: "Aluminum", finish: "None" },
-      { code: "G49", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "Galvanized" },
-      { code: "S49", dia: "1.90\"", wall: ".065\"", material: "Stainless", finish: "Polished" },
-      { code: "V50", dia: "1.90\"", wall: ".110\"", material: "PVC", finish: "Gray" },
-      { code: "R69", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "Galvanized", note: "Soft PVC Sleeve" },
-      { code: "R09", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "Galvanized", note: "Polyurethane Sleeve" },
-    ],
-    shafts: [
-      { code: "C00", dia: ".192\" dia", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "S00", dia: ".192\" dia", ext: ".56\"", material: "Stainless", type: "Spring Loaded" },
-      { code: "C07", dia: ".192\" dia", ext: ".75\"", material: "Steel", type: "Threaded 10-32" },
-      { code: "C02", dia: ".250\" dia", ext: ".75\"", material: "Steel", type: "Threaded 1/4-20" },
-      { code: "S02", dia: ".250\" dia", ext: ".75\"", material: "Stainless", type: "Threaded 1/4-20" },
-      { code: "C03", dia: ".250\" dia", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "S03", dia: ".250\" dia", ext: ".56\"", material: "Stainless", type: "Spring Loaded" },
-      { code: "C13", dia: ".312\" dia", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "C12", dia: ".312\" dia", ext: ".75\"", material: "Steel", type: "Threaded 5/16-18" },
-      { code: "C20", dia: ".312\" hex", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "C35", dia: ".375\" hex", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "C40", dia: ".437\" hex", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "S40", dia: ".437\" hex", ext: ".56\"", material: "Stainless", type: "Spring Loaded" },
-      { code: "C37", dia: ".437\" hex", ext: ".56\"", material: "Steel", type: "Tapped 1/4-20 x 5/8D" },
-    ],
-    partExample: "1.131.G49.C40-14.88\"RL",
   },
   {
     id: "1200",
-    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/680e08774_1200.png",
-    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/a2a6c7834_generated_image.png",
     name: "Series 1200",
-    subtitle: "Metal Conveyor Roller",
-    duty: "Light-Medium",
-    driveType: "Gravity / Belt",
-    bearingType: "Ball bearing (zinc plated)",
-    maxLoad: "Up to 600 lbs depending on length",
-    maxSpeed: "200 fpm",
-    tubeRange: "0.75\" – 2.50\"",
-    tempRange: "Standard",
-    applications: ["General conveying", "Powered belt conveyors", "Medium loads"],
-    tags: ["Gravity", "Belt Drive", "Medium Duty"],
+    subtitle: "Steel Conveyor Roller",
+    platform: "1200",
+    duty: "Medium",
     color: "#8b5cf6",
-    icon: "◎",
-    bearings: [
-      { code: "1.206", dia: "0.75\"", wall: ".035\"", shaftDia: ".250\" dia", housing: "Steel", note: "Zinc Plated" },
-      { code: "1.210", dia: "1.00\"", wall: ".049\"", shaftDia: ".250\" dia", housing: "Steel", note: "Zinc Plated" },
-      { code: "1.211", dia: "1.00\"", wall: ".049\"", shaftDia: ".312\" hex", housing: "Steel", note: "Zinc Plated" },
-      { code: "1.212", dia: "1.38\"", wall: ".049\"", shaftDia: ".250\" dia", housing: "Steel", note: "Zinc Plated" },
-      { code: "1.213", dia: "1.38\"", wall: ".049\"", shaftDia: ".312\" hex", housing: "Steel", note: "Zinc Plated" },
-      { code: "1.220", dia: "1.90\"", wall: ".065\"", shaftDia: ".437\" hex", housing: "Steel", note: "Zinc Plated" },
-      { code: "1.223", dia: "1.90\"", wall: ".065\"", shaftDia: ".437\" hex", housing: "Steel", note: "Zinc Plated, lightly oiled" },
-      { code: "1.226", dia: "2.50\"", wall: ".120\"", shaftDia: ".687\" hex", housing: "Steel", note: "Zinc Plated" },
+    driveType: "Gravity / Belt / Driven",
+    bearingType: "Zinc-plated steel housing, hardened running grooves",
+    maxLoad_N: 1200,
+    maxSpeed_ms: 0.8,
+    temp_min_C: -30, temp_max_C: 80,
+    tubes_mm: ["Ø30×1.2", "Ø40×1.2", "Ø50×1.5", "Ø60×1.5"],
+    materials: ["Zinc-plated steel", "Stainless steel", "Aluminum"],
+    shaft_options: ["Spring-loaded", "Fixed", "Female thread M8", "Male thread"],
+    antistatic: true,
+    applications: ["General conveying", "Powered belt conveyors", "Deep freeze storage", "High-temp environments"],
+    tags: ["Deep Freeze", "Belt Drive", "Antistatic"],
+    sleeve_options: ["PVC sleeve", "PU sleeve", "Lagging"],
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/0a354bdce_1200_p38_i0.jpeg",
+    notes: "Steel housing rated for −30°C to +80°C. All versions antistatic standard. Lubrication: oiled to Ø40 mm, greased from Ø50 mm.",
+    page_range: "38–43",
+    load_table: [
+      { tube: "Ø30×1.2 Zinc-plated", shaft_mm: 8, loads: { 200: 250, 400: 100, 600: 50, 800: 30 } },
+      { tube: "Ø40×1.2 Zinc-plated", shaft_mm: 10, loads: { 200: 500, 400: 220, 600: 130, 800: 90 } },
+      { tube: "Ø50×1.5 Zinc-plated", shaft_mm: 12, loads: { 200: 900, 400: 450, 600: 280, 800: 195, 1000: 150, 1200: 120 } },
+      { tube: "Ø60×1.5 Zinc-plated", shaft_mm: 14, loads: { 200: 1200, 400: 700, 600: 450, 800: 330, 1000: 260, 1200: 215 } },
     ],
-    tubes: [
-      { code: "A18", dia: "0.75\"", wall: ".035\"", material: "Aluminum", finish: "Anodized" },
-      { code: "A25", dia: "1.00\"", wall: ".049\"", material: "Aluminum", finish: "Anodized" },
-      { code: "G25", dia: "1.00\"", wall: ".049\"", material: "Steel", finish: "Galvanized" },
-      { code: "G36", dia: "1.38\"", wall: ".049\"", material: "Steel", finish: "Galvanized" },
-      { code: "S36", dia: "1.38\"", wall: ".049\"", material: "Stainless", finish: "Polished" },
-      { code: "G48", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "Galvanized" },
-      { code: "S48", dia: "1.90\"", wall: ".065\"", material: "Stainless", finish: "Polished" },
-      { code: "G66", dia: "2.50\"", wall: ".120\"", material: "Steel", finish: "Galvanized" },
-      { code: "C66", dia: "2.50\"", wall: ".120\"", material: "Steel", finish: "None" },
-      { code: "Z16", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "Galvanized", note: "1 variable groove" },
-      { code: "Z12", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "Galvanized", note: "2 variable grooves" },
-      { code: "P21", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "Galvanized", note: "Polyurethane sleeve" },
-    ],
-    shafts: [
-      { code: "C02", dia: ".250\" dia", ext: ".75\"", material: "Steel", type: "Threaded 1/4-20" },
-      { code: "C05", dia: ".250\" dia", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "C22", dia: ".312\" hex", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "C38", dia: ".437\" hex", ext: ".06\"", material: "Steel", type: "Tapped 5/16-18 x 5/8D (removable)" },
-      { code: "C41", dia: ".437\" hex", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "C66", dia: ".687\" hex", ext: ".75\"", material: "Steel", type: "Spring Loaded" },
-    ],
-    partExample: "1.206.A18.C02-14.88\"RL",
   },
   {
     id: "1450",
-    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/7dc919535_1450.png",
-    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/00a8dd683_generated_image.png",
     name: "Series 1450",
-    subtitle: "Heavy Duty Conveyor Roller",
+    subtitle: "Heavy-Duty Universal Conveyor Roller",
+    platform: "1450",
     duty: "Heavy",
-    driveType: "Gravity / Chain",
-    bearingType: "Precision ball bearing 6205ZZ (polypropylene/nylon housing)",
-    maxLoad: "Up to 600 lbs",
-    maxSpeed: "400 fpm",
-    tubeRange: "2.50\" – 3.50\"",
-    tempRange: "Standard",
-    applications: ["Palletizers", "Heavy loads", "Industrial conveying", "Drums & barrels"],
-    tags: ["Heavy Duty", "Chain Drive", "Industrial"],
     color: "#ef4444",
-    icon: "●",
-    bearings: [
-      { code: "1.462", dia: "2.50\"", wall: ".120\"", shaftDia: ".687\" hex", housing: "Polypropylene", note: "6205ZZ" },
-      { code: "1.465", dia: "2.50\"", wall: ".120\"", shaftDia: ".687\" taperhex", housing: "Polypropylene", note: "6205ZZ" },
-      { code: "1.45Z", dia: "3.50\"", wall: ".120\"", shaftDia: ".687\" hex", housing: "Nylon", note: "6205ZZ" },
-      { code: "1.455", dia: "3.50\"", wall: ".120\"", shaftDia: ".787\" dia", housing: "Nylon", note: "6205ZZ" },
+    driveType: "Gravity / Chain / Belt",
+    bearingType: "6205 2RZ precision steel (polyamide) or 6204 2RZ (steel housing for deep freeze)",
+    maxLoad_N: 5000,
+    maxSpeed_ms: 0.8,
+    temp_min_C: -5, temp_max_C: 40,
+    temp_deepfreeze_C: -30,
+    tubes_mm: ["Ø60×2", "Ø80×2", "Ø89×3"],
+    materials: ["Zinc-plated steel", "Stainless steel"],
+    shaft_options: ["Spring-loaded", "Fixed", "Female thread M12", "Male thread"],
+    antistatic: "Optional",
+    applications: ["Palletizers", "Heavy containers", "Barrels & drums", "Steel containers", "Gravity conveyors"],
+    tags: ["Heavy Duty", "5000 N", "Deep Freeze"],
+    sleeve_options: ["PVC sleeve (Ø60, 80 mm)", "Lagging"],
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/1ac6db2ed_1450_p44_i0.jpeg",
+    notes: "Polyamide housing: 5000 N, −5 to +40°C. Steel housing: 2500 N, −30 to +80°C. Grooves for round belt on Ø80×2 only.",
+    page_range: "44–49",
+    load_table: [
+      { tube: "Ø60×2 Zinc-plated (Polyamide housing)", shaft_mm: 14, loads: { 200: 3000, 400: 1500, 600: 900, 800: 650, 1000: 510, 1200: 420 } },
+      { tube: "Ø80×2 Zinc-plated (Polyamide housing)", shaft_mm: 17, loads: { 200: 5000, 400: 3000, 600: 1800, 800: 1300, 1000: 1020, 1200: 835 } },
+      { tube: "Ø89×3 Zinc-plated (Polyamide housing)", shaft_mm: 20, loads: { 200: 5000, 400: 4200, 600: 2650, 800: 1940, 1000: 1520, 1200: 1245 } },
     ],
-    tubes: [
-      { code: "P08", dia: "2.50\"", wall: ".120\"", material: "Steel", finish: "Mill" },
-      { code: "P09", dia: "2.50\"", wall: ".120\"", material: "Steel", finish: "Galvanized" },
-      { code: "J8B", dia: "3.50\"", wall: ".120\"", material: "Steel", finish: "Mill" },
+  },
+  {
+    id: "1500",
+    name: "Series 1500 / 1520",
+    subtitle: "Slide Bearing Conveyor Roller — Food Grade",
+    platform: "1500",
+    duty: "Light",
+    color: "#10b981",
+    driveType: "Non-driven (gravity/push)",
+    bearingType: "PTFE polymer slide bearing, stainless steel shaft pin — no lubrication",
+    maxLoad_N: 1100,
+    maxSpeed_ms: 0.8,
+    temp_min_C: -5, temp_max_C: 40,
+    tubes_mm: ["Ø30×1.5", "Ø50×1.5"],
+    materials: ["Zinc-plated steel", "Stainless steel", "PVC"],
+    shaft_options: ["Stainless pin Ø6 HEX (1500)", "Stainless pin Ø12 + M8 thread (1520)"],
+    antistatic: false,
+    applications: ["Food packaging", "Moist / wet areas", "Washdown conveyors", "High cleanliness zones"],
+    tags: ["Food Grade", "Washdown", "No Lubrication"],
+    sleeve_options: [],
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/f9eafd36b_1500_p50_i0.jpeg",
+    notes: "1500: max 120 N, Ø6 hex pin. 1520: max 1100 N, Ø12 pin with M8 thread. No grease — bearings run dry. Fully corrosion-proof.",
+    page_range: "50–55",
+    load_table: [
+      { tube: "Ø30 PVC — Series 1500", shaft_mm: 6, loads: { 200: 120, 400: 50, 600: 25 } },
+      { tube: "Ø50×1.5 Stainless — Series 1520", shaft_mm: 12, loads: { 200: 1100, 400: 500, 600: 300, 800: 200, 1000: 150 } },
     ],
-    shafts: [
-      { code: "W54", dia: ".687\" hex", ext: ".75\"", material: "Steel", type: "Spring Loaded (use with 1.462)" },
-      { code: "G30", dia: ".687\" hex", ext: ".75\"", material: "Steel", type: "Spring Loaded (use with 1.45Z)" },
-      { code: "D45", dia: ".687\" Taperhex", ext: "1.00\"", material: "Steel", type: "Taperhex (6.09\"–11.99\" lengths)" },
-      { code: "Y69", dia: ".687\" Taperhex", ext: "1.00\"", material: "Steel", type: "Taperhex (12.00\"–88.87\" lengths)" },
-      { code: "P20", dia: ".787\" dia", ext: ".06\"", material: "Steel", type: "Tapped 1/2-13 x .75D, fixed" },
-    ],
-    partExample: "1.462.P09.W54-14.88\"RL",
   },
   {
     id: "1700",
-    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/c5a9a72e8_1700.png",
-    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/9ecc6b84f_generated_image.png",
     name: "Series 1700",
-    subtitle: "Universal Conveyor Roller",
-    duty: "Medium-Heavy",
-    driveType: "Gravity / Belt / Motorized",
-    bearingType: "Commercial, Precision, or Stainless Steel",
-    maxLoad: "Up to 450 lbs depending on configuration",
-    maxSpeed: "400 fpm (precision bearings)",
-    tubeRange: "1.38\" – 3.50\" (also 50mm)",
-    tempRange: "-28°F to +104°F",
-    applications: ["Universal use", "Gravity & powered conveyors", "Food grade (stainless)", "AGVs", "Packaging"],
-    tags: ["Universal", "Medium Duty", "Heavy Duty", "Food Grade"],
+    subtitle: "Universal Conveyor Roller — Standard",
+    platform: "1700",
+    duty: "Medium",
     color: "#f59e0b",
-    icon: "◉",
-    bearingGroups: [
-      {
-        label: "Commercial Bearings",
-        bearings: [
-          { code: "1.701", dia: "1.90\"", wall: ".065\"", shaftDia: ".437\" hex", note: "Commercial" },
-          { code: "1.702", dia: "1.90\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Commercial" },
-          { code: "1.704", dia: "1.90\"", wall: ".110\"", shaftDia: ".437\" hex", note: "Commercial" },
-          { code: "1.705", dia: "1.90\"", wall: ".110\"", shaftDia: ".500\" dia", note: "Commercial" },
-          { code: "1.7AA", dia: "50mm", wall: "1.5mm", shaftDia: "8mm dia", note: "Commercial" },
-          { code: "1.7AE", dia: "50mm", wall: "1.5mm", shaftDia: "11mm hex", note: "Commercial" },
-          { code: "1.7AC", dia: "50mm", wall: "1.5mm", shaftDia: "12mm dia", note: "Commercial" },
-          { code: "1.707", dia: "2.50\"", wall: ".083\"", shaftDia: ".437\" hex", note: "Commercial" },
-          { code: "1.708", dia: "2.50\"", wall: ".083\"", shaftDia: ".500\" dia", note: "Commercial" },
-          { code: "1.710", dia: "2.50\"", wall: ".125\"", shaftDia: ".437\" hex", note: "Commercial" },
-          { code: "1.711", dia: "2.50\"", wall: ".125\"", shaftDia: ".500\" dia", note: "Commercial" },
-          { code: "1.716", dia: "3.50\"", wall: ".280\"", shaftDia: ".437\" hex", note: "Commercial" },
-          { code: "1.717", dia: "3.50\"", wall: ".280\"", shaftDia: ".500\" dia", note: "Commercial" },
-        ]
-      },
-      {
-        label: "Stainless Steel Bearings",
-        bearings: [
-          { code: "1.750", dia: "1.90\"", wall: ".065\"", shaftDia: ".437\" hex", note: "Stainless bearings" },
-          { code: "1.751", dia: "1.90\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Stainless bearings" },
-          { code: "1.742", dia: "1.90\"", wall: ".065\"", shaftDia: ".437\" hex", note: "Stainless + food grade grease" },
-          { code: "1.753", dia: "1.90\"", wall: ".110\"", shaftDia: ".437\" hex", note: "Stainless bearings" },
-          { code: "1.7FX", dia: "50mm", wall: "1.5mm", shaftDia: "11mm hex", note: "Stainless bearings" },
-          { code: "1.7FV", dia: "50mm", wall: "1.5mm", shaftDia: "12mm dia", note: "Stainless bearings" },
-          { code: "1.756", dia: "2.50\"", wall: ".083\"", shaftDia: ".437\" hex", note: "Stainless bearings" },
-          { code: "1.757", dia: "2.50\"", wall: ".083\"", shaftDia: ".500\" dia", note: "Stainless bearings" },
-        ]
-      },
-      {
-        label: "Precision Bearings",
-        bearings: [
-          { code: "1.770", dia: "1.90\"", wall: ".065\"", shaftDia: ".437\" Taperhex", note: "6002ZZ Precision" },
-          { code: "1.772", dia: "1.90\"", wall: ".065\"", shaftDia: ".437\" hex", note: "6002-2RS Precision" },
-          { code: "1.775", dia: "1.90\"", wall: ".065\"", shaftDia: ".437\" hex", note: "6002ZZ Precision" },
-          { code: "1.776", dia: "1.90\"", wall: ".065\"", shaftDia: ".500\" dia", note: "6002ZZ Precision" },
-          { code: "1.7L9", dia: "50mm", wall: "1.5mm", shaftDia: "11mm hex", note: "6002ZZ Precision" },
-          { code: "1.7L7", dia: "50mm", wall: "1.5mm", shaftDia: "12mm dia", note: "6002ZZ Precision" },
-          { code: "1.75A", dia: "50mm", wall: "1.5mm", shaftDia: "17mm dia", note: "6003ZZ Precision" },
-          { code: "1.781", dia: "2.50\"", wall: ".083\"", shaftDia: ".437\" hex", note: "6002ZZ Precision" },
-          { code: "1.784", dia: "2.50\"", wall: ".125\"", shaftDia: ".437\" hex", note: "6002ZZ Precision" },
-          { code: "1.790", dia: "3.50\"", wall: ".280\"", shaftDia: ".437\" hex", note: "6002ZZ Precision" },
-          { code: "1.791", dia: "3.50\"", wall: ".280\"", shaftDia: ".500\" dia", note: "6002ZZ Precision" },
-        ]
-      }
+    driveType: "Driven / Non-driven / Belt bearing",
+    bearingType: "6002 2RZ precision steel or stainless, bearing play C3",
+    maxLoad_N: 2000,
+    maxSpeed_ms: 2.0,
+    temp_min_C: -30, temp_max_C: 40,
+    tubes_mm: ["Ø20×1.5", "Ø30×1.2", "Ø40×1.5", "Ø50×1.5", "Ø60×1.5"],
+    materials: ["Zinc-plated steel", "Stainless steel", "Aluminum", "PVC"],
+    shaft_options: ["Spring-loaded", "Fixed", "Female thread", "Male thread", "Tapered shaft-shuttle"],
+    antistatic: true,
+    applications: ["Unit handling", "Cardboards & containers", "Gravity conveyors", "Belt bearing roller", "Deep freeze (oiled bearings)"],
+    tags: ["Universal", "2000 N", "2.0 m/s"],
+    sleeve_options: ["PVC sleeve", "PU sleeve", "Lagging"],
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/792d28c13_1700_p60_i0.jpeg",
+    notes: "Industry's most proven roller. Oiled bearings for deep freeze (−30°C). PVC tube min −5°C. Tapered shaft-shuttle for quick assembly.",
+    page_range: "60–69",
+    load_table: [
+      { tube: "Ø20×1.5 Zinc-plated", shaft_mm: 8, loads: { 200: 300, 400: 100, 600: 45, 800: 25 } },
+      { tube: "Ø30×1.2 Zinc-plated", shaft_mm: 10, loads: { 200: 550, 400: 220, 600: 130, 800: 85 } },
+      { tube: "Ø40×1.5 Zinc-plated", shaft_mm: 12, loads: { 200: 1000, 400: 500, 600: 310, 800: 220, 1000: 170, 1200: 135 } },
+      { tube: "Ø50×1.5 Zinc-plated", shaft_mm: 12, loads: { 200: 1500, 400: 850, 600: 570, 800: 430, 1000: 345, 1200: 285 } },
+      { tube: "Ø60×1.5 Zinc-plated", shaft_mm: 14, loads: { 200: 2000, 400: 1300, 600: 950, 800: 780, 1000: 665, 1200: 580 } },
     ],
-    tubes: [
-      { code: "R81", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "Galvanized" },
-      { code: "R82", dia: "1.90\"", wall: ".065\"", material: "Stainless", finish: "Polished" },
-      { code: "F31", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "Galvanized", note: "Anti-static" },
-      { code: "H74", dia: "1.90\"", wall: ".065\"", material: "Stainless", finish: "Polished", note: "Anti-static" },
-      { code: "R83", dia: "1.90\"", wall: ".110\"", material: "PVC", finish: "Gray" },
-      { code: "G50", dia: "50mm", wall: "1.5mm", material: "Steel", finish: "Galvanized", note: "Anti-static" },
-      { code: "W71", dia: "2.50\"", wall: ".083\"", material: "Steel", finish: "Galvanized", note: "Anti-static" },
-      { code: "R84", dia: "2.50\"", wall: ".125\"", material: "PVC", finish: "Gray" },
-      { code: "K38", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "Galvanized", note: "PVC sleeve" },
-      { code: "J76", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "Galvanized", note: "Polyurethane sleeve" },
-      { code: "J44", dia: "1.90\"", wall: ".110\"", material: "Polyethylene", finish: "Yellow", note: "Resists litho ink, max 26\" RL" },
-    ],
-    shafts: [
-      { code: "M70", dia: ".437\" hex", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "X62", dia: ".437\" hex", ext: ".56\"", material: "Stainless", type: "Spring Loaded" },
-      { code: "M71", dia: ".437\" hex", ext: ".56\"", material: "Steel", type: "Fixed ends" },
-      { code: "U05", dia: ".437\" Taperhex", ext: ".71\"", material: "Steel", type: "Taperhex (7\"–48\" RL)" },
-      { code: "U64", dia: ".437\" Taperhex", ext: ".71\"", material: "Steel", type: "Taperhex (3.88\"–7\" RL)" },
-      { code: "C38", dia: ".437\" hex", ext: ".06\"", material: "Steel", type: "Tapped 5/16-18 x 5/8D, removable" },
-      { code: "M75", dia: ".500\" dia", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "M73", dia: ".500\" dia", ext: ".06\"", material: "Steel", type: "Tapped 5/16-18 x 5/8D, fixed" },
-      { code: "M72", dia: ".500\" dia", ext: "1.00\"", material: "Steel", type: "1/2-13 threaded, removable" },
-      { code: "G31", dia: ".668\" dia (17mm)", ext: ".06\"", material: "Steel", type: "Tapped 3/8-16 x 3/4D, fixed" },
-    ],
-    partExample: "1.701.R81.M70-14.88\"RL",
   },
   {
-    id: "1800",
-    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/9d1a08bfd_1800.png",
-    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/f22fe3b4d_generated_image.png",
-    name: "Series 1800",
-    subtitle: "Precision Heavy Duty Roller",
+    id: "1700KXO",
+    name: "Series 1700KXO",
+    subtitle: "Tapered Curve Roller",
+    platform: "1700",
+    duty: "Medium",
+    color: "#06b6d4",
+    driveType: "Gravity / Driven curve sections",
+    bearingType: "6002 2RZ precision steel, bearing play C3",
+    maxLoad_N: 500,
+    maxSpeed_ms: 2.0,
+    temp_min_C: -30, temp_max_C: 40,
+    tubes_mm: ["Ø50×1.5 (tapered)", "Ø60×1.5 (tapered)"],
+    materials: ["Zinc-plated steel", "Stainless steel"],
+    shaft_options: ["Spring-loaded", "Fixed", "Female thread"],
+    antistatic: "1.8° black elements only",
+    applications: ["90° conveyor curves", "180° conveyor curves", "Driven curve sections", "Tight-radius curves (min 690 mm)"],
+    tags: ["Curve", "Tapered", "KXO"],
+    sleeve_options: [],
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/d5de1faf1_1700KXO_p70_i0.jpeg",
+    notes: "Conicity 1.8° gray: standard (inner radius 800–850 mm). 1.8° black: antistatic. 2.2° gray: tightest curves (min 690 mm inner radius). Always specify radius and conicity when ordering.",
+    page_range: "70–75",
+    load_table: [
+      { tube: "Ø50×1.5 Conicity 1.8°", shaft_mm: 12, loads: { 200: 500, 400: 350, 600: 240, 800: 185 } },
+      { tube: "Ø60×1.5 Conicity 1.8°", shaft_mm: 14, loads: { 200: 500, 400: 400, 600: 300, 800: 240 } },
+      { tube: "Ø60×1.5 Conicity 2.2°", shaft_mm: 14, loads: { 200: 500, 400: 380, 600: 275, 800: 215 } },
+    ],
+  },
+  {
+    id: "1700H",
+    name: "Series 1700 Heavy",
+    subtitle: "Universal Conveyor Roller — Heavy",
+    platform: "1700",
     duty: "Heavy",
-    driveType: "Belt / Powered",
-    bearingType: "Precision chrome alloy (ABEC-1), sintered iron housing",
-    maxLoad: "Up to 1013 lbs",
-    maxSpeed: "500 fpm",
-    tubeRange: "2.00\" – 3.50\"",
-    tempRange: "Standard",
-    applications: ["High-speed packaging lines", "AGVs", "Transfer machines", "Belt conveyors", "Parts handling"],
-    tags: ["Precision", "High Speed", "Heavy Duty"],
-    color: "#10b981",
-    icon: "◈",
-    bearings: [
-      { code: "1.815", dia: "2.00\"", wall: ".120\"", shaftDia: ".437\" hex", note: "6203ZZ Precision" },
-      { code: "1.816", dia: "2.00\"", wall: ".120\"", shaftDia: ".669\" dia", note: "6203ZZ Precision" },
-      { code: "1.817", dia: "2.00\"", wall: ".120\"", shaftDia: ".787\" dia", note: "6204ZZ, use R94 tube" },
-      { code: "1.825", dia: "2.50\"", wall: ".120\"", shaftDia: ".687\" hex", note: "6205ZZ Precision" },
-      { code: "1.826", dia: "2.50\"", wall: ".120\"", shaftDia: ".787\" dia", note: "6204ZZ Precision" },
-      { code: "1.827", dia: "2.50\"", wall: ".120\"", shaftDia: ".984\" dia", note: "6205ZZ Precision" },
-      { code: "1.832", dia: "3.00\"", wall: ".180\"", shaftDia: ".687\" hex", note: "6205ZZ Precision" },
-      { code: "1.835", dia: "3.00\"", wall: ".180\"", shaftDia: ".787\" dia", note: "6204ZZ Precision" },
-      { code: "1.836", dia: "3.00\"", wall: ".180\"", shaftDia: ".984\" dia", note: "6205ZZ Precision" },
-      { code: "1.843", dia: "3.50\"", wall: ".180\"", shaftDia: ".687\" hex", note: "6205ZZ Precision" },
+    color: "#dc2626",
+    driveType: "Driven / Belt idler (Ø60×3)",
+    bearingType: "6004 2RZ precision steel, bearing play C3",
+    maxLoad_N: 3000,
+    maxSpeed_ms: 2.0,
+    temp_min_C: -30, temp_max_C: 40,
+    tubes_mm: ["Ø40×2", "Ø50×2", "Ø60×2", "Ø60×3"],
+    materials: ["Zinc-plated steel", "Stainless steel"],
+    shaft_options: ["Spring-loaded Ø12", "Fixed Ø12", "Female thread Ø12", "Spring-loaded Ø15", "Fixed Ø15"],
+    antistatic: true,
+    applications: ["Heavy unit handling", "Pallets & rims", "Barrels & containers", "Belt idler (Ø60×3)", "Mechanical engineering"],
+    tags: ["Heavy Duty", "3000 N", "Belt Idler"],
+    sleeve_options: ["PVC sleeve", "PU sleeve", "Lagging"],
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/70725b856_1700_heavy_p76_i0.jpeg",
+    notes: "Ø60×3 steel tube also usable as belt idler. Oiled bearings for deep freeze (−30°C). Shaft Ø12 or Ø15 mm.",
+    page_range: "76–79",
+    load_table: [
+      { tube: "Ø40×2 Zinc-plated", shaft_mm: 12, loads: { 200: 1500, 400: 750, 600: 475, 800: 345, 1000: 270, 1200: 220 } },
+      { tube: "Ø50×2 Zinc-plated", shaft_mm: 12, loads: { 200: 2200, 400: 1300, 600: 900, 800: 690, 1000: 565, 1200: 475 } },
+      { tube: "Ø60×2 Zinc-plated", shaft_mm: 15, loads: { 200: 3000, 400: 2000, 600: 1500, 800: 1200, 1000: 990, 1200: 840 } },
+      { tube: "Ø60×3 Steel (Belt Idler)", shaft_mm: 15, loads: { 200: 3000, 400: 2200, 600: 1700, 800: 1390, 1000: 1165, 1200: 1000 } },
     ],
-    tubes: [
-      { code: "Z32", dia: "2.00\"", wall: ".120\"", material: "Steel", finish: "None", note: "Welded tubing" },
-      { code: "Z33", dia: "2.00\"", wall: ".120\"", material: "Steel", finish: "Zinc-Plated", note: "Welded tubing" },
-      { code: "R94", dia: "2.00\"", wall: ".120\"", material: "Steel", finish: "None", note: "Use with 1.817 bearing" },
-      { code: "R95", dia: "2.00\"", wall: ".120\"", material: "Steel", finish: "Zinc-Plated", note: "Use with 1.817 bearing" },
-      { code: "Z35", dia: "2.50\"", wall: ".120\"", material: "Steel", finish: "None", note: "Welded tubing" },
-      { code: "Z36", dia: "2.50\"", wall: ".120\"", material: "Steel", finish: "Galvanized", note: "Welded tubing" },
-      { code: "Z39", dia: "3.00\"", wall: ".180\"", material: "Steel", finish: "None", note: "DOM" },
-      { code: "Z64", dia: "3.50\"", wall: ".180\"", material: "Steel", finish: "None", note: "Welded tubing" },
-    ],
-    shafts: [
-      { code: "R60", dia: ".437\" hex", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "C38", dia: ".437\" hex", ext: ".06\"", material: "Steel", type: "Tapped 5/16-18 x 5/8D, loose" },
-      { code: "R62", dia: ".687\" hex", ext: ".75\"", material: "Steel", type: "Spring Loaded" },
-      { code: "C64", dia: ".687\" hex", ext: ".06\"", material: "Steel", type: "Tapped 3/8-16 x 3/4D, fixed" },
-      { code: "D68", dia: ".669\" dia", ext: ".06\"", material: "Steel", type: "Tapped 3/8-16 x 3/4D, fixed" },
-      { code: "B55", dia: ".787\" dia", ext: ".06\"", material: "Steel", type: "Tapped 3/8-16 x 3/4D, fixed" },
-      { code: "R71", dia: ".984\" dia", ext: ".06\"", material: "Steel", type: "Tapped 5/16-18 x 3/4D, fixed" },
-    ],
-    partExample: "1.815.Z32.R60-14.88\"RL",
   },
   {
-    id: "1940",
-    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/0669fa155_1940.png",
-    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/50b0a464c_generated_image.png",
-    name: "Series 1940 / 1960",
-    subtitle: "Heavy Duty Welded Roller",
-    duty: "Heavy",
-    driveType: "Gravity / Chain",
-    bearingType: "Precision 6204ZZ with triple labyrinth seal",
-    maxLoad: "Up to 1346 lbs",
-    maxSpeed: "500 fpm",
-    tubeRange: "2.50\" – 5.00\"",
-    tempRange: "Standard / Outdoor",
-    applications: ["Palletizers", "Bulk handling", "Foundry operations", "Outdoor environments", "Heavy industry"],
-    tags: ["Heavy Duty", "Welded", "Industrial", "Outdoor"],
-    color: "#6366f1",
-    icon: "⬛",
-    bearings: [
-      { code: "1.940", dia: "All", wall: "Varies", shaftDia: ".787\" dia", note: "6204ZZ, without dirtguard" },
-      { code: "1.960", dia: "All", wall: "Varies", shaftDia: ".787\" dia", note: "6204ZZ, with dirtguard seal" },
-      { code: "1.941", dia: "All", wall: "Varies", shaftDia: ".787\" dia", note: "6204ZZ, cantilever mounting" },
+    id: "3500",
+    name: "Series 3500",
+    subtitle: "Fixed Drive Conveyor Roller — Standard",
+    platform: "1700",
+    duty: "Medium",
+    color: "#7c3aed",
+    driveType: "Chain / PolyVee / Flat belt / Toothed belt",
+    bearingType: "6002 2RZ precision steel, bearing play C3 — widest drive head range",
+    maxLoad_N: 2000,
+    maxSpeed_ms: 2.0,
+    temp_min_C: -30, temp_max_C: 40,
+    tubes_mm: ["Ø40×1.5", "Ø50×1.5", "Ø50×2.8 PVC", "Ø60×1.5", "Ø60×2", "Ø63×3 PVC"],
+    materials: ["Zinc-plated steel", "Stainless steel", "Aluminum", "PVC"],
+    shaft_options: ["Female thread Ø12", "Female thread Ø14"],
+    antistatic: "Available (not PVC / not IP55)",
+    applications: ["Chain-driven conveying", "Flat belt drive", "PolyVee belt drive", "Toothed belt drive", "IP55 protected environments"],
+    tags: ["Fixed Drive", "Chain", "PolyVee", "IP55"],
+    sleeve_options: ["PVC sleeve", "PU sleeve", "Lagging"],
+    drive_heads: [
+      "PolyVee drive head (Ø43 polymer, Ø56 welded steel)",
+      "Round belt drive head (Ø37.8 mm)",
+      "Flat belt drive head 38 mm",
+      "Toothed belt 8-pitch, T18",
+      "1/2\" polymer sprocket — T9, T11, T13, T14 (single)",
+      "1/2\" polymer double sprocket — T14 (EL=RL+62)",
+      "3/8\" polymer double sprocket — T20",
+      "1/2\" welded steel sprocket — T14",
+      "1/2\" welded steel double sprocket — T14",
+      "5/8\" welded steel double sprocket — T13",
     ],
-    tubes: [
-      { code: "H19", dia: "2.50\"", wall: ".120\"", material: "Steel", finish: "Mill" },
-      { code: "H20", dia: "3.50\"", wall: ".120\"", material: "Steel", finish: "Mill" },
-      { code: "H21", dia: "4.00\"", wall: ".134\"", material: "Steel", finish: "Mill" },
-      { code: "H22", dia: "5.00\"", wall: ".134\"", material: "Steel", finish: "Mill" },
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/808a4015d_3500_p84_i0.jpeg",
+    notes: "EL = RL+40 (single sprocket / flat belt), RL+62 (double sprocket). PolyVee/round belt: EL = RL+36. IP55 variant: 0 to +40°C only.",
+    page_range: "84–95",
+    load_table: [
+      { tube: "Ø40×1.5 Steel — 1/2\" sprocket T14", shaft_mm: 12, loads: { 200: 1320, 400: 975, 600: 915, 800: 885, 1000: 870, 1200: 860 } },
+      { tube: "Ø50×1.5 Steel — 1/2\" sprocket T14", shaft_mm: 14, loads: { 200: 1500, 400: 1500, 600: 1450, 800: 1405, 1000: 1385, 1200: 1370 } },
+      { tube: "Ø60×1.5 Steel — 1/2\" sprocket T14", shaft_mm: 14, loads: { 200: 2000, 400: 1510, 600: 1405, 800: 1360, 1000: 1340, 1200: 1325 } },
     ],
-    shafts: [
-      { code: "C70", dia: ".787\" dia", ext: ".39\"", material: "Steel", type: "Standard (both ends)" },
-      { code: "C71", dia: ".787\" dia", ext: ".90\"", material: "Steel", type: "Cantilever (one end)" },
-      { code: "C72", dia: ".787\" dia", ext: ".90\"", material: "Steel", type: "Threaded end (one end)" },
-      { code: "C73", dia: ".787\" dia", ext: "—", material: "Steel", type: "Tapped both ends (frame spacer)" },
-    ],
-    partExample: "1.940.H20.C70-15.00\"RL",
-  },
-  {
-    id: "3400_3500",
-    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/ee09e3abd_3400_3500.png",
-    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/7306a6a02_generated_image.png",
-    name: "Series 3400 / 3500",
-    subtitle: "Sprocket Driven (Welded) Roller",
-    duty: "Medium-Heavy",
-    driveType: "Chain / Sprocket",
-    bearingType: "3400: Precision 6203/6205ZZ | 3500: Commercial (zinc plated)",
-    maxLoad: "Up to 675 lbs (3400), 225–600 lbs (3500)",
-    maxSpeed: "100 fpm (3400), 60 fpm (3500)",
-    tubeRange: "1.90\" – 2.50\"",
-    tempRange: "Standard",
-    applications: ["Chain-driven conveyors", "Roller-to-roller drive", "Tangential chain drive", "Powered roller lines"],
-    tags: ["Chain Drive", "Sprocket", "Medium Duty"],
-    color: "#f97316",
-    icon: "⚙",
-    bearings: [
-      { code: "3.450", dia: "1.90\"", wall: ".065\"", shaftDia: ".437\" hex", note: "Precision 6203ZZ (3400)" },
-      { code: "3.462", dia: "2.50\"", wall: ".120\"", shaftDia: ".687\" hex", note: "Precision 6205ZZ (3400)" },
-      { code: "3.520", dia: "1.90\"", wall: ".065\"", shaftDia: ".437\" hex", note: "Commercial bearing (3500)" },
-      { code: "3.525", dia: "2.50\"", wall: ".120\"", shaftDia: ".687\" hex", note: "Commercial bearing (3500)" },
-    ],
-    tubes: [
-      { code: "J30", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "None", note: "2 × #40-18 sprockets" },
-      { code: "P65", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "None", note: "1 × #50-15 sprocket" },
-      { code: "H47", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "None", note: "2 × #50-15 sprockets" },
-      { code: "D42", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "None", note: "1 × #40-18 sprocket (3500)" },
-      { code: "D43", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "None", note: "2 × #40-18 sprockets (3500)" },
-      { code: "D44", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "None", note: "1 × #50-15 sprocket (3500)" },
-      { code: "D46", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "None", note: "2 × #50-15 sprockets (3500)" },
-      { code: "M93", dia: "2.50\"", wall: ".120\"", material: "Steel", finish: "None", note: "2 × #50-18 sprockets (3400)" },
-      { code: "D61", dia: "2.50\"", wall: ".120\"", material: "Steel", finish: "None", note: "1 × #50-18 sprocket (3500)" },
-      { code: "D67", dia: "2.50\"", wall: ".120\"", material: "Steel", finish: "None", note: "2 × #50-18 sprockets (3500)" },
-      { code: "D68", dia: "2.50\"", wall: ".120\"", material: "Steel", finish: "None", note: "1 × #60-15 sprocket (3500)" },
-      { code: "D69", dia: "2.50\"", wall: ".120\"", material: "Steel", finish: "None", note: "2 × #60-15 sprockets (3500)" },
-    ],
-    shafts: [
-      { code: "V15", dia: ".437\" hex", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "C38", dia: ".437\" hex", ext: ".06\"", material: "Steel", type: "Tapped 5/16-18 x 5/8D" },
-      { code: "C41", dia: ".437\" hex", ext: ".56\"", material: "Steel", type: "Spring Loaded (3500)" },
-      { code: "W54", dia: ".687\" hex", ext: ".75\"", material: "Steel", type: "Spring Loaded" },
-      { code: "C64", dia: ".687\" hex", ext: ".06\"", material: "Steel", type: "Tapped 3/8-16 x 3/4D" },
-      { code: "C66", dia: ".687\" hex", ext: ".75\"", material: "Steel", type: "Spring Loaded (3500)" },
-    ],
-    partExample: "3.525.D69.C66-14.88\"RL",
   },
   {
     id: "3800",
-    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/2fd992fb2_3800.png",
-    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/2ffac20a3_generated_image.png",
     name: "Series 3800",
-    subtitle: "Slip Drive / Direct Drive Roller",
-    duty: "Light-Medium",
-    driveType: "Slip Drive / Direct Chain",
-    bearingType: "Commercial ball bearing (nylon housing)",
-    maxLoad: "Up to 126 lbs",
-    maxSpeed: "60 fpm (slip), 90 fpm (intermittent)",
-    tubeRange: "1.90\" – 2.50\"",
-    tempRange: "Standard",
-    applications: ["Zero-pressure accumulation", "Controlled stops/releases", "Powered accumulation conveyors"],
-    tags: ["Accumulation", "Slip Drive", "Chain Drive"],
+    subtitle: "Friction Conveyor Roller — Zero Pressure Accumulation",
+    platform: "1700",
+    duty: "Medium",
     color: "#ec4899",
-    icon: "⟳",
-    bearings: [
-      { code: "3.801", dia: "1.90\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Slip Drive, 1 × #40-9 nylon sprocket" },
-      { code: "3.802", dia: "1.90\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Slip Drive, 1 × #40-14 nylon sprocket" },
-      { code: "3.803", dia: "1.90\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Slip Drive, 2 × #40-14 nylon sprockets" },
-      { code: "3.804", dia: "2.50\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Slip Drive, 1 × #40-9 nylon sprocket" },
-      { code: "3.805", dia: "2.50\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Slip Drive, 1 × #40-14 nylon sprocket" },
-      { code: "3.806", dia: "2.50\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Slip Drive, 2 × #40-14 nylon sprockets" },
-      { code: "3.811", dia: "1.90\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Direct Drive, 1 × #40-9 sprocket" },
-      { code: "3.812", dia: "1.90\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Direct Drive, 1 × #40-14 sprocket" },
-      { code: "3.813", dia: "1.90\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Direct Drive, 2 × #40-14 sprockets" },
-      { code: "3.814", dia: "2.50\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Direct Drive, 1 × #40-9 sprocket" },
-      { code: "3.815", dia: "2.50\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Direct Drive, 1 × #40-14 sprocket" },
-      { code: "3.816", dia: "2.50\"", wall: ".065\"", shaftDia: ".500\" dia", note: "Direct Drive, 2 × #40-14 sprockets" },
+    driveType: "Chain / Flat belt / Toothed belt (friction slip coupling)",
+    bearingType: "6002 2RZ precision steel — friction coupling releases under back pressure",
+    maxLoad_N: 500,
+    maxSpeed_ms: 0.5,
+    temp_min_C: -5, temp_max_C: 40,
+    tubes_mm: ["Ø50×1.5", "Ø50×2.8 PVC", "Ø60×1.5"],
+    materials: ["Zinc-plated steel", "Stainless steel", "Aluminum", "PVC"],
+    shaft_options: ["Female thread Ø12", "Female thread Ø14", "Female thread Ø15"],
+    antistatic: true,
+    applications: ["Zero-pressure accumulation", "Buffer sections", "Packaging industry", "Controlled accumulation"],
+    tags: ["Accumulation", "Friction", "Buffer"],
+    sleeve_options: ["PVC sleeve", "PU sleeve", "Lagging"],
+    drive_heads: [
+      "Flat belt drive head 38 mm",
+      "Round belt drive head",
+      "Toothed belt 8-pitch T18",
+      "1/2\" polymer sprocket — T9, T14",
+      "1/2\" polymer double sprocket — T14",
+      "3/8\" polymer double sprocket — T20",
+      "1/2\" steel sprocket — T14",
+      "1/2\" steel double sprocket — T14",
     ],
-    tubes: [
-      { code: "A01", dia: "1.90\"", wall: ".065\"", material: "Aluminum", finish: "None", note: "1 Sprocket" },
-      { code: "A02", dia: "1.90\"", wall: ".065\"", material: "Aluminum", finish: "None", note: "2 Sprockets" },
-      { code: "G01", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "Galvanized", note: "1 Sprocket" },
-      { code: "G02", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "Galvanized", note: "2 Sprockets" },
-      { code: "S01", dia: "1.90\"", wall: ".065\"", material: "Stainless", finish: "320 Grit", note: "1 Sprocket" },
-      { code: "S02", dia: "1.90\"", wall: ".065\"", material: "Stainless", finish: "320 Grit", note: "2 Sprockets" },
-      { code: "G03", dia: "2.50\"", wall: ".065\"", material: "Steel", finish: "Galvanized", note: "1 Sprocket" },
-      { code: "G04", dia: "2.50\"", wall: ".065\"", material: "Steel", finish: "Galvanized", note: "2 Sprockets" },
-      { code: "J63", dia: "1.90\"", wall: ".065\"", material: "Steel", finish: "None", note: "2 Sprockets, PVC sleeve" },
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/644fcc1be_3800_p126_i0.jpeg",
+    notes: "Accumulation force depends on material weight. Single and double friction versions available. Series 3870 available with two-sided friction coupling (no width positioning needed). Consult planning section p.191.",
+    page_range: "117–131",
+    load_table: [
+      { tube: "Ø50×1.5 Steel — 1/2\" sprocket", shaft_mm: 12, loads: { 200: 500, 400: 500, 600: 500, 800: 500, 1000: 500, 1200: 500 } },
+      { tube: "Ø60×1.5 Steel — 1/2\" sprocket", shaft_mm: 14, loads: { 200: 500, 400: 500, 600: 500, 800: 500, 1000: 500, 1200: 500 } },
+      { tube: "Ø50×2.8 PVC — 1/2\" sprocket", shaft_mm: 12, loads: { 200: 500, 400: 185, 600: 75, 800: 40 } },
     ],
-    shafts: [
-      { code: "T20", dia: ".500\" dia", ext: ".06\"", material: "Steel", type: "Double tapped 5/16-18 x 5/8D" },
-      { code: "M92", dia: ".500\" dia", ext: ".06\"", material: "Steel", type: "Single tapped 5/16-18 x 5/8D" },
-    ],
-    partExample: "3.801.A01.T20-14.88\"RL",
   },
   {
-    id: "1300",
-    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/d936037e8_1300.png",
-    photo_url: "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/279c675a3_generated_image.png",
-    name: "Series 1300 / 1350 / 1400",
-    subtitle: "Tapered Curve Roller",
-    duty: "Light-Medium",
-    driveType: "Gravity / Friction (O-rings)",
-    bearingType: "1300: Commercial | 1350: Stainless | 1400: Precision",
-    maxLoad: "Up to 113 lbs",
-    maxSpeed: "236 fpm (precision)",
-    tubeRange: "2.07\" small end (tapered polypropylene overlay)",
-    tempRange: "Standard",
-    applications: ["45°, 90°, 180° conveyor curves", "32\" inside radius", "Light-medium curve conveying"],
-    tags: ["Curve", "Tapered", "Gravity"],
-    color: "#14b8a6",
-    icon: "⌒",
-    bearings: [
-      { code: "1.318", dia: "Tapered", wall: "—", shaftDia: ".437\" hex", note: "Commercial bearings" },
-      { code: "1.319", dia: "Tapered", wall: "—", shaftDia: ".500\" dia", note: "Commercial bearings" },
-      { code: "1.368", dia: "Tapered", wall: "—", shaftDia: ".437\" hex", note: "Stainless bearings" },
-      { code: "1.369", dia: "Tapered", wall: "—", shaftDia: ".500\" dia", note: "Stainless bearings" },
-      { code: "1.418", dia: "Tapered", wall: "—", shaftDia: ".437\" hex", note: "Precision bearings" },
-      { code: "1.419", dia: "Tapered", wall: "—", shaftDia: ".500\" dia", note: "Precision bearings" },
+    id: "3950",
+    name: "Series 3950",
+    subtitle: "Heavy-Duty Fixed Drive Conveyor Roller",
+    platform: "1450",
+    duty: "Heavy",
+    color: "#b45309",
+    driveType: "5/8\" welded steel chain sprockets",
+    bearingType: "6205 2RZ precision steel — permanently welded steel sprockets",
+    maxLoad_N: 5000,
+    maxSpeed_ms: 0.5,
+    temp_min_C: -5, temp_max_C: 40,
+    temp_deepfreeze_C: -30,
+    tubes_mm: ["Ø80×2", "Ø80×3", "Ø89×3"],
+    materials: ["Zinc-plated steel", "Stainless steel"],
+    shaft_options: ["Female thread Ø20 mm", "Male thread Ø20 mm"],
+    antistatic: "Via sprocket head",
+    applications: ["Heavy pallet conveying", "Steel containers", "Barrels & drums", "Wheels & tires", "Industrial heavy conveying"],
+    tags: ["Heavy Duty", "5000 N", "Welded Sprocket"],
+    sleeve_options: [],
+    drive_heads: [
+      "Welded steel 5/8\" sprocket — T15 single",
+      "Welded steel 5/8\" sprocket — T18 single",
+      "Welded steel 5/8\" double sprocket — T15",
+      "Welded steel 5/8\" double sprocket — T18",
     ],
-    tubes: [
-      { code: "T12", dia: "2.80\"", wall: "—", material: "Polypropylene/Steel", finish: "Black", note: "RL 9.52\"–12.27\"" },
-      { code: "T14", dia: "3.06\"", wall: "—", material: "Polypropylene/Steel", finish: "Black", note: "RL 13.47\"–16.22\"" },
-      { code: "T18", dia: "3.31\"", wall: "—", material: "Polypropylene/Steel", finish: "Black", note: "RL 17.42\"–20.17\"" },
-      { code: "T22", dia: "3.56\"", wall: "—", material: "Polypropylene/Steel", finish: "Black", note: "RL 21.37\"–24.13\"" },
-      { code: "T26", dia: "3.81\"", wall: "—", material: "Polypropylene/Steel", finish: "Black", note: "RL 25.32\"–28.07\"" },
-      { code: "T32", dia: "4.06\"", wall: "—", material: "Polypropylene/Steel", finish: "Black", note: "RL 29.27\"–32.02\"" },
-      { code: "T36", dia: "4.31\"", wall: "—", material: "Polypropylene/Steel", finish: "Black", note: "RL 33.22\"–35.97\"" },
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/d3be2eb5e_3950_p132_i0.jpeg",
+    notes: "Polyamide housing: 5000 N, −5 to +40°C. Steel housing: 2500 N, −30 to +40°C. All components zinc-plated after welding. Ø89×3 maintains 5000 N across 200–1600 mm lengths.",
+    page_range: "132–137",
+    load_table: [
+      { tube: "Ø80×2 Steel — T15/T18", shaft_mm: 20, loads: { 200: 5000, 400: 5000, 600: 5000, 800: 5000, 1000: 5000, 1200: 4340, 1400: 3170, 1600: 2420 } },
+      { tube: "Ø80×3 Steel — T15/T18", shaft_mm: 20, loads: { 200: 5000, 400: 5000, 600: 5000, 800: 5000, 1000: 5000, 1200: 5000, 1400: 4580, 1600: 3490 } },
+      { tube: "Ø89×3 Steel — T15/T18", shaft_mm: 20, loads: { 200: 5000, 400: 5000, 600: 5000, 800: 5000, 1000: 5000, 1200: 5000, 1400: 5000, 1600: 4865 } },
     ],
-    shafts: [
-      { code: "C42", dia: ".437\" hex", ext: ".56\"", material: "Steel", type: "Spring Loaded" },
-      { code: "S42", dia: ".437\" hex", ext: ".56\"", material: "Stainless", type: "Spring Loaded" },
-      { code: "C50", dia: ".500\" dia", ext: "1.00\"", material: "Steel", type: "1/2-13\" threaded removable" },
-      { code: "S50", dia: ".500\" dia", ext: "1.00\"", material: "Stainless", type: "1/2-13\" threaded removable" },
-      { code: "C51", dia: ".500\" dia", ext: ".06\"", material: "Steel", type: "Tapped 5/16-18 x 5/8D" },
-      { code: "C52", dia: ".500\" dia", ext: "1.00\"", material: "Steel", type: "1/2-13\" threaded fixed" },
+  },
+  {
+    id: "MSC50",
+    name: "Series MSC 50",
+    subtitle: "Magnetic Speed Controller — Brake Roller",
+    platform: "1700",
+    duty: "Light",
+    color: "#0f766e",
+    driveType: "Gravity only (eddy current brake)",
+    bearingType: "6002 2RZ (oiled) — Neodyme N45 magnets, contact-free braking",
+    maxLoad_N: 350,
+    maxSpeed_ms: 2.0,
+    temp_min_C: 0, temp_max_C: 40,
+    tubes_mm: ["Ø51×2", "Ø50×1.5 + PU sleeve"],
+    materials: ["Zinc-plated steel", "Stainless steel"],
+    shaft_options: ["Spring-loaded 11 HEX", "Fixed 11 HEX", "Female thread M8 (11 HEX)"],
+    antistatic: true,
+    applications: ["Gravity conveyors", "Sorter end points", "Spiral conveyors", "Speed-controlled descent", "Electronics conveying"],
+    tags: ["Brake Roller", "Magnetic", "Gravity", "No Controls"],
+    sleeve_options: ["PU sleeve"],
+    image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/42d2269d6_MSC50_p138_i0.jpeg",
+    notes: "Purely mechanical — no wiring or controls needed. Decelerates materials up to 35 kg. Min temp 0°C (higher than other series). Direction-independent. Same fastening holes as standard rollers — drop-in compatible.",
+    page_range: "138–141",
+    load_table: [
+      { tube: "Ø51×2 Zinc-plated", shaft_mm: 11, loads: { 200: 350, 400: 350, 600: 350, 800: 350, 1000: 350, 1200: 350, 1400: 350 } },
+      { tube: "Ø50×1.5 + PU sleeve", shaft_mm: 11, loads: { 200: 350, 400: 350, 600: 350, 800: 350, 1000: 350, 1200: 350, 1400: 350 } },
     ],
-    partExample: "1.318.T14.C42-14.88\"RL",
   },
 ];
 
-// ─── ROLLER SVG DIAGRAM ───────────────────────────────────────────────────────
-function RollerDiagram({ diameter, length, shaftType, shaftDia, tubeMaterial }) {
-  const bfNum = parseFloat(length) || 15;
-  const rl = Math.max(bfNum - 0.12, 3);
-  const diaNum = parseFloat(diameter) || 1.9;
-  const scale = 180 / Math.max(rl, 10);
-  const bodyW = Math.min(rl * scale, 220);
-  const bodyH = Math.min(diaNum * 22, 60);
-  const shaftExtL = shaftType && shaftType.includes("Spring") ? 14 : 10;
-  const totalW = bodyW + shaftExtL * 2 + 40;
-  const cx = totalW / 2;
-  const cy = 55;
-  const colors = {
-    "Steel": "#94a3b8", "Stainless": "#cbd5e1", "PVC": "#a3e635",
-    "Aluminum": "#93c5fd", "Polypropylene": "#fde68a", "": "#94a3b8",
-  };
-  const tubeColor = colors[tubeMaterial] || "#94a3b8";
+const DUTY_ORDER = { Light: 0, Medium: 1, Heavy: 2 };
 
+// ─── UNIT TOGGLE BUTTON ───────────────────────────────────────────────────────
+function UnitToggle({ metric, setMetric }) {
   return (
-    <svg width={totalW + 20} height={120} viewBox={`0 0 ${totalW + 20} 120`} style={{ display: "block", margin: "0 auto" }}>
-      {/* shaft left */}
-      <line x1={cx - bodyW/2 - shaftExtL} y1={cy} x2={cx - bodyW/2} y2={cy} stroke="#64748b" strokeWidth={Math.min(parseFloat(shaftDia || "0.437") * 12, 8)} strokeLinecap="round" />
-      {/* shaft right */}
-      <line x1={cx + bodyW/2} y1={cy} x2={cx + bodyW/2 + shaftExtL} y2={cy} stroke="#64748b" strokeWidth={Math.min(parseFloat(shaftDia || "0.437") * 12, 8)} strokeLinecap="round" />
-      {/* spring indicators */}
-      {shaftType && shaftType.includes("Spring") && (
-        <>
-          <circle cx={cx - bodyW/2 - shaftExtL + 4} cy={cy} r={5} fill="none" stroke="#f59e0b" strokeWidth={1.5} />
-          <circle cx={cx + bodyW/2 + shaftExtL - 4} cy={cy} r={5} fill="none" stroke="#f59e0b" strokeWidth={1.5} />
-        </>
-      )}
-      {/* roller body */}
-      <rect x={cx - bodyW/2} y={cy - bodyH/2} width={bodyW} height={bodyH} rx={bodyH/2} fill={tubeColor} stroke="#475569" strokeWidth={1.5} />
-      {/* bearing caps */}
-      <rect x={cx - bodyW/2} y={cy - bodyH/2 + 2} width={10} height={bodyH - 4} rx={3} fill="#334155" opacity={0.7} />
-      <rect x={cx + bodyW/2 - 10} y={cy - bodyH/2 + 2} width={10} height={bodyH - 4} rx={3} fill="#334155" opacity={0.7} />
-      {/* dimension lines */}
-      <line x1={cx - bodyW/2} y1={cy + bodyH/2 + 8} x2={cx + bodyW/2} y2={cy + bodyH/2 + 8} stroke="#94a3b8" strokeWidth={1} markerEnd="url(#arrow)" />
-      <text x={cx} y={cy + bodyH/2 + 20} textAnchor="middle" fontSize={9} fill="#64748b">RL ≈ {rl.toFixed(2)}&quot;</text>
-      {/* diameter label */}
-      <line x1={cx - bodyW/2 - 18} y1={cy - bodyH/2} x2={cx - bodyW/2 - 18} y2={cy + bodyH/2} stroke="#94a3b8" strokeWidth={1} />
-      <text x={cx - bodyW/2 - 22} y={cy + 3} textAnchor="middle" fontSize={8} fill="#64748b" transform={`rotate(-90,${cx - bodyW/2 - 22},${cy})`}>Ø {diameter || "—"}</text>
-      {/* legend */}
-      <rect x={8} y={8} width={10} height={8} rx={1} fill={tubeColor} stroke="#475569" strokeWidth={1} />
-      <text x={22} y={15} fontSize={8} fill="#64748b">{tubeMaterial || "Tube"}</text>
-      <rect x={8} y={20} width={10} height={6} rx={1} fill="#334155" opacity={0.7} />
-      <text x={22} y={26} fontSize={8} fill="#64748b">Bearing housing</text>
-    </svg>
+    <div style={{ display: "flex", alignItems: "center", background: "#f1f5f9", borderRadius: 8, padding: 3, gap: 2 }}>
+      {["Metric", "Imperial"].map(u => {
+        const active = (u === "Metric") === metric;
+        return (
+          <button key={u} onClick={() => setMetric(u === "Metric")}
+            style={{ padding: "5px 14px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 700,
+              background: active ? C.navy : "transparent", color: active ? "#fff" : C.muted, transition: "all 0.15s" }}>
+            {u === "Metric" ? "SI (m/s, N, mm)" : "Imperial (fpm, lbf, in)"}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
 // ─── TOP BAR ─────────────────────────────────────────────────────────────────
-function TopBar() {
+function TopBar({ metric, setMetric }) {
   return (
-    <div style={{ background: C.navy, borderBottom: "3px solid " + C.gold, padding: "0 40px" }}>
-      <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 58 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-          <a href={createPageUrl("Home")} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: C.gold, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 14, color: C.navy }}>U</div>
-            <span style={{ color: "#fff", fontWeight: 700, fontSize: 15, letterSpacing: "0.02em" }}>UniKonnect</span>
+    <div style={{ background: C.navy, borderBottom: "3px solid " + C.gold, position: "sticky", top: 0, zIndex: 100 }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <a href={createPageUrl("Home")} style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 28, height: 28, background: C.gold, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ color: C.navy, fontWeight: 900, fontSize: 13 }}>U</span>
+            </div>
+            <span style={{ color: "#fff", fontWeight: 700, fontSize: 15 }}>UniKonnect</span>
           </a>
           <div style={{ width: 1, height: 22, background: "rgba(255,255,255,0.15)" }} />
           <span style={{ color: C.gold, fontSize: 13, fontWeight: 600 }}>Interroll Roller Configurator</span>
         </div>
-        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+          <UnitToggle metric={metric} setMetric={setMetric} />
           <a href={createPageUrl("Home")} style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, textDecoration: "none" }}>← Catalog</a>
           <a href={createPageUrl("RFQCart")} style={{ background: C.gold, color: C.navy, padding: "7px 16px", borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: "none" }}>RFQ Cart</a>
         </div>
@@ -562,652 +413,400 @@ function TopBar() {
 }
 
 // ─── SERIES CARD ─────────────────────────────────────────────────────────────
-function SeriesCard({ s, onSelect }) {
+function SeriesCard({ s, onSelect, fmt }) {
   const [hov, setHov] = useState(false);
   const [imgErr, setImgErr] = useState(false);
+
   return (
-    <div
-      onClick={() => onSelect(s)}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        background: "#fff", borderRadius: 16, border: `2px solid ${hov ? s.color : C.border}`,
+    <div onClick={() => onSelect(s)} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{ background: "#fff", borderRadius: 16, border: `2px solid ${hov ? s.color : C.border}`,
         overflow: "hidden", cursor: "pointer", transition: "all 0.18s",
         boxShadow: hov ? `0 12px 32px ${s.color}28` : "0 1px 4px rgba(0,0,0,0.06)",
-        transform: hov ? "translateY(-3px)" : "none",
-      }}>
+        transform: hov ? "translateY(-3px)" : "none", display: "flex", flexDirection: "column" }}>
 
-      {/* Product photo area — like Interroll website */}
-      <div style={{
-        height: 180, background: "#f1f5f9", overflow: "hidden", position: "relative",
+      {/* Real product photo */}
+      <div style={{ height: 190, background: "#f8fafc", overflow: "hidden", position: "relative",
         display: "flex", alignItems: "center", justifyContent: "center",
-        borderBottom: `3px solid ${hov ? s.color : "#e2e8f0"}`, transition: "border-color 0.18s",
-      }}>
+        borderBottom: `3px solid ${hov ? s.color : "#e2e8f0"}`, transition: "border-color 0.18s" }}>
         {s.image_url && !imgErr ? (
-          <img
-            src={s.image_url}
-            alt={s.name}
-            onError={() => setImgErr(true)}
-            style={{
-              maxWidth: "85%", maxHeight: "85%", objectFit: "contain",
-              transition: "transform 0.3s ease",
-              transform: hov ? "scale(1.05)" : "scale(1)",
-            }}
-          />
+          <img src={s.image_url} alt={s.name} onError={() => setImgErr(true)}
+            style={{ width: "100%", height: "100%", objectFit: "cover",
+              transition: "transform 0.3s ease", transform: hov ? "scale(1.04)" : "scale(1)" }} />
         ) : (
-          <div style={{ fontSize: 52, color: s.color + "60" }}>{s.icon}</div>
+          <div style={{ fontSize: 48, color: s.color + "50" }}>⚙</div>
         )}
-        {/* duty badge overlay */}
-        <div style={{
-          position: "absolute", top: 12, left: 12,
-          background: s.color, color: "#fff",
-          fontSize: 10, fontWeight: 800, padding: "3px 10px",
-          borderRadius: 20, textTransform: "uppercase", letterSpacing: "0.5px",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-        }}>{s.duty} Duty</div>
+        <div style={{ position: "absolute", top: 10, left: 10, background: s.color, color: "#fff",
+          fontSize: 10, fontWeight: 800, padding: "3px 10px", borderRadius: 20, textTransform: "uppercase",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }}>{s.duty} Duty</div>
+        <div style={{ position: "absolute", bottom: 10, right: 10, background: "rgba(0,0,0,0.55)", color: "#fff",
+          fontSize: 10, padding: "2px 8px", borderRadius: 12 }}>pp. {s.page_range}</div>
       </div>
 
       {/* Card body */}
-      <div style={{ padding: "16px 18px 18px" }}>
-        <div style={{ marginBottom: 10 }}>
-          <div style={{ fontSize: 16, fontWeight: 800, color: C.text }}>{s.name}</div>
-          <div style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>{s.subtitle}</div>
+      <div style={{ padding: "14px 16px", flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
+        <div>
+          <div style={{ fontSize: 15, fontWeight: 800, color: C.text }}>{s.name}</div>
+          <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{s.subtitle}</div>
         </div>
 
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 12 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
           {s.tags.map(t => (
-            <span key={t} style={{ background: s.color + "18", color: s.color, fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20, letterSpacing: "0.3px" }}>{t}</span>
+            <span key={t} style={{ background: s.color + "18", color: s.color, fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20 }}>{t}</span>
           ))}
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 12px", fontSize: 11, marginBottom: 12 }}>
-          <div><span style={{ color: C.muted }}>Max Load</span><br /><span style={{ fontWeight: 700, color: C.text, fontSize: 12 }}>{s.maxLoad}</span></div>
-          <div><span style={{ color: C.muted }}>Max Speed</span><br /><span style={{ fontWeight: 700, color: C.text, fontSize: 12 }}>{s.maxSpeed}</span></div>
-          <div><span style={{ color: C.muted }}>Drive Type</span><br /><span style={{ fontWeight: 700, color: C.text, fontSize: 12 }}>{s.driveType}</span></div>
-          <div><span style={{ color: C.muted }}>Tube Range</span><br /><span style={{ fontWeight: 700, color: C.text, fontSize: 12 }}>{s.tubeRange}</span></div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "5px 10px", fontSize: 11 }}>
+          <div><span style={{ color: C.muted }}>Max Load</span><br /><strong style={{ color: C.text }}>{fmt.load(s.maxLoad_N)}</strong></div>
+          <div><span style={{ color: C.muted }}>Max Speed</span><br /><strong style={{ color: C.text }}>{fmt.speed(s.maxSpeed_ms)}</strong></div>
+          <div><span style={{ color: C.muted }}>Temp Range</span><br /><strong style={{ color: C.text }}>{fmt.temp(s.temp_min_C)} to {fmt.temp(s.temp_max_C)}</strong></div>
+          <div><span style={{ color: C.muted }}>Platform</span><br /><strong style={{ color: C.text }}>{s.platform}</strong></div>
         </div>
 
-        <div style={{ padding: "8px 10px", background: s.color + "0d", borderRadius: 8, fontSize: 11, color: C.muted, marginBottom: 12 }}>
-          <strong style={{ color: C.text }}>Applications: </strong>{s.applications.join(", ")}
+        <div style={{ padding: "7px 10px", background: s.color + "0d", borderRadius: 7, fontSize: 11, color: C.muted }}>
+          <strong style={{ color: C.text }}>Applications: </strong>{s.applications.slice(0, 3).join(", ")}
         </div>
+      </div>
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ fontSize: 11, color: C.muted }}>{s.bearingType.split("(")[0].trim()}</div>
-          <div style={{
-            background: hov ? s.color : "transparent",
-            color: hov ? "#fff" : s.color,
-            border: `1.5px solid ${s.color}`,
-            padding: "6px 16px", borderRadius: 8,
-            fontSize: 12, fontWeight: 700,
-            transition: "all 0.18s",
-          }}>Configure →</div>
+      <div style={{ padding: "10px 16px", borderTop: "1px solid " + C.border, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ fontSize: 11, color: C.muted }}>{s.driveType}</div>
+        <div style={{ background: hov ? s.color : "transparent", color: hov ? "#fff" : s.color,
+          border: `1.5px solid ${s.color}`, padding: "5px 14px", borderRadius: 7, fontSize: 12, fontWeight: 700, transition: "all 0.18s" }}>
+          Spec Sheet →
         </div>
       </div>
     </div>
   );
 }
 
-// ─── CONFIGURATOR WIZARD ─────────────────────────────────────────────────────
-function ConfigWizard({ series, onClose, onAddToRFQ }) {
-  const [step, setStep] = useState(0);
-  const [bearing, setBearing] = useState(null);
-  const [tube, setTube] = useState(null);
-  const [shaft, setShaft] = useState(null);
-  const [length, setLength] = useState("");
-  const [qty, setQty] = useState(1);
-  const [notes, setNotes] = useState("");
-  const [done, setDone] = useState(false);
-
-  // Flatten bearings for series with bearingGroups
-  const allBearings = useMemo(() => {
-    if (series.bearingGroups) {
-      return series.bearingGroups.flatMap(g => g.bearings.map(b => ({ ...b, groupLabel: g.label })));
-    }
-    return series.bearings || [];
-  }, [series]);
-
-  // Filter tubes by selected bearing diameter
-  const filteredTubes = useMemo(() => {
-    if (!bearing) return series.tubes || [];
-    const bd = bearing.dia;
-    // Match tubes by diameter
-    return (series.tubes || []).filter(t => {
-      if (bd === "All" || bd === "Tapered") return true;
-      if (bd.includes("50mm") || bd.includes("50 mm")) return t.dia.includes("50mm") || t.dia.includes("50 mm") || true;
-      return true; // Show all tubes — user may mix
-    });
-  }, [bearing, series]);
-
-  // Filter shafts by selected bearing shaft compatibility
-  const filteredShafts = useMemo(() => {
-    if (!bearing) return series.shafts || [];
-    const shaftDia = bearing.shaftDia || "";
-    return (series.shafts || []).filter(s => {
-      const sd = s.dia.toLowerCase();
-      const bd = shaftDia.toLowerCase();
-      const bMain = bd.split(" ")[0];
-      return sd.includes(bMain) || true; // show all but highlight compatible
-    });
-  }, [bearing, series]);
-
-  const partCode = useMemo(() => {
-    if (!bearing || !tube || !shaft || !length) return null;
-    const rl = (parseFloat(length) - 0.12).toFixed(2);
-    return `${bearing.code}.${tube.code}.${shaft.code}-${rl}"RL`;
-  }, [bearing, tube, shaft, length]);
-
-  const steps = ["Bearing", "Tube", "Shaft", "Length & Qty", "Review"];
-  const s = series;
-
-  function handlePrintTearSheet() {
-    const rl = (parseFloat(length) - 0.12).toFixed(2);
-    const html = `
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8"/>
-<title>Roller Spec Sheet — ${s.name}</title>
-<style>
-  body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; color: #1e293b; }
-  .header { background: #0F2340; color: #fff; padding: 28px 40px; display: flex; justify-content: space-between; align-items: center; }
-  .logo-text { font-size: 22px; font-weight: 900; letter-spacing: 0.5px; }
-  .logo-sub { font-size: 11px; color: #C9A84C; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
-  .gold-bar { height: 4px; background: #C9A84C; }
-  .body { padding: 32px 40px; }
-  .title { font-size: 20px; font-weight: 800; color: #0F2340; margin-bottom: 4px; }
-  .subtitle { font-size: 13px; color: #64748b; margin-bottom: 24px; }
-  .part-code-box { background: #0F2340; color: #e8c96d; font-family: 'Courier New', monospace; font-size: 24px; font-weight: 800; padding: 18px 24px; border-radius: 10px; margin-bottom: 28px; letter-spacing: 1px; }
-  .part-code-label { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
-  table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
-  th { background: #f1f5f9; color: #475569; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 14px; text-align: left; border-bottom: 2px solid #e2e8f0; }
-  td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid #f1f5f9; }
-  td:first-child { font-weight: 600; color: #475569; width: 35%; }
-  .tag { display: inline-block; background: #e0f2fe; color: #0369a1; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin: 2px; }
-  .footer { margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 16px; font-size: 11px; color: #94a3b8; display: flex; justify-content: space-between; }
-  .warn { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 16px; font-size: 11px; color: #92400e; margin-bottom: 20px; }
-  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
-</style>
-</head>
-<body>
-<div class="header">
-  <div>
-    <div class="logo-text">UNIKING CANADA</div>
-    <div class="logo-sub">Interroll Authorized Partner — Conveyor Roller</div>
-  </div>
-  <div style="text-align:right; font-size:12px; color:rgba(255,255,255,0.6)">
-    Spec Sheet<br/>Generated: ${new Date().toLocaleDateString('en-CA')}
-  </div>
-</div>
-<div class="gold-bar"></div>
-<div class="body">
-  <div style="display:flex;align-items:center;gap:24px;margin-bottom:20px">
-    ${s.image_url ? `<img src="${s.image_url}" style="height:80px;object-fit:contain;background:#f8fafc;border-radius:8px;padding:8px;border:1px solid #e2e8f0" alt="${s.name}" crossorigin="anonymous" />` : ""}
-    <div>
-      <div class="title">${s.name} — ${s.subtitle}</div>
-      <div class="subtitle">${s.duty} Duty · ${s.driveType}</div>
-    </div>
-  </div>
-  <div class="part-code-box">
-    <div class="part-code-label">Interroll Part Code</div>
-    ${partCode}
-  </div>
-  <div class="warn">⚠ Pricing not included. Contact Uniking Canada for a formal quotation: <strong>514-886-5270 · sales@unikingcanada.com</strong></div>
-  <table>
-    <tr><th colspan="2">Configuration Details</th></tr>
-    <tr><td>Bearing Assembly</td><td><strong>${bearing?.code}</strong> — Ø ${bearing?.dia}, Shaft: ${bearing?.shaftDia}<br/><span style="color:#64748b;font-size:12px">${bearing?.note || ""}</span></td></tr>
-    <tr><td>Tube</td><td><strong>${tube?.code}</strong> — ${tube?.material}, ${tube?.finish} finish, Wall: ${tube?.wall || "—"}<br/><span style="color:#64748b;font-size:12px">${tube?.note || ""}</span></td></tr>
-    <tr><td>Shaft</td><td><strong>${shaft?.code}</strong> — ${shaft?.dia}, ${shaft?.type}<br/><span style="color:#64748b;font-size:12px">Material: ${shaft?.material} · Extension: ${shaft?.ext}</span></td></tr>
-    <tr><td>Between Frames (BF)</td><td><strong>${length}"</strong></td></tr>
-    <tr><td>Roller Length (RL)</td><td><strong>${rl}"</strong> (BF − 0.12")</td></tr>
-    <tr><td>Quantity Requested</td><td><strong>${qty} pc${qty > 1 ? "s" : ""}</strong></td></tr>
-    ${notes ? `<tr><td>Special Notes</td><td>${notes}</td></tr>` : ""}
-  </table>
-  <table>
-    <tr><th colspan="2">Series Technical Data</th></tr>
-    <tr><td>Max Load Capacity</td><td>${s.maxLoad}</td></tr>
-    <tr><td>Max Conveyor Speed</td><td>${s.maxSpeed}</td></tr>
-    <tr><td>Bearing Type</td><td>${s.bearingType}</td></tr>
-    <tr><td>Temperature Range</td><td>${s.tempRange}</td></tr>
-    <tr><td>Typical Applications</td><td>${s.applications.join(", ")}</td></tr>
-  </table>
-  <div class="footer">
-    <span>Uniking Canada Inc. · 12985 Rue Brault, Mirabel, QC J7J 0W2 · 514-886-5270 · www.unikingcanada.com</span>
-    <span>Source: Interroll Conveyor Roller Catalog</span>
-  </div>
-</div>
-</body>
-</html>`;
-    const win = window.open("", "_blank");
-    if (win) {
-      win.document.write(html);
-      win.document.close();
-      setTimeout(() => win.print(), 400);
-    }
-  }
-
-  function handleAddToCart() {
-    if (!partCode) return;
-    const item = {
-      cartId: "roller_" + Date.now(),
-      id: "roller_" + Date.now(),
-      _source: "custom",
-      name: `${s.name} — ${partCode}`,
-      series: s.name,
-      type: "Conveyor Roller",
-      style: s.subtitle,
-      category: s.duty,
-      image_url: "",
-      materials: tube?.material || "",
-      quantity: qty,
-      unit: "Each",
-      notes: [
-        `Part Code: ${partCode}`,
-        `Bearing: ${bearing?.code} — Ø ${bearing?.dia}, ${bearing?.shaftDia}`,
-        `Tube: ${tube?.code} — ${tube?.material} ${tube?.finish}${tube?.note ? " (" + tube.note + ")" : ""}`,
-        `Shaft: ${shaft?.code} — ${shaft?.dia} ${shaft?.type}`,
-        `Between Frames: ${length}"`,
-        notes ? `Notes: ${notes}` : ""
-      ].filter(Boolean).join("\n"),
-    };
-    try {
-      const existing = JSON.parse(localStorage.getItem("uniking_rfq_cart") || "[]");
-      const updated = [...existing, item];
-      localStorage.setItem("uniking_rfq_cart", JSON.stringify(updated));
-      window.dispatchEvent(new Event("rfq_cart_updated"));
-    } catch(e) { console.error(e); }
-    setDone(true);
-  }
-
-  if (done) {
-    return (
-      <div style={{ textAlign: "center", padding: "60px 40px" }}>
-        <div style={{ fontSize: 56, marginBottom: 16 }}>✅</div>
-        <div style={{ fontSize: 20, fontWeight: 800, color: C.text, marginBottom: 8 }}>Added to RFQ Cart!</div>
-        <div style={{ fontSize: 14, color: C.muted, marginBottom: 8 }}>Part Code: <strong style={{ color: C.navy, fontFamily: "monospace" }}>{partCode}</strong></div>
-        <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 24 }}>
-          <button onClick={() => { setBearing(null); setTube(null); setShaft(null); setLength(""); setQty(1); setNotes(""); setStep(0); setDone(false); }}
-            style={{ padding: "10px 22px", background: C.navyMid, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600 }}>
-            Configure Another
-          </button>
-          <button onClick={onClose}
-            style={{ padding: "10px 22px", background: C.border, color: C.text, border: "none", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600 }}>
-            Back to Series
-          </button>
-          <a href={createPageUrl("RFQCart")}
-            style={{ padding: "10px 22px", background: C.gold, color: C.navy, border: "none", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 700, textDecoration: "none", display: "inline-block" }}>
-            View RFQ Cart →
-          </a>
-        </div>
-      </div>
-    );
-  }
+// ─── LOAD CAPACITY TABLE ──────────────────────────────────────────────────────
+function LoadTable({ series, fmt, metric }) {
+  if (!series.load_table || !series.load_table.length) return null;
+  const allLengths = [...new Set(series.load_table.flatMap(r => Object.keys(r.loads).map(Number)))].sort((a, b) => a - b);
 
   return (
     <div>
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, paddingBottom: 16, borderBottom: "1px solid " + C.border }}>
-        <div>
-          <div style={{ fontSize: 18, fontWeight: 800, color: C.text }}>{s.name} — {s.subtitle}</div>
-          <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>Build your part number step by step</div>
-        </div>
-        <button onClick={onClose} style={{ background: "none", border: "1px solid " + C.border, borderRadius: 8, padding: "6px 14px", cursor: "pointer", fontSize: 13, color: C.muted }}>← Back to Series</button>
+      <div style={{ fontWeight: 700, color: C.text, fontSize: 13, marginBottom: 8 }}>Load Capacity Table</div>
+      <div style={{ fontSize: 10, color: C.muted, marginBottom: 8 }}>Max static load — temperature +5 to +40°C</div>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
+          <thead>
+            <tr style={{ background: C.navy }}>
+              <th style={{ padding: "8px 10px", color: "#fff", textAlign: "left", fontWeight: 700, whiteSpace: "nowrap" }}>Tube / Drive</th>
+              <th style={{ padding: "8px 10px", color: "#fff", textAlign: "center", fontWeight: 700 }}>Shaft</th>
+              {allLengths.map(l => (
+                <th key={l} style={{ padding: "8px 10px", color: "#fff", textAlign: "center", fontWeight: 700, whiteSpace: "nowrap" }}>
+                  {metric ? `${l} mm` : `${(l / 25.4).toFixed(1)}"`}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {series.load_table.map((row, i) => (
+              <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid #e5e7eb" }}>
+                <td style={{ padding: "7px 10px", color: C.navyMid, fontWeight: 600, whiteSpace: "nowrap" }}>{row.tube}</td>
+                <td style={{ padding: "7px 10px", color: C.muted, textAlign: "center", whiteSpace: "nowrap" }}>
+                  {metric ? `Ø${row.shaft_mm} mm` : `Ø${(row.shaft_mm / 25.4).toFixed(3)}"`}
+                </td>
+                {allLengths.map(l => {
+                  const v = row.loads[l];
+                  return (
+                    <td key={l} style={{ padding: "7px 10px", textAlign: "center", color: v ? C.text : "#d1d5db", fontWeight: v ? 600 : 400 }}>
+                      {v != null ? fmt.load(v) : "—"}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
+    </div>
+  );
+}
 
-      {/* Live part code bar */}
-      <div style={{ background: C.navy, borderRadius: 10, padding: "12px 20px", marginBottom: 24, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px" }}>Live Part Code</div>
-        <div style={{ fontFamily: "monospace", fontSize: 16, fontWeight: 700, color: partCode ? C.goldLight : "rgba(255,255,255,0.3)", letterSpacing: "0.5px" }}>
-          {partCode || `${bearing?.code || "_.___"}.${tube?.code || "___"}.${shaft?.code || "___"}-${length ? (parseFloat(length) - 0.12).toFixed(2) + '"RL' : 'XX.XX"RL'}`}
+// ─── SERIES DETAIL MODAL ──────────────────────────────────────────────────────
+function SeriesDetail({ series: s, onClose, fmt, metric }) {
+  const [tab, setTab] = useState("overview");
+  const [imgErr, setImgErr] = useState(false);
+
+  const tabs = [
+    { id: "overview", label: "Overview" },
+    { id: "loads", label: "Load Capacity" },
+    { id: "drive", label: "Drive Options" },
+    { id: "order", label: "How to Order" },
+  ];
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 1000, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "20px 16px", overflowY: "auto" }}>
+      <div style={{ background: "#fff", borderRadius: 16, width: "100%", maxWidth: 780, boxShadow: "0 24px 80px rgba(0,0,0,0.25)", position: "relative" }}>
+
+        {/* Hero image */}
+        {s.image_url && !imgErr && (
+          <div style={{ height: 220, overflow: "hidden", borderRadius: "16px 16px 0 0", position: "relative" }}>
+            <img src={s.image_url} alt={s.name} onError={() => setImgErr(true)}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(15,35,64,0.8) 0%, transparent 60%)" }} />
+            <div style={{ position: "absolute", bottom: 16, left: 20 }}>
+              <div style={{ color: "#fff", fontSize: 22, fontWeight: 900 }}>{s.name}</div>
+              <div style={{ color: C.goldLight, fontSize: 13, marginTop: 2 }}>{s.subtitle}</div>
+            </div>
+            <div style={{ position: "absolute", top: 12, right: 12, background: s.color, color: "#fff", padding: "4px 12px", borderRadius: 20, fontSize: 11, fontWeight: 800 }}>{s.duty} Duty</div>
+          </div>
+        )}
+
+        {/* Close button */}
+        <button onClick={onClose} style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.4)", border: "none", borderRadius: "50%", width: 32, height: 32, cursor: "pointer", color: "#fff", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10 }}>✕</button>
+
+        {/* Tabs */}
+        <div style={{ display: "flex", borderBottom: "1px solid " + C.border, padding: "0 20px" }}>
+          {tabs.map(t => (
+            <button key={t.id} onClick={() => setTab(t.id)}
+              style={{ padding: "12px 16px", border: "none", background: "none", cursor: "pointer", fontSize: 13, fontWeight: tab === t.id ? 700 : 400,
+                color: tab === t.id ? s.color : C.muted, borderBottom: tab === t.id ? `2px solid ${s.color}` : "2px solid transparent", marginBottom: -1 }}>
+              {t.label}
+            </button>
+          ))}
         </div>
-        {partCode && <span style={{ background: C.gold, color: C.navy, padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700 }}>COMPLETE</span>}
-      </div>
 
-      {/* Step progress */}
-      <div style={{ display: "flex", gap: 4, marginBottom: 24 }}>
-        {steps.map((st, i) => (
-          <div key={st} style={{ flex: 1, textAlign: "center" }}>
-            <div style={{ height: 4, borderRadius: 2, background: i <= step ? s.color : C.border, marginBottom: 5, transition: "background 0.2s" }} />
-            <div style={{ fontSize: 10, fontWeight: i === step ? 700 : 400, color: i === step ? s.color : C.muted }}>{st}</div>
-          </div>
-        ))}
-      </div>
+        <div style={{ padding: "20px 24px", maxHeight: "60vh", overflowY: "auto" }}>
 
-      {/* Roller diagram (shows whenever enough info) */}
-      {(bearing || tube || shaft) && (
-        <div style={{ background: "#f8fafc", borderRadius: 12, padding: "16px", marginBottom: 20, border: "1px solid " + C.border }}>
-          <div style={{ fontSize: 11, color: C.muted, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 10, textAlign: "center" }}>Roller Preview</div>
-          <RollerDiagram
-            diameter={bearing?.dia || "1.90\""}
-            length={length || "15"}
-            shaftType={shaft?.type || ""}
-            shaftDia={shaft?.dia || "0.437"}
-            tubeMaterial={tube?.material || ""}
-          />
-          <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 8, flexWrap: "wrap" }}>
-            {bearing && <span style={{ fontSize: 10, color: C.muted }}>Ø {bearing.dia}</span>}
-            {shaft && <span style={{ fontSize: 10, color: C.muted }}>Shaft: {shaft.dia}</span>}
-            {length && <span style={{ fontSize: 10, color: C.muted }}>BF: {length}&quot; → RL: {(parseFloat(length) - 0.12).toFixed(2)}&quot;</span>}
-          </div>
-        </div>
-      )}
+          {tab === "overview" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                {[
+                  ["Max Load", fmt.load(s.maxLoad_N)],
+                  ["Max Speed", fmt.speed(s.maxSpeed_ms)],
+                  ["Temp Range", `${fmt.temp(s.temp_min_C)} to ${fmt.temp(s.temp_max_C)}`],
+                  ["Platform", s.platform],
+                  ["Antistatic", String(s.antistatic)],
+                  ["Catalog Pages", `pp. ${s.page_range}`],
+                ].map(([k, v]) => (
+                  <div key={k} style={{ background: "#f8fafc", borderRadius: 8, padding: "10px 14px" }}>
+                    <div style={{ fontSize: 10, color: C.muted, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px" }}>{k}</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginTop: 3 }}>{v}</div>
+                  </div>
+                ))}
+              </div>
 
-      {/* Step 0: Bearing */}
-      {step === 0 && (
-        <div>
-          <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 14 }}>
-            Step 1 — Select Bearing Assembly
-            <span style={{ fontSize: 11, color: C.muted, fontWeight: 400, marginLeft: 8 }}>Defines tube diameter, bearing type &amp; shaft size</span>
-          </div>
-          {s.bearingGroups ? (
-            s.bearingGroups.map(group => (
-              <div key={group.label} style={{ marginBottom: 20 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: s.color, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 10, paddingBottom: 6, borderBottom: "1px solid " + C.border }}>{group.label}</div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 8 }}>
-                  {group.bearings.map(b => (
-                    <BearingOption key={b.code} b={b} selected={bearing?.code === b.code} color={s.color} onClick={() => { setBearing(b); setStep(1); }} />
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 8 }}>Tube Options</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {s.tubes_mm.map(t => (
+                    <span key={t} style={{ background: "#e0f2fe", color: "#0369a1", padding: "4px 10px", borderRadius: 8, fontSize: 12, fontWeight: 600 }}>{t}</span>
                   ))}
                 </div>
               </div>
-            ))
-          ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 8 }}>
-              {allBearings.map(b => (
-                <BearingOption key={b.code} b={b} selected={bearing?.code === b.code} color={s.color} onClick={() => { setBearing(b); setStep(1); }} />
-              ))}
+
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 8 }}>Tube Materials</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {s.materials.map(m => (
+                    <span key={m} style={{ background: "#f1f5f9", color: C.text, padding: "4px 10px", borderRadius: 8, fontSize: 12, fontWeight: 600 }}>{m}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 8 }}>Shaft Options</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {s.shaft_options.map(o => (
+                    <span key={o} style={{ background: "#fef3c7", color: "#92400e", padding: "4px 10px", borderRadius: 8, fontSize: 12, fontWeight: 600 }}>{o}</span>
+                  ))}
+                </div>
+              </div>
+
+              {s.sleeve_options && s.sleeve_options.length > 0 && (
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 8 }}>Sleeve Options</div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {s.sleeve_options.map(o => (
+                      <span key={o} style={{ background: "#f0fdf4", color: "#15803d", padding: "4px 10px", borderRadius: 8, fontSize: 12, fontWeight: 600 }}>{o}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 8 }}>Applications</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {s.applications.map(a => (
+                    <span key={a} style={{ background: s.color + "12", color: s.color, padding: "4px 10px", borderRadius: 8, fontSize: 12, fontWeight: 600 }}>{a}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 6 }}>Bearing</div>
+                <div style={{ fontSize: 12, color: C.muted }}>{s.bearingType}</div>
+              </div>
+
+              {s.notes && (
+                <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#92400e" }}>
+                  <strong>Notes: </strong>{s.notes}
+                </div>
+              )}
+            </div>
+          )}
+
+          {tab === "loads" && <LoadTable series={s} fmt={fmt} metric={metric} />}
+
+          {tab === "drive" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 8 }}>Drive Type</div>
+                <div style={{ fontSize: 13, color: C.text }}>{s.driveType}</div>
+              </div>
+              {s.drive_heads && (
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 8 }}>Available Drive Heads</div>
+                  {s.drive_heads.map((d, i) => (
+                    <div key={i} style={{ padding: "8px 12px", background: i % 2 === 0 ? "#f8fafc" : "#fff", borderRadius: 6, fontSize: 12, color: C.text, marginBottom: 4 }}>
+                      • {d}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {!s.drive_heads && (
+                <div style={{ fontSize: 12, color: C.muted }}>Drive head configuration depends on tube diameter and bearing selected. Contact Uniking Canada for full drive head matrix.</div>
+              )}
+            </div>
+          )}
+
+          {tab === "order" && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div style={{ background: C.navy, borderRadius: 10, padding: "14px 18px", color: "#fff" }}>
+                <div style={{ fontSize: 11, color: C.goldLight, fontWeight: 600, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>Interroll Part Code Format</div>
+                <div style={{ fontFamily: "monospace", fontSize: 15, color: C.gold, fontWeight: 700 }}>
+                  Bearing.Tube.Shaft — RL (mm or in)
+                </div>
+              </div>
+              <div style={{ fontSize: 12, color: C.text, lineHeight: 1.7 }}>
+                <strong>Ordering dimensions:</strong><br />
+                RL = Reference Length / Ordering Length<br />
+                EL = Installation Length (inside side profiles)<br />
+                AGL = Total shaft length<br />
+                U = Usable tube length
+              </div>
+              <div style={{ fontSize: 12, color: C.text, lineHeight: 1.7 }}>
+                <strong>Dimension formulas (Series {s.id}):</strong><br />
+                {s.id === "3500" || s.id === "3800" || s.id === "3950" ? (
+                  <>• Single sprocket head: EL = AGL = RL + 40 mm<br />• Double sprocket head: EL = AGL = RL + 62 mm<br />• PolyVee / round belt: EL = AGL = RL + 36 mm</>
+                ) : s.id === "MSC50" ? (
+                  <>• Spring-loaded / Fixed shaft: EL = AGL = RL + 10 mm<br />• Spring-loaded: AGL = EL + 22 mm<br />• Female thread: EL = AGL = RL + 10 mm</>
+                ) : (
+                  <>• EL = RL + shaft extension (varies by shaft type)<br />• Consult catalog pages {s.page_range} for exact dimension tables</>
+                )}
+              </div>
+              <div style={{ background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 8, padding: "12px 16px" }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 4 }}>Contact Uniking Canada to Order</div>
+                <div style={{ fontSize: 12, color: C.muted }}>514-886-5270 · sales@unikingcanada.com</div>
+                <div style={{ fontSize: 11, color: C.muted, marginTop: 4 }}>Reference Interroll Catalog 01/2026, pages {s.page_range}</div>
+              </div>
             </div>
           )}
         </div>
-      )}
 
-      {/* Step 1: Tube */}
-      {step === 1 && (
-        <div>
-          <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 4 }}>Step 2 — Select Tube</div>
-          <div style={{ fontSize: 12, color: C.muted, marginBottom: 14 }}>Choose tube material, diameter, and any special features</div>
-          <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "8px 14px", marginBottom: 14, fontSize: 12, color: "#92400e" }}>
-            Selected bearing: <strong>{bearing?.code}</strong> — Ø {bearing?.dia}, shaft: {bearing?.shaftDia}
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 8 }}>
-            {filteredTubes.map(t => (
-              <TubeOption key={t.code} t={t} selected={tube?.code === t.code} color={s.color} onClick={() => { setTube(t); setStep(2); }} />
-            ))}
-          </div>
-          <button onClick={() => setStep(0)} style={{ marginTop: 16, background: "none", border: "none", color: C.muted, cursor: "pointer", fontSize: 13 }}>← Back</button>
-        </div>
-      )}
-
-      {/* Step 2: Shaft */}
-      {step === 2 && (
-        <div>
-          <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 4 }}>Step 3 — Select Shaft</div>
-          <div style={{ fontSize: 12, color: C.muted, marginBottom: 14 }}>Choose shaft type, material, and mounting method</div>
-          <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "8px 14px", marginBottom: 14, fontSize: 12, color: "#166534" }}>
-            Compatible with bearing shaft: <strong>{bearing?.shaftDia}</strong>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 8 }}>
-            {filteredShafts.map(sh => {
-              const compatible = sh.dia.includes(bearing?.shaftDia?.split(" ")[0] || "");
-              return (
-                <ShaftOption key={sh.code} sh={sh} selected={shaft?.code === sh.code} color={s.color} compatible={compatible} onClick={() => { setShaft(sh); setStep(3); }} />
-              );
-            })}
-          </div>
-          <button onClick={() => setStep(1)} style={{ marginTop: 16, background: "none", border: "none", color: C.muted, cursor: "pointer", fontSize: 13 }}>← Back</button>
-        </div>
-      )}
-
-      {/* Step 3: Length & Qty */}
-      {step === 3 && (
-        <div>
-          <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 4 }}>Step 4 — Length &amp; Quantity</div>
-          <div style={{ fontSize: 12, color: C.muted, marginBottom: 20 }}>Enter the between-frame (BF) dimension. Roller length (RL) = BF − 0.12&quot;</div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, maxWidth: 480 }}>
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: C.text, display: "block", marginBottom: 6 }}>Between Frames (BF) — inches</label>
-              <input
-                type="number" step="0.01" min="3" max="120"
-                value={length} onChange={e => setLength(e.target.value)}
-                placeholder="e.g. 15.00"
-                style={{ width: "100%", boxSizing: "border-box", padding: "10px 12px", borderRadius: 8, border: "1.5px solid " + (length ? s.color : C.border), fontSize: 14, outline: "none" }}
-              />
-              {length && <div style={{ fontSize: 11, color: C.muted, marginTop: 4 }}>RL = {(parseFloat(length) - 0.12).toFixed(2)}&quot;</div>}
-            </div>
-            <div>
-              <label style={{ fontSize: 12, fontWeight: 600, color: C.text, display: "block", marginBottom: 6 }}>Quantity</label>
-              <input
-                type="number" min="1" value={qty} onChange={e => setQty(parseInt(e.target.value) || 1)}
-                style={{ width: "100%", boxSizing: "border-box", padding: "10px 12px", borderRadius: 8, border: "1.5px solid " + C.border, fontSize: 14, outline: "none" }}
-              />
-            </div>
-          </div>
-          <div style={{ marginTop: 16 }}>
-            <label style={{ fontSize: 12, fontWeight: 600, color: C.text, display: "block", marginBottom: 6 }}>Special Notes / Requirements (optional)</label>
-            <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={2}
-              placeholder="e.g. anti-static requirement, specific groove locations, special finish..."
-              style={{ width: "100%", maxWidth: 480, boxSizing: "border-box", padding: "10px 12px", borderRadius: 8, border: "1.5px solid " + C.border, fontSize: 13, outline: "none", resize: "vertical" }} />
-          </div>
-          <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
-            <button onClick={() => setStep(2)} style={{ padding: "10px 20px", background: "none", border: "1px solid " + C.border, borderRadius: 8, cursor: "pointer", fontSize: 14, color: C.muted }}>← Back</button>
-            <button onClick={() => setStep(4)} disabled={!length}
-              style={{ padding: "10px 24px", background: length ? s.color : C.border, color: length ? "#fff" : C.muted, border: "none", borderRadius: 8, cursor: length ? "pointer" : "not-allowed", fontSize: 14, fontWeight: 700 }}>
-              Review →
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Step 4: Review */}
-      {step === 4 && (
-        <div>
-          <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 16 }}>Step 5 — Review &amp; Add to RFQ</div>
-          <div style={{ background: C.navy + "08", border: "1px solid " + C.border, borderRadius: 12, padding: "20px", marginBottom: 20 }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 12 }}>Configuration Summary</div>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-              {[
-                ["Series", s.name + " — " + s.subtitle],
-                ["Bearing", `${bearing?.code} — Ø ${bearing?.dia}, ${bearing?.shaftDia}, ${bearing?.note || ""}`],
-                ["Tube", `${tube?.code} — ${tube?.material} ${tube?.finish}${tube?.note ? " (" + tube.note + ")" : ""}`],
-                ["Shaft", `${shaft?.code} — ${shaft?.dia} ${shaft?.type}`],
-                ["BF Length", length + "\""],
-                ["Roller Length (RL)", (parseFloat(length) - 0.12).toFixed(2) + "\""],
-                ["Quantity", qty],
-                ["Notes", notes || "—"],
-              ].map(([k, v]) => (
-                <tr key={k} style={{ borderBottom: "1px solid #f1f5f9" }}>
-                  <td style={{ padding: "7px 0", color: C.muted, width: "30%", fontWeight: 600 }}>{k}</td>
-                  <td style={{ padding: "7px 0", color: C.text }}>{v}</td>
-                </tr>
-              ))}
-            </table>
-          </div>
-          {/* Big part code */}
-          <div style={{ background: C.navy, borderRadius: 12, padding: "20px 24px", marginBottom: 24, textAlign: "center" }}>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 8 }}>Interroll Part Code</div>
-            <div style={{ fontFamily: "monospace", fontSize: 22, fontWeight: 800, color: C.goldLight, letterSpacing: "1px" }}>{partCode}</div>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 8 }}>Bearing.Tube.Shaft-Length</div>
-          </div>
-          {/* Print Tear Sheet */}
-          <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "10px 16px", marginBottom: 20, fontSize: 12, color: "#166534", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-            <span><strong>Print Spec Sheet:</strong> Generate a branded, pricing-free roller spec sheet for this configuration.</span>
-            <button onClick={() => handlePrintTearSheet()}
-              style={{ padding: "7px 16px", background: "#166534", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 12, fontWeight: 700, whiteSpace: "nowrap" }}>
-              Print Tear Sheet
-            </button>
-          </div>
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            <button onClick={() => setStep(3)} style={{ padding: "10px 20px", background: "none", border: "1px solid " + C.border, borderRadius: 8, cursor: "pointer", fontSize: 14, color: C.muted }}>← Edit</button>
-            <button onClick={handleAddToCart}
-              style={{ padding: "10px 28px", background: C.gold, color: C.navy, border: "none", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 800 }}>
-              Add to RFQ Cart →
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function BearingOption({ b, selected, color, onClick }) {
-  const [hov, setHov] = useState(false);
-  return (
-    <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ padding: "12px 14px", borderRadius: 10, border: `2px solid ${selected ? color : hov ? color + "88" : C.border}`, cursor: "pointer", background: selected ? color + "12" : "#fff", transition: "all 0.15s" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-        <span style={{ fontFamily: "monospace", fontSize: 13, fontWeight: 800, color: selected ? color : C.text }}>{b.code}</span>
-        {selected && <span style={{ fontSize: 10, color, fontWeight: 700 }}>SELECTED ✓</span>}
-      </div>
-      <div style={{ fontSize: 11, color: C.muted }}>Ø {b.dia} · Wall {b.wall}</div>
-      <div style={{ fontSize: 11, color: C.muted }}>Shaft: {b.shaftDia}</div>
-      {b.note && <div style={{ fontSize: 10, color: C.muted, marginTop: 4, fontStyle: "italic" }}>{b.note}</div>}
-      {b.groupLabel && <div style={{ fontSize: 9, color, fontWeight: 700, marginTop: 4, textTransform: "uppercase" }}>{b.groupLabel}</div>}
-    </div>
-  );
-}
-
-function TubeOption({ t, selected, color, onClick }) {
-  const [hov, setHov] = useState(false);
-  const matColors = { "Steel": "#94a3b8", "Stainless": "#cbd5e1", "PVC": "#86efac", "Aluminum": "#93c5fd", "Polyethylene": "#fde68a", "Polypropylene": "#fde68a" };
-  return (
-    <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ padding: "12px 14px", borderRadius: 10, border: `2px solid ${selected ? color : hov ? color + "88" : C.border}`, cursor: "pointer", background: selected ? color + "12" : "#fff", transition: "all 0.15s" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-        <span style={{ fontFamily: "monospace", fontSize: 13, fontWeight: 800, color: selected ? color : C.text }}>{t.code}</span>
-        <span style={{ width: 10, height: 10, borderRadius: "50%", background: matColors[t.material] || "#94a3b8", border: "1px solid #e2e8f0", display: "inline-block" }} />
-      </div>
-      <div style={{ fontSize: 11, fontWeight: 700, color: C.text }}>Ø {t.dia} · {t.material}</div>
-      <div style={{ fontSize: 11, color: C.muted }}>Finish: {t.finish}{t.wall && t.wall !== "—" ? ` · Wall: ${t.wall}` : ""}</div>
-      {t.note && <div style={{ fontSize: 10, color: C.muted, marginTop: 4, fontStyle: "italic" }}>{t.note}</div>}
-    </div>
-  );
-}
-
-function ShaftOption({ sh, selected, color, compatible, onClick }) {
-  const [hov, setHov] = useState(false);
-  return (
-    <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ padding: "12px 14px", borderRadius: 10, border: `2px solid ${selected ? color : compatible ? color + "44" : hov ? color + "66" : C.border}`, cursor: "pointer", background: selected ? color + "12" : compatible ? color + "06" : "#fff", transition: "all 0.15s" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-        <span style={{ fontFamily: "monospace", fontSize: 13, fontWeight: 800, color: selected ? color : C.text }}>{sh.code}</span>
-        <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
-          {compatible && !selected && <span style={{ fontSize: 9, color, fontWeight: 700, background: color + "18", padding: "1px 6px", borderRadius: 10 }}>COMPATIBLE</span>}
-          {selected && <span style={{ fontSize: 10, color, fontWeight: 700 }}>SELECTED ✓</span>}
+        {/* Footer CTA */}
+        <div style={{ padding: "16px 24px", borderTop: "1px solid " + C.border, display: "flex", gap: 10, justifyContent: "flex-end", borderRadius: "0 0 16px 16px", background: "#f8fafc" }}>
+          <button onClick={onClose}
+            style={{ padding: "9px 20px", background: "#fff", border: "1px solid " + C.border, borderRadius: 8, cursor: "pointer", fontSize: 13, color: C.muted, fontWeight: 600 }}>
+            Back to Series
+          </button>
+          <button onClick={() => {
+            const item = {
+              cartId: "roller_" + Date.now(),
+              id: "roller_" + Date.now(),
+              _source: "interroll_roller",
+              name: `${s.name} — ${s.subtitle}`,
+              series: s.name,
+              type: "Conveyor Roller",
+              style: s.subtitle,
+              category: s.duty + " Duty",
+              image_url: s.image_url,
+              materials: s.materials.join(", "),
+              quantity: 1,
+              unit: "Each",
+              notes: `Platform: ${s.platform} | Max Load: ${s.maxLoad_N} N | Drive: ${s.driveType} | Catalog pp. ${s.page_range}`,
+            };
+            try {
+              const existing = JSON.parse(localStorage.getItem("uniking_rfq_cart") || "[]");
+              localStorage.setItem("uniking_rfq_cart", JSON.stringify([...existing, item]));
+              window.dispatchEvent(new Event("rfq_cart_updated"));
+            } catch(e) {}
+            onClose();
+            window.location.href = createPageUrl("RFQCart");
+          }}
+            style={{ padding: "9px 20px", background: C.gold, color: C.navy, border: "none", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 800 }}>
+            Add to RFQ Cart →
+          </button>
         </div>
       </div>
-      <div style={{ fontSize: 11, fontWeight: 700, color: C.text }}>{sh.dia}</div>
-      <div style={{ fontSize: 11, color: C.muted }}>{sh.type}</div>
-      <div style={{ fontSize: 11, color: C.muted }}>Material: {sh.material} · Ext: {sh.ext}</div>
     </div>
   );
 }
 
 // ─── MAIN PAGE ────────────────────────────────────────────────────────────────
 export default function RollerConfigurator() {
-  const [selectedSeries, setSelectedSeries] = useState(null);
-  const [rfqItems, setRfqItems] = useState([]);
-  const [dutyFilter, setDutyFilter] = useState("All");
-  const [driveFilter, setDriveFilter] = useState("All");
-  const [searchQ, setSearchQ] = useState("");
+  const { metric, setMetric, fmt } = useUnits();
+  const [filter, setFilter] = useState("All");
+  const [selected, setSelected] = useState(null);
 
-  const duties = ["All", "Light", "Light-Medium", "Medium-Heavy", "Heavy"];
-  const drives = ["All", "Gravity", "Belt", "Chain", "Slip Drive", "Curve"];
-
-  const filteredSeries = useMemo(() => {
-    return SERIES.filter(s => {
-      if (dutyFilter !== "All" && !s.duty.includes(dutyFilter)) return false;
-      if (driveFilter !== "All") {
-        const drv = s.driveType + " " + s.tags.join(" ");
-        if (!drv.toLowerCase().includes(driveFilter.toLowerCase())) return false;
-      }
-      if (searchQ.trim()) {
-        const q = searchQ.toLowerCase();
-        const haystack = [s.name, s.subtitle, s.duty, s.driveType, ...s.tags, ...s.applications].join(" ").toLowerCase();
-        if (!haystack.includes(q)) return false;
-      }
-      return true;
-    });
-  }, [dutyFilter, driveFilter, searchQ]);
-
-  function handleAddToRFQ(item) {
-    setRfqItems(prev => [...prev, item]);
-  }
+  const filters = ["All", "Light", "Medium", "Heavy"];
+  const filtered = SERIES.filter(s => filter === "All" || s.duty === filter)
+    .sort((a, b) => (DUTY_ORDER[a.duty] - DUTY_ORDER[b.duty]) || a.id.localeCompare(b.id));
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column" }}>
-      <TopBar />
+    <div style={{ background: C.bg, minHeight: "100vh", fontFamily: "'Inter', 'Segoe UI', sans-serif" }}>
+      <TopBar metric={metric} setMetric={setMetric} />
 
-      <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "32px 40px", boxSizing: "border-box" }}>
-
-        {/* Page header */}
-        {!selectedSeries && (
-          <div style={{ marginBottom: 32 }}>
-            <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 16 }}>
-              <div>
-                <div style={{ fontSize: 11, fontWeight: 700, color: C.gold, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 6 }}>Interroll — Exclusive Partner</div>
-                <h1 style={{ fontSize: 26, fontWeight: 900, color: C.navy, margin: 0 }}>Conveyor Roller Configurator</h1>
-                <p style={{ fontSize: 14, color: C.muted, marginTop: 6, marginBottom: 0 }}>Select a series, build your roller step by step, and generate your Interroll part code.</p>
+      {/* Hero */}
+      <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, ${C.navyLight} 100%)`, padding: "36px 20px 32px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+            <div>
+              <div style={{ color: C.gold, fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 8 }}>
+                Interroll Authorized Partner
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ fontSize: 13, color: C.muted }}>{filteredSeries.length} series available</span>
-                {rfqItems.length > 0 && (
-                  <a href={createPageUrl("RFQCart")} style={{ background: C.gold, color: C.navy, padding: "8px 18px", borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
-                    Cart ({rfqItems.length})
-                  </a>
-                )}
-              </div>
+              <h1 style={{ color: "#fff", fontSize: 26, fontWeight: 900, margin: "0 0 8px" }}>
+                Conveyor Roller Series
+              </h1>
+              <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: 0, maxWidth: 500 }}>
+                All {SERIES.length} series from the official Interroll 2026 catalog — real specifications, load tables, and technical data.
+              </p>
             </div>
-
-            {/* Filter bar */}
-            <div style={{ background: "#fff", border: "1px solid " + C.border, borderRadius: 12, padding: "16px 20px", display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center" }}>
-              <div style={{ position: "relative", flex: "1 1 200px" }}>
-                <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", fontSize: 16, color: C.muted }}>🔍</span>
-                <input value={searchQ} onChange={e => setSearchQ(e.target.value)} placeholder="Search series, application..."
-                  style={{ width: "100%", boxSizing: "border-box", padding: "9px 12px 9px 34px", borderRadius: 8, border: "1.5px solid " + C.border, fontSize: 13, outline: "none" }} />
-              </div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-                <span style={{ fontSize: 12, color: C.muted, fontWeight: 600 }}>Duty:</span>
-                {duties.map(d => (
-                  <button key={d} onClick={() => setDutyFilter(d)}
-                    style={{ padding: "5px 12px", borderRadius: 20, border: `1.5px solid ${dutyFilter === d ? C.navyMid : C.border}`, background: dutyFilter === d ? C.navyMid : "#fff", color: dutyFilter === d ? "#fff" : C.text, fontSize: 12, cursor: "pointer", fontWeight: dutyFilter === d ? 700 : 400 }}>
-                    {d}
-                  </button>
-                ))}
-              </div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-                <span style={{ fontSize: 12, color: C.muted, fontWeight: 600 }}>Drive:</span>
-                {drives.map(d => (
-                  <button key={d} onClick={() => setDriveFilter(d)}
-                    style={{ padding: "5px 12px", borderRadius: 20, border: `1.5px solid ${driveFilter === d ? C.navyMid : C.border}`, background: driveFilter === d ? C.navyMid : "#fff", color: driveFilter === d ? "#fff" : C.text, fontSize: 12, cursor: "pointer", fontWeight: driveFilter === d ? 700 : 400 }}>
-                    {d}
-                  </button>
-                ))}
-              </div>
+            <div style={{ background: "rgba(255,255,255,0.08)", borderRadius: 12, padding: "12px 20px", minWidth: 180 }}>
+              <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 10, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 6 }}>Units</div>
+              <UnitToggle metric={metric} setMetric={setMetric} />
             </div>
           </div>
-        )}
 
-        {/* Series grid or Wizard */}
-        {!selectedSeries ? (
-          filteredSeries.length > 0 ? (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 20 }}>
-              {filteredSeries.map(s => (
-                <SeriesCard key={s.id} s={s} onSelect={setSelectedSeries} />
-              ))}
-            </div>
-          ) : (
-            <div style={{ textAlign: "center", padding: 80, color: C.muted }}>
-              No series match your filters. <button onClick={() => { setDutyFilter("All"); setDriveFilter("All"); setSearchQ(""); }} style={{ background: "none", border: "none", color: C.navyMid, cursor: "pointer", fontWeight: 700, fontSize: 14 }}>Clear filters</button>
-            </div>
-          )
-        ) : (
-          <div style={{ background: "#fff", borderRadius: 16, border: "1px solid " + C.border, padding: 32, boxShadow: "0 4px 24px rgba(0,0,0,0.07)" }}>
-            <ConfigWizard series={selectedSeries} onClose={() => setSelectedSeries(null)} onAddToRFQ={handleAddToRFQ} />
+          {/* Duty filter */}
+          <div style={{ display: "flex", gap: 8, marginTop: 24, flexWrap: "wrap" }}>
+            {filters.map(f => (
+              <button key={f} onClick={() => setFilter(f)}
+                style={{ padding: "7px 18px", borderRadius: 20, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 700, transition: "all 0.15s",
+                  background: filter === f ? C.gold : "rgba(255,255,255,0.12)",
+                  color: filter === f ? C.navy : "rgba(255,255,255,0.8)" }}>
+                {f === "All" ? `All Series (${SERIES.length})` : `${f} Duty`}
+              </button>
+            ))}
           </div>
-        )}
+        </div>
       </div>
 
-      <div style={{ borderTop: "1px solid " + C.border, padding: "14px 40px", textAlign: "center", fontSize: 11, color: "#cbd5e1" }}>
-        Uniking Canada · Interroll Authorized Partner · <a href="https://www.interroll.com/products/rollers-and-wheels" target="_blank" rel="noreferrer" style={{ color: "#93c5fd", textDecoration: "none" }}>Interroll Product Library</a>
+      {/* Grid */}
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "28px 20px 60px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 20 }}>
+          {filtered.map(s => (
+            <SeriesCard key={s.id} s={s} onSelect={setSelected} fmt={fmt} />
+          ))}
+        </div>
       </div>
+
+      {/* Detail modal */}
+      {selected && (
+        <SeriesDetail series={selected} onClose={() => setSelected(null)} fmt={fmt} metric={metric} />
+      )}
     </div>
   );
 }
