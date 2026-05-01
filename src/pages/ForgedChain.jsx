@@ -287,10 +287,8 @@ function FlightSchematic({ att, imperial }) {
   const VW = 380, VH = 260;
   const cx = VW / 2;
   // Chain attachment points — two circles representing the chain
-  const chainY = 170;
-  const chainR = 14;
-  const chainSpan = 80; // distance between the two chain links shown
-  const baseY = chainY - chainR;
+  // No chain shown in schematic — just the attachment profile
+  const baseY = 210;
 
   // Scale flight dims to SVG pixels — relative to canvas
   const maxW = 300, maxH = 120;
@@ -307,21 +305,7 @@ function FlightSchematic({ att, imperial }) {
   const flightStroke = C.navyMid;
   const shadowFill = "#2e5a8a";
   const uhmwFill = "rgba(180,210,255,0.75)";
-  const chainFill = "#8a9ab8";
-
-  // ── Draw chain attachment (two link ovals) ──
-  const chainElem = (
-    <g>
-      {/* Link left */}
-      <ellipse cx={cx - chainSpan/2} cy={chainY} rx={chainR*1.4} ry={chainR*0.7} fill={chainFill} stroke={C.navyMid} strokeWidth="1.5" />
-      <ellipse cx={cx - chainSpan/2} cy={chainY} rx={chainR*0.55} ry={chainR*0.3} fill="#c8d4e8" stroke={C.navyMid} strokeWidth="0.8" />
-      {/* Link right */}
-      <ellipse cx={cx + chainSpan/2} cy={chainY} rx={chainR*1.4} ry={chainR*0.7} fill={chainFill} stroke={C.navyMid} strokeWidth="1.5" />
-      <ellipse cx={cx + chainSpan/2} cy={chainY} rx={chainR*0.55} ry={chainR*0.3} fill="#c8d4e8" stroke={C.navyMid} strokeWidth="0.8" />
-      {/* Connecting bar */}
-      <rect x={cx - chainSpan/2 + chainR*1.2} y={chainY - chainR*0.45} width={chainSpan - chainR*2.4} height={chainR*0.9} fill="#b0bdd4" stroke={C.navyMid} strokeWidth="1" />
-    </g>
-  );
+  // No chain graphic — clean attachment-only view
 
   // ── Flight body based on style ──
   let flightElem = null;
@@ -421,8 +405,8 @@ function FlightSchematic({ att, imperial }) {
   // Backing plate
   const bpElem = hasBacking ? (
     <g>
-      <rect x={cx - W_px/2 + 6} y={chainY + chainR + 4} width={W_px - 12} height={bpT_px + 4} fill="#8a9ab8" stroke={C.navyMid} strokeWidth="1" />
-      <text x={cx} y={chainY + chainR + 12 + bpT_px} textAnchor="middle" fontSize="9" fill={C.muted}>Backing Plate</text>
+      <rect x={cx - W_px/2 + 6} y={baseY + 6} width={W_px - 12} height={bpT_px + 4} fill="#8a9ab8" stroke={C.navyMid} strokeWidth="1" />
+      <text x={cx} y={baseY + 14 + bpT_px} textAnchor="middle" fontSize="9" fill={C.muted}>Backing Plate</text>
     </g>
   ) : null;
 
@@ -469,7 +453,6 @@ function FlightSchematic({ att, imperial }) {
         Live Preview — {att?.flightName || "Flight"}{seqLabel ? ` · ${seqLabel}` : ""}
       </div>
       <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ display: "block" }}>
-        {chainElem}
         {flightElem}
         {uhmwElem}
         {bpElem}
@@ -585,10 +568,21 @@ function FieldRow({ label, note, children }) {
   );
 }
 function TextInput({ value, onChange, placeholder, unit }) {
+  // Local string state so user can type freely without conversion interrupting
+  const [local, setLocal] = useState(value ?? "");
+  // Re-sync when parent pushes a new value (e.g. unit toggle recalculates)
+  useEffect(() => { setLocal(value ?? ""); }, [value]);
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-      <input type="number" value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder||""}
-        style={{ flex: 1, border: `1px solid ${C.border}`, borderRadius: 8, padding: "9px 12px", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+      <input
+        type="text"
+        inputMode="decimal"
+        value={local}
+        placeholder={placeholder || ""}
+        onChange={e => setLocal(e.target.value)}
+        onBlur={e => { const v = e.target.value; if (v !== value) onChange(v); }}
+        style={{ flex: 1, border: `1px solid ${C.border}`, borderRadius: 8, padding: "9px 12px", fontSize: 13, outline: "none", boxSizing: "border-box" }}
+      />
       {unit && <span style={{ fontSize: 12, color: C.muted, minWidth: 24 }}>{unit}</span>}
     </div>
   );
