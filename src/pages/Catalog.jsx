@@ -431,12 +431,19 @@ export default function Catalog() {
   useEffect(() => {
     async function load() {
       try {
-        const [intralox, unicatalog, buckets, macChains] = await Promise.all([
+        const [intralox, unicatalog, buckets] = await Promise.all([
           CatalogProduct.filter({}, 1, 500),
           UniCatalog.filter({}, 1, 500),
           ElevatorBucket.filter({}, 1, 500),
-          MacChainProduct.filter({ product_type: "Chain" }, 1, 500),
         ]);
+        let macChains = [];
+        let macPage = 1;
+        while (true) {
+          const batch = await MacChainProduct.filter({}, macPage, 500);
+          macChains = macChains.concat(batch);
+          if (batch.length < 500) break;
+          macPage++;
+        }
         const combined = [
           ...intralox.map(r => ({ ...r, _src: "intralox", _type: r.category || "Modular Plastic Belt" })),
           ...unicatalog.map(r => ({ ...r, _src: "uni", _type: r.product_type })),
