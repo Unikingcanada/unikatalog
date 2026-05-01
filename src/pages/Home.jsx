@@ -909,8 +909,8 @@ function ProductModal({ product, showBrand, onClose }) {
   ].filter(Boolean);
 
   return (
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
-      <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 10, width: "100%", maxWidth: 700, width: "calc(100vw - 24px)", maxHeight: "90vh", display: "flex", flexDirection: "column", boxShadow: "0 24px 64px rgba(0,0,0,0.22)" }}>
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 1000, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "16px 12px", overflowY: "auto" }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 10, width: "100%", maxWidth: 700, display: "flex", flexDirection: "column", boxShadow: "0 24px 64px rgba(0,0,0,0.22)", marginTop: "auto", marginBottom: "auto" }}>
 
         {/* Header */}
         <div style={{ background: C.navyMid, padding: "20px 26px", borderRadius: "10px 10px 0 0", flexShrink: 0 }}>
@@ -1489,12 +1489,12 @@ function RFQButtonMac({ record }) {
   }
   return (
     <button onClick={handle}
-      style={{ padding:"6px 14px", borderRadius:6, fontSize:11, fontWeight:700, cursor:"pointer",
-        border: added ? "1px solid #16a34a" : "1px solid #2563eb",
-        background: added ? "#f0fdf4" : "#eff6ff",
-        color: added ? "#16a34a" : "#2563eb",
+      style={{ padding:"10px 20px", borderRadius:8, fontSize:13, fontWeight:700, cursor:"pointer", letterSpacing:"0.02em",
+        border:"none",
+        background: added ? C.greenBg : C.green,
+        color: added ? C.green : "#fff",
         whiteSpace:"nowrap", transition:"all 0.15s" }}>
-      {added ? "✓ In RFQ" : "+ Add to RFQ"}
+      {added ? "✓ Added to RFQ" : "Add to RFQ"}
     </button>
   );
 }
@@ -1512,24 +1512,26 @@ function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect
   ].filter(Boolean);
 
   return (
-    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.6)", zIndex:1000, display:"flex", alignItems:"flex-start", justifyContent:"center", padding:"16px 12px", overflowY:"auto" }}
       onClick={onClose}>
-      <div style={{ background:C.card, borderRadius:12, maxWidth:900, width:"100%", maxHeight:"90vh", overflowY:"auto", boxShadow:"0 20px 60px rgba(0,0,0,0.4)" }}
+      <div style={{ background:C.card, borderRadius:12, maxWidth:900, width:"100%", minHeight:0, boxShadow:"0 20px 60px rgba(0,0,0,0.4)", marginTop:"auto", marginBottom:"auto" }}
         onClick={e => e.stopPropagation()}>
         {/* Header */}
-        <div style={{ padding:"20px 24px 0", borderBottom:"1px solid "+C.border }}>
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:12 }}>
-            <div>
-              <div style={{ fontSize:22, fontWeight:800, color:C.text }}>{record._specificPart || record.part_number}</div>
+        <div style={{ padding:"20px clamp(14px,4vw,24px) 0", borderBottom:"1px solid "+C.border }}>
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:12, marginBottom:12, flexWrap:"wrap" }}>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{ fontSize:20, fontWeight:800, color:C.text, wordBreak:"break-word" }}>{record._specificPart || record.part_number}</div>
               <div style={{ fontSize:13, color:C.muted, marginTop:3 }}>{record.subcategory} · {record.product_type}</div>
             </div>
-            <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
-              <RFQButtonMac record={record} />
-              <button onClick={() => printMacTearSheet(record)} style={{ background:C.navy, border:"none", color:"#fff", padding:"6px 14px", borderRadius:6, cursor:"pointer", fontSize:11, fontWeight:700 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:8, flexShrink:0 }}>
+              <button onClick={() => printMacTearSheet(record)} style={{ background:C.navy, border:"none", color:"#fff", padding:"7px 14px", borderRadius:8, cursor:"pointer", fontSize:12, fontWeight:700, letterSpacing:"0.02em" }}>
                 Print Tear Sheet
               </button>
-              <button onClick={onClose} style={{ background:"none", border:"none", fontSize:22, cursor:"pointer", color:C.muted, padding:"4px 8px" }}>×</button>
+              <button onClick={onClose} style={{ background:"#f1f5f9", border:"none", fontSize:18, cursor:"pointer", color:C.muted, padding:"6px 10px", borderRadius:8, lineHeight:1 }}>×</button>
             </div>
+          </div>
+          <div style={{ marginBottom:12 }}>
+            <RFQButtonMac record={record} />
           </div>
           {tabs.length > 1 && (
             <div style={{ display:"flex", gap:8, marginBottom:0 }}>
@@ -1544,17 +1546,19 @@ function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect
         </div>
 
         {/* Body */}
-        <div style={{ padding:"20px 24px" }}>
+        <div style={{ padding:"20px clamp(14px,4vw,24px)" }}>
           {tab === "specs" && (
             <div>
               {/* Image + description */}
-              <div style={{ display:"flex", gap:20, marginBottom:20 }}>
+              <div style={{ display:"flex", gap:20, marginBottom:20, flexWrap:"wrap" }}>
                 {record.product_image && (
-                  <img src={record.product_image} alt={record.part_number}
-                    style={{ width:160, height:120, objectFit:"contain", borderRadius:8, background:C.bg, border:"1px solid "+C.border, padding:8, flexShrink:0 }} />
+                  <div style={{ background:C.bg, border:"1px solid "+C.border, borderRadius:10, padding:10, display:"flex", alignItems:"center", justifyContent:"center", width:160, height:130, flexShrink:0 }}>
+                    <img src={record.product_image} alt={record.part_number}
+                      style={{ maxWidth:144, maxHeight:114, objectFit:"contain" }} />
+                  </div>
                 )}
-                <div>
-                  {record.description && <p style={{ fontSize:14, color:C.text, lineHeight:1.6, margin:0 }}>{stripVendor(record.description)}</p>}
+                <div style={{ flex:1, minWidth:200 }}>
+                  {record.description && <p style={{ fontSize:14, color:C.text, lineHeight:1.65, margin:0 }}>{stripVendor(record.description)}</p>}
                   {Array.isArray(record.features) && record.features.length > 0 && (
                     <ul style={{ margin:"10px 0 0", paddingLeft:18 }}>
                       {record.features.map((f,i) => <li key={i} style={{ fontSize:13, color:C.muted, marginBottom:4 }}>{stripVendor(f)}</li>)}
