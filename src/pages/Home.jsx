@@ -18,7 +18,7 @@ const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics",
 const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket", "Plastic Chain", "Metal Chain"]);
 const EXTERNAL_ROUTES = {
   "Conveyor Rollers": "/RollerConfigurator",
-  "Forged Chain": "/ForgedChainConfigurator",
+  "Forged Chain": "/ForgedChain",
 };
 
 
