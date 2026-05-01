@@ -13,10 +13,13 @@ const IMG = {
   double:   "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/8b574a65e_double-link.jpg",
   triple:   "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/fa0ba96be_triple-link.jpg",
   hero:     "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/4ed6677f2_forged-chain.jpg",
-  chain_installed:        "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/4730baa88_4b142ha-chain.jpg",
-  double_installed:       "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/5927207c6_double-link-installed.jpg",
-  sprocket_installed:     "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/1869b08c5_sprocket-installed.jpg",
-  chain_pins:             "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/728ea1a69_chain-pins.jpg",
+  bolt_n_go: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/4730baa88_4b142ha-chain.jpg",
+  chain_installed:    "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/4730baa88_4b142ha-chain.jpg",
+  double_installed:   "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/5927207c6_double-link-installed.jpg",
+  sprocket_installed: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/1869b08c5_sprocket-installed.jpg",
+  // Pin images — each pin type gets its own cropped region from the combined photo
+  pin_all:            "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/728ea1a69_chain-pins.jpg",
+  // Flight images
   "Square Bar Flight":                  "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/a79564d01_SQUARE-BAR.jpg",
   "Flat Bar Flight":                    "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/57feb5aa4_FLAT-BAR.jpg",
   "Paddle Flight":                      "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/a3b67f93e_PADDLE-FLIGHT.jpg",
@@ -28,10 +31,16 @@ const IMG = {
   "Return Cups":                        "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/2be898a6a_RETURN-CUPS.jpg",
 };
 
+// Pin type individual images (using object-position to crop the combined photo)
+const PIN_IMG_POSITION = {
+  "Forged Head Pin + Collar and Roll Pin": "top",    // top row in combined photo
+  "Forged Head Pin + One Clamp":           "center", // middle row
+  "Plain Pin + Two Clamps":               "bottom",  // bottom row
+};
+
 function getLinkImg(t) { return t==="Double"?IMG.double:t==="Triple"?IMG.triple:IMG.standard; }
 function tryParse(v) { try { return JSON.parse(v||"[]"); } catch { return []; } }
 
-// ── Unit conversion helpers ───────────────────────────────────────────────────
 const MM_TO_IN = 0.03937008;
 const IN_TO_MM = 25.4;
 function toDisplay(mm, imperial) {
@@ -44,7 +53,6 @@ function toMM(val, imperial) {
   return imperial ? String(Math.round(n * IN_TO_MM * 10) / 10) : String(n);
 }
 
-// ── RFQ Context ───────────────────────────────────────────────────────────────
 function getRFQCart() { try { return JSON.parse(localStorage.getItem("rfq_cart")||"[]"); } catch { return []; } }
 function saveRFQCart(c) { localStorage.setItem("rfq_cart", JSON.stringify(c)); }
 function addToRFQ(item) {
@@ -54,451 +62,638 @@ function addToRFQ(item) {
   return cart.length;
 }
 
-// ── Flight style SVG schematics (based on Uniking ID Form) ───────────────────
-function FlightSchematicSVG({ style, dims = {}, compact = false }) {
-  const W = compact ? 160 : 280, H = compact ? 110 : 190;
-  const { W: fw = 200, P: fp = 142, H: fh = 80, G: fg = 40, K: fk = 30, barSize = 10 } = dims;
-  const sc = compact ? 0.55 : 1;
-  const cx = W / 2, cy = H / 2;
+// ── PIN PRODUCT PAGE ──────────────────────────────────────────────────────────
+function PinModal({ pinName, chainLink, onClose, onAddRFQ }) {
+  const [material, setMaterial] = useState("");
+  const [qty, setQty] = useState("");
+  const [added, setAdded] = useState(false);
 
-  // Chain body (simplified link)
-  const chainW = Math.min(60 * sc, W * 0.35), chainH = 22 * sc;
-  const chainX = cx - chainW / 2, chainY = cy + (compact ? 28 : 50);
+  const position = PIN_IMG_POSITION[pinName] || "center";
 
-  const link = (
-    <g>
-      <rect x={chainX} y={chainY} width={chainW} height={chainH} rx={chainH * 0.4}
-        fill="#c8d4e8" stroke={C.navyMid} strokeWidth={compact ? 1 : 1.5} />
-      <circle cx={chainX + chainH * 0.55} cy={chainY + chainH / 2} r={chainH * 0.28} fill="#6a8cb8" stroke={C.navyMid} strokeWidth="1" />
-      <circle cx={chainX + chainW - chainH * 0.55} cy={chainY + chainH / 2} r={chainH * 0.28} fill="#6a8cb8" stroke={C.navyMid} strokeWidth="1" />
-    </g>
-  );
-
-  const label = (x, y, txt, color="#333", size=compact?7:9) => (
-    <text x={x} y={y} textAnchor="middle" fontSize={size} fill={color} fontFamily="Arial">{txt}</text>
-  );
-  const dimLine = (x1, y1, x2, y2, id) => (
-    <g>
-      <defs><marker id={id+"a"} markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0,0 L4,2 L0,4 Z" fill="#555"/></marker>
-      <marker id={id+"b"} markerWidth="4" markerHeight="4" refX="1" refY="2" orient="auto"><path d="M4,0 L0,2 L4,4 Z" fill="#555"/></marker></defs>
-      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#555" strokeWidth="0.7" markerEnd={`url(#${id}a)`} markerStart={`url(#${id}b)`}/>
-    </g>
-  );
-
-  // B Style — Bar Flight (Square/Flat/Paddle all same profile)
-  if (style === "B") {
-    const bW = Math.min(fw * 0.55 * sc, W * 0.7), bH = barSize * sc * 1.5;
-    const bX = cx - bW / 2, bY = chainY - bH - 4 * sc;
-    return (
-      <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H}>
-        {link}
-        <rect x={bX} y={bY} width={bW} height={bH} fill="#8fa8c8" stroke={C.navyMid} strokeWidth={compact?1:1.5} />
-        {!compact && <>
-          {dimLine(bX, bY - 14, bX + bW, bY - 14, "bw")}
-          {label(cx, bY - 17, `W = ${fw} mm`, "#1B3A6B")}
-          {dimLine(bX + bW + 8, bY, bX + bW + 8, bY + bH, "bh")}
-          {label(bX + bW + 22, bY + bH / 2 + 3, `${barSize}`, "#555")}
-        </>}
-        {label(cx, H - 8, "B Style — Bar Flight", C.navyMid, compact ? 7 : 10)}
-      </svg>
-    );
-  }
-
-  // U Style
-  if (style === "U") {
-    const uW = Math.min(fw * 0.55 * sc, W * 0.7), uH = fh * 0.55 * sc;
-    const uX = cx - uW / 2, uY = chainY - uH - 4 * sc;
-    const t = barSize * sc;
-    return (
-      <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H}>
-        {link}
-        {/* U shape: left wall, bottom, right wall */}
-        <rect x={uX} y={uY} width={t} height={uH} fill="#8fa8c8" stroke={C.navyMid} strokeWidth={compact?1:1.4} />
-        <rect x={uX} y={uY + uH - t} width={uW} height={t} fill="#8fa8c8" stroke={C.navyMid} strokeWidth={compact?1:1.4} />
-        <rect x={uX + uW - t} y={uY} width={t} height={uH} fill="#8fa8c8" stroke={C.navyMid} strokeWidth={compact?1:1.4} />
-        {!compact && <>
-          {dimLine(uX, uY - 14, uX + uW, uY - 14, "uw")}
-          {label(cx, uY - 17, `W = ${fw} mm`, "#1B3A6B")}
-          {dimLine(uX - 14, uY, uX - 14, uY + uH, "uh")}
-          {label(uX - 28, uY + uH / 2 + 3, `H=${fh}`, "#555")}
-        </>}
-        {label(cx, H - 8, "U Style Flight", C.navyMid, compact ? 7 : 10)}
-      </svg>
-    );
-  }
-
-  // CU Style (Closed U)
-  if (style === "CU") {
-    const uW = Math.min(fw * 0.55 * sc, W * 0.7), uH = fh * 0.55 * sc;
-    const uX = cx - uW / 2, uY = chainY - uH - 4 * sc;
-    const t = barSize * sc, gH = fg * 0.4 * sc;
-    return (
-      <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H}>
-        {link}
-        <rect x={uX} y={uY} width={t} height={uH} fill="#8fa8c8" stroke={C.navyMid} strokeWidth={compact?1:1.4} />
-        <rect x={uX} y={uY + uH - t} width={uW} height={t} fill="#8fa8c8" stroke={C.navyMid} strokeWidth={compact?1:1.4} />
-        <rect x={uX + uW - t} y={uY} width={t} height={uH} fill="#8fa8c8" stroke={C.navyMid} strokeWidth={compact?1:1.4} />
-        {/* Top plate (closed) */}
-        <rect x={uX} y={uY} width={uW} height={t} fill="#7090b8" stroke={C.navyMid} strokeWidth={compact?1:1.4} />
-        {/* G gap label */}
-        {!compact && <>
-          {dimLine(uX + t, uY + t + 2, uX + t, uY + uH - t - 2, "cug")}
-          {label(uX + t + 18, uY + uH / 2, `G=${fg}`, "#c33")}
-          {dimLine(uX, uY - 14, uX + uW, uY - 14, "cuw")}
-          {label(cx, uY - 17, `W = ${fw} mm`, "#1B3A6B")}
-          {dimLine(uX - 14, uY, uX - 14, uY + uH, "cuh")}
-          {label(uX - 28, uY + uH / 2, `H=${fh}`, "#555")}
-        </>}
-        {label(cx, H - 8, "CU Style — Closed U Flight", C.navyMid, compact ? 7 : 10)}
-      </svg>
-    );
-  }
-
-  // OO Style
-  if (style === "OO") {
-    const uW = Math.min(fw * 0.55 * sc, W * 0.7), uH = fh * 0.55 * sc;
-    const uX = cx - uW / 2, uY = chainY - uH - 4 * sc;
-    const t = barSize * sc, kH = fk * 0.35 * sc;
-    return (
-      <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H}>
-        {link}
-        {/* Side walls */}
-        <rect x={uX} y={uY} width={t} height={uH} fill="#8fa8c8" stroke={C.navyMid} strokeWidth={compact?1:1.4} />
-        <rect x={uX + uW - t} y={uY} width={t} height={uH} fill="#8fa8c8" stroke={C.navyMid} strokeWidth={compact?1:1.4} />
-        {/* Bottom */}
-        <rect x={uX} y={uY + uH - t} width={uW} height={t} fill="#8fa8c8" stroke={C.navyMid} strokeWidth={compact?1:1.4} />
-        {/* Top */}
-        <rect x={uX} y={uY} width={uW} height={t} fill="#7090b8" stroke={C.navyMid} strokeWidth={compact?1:1.4} />
-        {/* K — extended bottom lip */}
-        <rect x={uX - kH} y={uY + uH - t} width={kH} height={t} fill="#6080a8" stroke={C.navyMid} strokeWidth={compact?1:1.2} opacity="0.8" />
-        <rect x={uX + uW} y={uY + uH - t} width={kH} height={t} fill="#6080a8" stroke={C.navyMid} strokeWidth={compact?1:1.2} opacity="0.8" />
-        {!compact && <>
-          {dimLine(uX, uY - 14, uX + uW, uY - 14, "oow")}
-          {label(cx, uY - 17, `W = ${fw} mm`, "#1B3A6B")}
-          {dimLine(uX - 18, uY, uX - 18, uY + uH, "ooh")}
-          {label(uX - 32, uY + uH / 2, `H=${fh}`, "#555")}
-          {dimLine(uX - kH, uY + uH + 8, uX, uY + uH + 8, "ook")}
-          {label(uX - kH / 2, uY + uH + 18, `K=${fk}`, "#c33")}
-        </>}
-        {label(cx, H - 8, "OO Style Flight", C.navyMid, compact ? 7 : 10)}
-      </svg>
-    );
-  }
-
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H}>
-      {link}
-      {label(cx, cy - 10, style, C.navyMid, 14)}
-    </svg>
-  );
-}
-
-// ── Sequence Schematic ────────────────────────────────────────────────────────
-function SequenceSchematic({ chain, attachments }) {
-  if (!attachments || !attachments.length) return null;
-  const pitchPx = 70, linkH = 20, W = 600, H = 200;
-  const numLinks = 8;
-  const links = Array.from({ length: numLinks }, (_, i) => i);
-
-  const getStyle = (idx) => {
-    let result = null;
-    attachments.forEach(att => {
-      const every = parseInt(att.sequence) || 1;
-      const offset = parseInt(att.sequenceOffset) || 0;
-      if ((idx - offset) % every === 0 && idx >= offset) result = att;
-    });
-    return result;
+  const pinDescriptions = {
+    "Forged Head Pin + Collar and Roll Pin": "Drop-forged head pin retained by a collar and roll pin. Standard assembly method — provides maximum strength and is the most common configuration for heavy-duty drag conveyor chains.",
+    "Forged Head Pin + One Clamp":           "Forged head pin retained by a single clamp. Easier to service than roll pin style — ideal for applications requiring frequent disassembly or inspection.",
+    "Plain Pin + Two Clamps":                "Plain (unheaded) pin retained by two clamps, one on each end. Allows removal from either side — preferred in confined spaces or where bidirectional disassembly is needed.",
   };
 
-  const flightColors = { B: "#4a80b8", U: "#c9a84c", CU: "#7c4ddb", OO: "#c2410c", T: "#16a34a" };
+  const handleAdd = () => {
+    if (!material || !qty) return;
+    onAddRFQ({ description: `4B Drop Forged Chain Pin — ${pinName} | Chain: ${chainLink} | Material: ${material} | Qty: ${qty} pins` });
+    setAdded(true);
+    setTimeout(() => onClose(), 1500);
+  };
 
   return (
-    <div style={{ background: "#f8fafc", borderRadius: 10, border: `1px solid ${C.border}`, padding: 16, overflowX: "auto" }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 8 }}>Sequence Preview</div>
-      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", minWidth: 480 }}>
-        {/* Chain line */}
-        <line x1={20} y1={H / 2 + 10} x2={W - 20} y2={H / 2 + 10} stroke="#c8d4e8" strokeWidth="2" />
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 480, maxHeight: "90vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+        <div style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.navyMid})`, padding: "20px 24px", borderRadius: "16px 16px 0 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <div style={{ color: "white", fontWeight: 800, fontSize: 16 }}>{pinName}</div>
+            <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 12 }}>For chain: {chainLink}</div>
+          </div>
+          <button onClick={onClose} style={{ background: "rgba(255,255,255,0.1)", border: "none", color: "white", cursor: "pointer", borderRadius: 8, padding: "6px 12px", fontSize: 13 }}>✕</button>
+        </div>
 
-        {links.map(i => {
-          const x = 30 + i * pitchPx;
-          const y = H / 2;
-          const att = getStyle(i);
-          const linkImg = null;
-          const style = att?.flightStyle;
-          const fc = style ? (flightColors[style] || "#888") : null;
-          const fH = att ? Math.max(30, (parseInt(att.dims?.H) || 60) * 0.5) : 0;
+        {/* Pin image — cropped to show just this pin type */}
+        <div style={{ overflow: "hidden", height: 160, position: "relative", background: "#f8fafc" }}>
+          <img src={IMG.pin_all} alt={pinName}
+            style={{ width: "100%", height: "480px", objectFit: "cover", objectPosition: `center ${position}`, position: "absolute", top: position === "top" ? 0 : position === "bottom" ? "auto" : "50%", transform: position === "center" ? "translateY(-50%)" : "none", bottom: position === "bottom" ? 0 : "auto" }} />
+        </div>
 
-          return (
-            <g key={i}>
-              {/* Link */}
-              <rect x={x - 22} y={y} width={44} height={linkH} rx={8} fill="#c8d4e8" stroke={C.navyMid} strokeWidth="1.2" />
-              <circle cx={x - 12} cy={y + 10} r={5} fill="#6a8cb8" stroke={C.navyMid} strokeWidth="1" />
-              <circle cx={x + 12} cy={y + 10} r={5} fill="#6a8cb8" stroke={C.navyMid} strokeWidth="1" />
+        <div style={{ padding: "20px 24px" }}>
+          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7, marginBottom: 20 }}>{pinDescriptions[pinName]}</p>
 
-              {/* Flight */}
-              {att && (
-                <g>
-                  {/* B style */}
-                  {(style === "B") && (
-                    <>
-                      <rect x={x - 20} y={y - fH - 2} width={40} height={8} fill={fc} stroke={C.navy} strokeWidth="0.8" opacity="0.9" />
-                      <text x={x} y={y - fH - 6} textAnchor="middle" fontSize="7" fill={C.navy}>{att.flightName?.split(" ")[0]}</text>
-                    </>
-                  )}
-                  {/* U/CU/OO style */}
-                  {["U","CU","OO"].includes(style) && (
-                    <>
-                      <rect x={x - 16} y={y - fH - 2} width={4} height={fH} fill={fc} stroke={C.navy} strokeWidth="0.7" opacity="0.9" />
-                      <rect x={x - 16} y={y - fH - 2} width={32} height={4} fill={fc} stroke={C.navy} strokeWidth="0.7" opacity="0.9" />
-                      <rect x={x + 12} y={y - fH - 2} width={4} height={fH} fill={fc} stroke={C.navy} strokeWidth="0.7" opacity="0.9" />
-                      {style === "CU" && <rect x={x - 16} y={y - 6} width={32} height={4} fill={fc} stroke={C.navy} strokeWidth="0.7" opacity="0.7" />}
-                      <text x={x} y={y - fH - 6} textAnchor="middle" fontSize="7" fill={C.navy}>{style}</text>
-                    </>
-                  )}
-                  {/* UHMW plate indicator */}
-                  {att.uhmw && (
-                    <rect x={x - 18} y={y - fH - 10} width={36} height={6} fill="#e0f2fe" stroke="#0369a1" strokeWidth="0.7" opacity="0.85" />
-                  )}
-                </g>
-              )}
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, marginBottom: 8 }}>Pin Material</div>
+            <div style={{ display: "flex", gap: 10 }}>
+              {["Alloy Steel", "Stainless Steel"].map(m => (
+                <button key={m} onClick={() => setMaterial(m)}
+                  style={{ flex: 1, background: material === m ? C.navyMid : "#f1f5f9", color: material === m ? "white" : C.text,
+                    border: `2px solid ${material === m ? C.navyMid : C.border}`, borderRadius: 8, padding: "10px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                  {m}
+                </button>
+              ))}
+            </div>
+          </div>
 
-              {/* Link number */}
-              <text x={x} y={y + 32} textAnchor="middle" fontSize="8" fill={C.muted}>{i + 1}</text>
-            </g>
-          );
-        })}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, marginBottom: 8 }}>Quantity (number of pins)</div>
+            <input type="number" value={qty} onChange={e => setQty(e.target.value)} placeholder="e.g. 100"
+              style={{ width: "100%", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 14px", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+          </div>
 
-        {/* Legend */}
-        {attachments.map((att, i) => (
-          <g key={i}>
-            <rect x={20 + i * 140} y={H - 22} width={10} height={10} fill={flightColors[att.flightStyle] || "#888"} rx={2} />
-            <text x={34 + i * 140} y={H - 13} fontSize="8" fill={C.text}>{att.flightName} every {att.sequence}</text>
-          </g>
-        ))}
-      </svg>
+          <button onClick={handleAdd} disabled={!material || !qty}
+            style={{ width: "100%", background: added ? C.green : (!material || !qty ? "#e5e7eb" : C.navyMid), color: !material || !qty ? C.muted : "white",
+              border: "none", borderRadius: 10, padding: "14px", fontSize: 14, fontWeight: 700, cursor: !material || !qty ? "default" : "pointer" }}>
+            {added ? "✓ Added to RFQ!" : "Add to RFQ"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
 
-// ── Flight Configurator Wizard ────────────────────────────────────────────────
-const FLIGHT_STYLES = [
-  { id: "B-square", name: "Square Bar Flight", style: "B", img: IMG["Square Bar Flight"] },
-  { id: "B-flat",   name: "Flat Bar Flight",   style: "B", img: IMG["Flat Bar Flight"] },
-  { id: "B-paddle", name: "Paddle Flight",     style: "B", img: IMG["Paddle Flight"] },
-  { id: "U",        name: "U Flight",           style: "U", img: IMG["U Flight"] },
-  { id: "CU",       name: "Closed U Flight",    style: "CU", img: IMG["Closed U Flight"] },
-  { id: "CU-fp",    name: "Closed U with Filler Plates", style: "CU", img: IMG["Closed U Flight with Filler Plates"] },
-  { id: "OO",       name: "00 Flight",          style: "OO", img: IMG["00 Flight"] },
-  { id: "OO-fp",    name: "00 Flight with Filler Plates", style: "OO", img: IMG["00 Flight with Filler Plates"] },
-  { id: "RC",       name: "Return Cups",        style: "B",  img: IMG["Return Cups"] },
-];
+// ── SPROCKET PRODUCT PAGE ─────────────────────────────────────────────────────
+function SprocketModal({ sprocket, chainLink, sprocketFamily, onClose, onAddRFQ }) {
+  const [boreSize, setBoreSize] = useState("");
+  const [boreType, setBoreType] = useState("");
+  const [qty, setQty] = useState("");
+  const [added, setAdded] = useState(false);
 
-const PIN_OPTIONS = [
-  { name: "Forged Head Pin + Collar and Roll Pin", img: IMG.chain_pins, materials: ["Alloy Steel", "Stainless Steel"] },
-  { name: "Forged Head Pin + One Clamp",           img: IMG.chain_pins, materials: ["Alloy Steel", "Stainless Steel"] },
-  { name: "Plain Pin + Two Clamps",                img: IMG.chain_pins, materials: ["Alloy Steel", "Stainless Steel"] },
-];
+  const handleAdd = () => {
+    if (!boreSize || !qty) return;
+    const desc = `4B Sprocket ${sprocketFamily} — ${sprocket.teeth} Teeth | PCD=${sprocket.pcd_mm}mm | T=${sprocket.T_mm}mm | WB1=${sprocket.WB1_mm}mm | ØA=${sprocket.A_mm}mm | ØB=${sprocket.B_mm}mm | Bore: ${boreSize}${boreType ? ` (${boreType})` : ""} | Qty: ${qty} | For chain: ${chainLink}`;
+    onAddRFQ({ description: desc });
+    setAdded(true);
+    setTimeout(() => onClose(), 1500);
+  };
 
-function FieldRow({ label, children }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
-      <label style={{ width: 180, fontSize: 12, color: C.muted, flexShrink: 0 }}>{label}</label>
-      <div style={{ flex: 1 }}>{children}</div>
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 10001, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 480, maxHeight: "90vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+        <div style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.navyMid})`, padding: "20px 24px", borderRadius: "16px 16px 0 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <div style={{ color: "white", fontWeight: 800, fontSize: 16 }}>{sprocketFamily} — {sprocket.teeth} Teeth</div>
+            <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 12 }}>For chain: {chainLink}</div>
+          </div>
+          <button onClick={onClose} style={{ background: "rgba(255,255,255,0.1)", border: "none", color: "white", cursor: "pointer", borderRadius: 8, padding: "6px 12px", fontSize: 13 }}>✕</button>
+        </div>
+
+        <div style={{ padding: 20 }}>
+          <img src={IMG.sprocket_installed} alt="Sprocket"
+            style={{ width: "100%", height: 140, objectFit: "cover", borderRadius: 10, marginBottom: 16, border: `1px solid ${C.border}` }} />
+
+          {/* Specs table */}
+          <div style={{ background: "#f8fafc", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden", marginBottom: 20 }}>
+            <div style={{ background: C.navyMid, color: "white", padding: "8px 14px", fontSize: 12, fontWeight: 700 }}>Specifications</div>
+            <div style={{ padding: "0 14px" }}>
+              {[["Teeth", sprocket.teeth], ["PCD", `${sprocket.pcd_mm} mm`], ["Pitch Circle (P1)", `${sprocket.P1_mm} mm`], ["ØA", `${sprocket.A_mm} mm`], ["ØB", `${sprocket.B_mm} mm`], ["C max", `${sprocket.C_max_mm} mm`], ["Bolt Size", sprocket.D_mm], ["No. Bolts", sprocket.bolts], ["Thickness (T)", `${sprocket.T_mm} mm`], ["WB1", `${sprocket.WB1_mm} mm`]].map(([k, v]) => (
+                <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "7px 0", borderBottom: `1px solid ${C.border}`, fontSize: 13 }}>
+                  <span style={{ color: C.muted }}>{k}</span><span style={{ fontWeight: 600 }}>{v}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bore size */}
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, marginBottom: 8 }}>Bore Size (required)</div>
+            <input type="text" value={boreSize} onChange={e => setBoreSize(e.target.value)} placeholder='e.g. 60mm, 2.5", 70mm keyed'
+              style={{ width: "100%", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 14px", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+          </div>
+
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, marginBottom: 8 }}>Bore Type (optional)</div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {["Plain Bore", "Keyed", "Taper Lock", "QD Bush"].map(b => (
+                <button key={b} onClick={() => setBoreType(b === boreType ? "" : b)}
+                  style={{ background: boreType === b ? C.navyMid : "#f1f5f9", color: boreType === b ? "white" : C.text,
+                    border: `1px solid ${boreType === b ? C.navyMid : C.border}`, borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+                  {b}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, marginBottom: 8 }}>Quantity</div>
+            <input type="number" value={qty} onChange={e => setQty(e.target.value)} placeholder="e.g. 2"
+              style={{ width: "100%", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 14px", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+          </div>
+
+          <button onClick={handleAdd} disabled={!boreSize || !qty}
+            style={{ width: "100%", background: added ? C.green : (!boreSize || !qty ? "#e5e7eb" : C.navyMid), color: !boreSize || !qty ? C.muted : "white",
+              border: "none", borderRadius: 10, padding: "14px", fontSize: 14, fontWeight: 700, cursor: !boreSize || !qty ? "default" : "pointer" }}>
+            {added ? "✓ Added to RFQ!" : "Add Sprocket to RFQ"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
 
-function TextInput({ value, onChange, placeholder, unit }) {
+// ── BOLT N GO PRODUCT PAGE ───────────────────────────────────────────────────
+function BoltNGoModal({ chain, onClose, onAddRFQ }) {
+  const [footage, setFootage] = useState("");
+  const [unit, setUnit] = useState("feet");
+  const [added, setAdded] = useState(false);
+
+  const handleAdd = () => {
+    if (!footage) return;
+    onAddRFQ({ description: `4B Bolt N Go Chain ${chain.chain_link} (${chain.link_type} Link, P=${chain.P_mm}mm, ${chain.min_breaking_load_kn}kN) | ${footage} ${unit}` });
+    setAdded(true);
+    setTimeout(() => onClose(), 1500);
+  };
+
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-      <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-        style={{ border: `1px solid ${C.border}`, borderRadius: 6, padding: "6px 10px", fontSize: 13, width: 100, outline: "none" }} />
-      {unit && <span style={{ fontSize: 11, color: C.muted }}>{unit}</span>}
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 480, boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+        <div style={{ background: `linear-gradient(135deg, ${C.green}, #15803d)`, padding: "20px 24px", borderRadius: "16px 16px 0 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <div style={{ color: "white", fontWeight: 800, fontSize: 16 }}>⚡ Bolt N Go — {chain.chain_link}</div>
+            <div style={{ color: "rgba(255,255,255,0.8)", fontSize: 12 }}>Pre-assembled, ready-to-install chain</div>
+          </div>
+          <button onClick={onClose} style={{ background: "rgba(255,255,255,0.2)", border: "none", color: "white", cursor: "pointer", borderRadius: 8, padding: "6px 12px", fontSize: 13 }}>✕</button>
+        </div>
+        <div style={{ padding: "20px 24px" }}>
+          <img src={IMG.bolt_n_go} alt="Bolt N Go Chain"
+            style={{ width: "100%", height: 140, objectFit: "cover", borderRadius: 10, marginBottom: 16, border: `1px solid ${C.border}` }} />
+          <p style={{ fontSize: 13, color: C.text, lineHeight: 1.7, marginBottom: 20 }}>
+            Bolt N Go chain arrives pre-assembled with pins and clamps installed — ready to drop into your conveyor without any assembly. Saves significant installation time in the field.
+          </p>
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, marginBottom: 8 }}>Unit</div>
+            <div style={{ display: "flex", gap: 10 }}>
+              {["feet", "metres", "links"].map(u => (
+                <button key={u} onClick={() => setUnit(u)}
+                  style={{ flex: 1, background: unit === u ? C.navyMid : "#f1f5f9", color: unit === u ? "white" : C.text,
+                    border: `2px solid ${unit === u ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                  {u}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, marginBottom: 8 }}>Quantity ({unit})</div>
+            <input type="number" value={footage} onChange={e => setFootage(e.target.value)} placeholder={`e.g. ${unit === "links" ? "50" : "100"}`}
+              style={{ width: "100%", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 14px", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+          </div>
+          <button onClick={handleAdd} disabled={!footage}
+            style={{ width: "100%", background: added ? C.green : (!footage ? "#e5e7eb" : C.navyMid), color: !footage ? C.muted : "white",
+              border: "none", borderRadius: 10, padding: "14px", fontSize: 14, fontWeight: 700, cursor: !footage ? "default" : "pointer" }}>
+            {added ? "✓ Added to RFQ!" : "Add Bolt N Go to RFQ"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
 
+// ── INPUT HELPERS ─────────────────────────────────────────────────────────────
+function FieldRow({ label, children, note }) {
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, marginBottom: 6 }}>{label}</div>
+      {children}
+      {note && <div style={{ fontSize: 11, color: C.muted, marginTop: 4 }}>{note}</div>}
+    </div>
+  );
+}
+function TextInput({ value, onChange, unit, placeholder }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <input type="text" value={value || ""} onChange={e => onChange(e.target.value)} placeholder={placeholder || ""}
+        style={{ flex: 1, border: `1px solid ${C.border}`, borderRadius: 8, padding: "9px 12px", fontSize: 13, outline: "none" }} />
+      {unit && <span style={{ fontSize: 12, color: C.muted, minWidth: 24 }}>{unit}</span>}
+    </div>
+  );
+}
 function SelectInput({ value, onChange, options }) {
   return (
-    <select value={value} onChange={e => onChange(e.target.value)}
-      style={{ border: `1px solid ${C.border}`, borderRadius: 6, padding: "6px 10px", fontSize: 13, outline: "none", background: "white" }}>
-      <option value="">— Select —</option>
+    <select value={value || ""} onChange={e => onChange(e.target.value)}
+      style={{ width: "100%", border: `1px solid ${C.border}`, borderRadius: 8, padding: "9px 12px", fontSize: 13, outline: "none", background: "white" }}>
+      <option value="">Select...</option>
       {options.map(o => <option key={o} value={o}>{o}</option>)}
     </select>
   );
 }
 
-function emptyAttachment(idx = 0) {
+const PIN_OPTIONS = [
+  { name: "Forged Head Pin + Collar and Roll Pin" },
+  { name: "Forged Head Pin + One Clamp" },
+  { name: "Plain Pin + Two Clamps" },
+];
+
+const STEEL_TYPES = ["Mild Steel (A36)", "AR200", "AR400", "AR500", "304 Stainless", "316 Stainless"];
+const NUT_STYLES = ["Standard Hex Nut", "Nylon Lock Nut", "Flange Nut", "Serrated Flange Nut", "Wing Nut"];
+
+function emptyAttachment(idx) {
   return {
     _key: Date.now() + idx,
-    flightId: "", flightName: "", flightStyle: "",
-    dims: { W: "", P: "", H: "", G: "", K: "", barSize: "", steelType: "", perpendicular: "No", carryBackCups: "No", cupsSize: "", configuration: "", notchDetails: "", holeDetails: "", mangTipping: "No", plateBlanking: "No" },
+    flightName: "", flightStyle: "",
+    sequence: "4", // every Nth link
+    hasBackingPlate: false,
+    backingPlateThickness: "",
+    backingPlateSequence: "",
+    dims: { W: "", H: "", G: "", K: "", barSize: "", barShape: "", steelType: "" },
     uhmw: false,
-    uhmwDims: { thickness: "", overallW: "", overallH: "", type: "Regular", bottomStyle: "Flush", overlap: "", sequence: "" },
-    sequence: "1", sequenceOffset: "0",
+    uhmwDims: { thickness: "", overallW: "", overallH: "", type: "Regular UHMW", bottomStyle: "Flush to bottom", overlap: "", boltDiameter: "", nutStyle: "", boltPlacement: "" },
   };
 }
 
-function FlightWizard({ chain, onComplete, onCancel }) {
+// ── ISOMETRIC-STYLE SEQUENCE SCHEMATIC ───────────────────────────────────────
+function SequenceSchematic({ chain, attachments }) {
+  const att = attachments[0];
+  const seq = parseInt(att?.sequence) || 4;
+  const style = att?.flightStyle;
+  const fw = parseFloat(att?.dims?.W) || 300;
+  const fh = parseFloat(att?.dims?.H) || 120;
+  const barSize = parseFloat(att?.dims?.barSize) || 16;
+  const linkP = parseFloat(chain?.P_mm) || 142;
+  const hasUHMW = att?.uhmw;
+  const uhmwT = parseFloat(att?.uhmwDims?.thickness) || 12;
+  const hasBacking = att?.hasBackingPlate;
+  const backingSeq = parseInt(att?.backingPlateSequence) || 2;
+
+  // Draw 4 links in a row, flights on every `seq` links
+  const W = 560, H = 200;
+  const numLinks = Math.max(seq * 2 + 1, 5);
+  const linkW = Math.min(60, (W - 80) / numLinks);
+  const startX = 40;
+  const chainY = H - 60;
+  const links = Array.from({ length: numLinks }, (_, i) => i);
+
+  // Chain link rendering
+  const drawLink = (i) => {
+    const x = startX + i * linkW;
+    const lh = 22, lw = linkW - 2;
+    return (
+      <g key={i}>
+        <rect x={x} y={chainY - lh / 2} width={lw} height={lh} rx={lh * 0.4} fill="#c8d4e8" stroke={C.navyMid} strokeWidth={1.2} />
+        <circle cx={x + lh * 0.5} cy={chainY} r={lh * 0.28} fill="#6a8cb8" stroke={C.navyMid} strokeWidth="0.8" />
+        <circle cx={x + lw - lh * 0.5} cy={chainY} r={lh * 0.28} fill="#6a8cb8" stroke={C.navyMid} strokeWidth="0.8" />
+      </g>
+    );
+  };
+
+  // Flight rendering based on style
+  const drawFlight = (i) => {
+    const cx = startX + i * linkW + linkW / 2;
+    const baseY = chainY - 12;
+    const scale = Math.min(fw / 300, 1.0);
+    const flightW = Math.min(fw * scale * 0.18, 80);
+    const flightH = Math.min(fh * scale * 0.55, 65);
+    const bar = Math.max(barSize * 0.18, 4);
+
+    let flightElem = null;
+
+    if (style === "B") {
+      // Bar flight — horizontal bar across chain
+      flightElem = (
+        <g>
+          <rect x={cx - flightW / 2} y={baseY - bar} width={flightW} height={bar} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+          {/* Isometric side shadow */}
+          <rect x={cx + flightW / 2} y={baseY - bar + 2} width={4} height={bar} fill="#3a5a8a" />
+          <rect x={cx - flightW / 2} y={baseY} width={flightW + 4} height={3} fill="#3a5a8a" />
+        </g>
+      );
+    } else if (style === "U" || style === "CU") {
+      const t = Math.max(bar, 5);
+      flightElem = (
+        <g>
+          <rect x={cx - flightW / 2} y={baseY - flightH} width={t} height={flightH} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+          <rect x={cx + flightW / 2 - t} y={baseY - flightH} width={t} height={flightH} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+          <rect x={cx - flightW / 2} y={baseY - t} width={flightW} height={t} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+          {style === "CU" && <rect x={cx - flightW / 2} y={baseY - flightH} width={flightW} height={t} fill="#4a6a9a" stroke={C.navyMid} strokeWidth="1" />}
+          {/* Shadow */}
+          <rect x={cx + flightW / 2} y={baseY - flightH + 2} width={4} height={flightH} fill="#3a5a8a" />
+        </g>
+      );
+    } else if (style === "OO") {
+      const t = Math.max(bar, 5), kH = flightH * 0.3;
+      flightElem = (
+        <g>
+          <rect x={cx - flightW / 2} y={baseY - flightH} width={t} height={flightH} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+          <rect x={cx + flightW / 2 - t} y={baseY - flightH} width={t} height={flightH} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+          <rect x={cx - flightW / 2} y={baseY - t} width={flightW} height={t} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+          <rect x={cx - flightW / 2} y={baseY - flightH} width={flightW} height={t} fill="#4a6a9a" stroke={C.navyMid} strokeWidth="1" />
+          {/* OO lip extension */}
+          <rect x={cx - flightW / 2 - kH} y={baseY - t} width={kH} height={t} fill="#4a6a9a" />
+          <rect x={cx + flightW / 2} y={baseY - flightH + 2} width={4} height={flightH} fill="#3a5a8a" />
+        </g>
+      );
+    } else {
+      // Default bar
+      flightElem = (
+        <rect x={cx - flightW / 2} y={baseY - bar} width={flightW} height={bar} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+      );
+    }
+
+    // UHMW overlay on the flight
+    const uhmwElem = hasUHMW ? (
+      <rect x={cx - flightW / 2} y={baseY - bar - uhmwT * 0.4} width={flightW} height={uhmwT * 0.4}
+        fill="rgba(200,220,255,0.7)" stroke="#4a80cc" strokeWidth="0.8" strokeDasharray="3,2" />
+    ) : null;
+
+    // Backing plate (below chain)
+    const shouldDrawBacking = hasBacking && (Math.floor(i / backingSeq) * backingSeq === i);
+    const backingElem = shouldDrawBacking ? (
+      <g>
+        <rect x={cx - flightW / 2 + 4} y={chainY + 12} width={flightW - 8} height={6} fill="#8a9ab8" stroke={C.navyMid} strokeWidth="0.8" />
+        <text x={cx} y={chainY + 24} textAnchor="middle" fontSize="7" fill={C.muted}>BP</text>
+      </g>
+    ) : null;
+
+    return <g key={`f${i}`}>{flightElem}{uhmwElem}{backingElem}</g>;
+  };
+
+  // Dimension annotations
+  const firstFlightX = startX + (seq - 1) * linkW + linkW / 2;
+  const secondFlightX = startX + (seq * 2 - 1) * linkW + linkW / 2;
+
+  return (
+    <div>
+      <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 8 }}>Chain Assembly — Profile View</div>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ background: "#f8fafc", borderRadius: 10, border: `1px solid ${C.border}` }}>
+        {/* Ground line */}
+        <line x1={30} y1={chainY + 30} x2={W - 30} y2={chainY + 30} stroke="#ccc" strokeWidth="1" strokeDasharray="4,4" />
+
+        {/* Links */}
+        {links.map(i => drawLink(i))}
+
+        {/* Flights at every seq-th link (0-indexed: link seq-1, 2*seq-1, etc.) */}
+        {links.filter(i => (i + 1) % seq === 0).map(i => drawFlight(i))}
+
+        {/* Pitch label */}
+        {links.length > 2 && (
+          <g>
+            <defs>
+              <marker id="pa" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0,0 L4,2 L0,4 Z" fill="#666"/></marker>
+              <marker id="pb" markerWidth="4" markerHeight="4" refX="1" refY="2" orient="auto"><path d="M4,0 L0,2 L4,4 Z" fill="#666"/></marker>
+            </defs>
+            <line x1={startX} y1={chainY + 35} x2={startX + linkW} y2={chainY + 35} stroke="#666" strokeWidth="0.8" markerEnd="url(#pa)" markerStart="url(#pb)" />
+            <text x={startX + linkW / 2} y={chainY + 46} textAnchor="middle" fontSize="9" fill="#666">P={chain?.P_mm}mm</text>
+          </g>
+        )}
+
+        {/* Flight spacing label */}
+        {links.some(i => (i + 1) % seq === 0) && (() => {
+          const f1 = links.find(i => (i + 1) % seq === 0);
+          const f2 = links.find(i => (i + 1) % seq === 0 && i > f1);
+          if (f1 === undefined || f2 === undefined) return null;
+          const x1 = startX + f1 * linkW + linkW / 2;
+          const x2 = startX + f2 * linkW + linkW / 2;
+          return (
+            <g>
+              <line x1={x1} y1={chainY - 75} x2={x2} y2={chainY - 75} stroke={C.navyMid} strokeWidth="0.8" markerEnd="url(#pa)" markerStart="url(#pb)" />
+              <text x={(x1 + x2) / 2} y={chainY - 80} textAnchor="middle" fontSize="9" fill={C.navyMid}>Every {seq} links</text>
+            </g>
+          );
+        })()}
+
+        {/* Flight height label */}
+        {style && (() => {
+          const fi = links.find(i => (i + 1) % seq === 0);
+          if (fi === undefined) return null;
+          const fx = startX + fi * linkW + linkW / 2;
+          const scale = Math.min(fw / 300, 1.0);
+          const fhPx = Math.min(fh * scale * 0.55, 65);
+          return (
+            <g>
+              <line x1={fx + 44} y1={chainY - 12} x2={fx + 44} y2={chainY - 12 - fhPx} stroke="#999" strokeWidth="0.7" markerEnd="url(#pa)" markerStart="url(#pb)" />
+              <text x={fx + 54} y={chainY - 12 - fhPx / 2 + 4} fontSize="8" fill="#888">H={att?.dims?.H||"?"}mm</text>
+            </g>
+          );
+        })()}
+
+        {/* UHMW label */}
+        {hasUHMW && (() => {
+          const fi = links.find(i => (i + 1) % seq === 0);
+          if (fi === undefined) return null;
+          const fx = startX + fi * linkW + linkW / 2;
+          return <text x={fx} y={chainY - 35} textAnchor="middle" fontSize="8" fill="#4a80cc" fontWeight="600">UHMW T={att?.uhmwDims?.thickness||"?"}mm</text>;
+        })()}
+
+        {/* Backing plate label */}
+        {hasBacking && (
+          <text x={W / 2} y={chainY + 38} textAnchor="middle" fontSize="8" fill={C.muted}>Backing Plate every {att?.backingPlateSequence||"?"} attachment(s){att?.backingPlateThickness ? ` — T=${att.backingPlateThickness}mm` : ""}</text>
+        )}
+      </svg>
+    </div>
+  );
+}
+
+// ── CHAIN CONFIGURATOR (WIZARD) ───────────────────────────────────────────────
+function ChainConfigurator({ chain, onComplete, onClose }) {
   const [step, setStep] = useState(0);
-  const [imperial, setImperial] = useState(false);
+  const [footage, setFootage] = useState("");
+  const [footageUnit, setFootageUnit] = useState("feet");
   const [hasFlights, setHasFlights] = useState(null);
   const [attachments, setAttachments] = useState([emptyAttachment(0)]);
   const [activeAtt, setActiveAtt] = useState(0);
-  const [addingAnother, setAddingAnother] = useState(false);
-  const [pinStyle, setPinStyle] = useState(null);
+  const [pinStyle, setPinStyle] = useState("");
   const [pinMaterial, setPinMaterial] = useState("");
+  const imperial = false;
 
-  const att = attachments[activeAtt] || attachments[0];
-  const setAtt = (fn) => setAttachments(prev => prev.map((a, i) => i === activeAtt ? fn(a) : a));
+  const flights = tryParse(chain.flight_options);
+  const att = attachments[activeAtt] || emptyAttachment(0);
 
-  const updateDims = (key, val) => setAtt(a => ({ ...a, dims: { ...a.dims, [key]: val } }));
-  const updateUhmw = (key, val) => setAtt(a => ({ ...a, uhmwDims: { ...a.uhmwDims, [key]: val } }));
+  function updateAtt(field, val) {
+    setAttachments(prev => prev.map((a, i) => i === activeAtt ? { ...a, [field]: val } : a));
+  }
+  function updateDim(field, val) {
+    setAttachments(prev => prev.map((a, i) => i === activeAtt ? { ...a, dims: { ...a.dims, [field]: val } } : a));
+  }
+  function updateUhmw(field, val) {
+    setAttachments(prev => prev.map((a, i) => i === activeAtt ? { ...a, uhmwDims: { ...a.uhmwDims, [field]: val } } : a));
+  }
 
-  const styleFields = {
-    B:  ["W", "barSize", "steelType", "perpendicular", "carryBackCups", "cupsSize", "configuration"],
-    T:  ["W", "barSize", "steelType", "perpendicular", "carryBackCups", "cupsSize", "configuration", "notchDetails", "holeDetails"],
-    U:  ["W", "H", "barSize", "steelType", "mangTipping", "plateBlanking"],
-    CU: ["W", "H", "G", "barSize", "steelType", "mangTipping", "plateBlanking"],
-    OO: ["W", "H", "G", "K", "barSize", "steelType", "mangTipping", "plateBlanking"],
-  };
+  const steps = ["Footage", "Flights?", "Flight Type", "Dimensions", "More?", "Pins", "Review"];
 
-  const fieldLabels = {
-    W: "Width (W)", P: "Pitch (P)", H: "Height (H)", G: "Gap (G)", K: "Extension (K)",
-    barSize: "Bar Size", steelType: "Steel Type", perpendicular: "Perpendicular to chain?",
-    carryBackCups: "Carry Back Cups?", cupsSize: "Cup Size", configuration: "Configuration",
-    notchDetails: "Notch Details", holeDetails: "Hole Details",
-    mangTipping: "Manganese Tipping?", plateBlanking: "Plate Blanking?",
-  };
-
-  const boolFields = ["perpendicular", "carryBackCups", "mangTipping", "plateBlanking"];
-  const fields = styleFields[att.flightStyle] || [];
-
-  // Step 0: has flights?
+  // Step 0: Footage
   if (step === 0) return (
-    <div style={{ padding: "32px 24px", textAlign: "center" }}>
-      <div style={{ fontSize: 20, fontWeight: 800, color: C.navyMid, marginBottom: 8 }}>Does this chain have flight attachments?</div>
-      <div style={{ color: C.muted, fontSize: 13, marginBottom: 28 }}>Flights are welded steel bars or profiles bolted or welded to the chain for material conveying.</div>
-      <div style={{ display: "flex", gap: 16, justifyContent: "center" }}>
-        <button onClick={() => { setHasFlights(true); setStep(1); }}
-          style={{ background: C.navyMid, color: "white", border: "none", borderRadius: 10, padding: "14px 36px", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-          Yes, with Flights
-        </button>
-        <button onClick={() => { setHasFlights(false); setStep(5); }}
-          style={{ background: "#f1f5f9", color: C.text, border: `1px solid ${C.border}`, borderRadius: 10, padding: "14px 36px", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-          No Flights (Chain Only)
-        </button>
-      </div>
+    <div style={{ padding: 24 }}>
+      <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>How much chain do you need?</div>
+      <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Enter the total length required.</div>
+      <FieldRow label="Unit">
+        <div style={{ display: "flex", gap: 10 }}>
+          {["feet", "metres", "links"].map(u => (
+            <button key={u} onClick={() => setFootageUnit(u)}
+              style={{ flex: 1, background: footageUnit === u ? C.navyMid : "#f1f5f9", color: footageUnit === u ? "white" : C.text,
+                border: `2px solid ${footageUnit === u ? C.navyMid : C.border}`, borderRadius: 8, padding: "10px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+              {u}
+            </button>
+          ))}
+        </div>
+      </FieldRow>
+      <FieldRow label={`Quantity (${footageUnit})`}>
+        <TextInput value={footage} onChange={setFootage} placeholder={footageUnit === "links" ? "e.g. 50" : "e.g. 100"} />
+      </FieldRow>
+      <button onClick={() => { if (footage) setStep(1); }} disabled={!footage}
+        style={{ background: footage ? C.navyMid : "#e5e7eb", color: footage ? "white" : C.muted, border: "none", borderRadius: 8, padding: "12px 28px", cursor: footage ? "pointer" : "default", fontSize: 13, fontWeight: 700, marginTop: 8 }}>
+        Next →
+      </button>
     </div>
   );
 
-  // Step 1: pick flight style
+  // Step 1: Flights?
   if (step === 1) return (
-    <div style={{ padding: "24px" }}>
-      <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>
-        {attachments.length > 1 || addingAnother ? `Attachment #${activeAtt + 1} — ` : ""}Select Flight Style
-      </div>
-      <div style={{ color: C.muted, fontSize: 12, marginBottom: 18 }}>Based on the Uniking Flight Identification Form</div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 12 }}>
-        {FLIGHT_STYLES.map(fs => (
-          <button key={fs.id} onClick={() => { setAtt(a => ({ ...a, flightId: fs.id, flightName: fs.name, flightStyle: fs.style })); setStep(2); }}
-            style={{ background: att.flightId === fs.id ? C.navyMid : C.card, border: `2px solid ${att.flightId === fs.id ? C.navyMid : C.border}`,
-              borderRadius: 10, padding: 0, cursor: "pointer", overflow: "hidden", textAlign: "left", transition: "all 0.15s" }}>
-            {fs.img && <img src={fs.img} alt={fs.name} style={{ width: "100%", height: 100, objectFit: "contain", background: "#f8fafc", display: "block", padding: "6px 0" }} />}
-            <div style={{ padding: "8px 10px", fontSize: 11, fontWeight: 700, color: att.flightId === fs.id ? "white" : C.text }}>{fs.name}</div>
+    <div style={{ padding: 24 }}>
+      <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Does this chain need flights / attachments?</div>
+      <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Flights are bar, U-type, or OO-type steel attachments welded or bolted to links to push or carry material.</div>
+      <div style={{ display: "flex", gap: 12 }}>
+        {[["Yes", true], ["No — Chain Links Only", false]].map(([label, val]) => (
+          <button key={label} onClick={() => { setHasFlights(val); setStep(val ? 2 : 5); }}
+            style={{ flex: 1, background: C.navyMid, color: "white", border: "none", borderRadius: 10, padding: "16px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+            {label}
           </button>
         ))}
       </div>
+      <button onClick={() => setStep(0)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontSize: 12, marginTop: 12 }}>← Back</button>
     </div>
   );
 
-  // Step 2: flight measurements
+  // Step 2: Flight type selection
   if (step === 2) return (
-    <div style={{ padding: "24px" }}>
-      <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-            <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid }}>{att.flightName} — Measurements</div>
-            <div style={{ display: "flex", background: "#f1f5f9", borderRadius: 8, padding: "3px" }}>
-              <button onClick={() => setImperial(false)}
-                style={{ padding: "4px 12px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 700, background: !imperial ? C.navyMid : "transparent", color: !imperial ? "white" : C.muted }}>
-                mm
-              </button>
-              <button onClick={() => setImperial(true)}
-                style={{ padding: "4px 12px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 700, background: imperial ? C.navyMid : "transparent", color: imperial ? "white" : C.muted }}>
-                in
-              </button>
-            </div>
-          </div>
-          <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Enter dimensions from the ID Form. Toggle mm/in — values stored as mm internally.</div>
-          {fields.map(f => (
-            <FieldRow key={f} label={fieldLabels[f]}>
-              {boolFields.includes(f) ? (
-                <SelectInput value={att.dims[f]} onChange={v => updateDims(f, v)} options={["Yes", "No"]} />
-              ) : f === "steelType" ? (
-                <SelectInput value={att.dims[f]} onChange={v => updateDims(f, v)} options={["Mild Steel", "Stainless Steel 304", "Stainless Steel 316", "Hardox", "AR400"]} />
-              ) : (
-                <TextInput value={["W","H","G","K"].includes(f) ? (imperial && att.dims[f] ? toDisplay(att.dims[f], true) : att.dims[f]) : att.dims[f]} onChange={v => updateDims(f, ["W","H","G","K"].includes(f) ? toMM(v, imperial) : v)} placeholder="0" unit={["W","H","G","K"].includes(f) ? (imperial ? "in" : "mm") : ""} />
-              )}
-            </FieldRow>
-          ))}
-          {att.flightStyle && (
-            <div style={{ marginTop: 12 }}>
-              <FieldRow label="Sequence (every N links)">
-                <SelectInput value={att.sequence} onChange={v => setAtt(a => ({ ...a, sequence: v }))} options={["1","2","3","4","5","6","8","10","12"]} />
-              </FieldRow>
-            </div>
-          )}
-        </div>
-        <div style={{ width: 200, flexShrink: 0 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>Reference Drawing</div>
-          <div style={{ background: "#f8fafc", borderRadius: 10, border: `1px solid ${C.border}`, padding: 8 }}>
-            <FlightSchematicSVG style={att.flightStyle} dims={{ W: parseInt(att.dims.W)||200, H: parseInt(att.dims.H)||80, G: parseInt(att.dims.G)||40, K: parseInt(att.dims.K)||30, barSize: parseInt(att.dims.barSize)||10 }} />
-          </div>
-          {att.img && <img src={IMG[att.flightName]} alt={att.flightName} style={{ width: "100%", marginTop: 10, borderRadius: 8, border: `1px solid ${C.border}` }} onError={() => {}} />}
-        </div>
+    <div style={{ padding: 24 }}>
+      <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>
+        {attachments.length > 1 ? `Attachment ${activeAtt + 1} — ` : ""}Flight / Attachment Type
       </div>
-      <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+      <div style={{ color: C.muted, fontSize: 12, marginBottom: 16 }}>Select the profile that matches your application.</div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
+        {flights.map(f => (
+          <button key={f.name} onClick={() => { updateAtt("flightName", f.name); updateAtt("flightStyle", f.style); }}
+            style={{ background: att.flightName === f.name ? C.navyMid : C.card, border: `2px solid ${att.flightName === f.name ? C.navyMid : C.border}`,
+              borderRadius: 10, padding: "10px 14px", cursor: "pointer", textAlign: "left",
+              display: "flex", alignItems: "center", gap: 12 }}>
+            {IMG[f.name] && <img src={IMG[f.name]} alt={f.name} style={{ width: 50, height: 36, objectFit: "cover", borderRadius: 6, border: `1px solid ${C.border}` }} />}
+            <span style={{ fontSize: 13, fontWeight: 600, color: att.flightName === f.name ? "white" : C.text }}>{f.name}</span>
+          </button>
+        ))}
+      </div>
+      <div style={{ display: "flex", gap: 10 }}>
         <button onClick={() => setStep(1)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
-        <button onClick={() => setStep(3)} style={{ background: C.navyMid, color: "white", border: "none", borderRadius: 8, padding: "10px 24px", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Next →</button>
+        <button onClick={() => { if (att.flightName) setStep(3); }} disabled={!att.flightName}
+          style={{ background: att.flightName ? C.navyMid : "#e5e7eb", color: att.flightName ? "white" : C.muted, border: "none", borderRadius: 8, padding: "10px 24px", cursor: att.flightName ? "pointer" : "default", fontSize: 13, fontWeight: 700 }}>
+          Next →
+        </button>
       </div>
     </div>
   );
 
-  // Step 3: UHMW plates
+  // Step 3: Dimensions + spacing + backing plate + UHMW
   if (step === 3) return (
-    <div style={{ padding: "24px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-        <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid }}>UHMW Wear Plates</div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#f1f5f9", borderRadius: 8, padding: "4px 6px" }}>
-          <button onClick={() => setImperial(false)}
-            style={{ padding: "4px 12px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 700, background: !imperial ? C.navyMid : "transparent", color: !imperial ? "white" : C.muted }}>
-            Metric
-          </button>
-          <button onClick={() => setImperial(true)}
-            style={{ padding: "4px 12px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 700, background: imperial ? C.navyMid : "transparent", color: imperial ? "white" : C.muted }}>
-            Imperial
-          </button>
-        </div>
-      </div>
-      <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Does this flight have UHMW polyethylene plates bolted to it?</div>
-      <div style={{ display: "flex", gap: 12, marginBottom: 24 }}>
-        <button onClick={() => setAtt(a => ({ ...a, uhmw: true }))}
-          style={{ flex: 1, background: att.uhmw ? C.navyMid : "#f1f5f9", color: att.uhmw ? "white" : C.text, border: `2px solid ${att.uhmw ? C.navyMid : C.border}`, borderRadius: 10, padding: "14px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
-          Yes, with UHMW Plates
-        </button>
-        <button onClick={() => setAtt(a => ({ ...a, uhmw: false }))}
-          style={{ flex: 1, background: !att.uhmw ? C.navyMid : "#f1f5f9", color: !att.uhmw ? "white" : C.text, border: `2px solid ${!att.uhmw ? C.navyMid : C.border}`, borderRadius: 10, padding: "14px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
-          No UHMW
-        </button>
-      </div>
+    <div style={{ padding: 24, maxHeight: "70vh", overflowY: "auto" }}>
+      <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>{att.flightName} — Dimensions</div>
+      {IMG[att.flightName] && (
+        <img src={IMG[att.flightName]} alt={att.flightName}
+          style={{ width: "100%", height: 130, objectFit: "cover", borderRadius: 8, border: `1px solid ${C.border}`, marginBottom: 16 }} />
+      )}
 
+      {/* Common dims */}
+      <FieldRow label="Overall Flight Width (W)" note="Measured tip to tip across the chain">
+        <TextInput value={att.dims.W} onChange={v => updateDim("W", v)} unit="mm" />
+      </FieldRow>
+
+      {(att.flightStyle === "U" || att.flightStyle === "CU" || att.flightStyle === "OO") && (
+        <>
+          <FieldRow label="Flight Height (H)">
+            <TextInput value={att.dims.H} onChange={v => updateDim("H", v)} unit="mm" />
+          </FieldRow>
+          {att.flightStyle === "CU" && (
+            <FieldRow label="Internal Gap (G)" note="Opening width inside closed U">
+              <TextInput value={att.dims.G} onChange={v => updateDim("G", v)} unit="mm" />
+            </FieldRow>
+          )}
+          {att.flightStyle === "OO" && (
+            <FieldRow label="Lip Extension (K)" note="How far the OO lip extends beyond the side wall">
+              <TextInput value={att.dims.K} onChange={v => updateDim("K", v)} unit="mm" />
+            </FieldRow>
+          )}
+        </>
+      )}
+
+      {att.flightStyle === "B" && (
+        <>
+          <FieldRow label="Bar Size" note="Diameter (round) or side length (square/flat)">
+            <div style={{ display: "flex", gap: 8 }}>
+              <TextInput value={att.dims.barSize} onChange={v => updateDim("barSize", v)} unit="mm" />
+              <SelectInput value={att.dims.barShape} onChange={v => updateDim("barShape", v)} options={["Round", "Square", "Flat"]} />
+            </div>
+          </FieldRow>
+        </>
+      )}
+
+      <FieldRow label="Steel Type">
+        <SelectInput value={att.dims.steelType} onChange={v => updateDim("steelType", v)} options={STEEL_TYPES} />
+      </FieldRow>
+
+      {/* Attachment sequence */}
+      <FieldRow label="Attachment Sequence — every N links" note="e.g. 4 = one flight per 4 links">
+        <TextInput value={att.sequence} onChange={v => updateAtt("sequence", v)} placeholder="4" unit="links" />
+      </FieldRow>
+
+      {/* Backing plate */}
+      <FieldRow label="Backing Plate?">
+        <div style={{ display: "flex", gap: 10 }}>
+          {[["Yes", true], ["No", false]].map(([label, val]) => (
+            <button key={label} onClick={() => updateAtt("hasBackingPlate", val)}
+              style={{ flex: 1, background: att.hasBackingPlate === val ? C.navyMid : "#f1f5f9", color: att.hasBackingPlate === val ? "white" : C.text,
+                border: `2px solid ${att.hasBackingPlate === val ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+              {label}
+            </button>
+          ))}
+        </div>
+      </FieldRow>
+      {att.hasBackingPlate && (
+        <>
+          <FieldRow label="Backing Plate Thickness">
+            <TextInput value={att.backingPlateThickness} onChange={v => updateAtt("backingPlateThickness", v)} unit="mm" />
+          </FieldRow>
+          <FieldRow label="Backing Plate Sequence — every N attachments" note="e.g. 2 = backing plate on every 2nd attachment">
+            <TextInput value={att.backingPlateSequence} onChange={v => updateAtt("backingPlateSequence", v)} placeholder="2" unit="attachments" />
+          </FieldRow>
+        </>
+      )}
+
+      {/* UHMW */}
+      <FieldRow label="UHMW Wear Liner?">
+        <div style={{ display: "flex", gap: 10 }}>
+          {[["Yes", true], ["No", false]].map(([label, val]) => (
+            <button key={label} onClick={() => updateAtt("uhmw", val)}
+              style={{ flex: 1, background: att.uhmw === val ? C.navyMid : "#f1f5f9", color: att.uhmw === val ? "white" : C.text,
+                border: `2px solid ${att.uhmw === val ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+              {label}
+            </button>
+          ))}
+        </div>
+      </FieldRow>
       {att.uhmw && (
-        <div style={{ background: "#f0f7ff", borderRadius: 10, border: `1px solid #bfdbfe`, padding: "18px 20px" }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid, marginBottom: 14 }}>UHMW Plate Details</div>
-          <FieldRow label="Plate Thickness"><TextInput value={imperial && att.uhmwDims.thickness ? toDisplay(att.uhmwDims.thickness, true) : att.uhmwDims.thickness} onChange={v => updateUhmw("thickness", toMM(v, imperial))} unit={imperial ? "in" : "mm"} /></FieldRow>
-          <FieldRow label="Overall Width"><TextInput value={imperial && att.uhmwDims.overallW ? toDisplay(att.uhmwDims.overallW, true) : att.uhmwDims.overallW} onChange={v => updateUhmw("overallW", toMM(v, imperial))} unit={imperial ? "in" : "mm"} /></FieldRow>
-          <FieldRow label="Overall Height"><TextInput value={imperial && att.uhmwDims.overallH ? toDisplay(att.uhmwDims.overallH, true) : att.uhmwDims.overallH} onChange={v => updateUhmw("overallH", toMM(v, imperial))} unit={imperial ? "in" : "mm"} /></FieldRow>
+        <div style={{ background: "#f0f7ff", borderRadius: 10, padding: "14px 16px", marginTop: 8 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 12 }}>UHMW Details</div>
+          <FieldRow label="Thickness"><TextInput value={att.uhmwDims.thickness} onChange={v => updateUhmw("thickness", v)} unit="mm" /></FieldRow>
+          <FieldRow label="Overall Width"><TextInput value={att.uhmwDims.overallW} onChange={v => updateUhmw("overallW", v)} unit="mm" /></FieldRow>
+          <FieldRow label="Overall Height"><TextInput value={att.uhmwDims.overallH} onChange={v => updateUhmw("overallH", v)} unit="mm" /></FieldRow>
           <FieldRow label="UHMW Type">
             <SelectInput value={att.uhmwDims.type} onChange={v => updateUhmw("type", v)} options={["Regular UHMW", "High Heat UHMW"]} />
           </FieldRow>
@@ -506,8 +701,17 @@ function FlightWizard({ chain, onComplete, onCancel }) {
             <SelectInput value={att.uhmwDims.bottomStyle} onChange={v => updateUhmw("bottomStyle", v)} options={["Flush to bottom", "Overlap"]} />
           </FieldRow>
           {att.uhmwDims.bottomStyle === "Overlap" && (
-            <FieldRow label="Overlap Amount"><TextInput value={imperial && att.uhmwDims.overlap ? toDisplay(att.uhmwDims.overlap, true) : att.uhmwDims.overlap} onChange={v => updateUhmw("overlap", toMM(v, imperial))} unit={imperial ? "in" : "mm"} /></FieldRow>
+            <FieldRow label="Overlap Amount"><TextInput value={att.uhmwDims.overlap} onChange={v => updateUhmw("overlap", v)} unit="mm" /></FieldRow>
           )}
+          <FieldRow label="Bolt Diameter" note="For attaching UHMW to the flight">
+            <TextInput value={att.uhmwDims.boltDiameter} onChange={v => updateUhmw("boltDiameter", v)} unit="mm" />
+          </FieldRow>
+          <FieldRow label="Nut Style">
+            <SelectInput value={att.uhmwDims.nutStyle} onChange={v => updateUhmw("nutStyle", v)} options={NUT_STYLES} />
+          </FieldRow>
+          <FieldRow label="Bolt Placement" note='e.g. "2 in from edge, 2 in from top"'>
+            <TextInput value={att.uhmwDims.boltPlacement} onChange={v => updateUhmw("boltPlacement", v)} placeholder='e.g. 2" from edge, 2" from top' />
+          </FieldRow>
         </div>
       )}
 
@@ -520,65 +724,56 @@ function FlightWizard({ chain, onComplete, onCancel }) {
 
   // Step 4: Add another attachment?
   if (step === 4) return (
-    <div style={{ padding: "24px" }}>
-      <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Second Attachment?</div>
-      <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>
-        Some chains have two different flight styles — e.g. OO flights every 4th with filler plates, and OO flights every 4th between them without. Add another attachment pattern?
-      </div>
-
-      {/* Summary of current attachments */}
+    <div style={{ padding: 24 }}>
+      <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Add Another Attachment Pattern?</div>
+      <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Some conveyors use two different flight patterns on the same chain (e.g. OO flights every 4th, with filler plate flights between them).</div>
       <div style={{ marginBottom: 20 }}>
         {attachments.map((a, i) => (
-          <div key={a._key} style={{ background: "#f0f7ff", borderRadius: 8, padding: "10px 14px", marginBottom: 8, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <span style={{ fontWeight: 700, color: C.navyMid, fontSize: 13 }}>Attachment {i + 1}: </span>
-              <span style={{ fontSize: 13, color: C.text }}>{a.flightName}</span>
-              <span style={{ fontSize: 12, color: C.muted }}> · Every {a.sequence} link(s)</span>
-              {a.uhmw && <span style={{ fontSize: 11, background: "#bfdbfe", color: "#1d4ed8", borderRadius: 8, padding: "1px 7px", marginLeft: 8 }}>+ UHMW</span>}
-            </div>
+          <div key={a._key} style={{ background: "#f0f7ff", borderRadius: 8, padding: "10px 14px", marginBottom: 8 }}>
+            <span style={{ fontWeight: 700, color: C.navyMid, fontSize: 13 }}>Attachment {i + 1}: </span>
+            <span style={{ fontSize: 13, color: C.text }}>{a.flightName}</span>
+            <span style={{ fontSize: 12, color: C.muted }}> · Every {a.sequence} link(s)</span>
+            {a.uhmw && <span style={{ fontSize: 11, background: "#bfdbfe", color: "#1d4ed8", borderRadius: 8, padding: "1px 7px", marginLeft: 8 }}>+ UHMW</span>}
+            {a.hasBackingPlate && <span style={{ fontSize: 11, background: "#fef3c7", color: "#92400e", borderRadius: 8, padding: "1px 7px", marginLeft: 4 }}>+ BP</span>}
           </div>
         ))}
       </div>
-
       <div style={{ display: "flex", gap: 12 }}>
-        <button onClick={() => {
-          const newAtt = emptyAttachment(attachments.length);
-          setAttachments(prev => [...prev, newAtt]);
-          setActiveAtt(attachments.length);
-          setAddingAnother(true);
-          setStep(1);
-        }}
-          style={{ flex: 1, background: "#f0f7ff", border: `2px solid ${C.navyMid}`, color: C.navyMid, borderRadius: 10, padding: "14px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+        <button onClick={() => { const newAtt = emptyAttachment(attachments.length); setAttachments(prev => [...prev, newAtt]); setActiveAtt(attachments.length); setStep(2); }}
+          style={{ flex: 1, background: "#f0f7ff", border: `2px solid ${C.navyMid}`, color: C.navyMid, borderRadius: 10, padding: 14, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
           + Add Another Attachment
         </button>
         <button onClick={() => setStep(5)}
-          style={{ flex: 1, background: C.navyMid, color: "white", border: "none", borderRadius: 10, padding: "14px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
-          Done with Attachments →
+          style={{ flex: 1, background: C.navyMid, color: "white", border: "none", borderRadius: 10, padding: 14, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+          Done →
         </button>
       </div>
-      <div style={{ marginTop: 12 }}>
-        <button onClick={() => setStep(3)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontSize: 12 }}>← Back</button>
-      </div>
+      <button onClick={() => setStep(3)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontSize: 12, marginTop: 12 }}>← Back</button>
     </div>
   );
 
   // Step 5: Pin selection
   if (step === 5) return (
-    <div style={{ padding: "24px" }}>
+    <div style={{ padding: 24 }}>
       <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Pin Style & Material</div>
-      <div style={{ color: C.muted, fontSize: 12, marginBottom: 16 }}>Select how this chain will be assembled.</div>
-      <div style={{ marginBottom: 14 }}>
-        <img src={IMG.chain_pins} alt="Pin styles" style={{ width: "100%", maxWidth: 340, height: 160, objectFit: "contain", borderRadius: 8, background: "#f8fafc", border: `1px solid ${C.border}` }} />
-      </div>
+      <div style={{ color: C.muted, fontSize: 12, marginBottom: 16 }}>Select how this chain will be assembled. Each pin style is a separate orderable component.</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
-        {PIN_OPTIONS.map(p => (
-          <button key={p.name} onClick={() => setPinStyle(p.name)}
-            style={{ background: pinStyle === p.name ? C.navyMid : C.card, border: `2px solid ${pinStyle === p.name ? C.navyMid : C.border}`,
-              borderRadius: 10, padding: "12px 16px", cursor: "pointer", textAlign: "left", fontSize: 13, fontWeight: 600,
-              color: pinStyle === p.name ? "white" : C.text, transition: "all 0.15s" }}>
-            {p.name}
-          </button>
-        ))}
+        {PIN_OPTIONS.map(p => {
+          const pos = PIN_IMG_POSITION[p.name] || "center";
+          return (
+            <button key={p.name} onClick={() => setPinStyle(p.name)}
+              style={{ background: pinStyle === p.name ? C.navyMid : C.card, border: `2px solid ${pinStyle === p.name ? C.navyMid : C.border}`,
+                borderRadius: 10, padding: 0, cursor: "pointer", overflow: "hidden", display: "flex", alignItems: "center" }}>
+              {/* Cropped pin image */}
+              <div style={{ width: 72, height: 52, overflow: "hidden", flexShrink: 0, position: "relative" }}>
+                <img src={IMG.pin_all} alt={p.name}
+                  style={{ width: "100%", height: 156, objectFit: "cover", objectPosition: `center ${pos}`, position: "absolute",
+                    top: pos === "top" ? 0 : pos === "bottom" ? "auto" : "50%", transform: pos === "center" ? "translateY(-50%)" : "none", bottom: pos === "bottom" ? 0 : "auto" }} />
+              </div>
+              <span style={{ fontSize: 13, fontWeight: 600, color: pinStyle === p.name ? "white" : C.text, padding: "0 16px" }}>{p.name}</span>
+            </button>
+          );
+        })}
       </div>
       {pinStyle && (
         <div style={{ marginBottom: 20 }}>
@@ -587,7 +782,7 @@ function FlightWizard({ chain, onComplete, onCancel }) {
             {["Alloy Steel", "Stainless Steel"].map(m => (
               <button key={m} onClick={() => setPinMaterial(m)}
                 style={{ flex: 1, background: pinMaterial === m ? C.green : "#f1f5f9", color: pinMaterial === m ? "white" : C.text,
-                  border: `2px solid ${pinMaterial === m ? C.green : C.border}`, borderRadius: 8, padding: "10px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                  border: `2px solid ${pinMaterial === m ? C.green : C.border}`, borderRadius: 8, padding: 10, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
                 {m}
               </button>
             ))}
@@ -595,9 +790,8 @@ function FlightWizard({ chain, onComplete, onCancel }) {
         </div>
       )}
       <div style={{ display: "flex", gap: 10 }}>
-        <button onClick={() => setStep(hasFlights ? 4 : 0)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
-        <button onClick={() => { if (pinStyle && pinMaterial) setStep(6); }}
-          disabled={!pinStyle || !pinMaterial}
+        <button onClick={() => setStep(hasFlights ? 4 : 1)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
+        <button onClick={() => { if (pinStyle && pinMaterial) setStep(6); }} disabled={!pinStyle || !pinMaterial}
           style={{ background: pinStyle && pinMaterial ? C.navyMid : "#e5e7eb", color: pinStyle && pinMaterial ? "white" : C.muted, border: "none", borderRadius: 8, padding: "10px 24px", cursor: pinStyle && pinMaterial ? "pointer" : "default", fontSize: 13, fontWeight: 700 }}>
           Review & Add to RFQ →
         </button>
@@ -607,43 +801,37 @@ function FlightWizard({ chain, onComplete, onCancel }) {
 
   // Step 6: Review + sequence schematic + Add to RFQ
   if (step === 6) {
-    // Build description string
-    const chainDesc = `4B Drop Forged Chain ${chain.chain_link} (${chain.link_type} Link, P=${chain.P_mm}mm, ${chain.min_breaking_load_kn}kN)`;
+    const chainDesc = `4B Drop Forged Chain ${chain.chain_link} (${chain.link_type} Link, P=${chain.P_mm}mm, ${chain.min_breaking_load_kn}kN) — ${footage} ${footageUnit}`;
     const flightDescs = hasFlights ? attachments.map((a, i) => {
-      let d = `Attachment ${i + 1}: ${a.flightName} every ${a.sequence} link(s)`;
-      const dims = a.dims;
-      const dimParts = [];
-      if (dims.W) dimParts.push(`W=${dims.W}mm`);
-      if (dims.H) dimParts.push(`H=${dims.H}mm`);
-      if (dims.G) dimParts.push(`G=${dims.G}mm`);
-      if (dims.K) dimParts.push(`K=${dims.K}mm`);
-      if (dims.barSize) dimParts.push(`Bar ${dims.barSize}mm`);
-      if (dims.steelType) dimParts.push(dims.steelType);
-      if (dimParts.length) d += ` [${dimParts.join(", ")}]`;
+      let d = `Attachment ${i + 1}: ${a.flightName} every ${a.sequence} links`;
+      const dp = [];
+      if (a.dims.W) dp.push(`W=${a.dims.W}mm`);
+      if (a.dims.H) dp.push(`H=${a.dims.H}mm`);
+      if (a.dims.G) dp.push(`G=${a.dims.G}mm`);
+      if (a.dims.K) dp.push(`K=${a.dims.K}mm`);
+      if (a.dims.barSize) dp.push(`Bar ${a.dims.barSize}mm ${a.dims.barShape||""}`);
+      if (a.dims.steelType) dp.push(a.dims.steelType);
+      if (dp.length) d += ` [${dp.join(", ")}]`;
+      if (a.hasBackingPlate) d += ` | Backing Plate T=${a.backingPlateThickness}mm every ${a.backingPlateSequence} att.`;
       if (a.uhmw) {
-        d += ` + UHMW (${a.uhmwDims.type}, T=${a.uhmwDims.thickness}mm, W=${a.uhmwDims.overallW}mm, H=${a.uhmwDims.overallH}mm, ${a.uhmwDims.bottomStyle}${a.uhmwDims.overlap ? ` OL=${a.uhmwDims.overlap}mm` : ""})`;
+        d += ` | UHMW: ${a.uhmwDims.type} T=${a.uhmwDims.thickness}mm, W=${a.uhmwDims.overallW}mm, H=${a.uhmwDims.overallH}mm, ${a.uhmwDims.bottomStyle}${a.uhmwDims.overlap ? ` OL=${a.uhmwDims.overlap}mm` : ""}, Bolt Ø${a.uhmwDims.boltDiameter}mm, ${a.uhmwDims.nutStyle}, Placement: ${a.uhmwDims.boltPlacement}`;
       }
       return d;
-    }).join(" | ") : "No flights";
+    }).join(" | ") : "No flights — chain links only";
     const pinDesc = `Pin: ${pinStyle} — ${pinMaterial}`;
     const fullDesc = [chainDesc, flightDescs, pinDesc].join(" · ");
 
     return (
-      <div style={{ padding: "24px" }}>
+      <div style={{ padding: 24 }}>
         <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 16 }}>Configuration Summary</div>
-
         {hasFlights && <SequenceSchematic chain={chain} attachments={attachments} />}
-
         <div style={{ marginTop: 20, background: "#f8fafc", borderRadius: 10, border: `1px solid ${C.border}`, padding: "16px 18px" }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>RFQ Line Item Description</div>
-          <div style={{ fontSize: 12, color: C.text, lineHeight: 1.7, fontFamily: "monospace", background: "#fff", borderRadius: 6, padding: "10px 14px", border: `1px solid ${C.border}` }}>
-            {fullDesc}
-          </div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>RFQ Line Item</div>
+          <div style={{ fontSize: 12, color: C.text, lineHeight: 1.7, fontFamily: "monospace", background: "#fff", borderRadius: 6, padding: "10px 14px", border: `1px solid ${C.border}` }}>{fullDesc}</div>
         </div>
-
         <div style={{ marginTop: 16, display: "flex", gap: 10 }}>
           <button onClick={() => setStep(5)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
-          <button onClick={() => onComplete({ description: fullDesc, chain, attachments, pinStyle, pinMaterial })}
+          <button onClick={() => onComplete({ description: fullDesc, chain, footage, footageUnit, attachments: hasFlights ? attachments : [], pinStyle, pinMaterial })}
             style={{ flex: 1, background: C.green, color: "white", border: "none", borderRadius: 8, padding: "12px 24px", cursor: "pointer", fontSize: 14, fontWeight: 700 }}>
             Add to RFQ Cart
           </button>
@@ -651,249 +839,242 @@ function FlightWizard({ chain, onComplete, onCancel }) {
       </div>
     );
   }
-
   return null;
 }
 
-// ── Product Modal ─────────────────────────────────────────────────────────────
+// ── PRODUCT MODAL ─────────────────────────────────────────────────────────────
 function ChainModal({ chain, onClose, onAddRFQ }) {
   const [tab, setTab] = useState("specs");
   const [showConfigurator, setShowConfigurator] = useState(false);
+  const [showBoltNGo, setShowBoltNGo] = useState(false);
   const [rfqAdded, setRfqAdded] = useState(false);
+  const [selectedSprocket, setSelectedSprocket] = useState(null);
+  const [selectedPin, setSelectedPin] = useState(null);
 
   const sprockets = tryParse(chain.sprocket_data);
   const trailers = tryParse(chain.trailer_data);
-  const pins = tryParse(chain.pin_options);
-
-  if (showConfigurator) return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 860, maxHeight: "92vh", overflow: "auto", position: "relative" }}>
-        <div style={{ background: C.navyMid, padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", borderRadius: "16px 16px 0 0" }}>
-          <div style={{ color: "white", fontWeight: 800, fontSize: 16 }}>Configure {chain.chain_link}</div>
-          <button onClick={() => setShowConfigurator(false)} style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "white", borderRadius: 8, padding: "6px 14px", cursor: "pointer" }}>✕ Close</button>
-        </div>
-        <FlightWizard chain={chain} onCancel={() => setShowConfigurator(false)} onComplete={(result) => {
-          onAddRFQ(result);
-          setShowConfigurator(false);
-          setRfqAdded(true);
-        }} />
-      </div>
-    </div>
-  );
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 9000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 840, maxHeight: "92vh", overflow: "auto", position: "relative" }}>
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 9000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 720, maxHeight: "92vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
 
-        {/* Modal header */}
-        <div style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.navyMid})`, padding: "18px 24px", borderRadius: "16px 16px 0 0", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <div>
-            <div style={{ color: "white", fontSize: 22, fontWeight: 800 }}>{chain.chain_link}</div>
-            <div style={{ color: "rgba(255,255,255,0.65)", fontSize: 13, marginTop: 3 }}>
-              Drop Forged Chain · {chain.link_type} Link · P = {chain.P_mm} mm · {chain.min_breaking_load_kn} kN
-            </div>
-          </div>
-          <button onClick={onClose} style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "white", borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontSize: 13 }}>✕</button>
-        </div>
-
-        {/* Hero + actions */}
-        <div style={{ display: "flex", gap: 20, padding: "20px 24px 0", alignItems: "flex-start" }}>
-          <img src={getLinkImg(chain.link_type)} alt={chain.link_type}
-            style={{ width: 130, height: 130, objectFit: "cover", borderRadius: 10, border: `1px solid ${C.border}`, flexShrink: 0 }} />
-          <div style={{ flex: 1 }}>
-            {chain.notes && <div style={{ fontSize: 13, color: C.muted, marginBottom: 12 }}>{chain.notes}</div>}
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-              {chain.bolt_n_go_compatible && <span style={{ background: C.greenBg, color: C.green, fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 99 }}>⚡ Bolt N Go Compatible</span>}
-              {chain.stainless_available && <span style={{ background: "#f1f5f9", color: C.muted, fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 99 }}>Stainless Available</span>}
-            </div>
-            <div style={{ display: "flex", gap: 10, marginTop: 16, flexWrap: "wrap" }}>
-              <button onClick={() => setShowConfigurator(true)}
-                style={{ background: C.navyMid, color: "white", border: "none", borderRadius: 9, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                Configure + Build Quote
-              </button>
-              <button onClick={() => { onAddRFQ({ description: `4B Drop Forged Chain ${chain.chain_link} (${chain.link_type} Link, P=${chain.P_mm}mm, ${chain.min_breaking_load_kn}kN, W=${chain.W_mm}mm)`, chain }); setRfqAdded(true); }}
-                style={{ background: rfqAdded ? C.green : "#f1f5f9", color: rfqAdded ? "white" : C.text, border: `1px solid ${rfqAdded ? C.green : C.border}`, borderRadius: 9, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                {rfqAdded ? "✓ Added to RFQ" : "Add to RFQ (Chain Only)"}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Tabs */}
-        <div style={{ display: "flex", gap: 4, padding: "16px 24px 0", borderBottom: `1px solid ${C.border}` }}>
-          {[["specs","Specifications"], ["sprockets",`Sprockets (${sprockets.length})`], ["pins","Pins"], ["segments","Segments"]].map(([k, l]) => (
-            <button key={k} onClick={() => setTab(k)}
-              style={{ padding: "8px 16px", border: "none", cursor: "pointer", fontWeight: 600, fontSize: 12, borderRadius: "8px 8px 0 0",
-                background: tab === k ? C.navyMid : "transparent", color: tab === k ? "white" : C.muted, borderBottom: tab === k ? "none" : undefined }}>
-              {l}
-            </button>
-          ))}
-        </div>
-
-        <div style={{ padding: "20px 24px 28px" }}>
-          {/* SPECS */}
-          {tab === "specs" && (
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+        {showConfigurator ? (
+          <ChainConfigurator chain={chain}
+            onComplete={(item) => { onAddRFQ(item); setShowConfigurator(false); }}
+            onClose={() => setShowConfigurator(false)} />
+        ) : showBoltNGo ? (
+          <BoltNGoModal chain={chain} onClose={() => setShowBoltNGo(false)} onAddRFQ={(item) => { onAddRFQ(item); setShowBoltNGo(false); }} />
+        ) : (
+          <>
+            {/* Header */}
+            <div style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.navyMid})`, padding: "20px 24px", borderRadius: "16px 16px 0 0", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
               <div>
-                <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 10, textTransform: "uppercase" }}>Dimensions</div>
-                {[["Pitch (P)", `${chain.P_mm} mm`], ["Height (H)", `${chain.H_mm} mm`], ["Plate Thickness (T)", `${chain.T_mm} mm`], ["Width (W)", `${chain.W_mm} mm`], ["Pin-to-Edge (M)", `${chain.M_mm} mm`], ["Pin Hole Dia (D)", `${chain.D_mm} mm`], ...(chain.F_mm ? [["Overall Width (F)", `${chain.F_mm} mm`], ["Bar Gap (E)", `${chain.E_mm} mm`]] : [])].map(([k,v]) => (
-                  <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: `1px solid ${C.border}`, fontSize: 13 }}>
-                    <span style={{ color: C.muted }}>{k}</span><span style={{ fontWeight: 600 }}>{v}</span>
-                  </div>
-                ))}
+                <div style={{ color: C.gold, fontSize: 11, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>4B Drop Forged Chain</div>
+                <div style={{ color: "white", fontSize: 22, fontWeight: 900 }}>{chain.chain_link}</div>
+                <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, marginTop: 2 }}>{chain.link_type} Link · P = {chain.P_mm} mm</div>
               </div>
-              <div>
-                <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 10, textTransform: "uppercase" }}>Mechanical</div>
-                {[["Min Breaking Load", `${chain.min_breaking_load_kn} kN`], ["Case Hardness", chain.case_hardness || "C57–C62"], ["Case Depth", `${chain.case_depth_mm || 0.7} mm`], ["Core Hardness", chain.core_hardness || "C40"], ["Weight / Link", `${chain.weight_per_link_kg} kg`], ["Link Type", chain.link_type], ["Stainless Avail.", chain.stainless_available ? "Yes" : "No"]].map(([k,v]) => (
-                  <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: `1px solid ${C.border}`, fontSize: 13 }}>
-                    <span style={{ color: C.muted }}>{k}</span><span style={{ fontWeight: 600 }}>{v}</span>
-                  </div>
-                ))}
+              <button onClick={onClose} style={{ background: "rgba(255,255,255,0.1)", border: "none", color: "white", cursor: "pointer", borderRadius: 8, padding: "6px 12px", fontSize: 13 }}>✕ Close</button>
+            </div>
+
+            {/* Image + badges + actions */}
+            <div style={{ display: "flex", gap: 20, padding: "20px 24px 0", alignItems: "flex-start" }}>
+              <img src={getLinkImg(chain.link_type)} alt={chain.link_type}
+                style={{ width: 130, height: 130, objectFit: "cover", borderRadius: 10, border: `1px solid ${C.border}`, flexShrink: 0 }} />
+              <div style={{ flex: 1 }}>
+                {chain.notes && <div style={{ fontSize: 13, color: C.muted, marginBottom: 12 }}>{chain.notes}</div>}
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
+                  {chain.stainless_available && <span style={{ background: "#f1f5f9", color: C.muted, fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 99 }}>Stainless Available</span>}
+                </div>
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                  <button onClick={() => setShowConfigurator(true)}
+                    style={{ background: C.navyMid, color: "white", border: "none", borderRadius: 9, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                    Configure + Build Quote
+                  </button>
+                  <button onClick={() => { onAddRFQ({ description: `4B Drop Forged Chain ${chain.chain_link} (${chain.link_type} Link, P=${chain.P_mm}mm, ${chain.min_breaking_load_kn}kN, W=${chain.W_mm}mm) — Links Only` }); setRfqAdded(true); }}
+                    style={{ background: rfqAdded ? C.green : "#f1f5f9", color: rfqAdded ? "white" : C.text, border: `1px solid ${rfqAdded ? C.green : C.border}`, borderRadius: 9, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                    {rfqAdded ? "✓ Added" : "Add to RFQ (Links Only)"}
+                  </button>
+                  {chain.bolt_n_go_compatible && (
+                    <button onClick={() => setShowBoltNGo(true)}
+                      style={{ background: C.greenBg, color: C.green, border: `2px solid ${C.green}`, borderRadius: 9, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                      ⚡ Order Bolt N Go
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-          )}
 
-          {/* SPROCKETS */}
-          {tab === "sprockets" && (
-            <div>
-              {sprockets.length === 0 ? (
-                <div style={{ textAlign: "center", padding: 32, color: C.muted }}>No sprocket data available. Contact Uniking Canada.</div>
-              ) : (
-                <>
-                  <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
-                    <img src={IMG.sprocket_installed} alt="Sprocket" style={{ width: 160, height: 110, objectFit: "cover", borderRadius: 8, border: `1px solid ${C.border}` }} />
-                    <div>
-                      <div style={{ fontWeight: 700, color: C.navyMid, fontSize: 14 }}>Sprocket Family: {chain.sprocket_family}</div>
-                      <div style={{ fontSize: 12, color: C.muted, marginTop: 4, marginBottom: 12 }}>Each tooth count is a separate product. Add individual sprockets to RFQ.</div>
-                    </div>
+            {/* Tabs */}
+            <div style={{ display: "flex", gap: 4, padding: "16px 24px 0", borderBottom: `1px solid ${C.border}`, overflowX: "auto" }}>
+              {[["specs","Specifications"], ["sprockets",`Sprockets (${sprockets.length})`], ["pins","Pins (3)"], ["segments","Segments"]].map(([k, l]) => (
+                <button key={k} onClick={() => setTab(k)}
+                  style={{ padding: "8px 16px", border: "none", cursor: "pointer", fontWeight: 600, fontSize: 12, borderRadius: "8px 8px 0 0", whiteSpace: "nowrap",
+                    background: tab === k ? C.navyMid : "transparent", color: tab === k ? "white" : C.muted }}>
+                  {l}
+                </button>
+              ))}
+            </div>
+
+            <div style={{ padding: "20px 24px 28px" }}>
+
+              {/* SPECS */}
+              {tab === "specs" && (
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 10, textTransform: "uppercase" }}>Dimensions</div>
+                    {[["Pitch (P)", `${chain.P_mm} mm`], ["Height (H)", `${chain.H_mm} mm`], ["Plate Thickness (T)", `${chain.T_mm} mm`], ["Width (W)", `${chain.W_mm} mm`], ["Pin-to-Edge (M)", `${chain.M_mm} mm`], ["Pin Hole Dia (D)", `${chain.D_mm} mm`], ...(chain.F_mm ? [["Overall Width (F)", `${chain.F_mm} mm`], ["Bar Gap (E)", `${chain.E_mm} mm`]] : [])].map(([k,v]) => (
+                      <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: `1px solid ${C.border}`, fontSize: 13 }}>
+                        <span style={{ color: C.muted }}>{k}</span><span style={{ fontWeight: 600 }}>{v}</span>
+                      </div>
+                    ))}
                   </div>
-                  <div style={{ overflowX: "auto" }}>
-                    <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
-                      <thead><tr style={{ background: C.navyMid, color: "white" }}>
-                        {["Teeth","PCD mm","ØA mm","ØB mm","ØC max","Bolts","T mm","WB1 mm","Add to RFQ"].map(h => (
-                          <th key={h} style={{ padding: "8px 10px", textAlign: "center", fontWeight: 600 }}>{h}</th>
-                        ))}
-                      </tr></thead>
-                      <tbody>
-                        {sprockets.map((s, i) => (
-                          <tr key={i} style={{ background: i % 2 ? "#f5f7fb" : "white" }}>
-                            {[s.teeth, s.pcd_mm, s.A_mm, s.B_mm, s.C_max_mm, s.bolts, s.T_mm, s.WB1_mm].map((v, j) => (
-                              <td key={j} style={{ padding: "7px 10px", textAlign: "center", borderBottom: `1px solid ${C.border}` }}>{v}</td>
-                            ))}
-                            <td style={{ padding: "5px 8px", textAlign: "center", borderBottom: `1px solid ${C.border}` }}>
-                              <button onClick={() => onAddRFQ({ description: `4B Sprocket ${chain.sprocket_family} — ${s.teeth} Teeth, PCD=${s.pcd_mm}mm, T=${s.T_mm}mm, WB1=${s.WB1_mm}mm, ØA=${s.A_mm}mm, ØB=${s.B_mm}mm, Bolts=${s.bolts}` })}
-                                style={{ background: C.navyMid, color: "white", border: "none", borderRadius: 6, padding: "4px 10px", cursor: "pointer", fontSize: 11, fontWeight: 700 }}>
-                                + RFQ
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 10, textTransform: "uppercase" }}>Mechanical</div>
+                    {[["Min Breaking Load", `${chain.min_breaking_load_kn} kN`], ["Case Hardness", chain.case_hardness || "C57–C62"], ["Case Depth", `${chain.case_depth_mm || 0.7} mm`], ["Core Hardness", chain.core_hardness || "C40"], ["Weight / Link", `${chain.weight_per_link_kg} kg`], ["Link Type", chain.link_type], ["Stainless Avail.", chain.stainless_available ? "Yes" : "No"]].map(([k,v]) => (
+                      <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: `1px solid ${C.border}`, fontSize: 13 }}>
+                        <span style={{ color: C.muted }}>{k}</span><span style={{ fontWeight: 600 }}>{v}</span>
+                      </div>
+                    ))}
                   </div>
-                  {trailers.length > 0 && (
-                    <div style={{ marginTop: 20 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid, marginBottom: 10 }}>Trailer / Return Wheels</div>
+                </div>
+              )}
+
+              {/* SPROCKETS — clickable cards, bore size on RFQ */}
+              {tab === "sprockets" && (
+                <div>
+                  {sprockets.length === 0 ? (
+                    <div style={{ textAlign: "center", padding: 32, color: C.muted }}>No sprocket data available. Contact Uniking Canada.</div>
+                  ) : (
+                    <>
+                      <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
+                        <img src={IMG.sprocket_installed} alt="Sprocket" style={{ width: 160, height: 110, objectFit: "cover", borderRadius: 8, border: `1px solid ${C.border}` }} />
+                        <div>
+                          <div style={{ fontWeight: 700, color: C.navyMid, fontSize: 14 }}>Sprocket Family: {chain.sprocket_family}</div>
+                          <div style={{ fontSize: 12, color: C.muted, marginTop: 4 }}>Click any row to order a specific sprocket. Bore size collected at checkout.</div>
+                        </div>
+                      </div>
                       <div style={{ overflowX: "auto" }}>
                         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
-                          <thead><tr style={{ background: C.navyLight, color: "white" }}>
-                            {["PCD mm","C max (smooth)","WB2 smooth","WB3 segmental","T1 rim","Add to RFQ"].map(h => (
+                          <thead><tr style={{ background: C.navyMid, color: "white" }}>
+                            {["Teeth","PCD mm","ØA mm","ØB mm","ØC max","Bolts","T mm","WB1 mm",""].map(h => (
                               <th key={h} style={{ padding: "8px 10px", textAlign: "center", fontWeight: 600 }}>{h}</th>
                             ))}
                           </tr></thead>
                           <tbody>
-                            {trailers.map((t, i) => (
-                              <tr key={i} style={{ background: i % 2 ? "#f5f7fb" : "white" }}>
-                                {[t.pcd_mm, t.C_max_smooth_mm, t.WB2_smooth_mm, t.WB3_segmental_mm, t.T1_rim_width_mm].map((v, j) => (
-                                  <td key={j} style={{ padding: "7px 10px", textAlign: "center", borderBottom: `1px solid ${C.border}` }}>{v}</td>
+                            {sprockets.map((s, i) => (
+                              <tr key={i} style={{ background: i % 2 ? "#f5f7fb" : "white", cursor: "pointer" }}
+                                onClick={() => setSelectedSprocket(s)}
+                                onMouseEnter={e => e.currentTarget.style.background = "#e8f0fe"}
+                                onMouseLeave={e => e.currentTarget.style.background = i % 2 ? "#f5f7fb" : "white"}>
+                                {[s.teeth, s.pcd_mm, s.A_mm, s.B_mm, s.C_max_mm, s.bolts, s.T_mm, s.WB1_mm].map((v, j) => (
+                                  <td key={j} style={{ padding: "8px 10px", textAlign: "center", borderBottom: `1px solid ${C.border}` }}>{v}</td>
                                 ))}
-                                <td style={{ padding: "5px 8px", textAlign: "center", borderBottom: `1px solid ${C.border}` }}>
-                                  <button onClick={() => onAddRFQ({ description: `4B Trailer/Return Wheel for ${chain.sprocket_family} — PCD=${t.pcd_mm}mm, C max=${t.C_max_smooth_mm}mm, WB2=${t.WB2_smooth_mm}mm, WB3=${t.WB3_segmental_mm}mm, T1=${t.T1_rim_width_mm}mm` })}
-                                    style={{ background: C.navyLight, color: "white", border: "none", borderRadius: 6, padding: "4px 10px", cursor: "pointer", fontSize: 11, fontWeight: 700 }}>
-                                    + RFQ
-                                  </button>
+                                <td style={{ padding: "6px 8px", textAlign: "center", borderBottom: `1px solid ${C.border}` }}>
+                                  <span style={{ background: C.navyMid, color: "white", borderRadius: 6, padding: "3px 10px", fontSize: 11, fontWeight: 700 }}>Select →</span>
                                 </td>
                               </tr>
                             ))}
                           </tbody>
                         </table>
                       </div>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          )}
-
-          {/* PINS */}
-          {tab === "pins" && (
-            <div>
-              <div style={{ marginBottom: 14 }}>
-                <img src={IMG.chain_pins} alt="Pin styles" style={{ width: "100%", maxWidth: 340, height: 160, objectFit: "contain", borderRadius: 8, background: "#f8fafc", border: `1px solid ${C.border}` }} />
-              </div>
-              <div style={{ fontSize: 12, color: C.muted, marginBottom: 14 }}>Each pin style + material combination is a separate product. Add to RFQ individually.</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {pins.flatMap(p =>
-                  ["Alloy Steel", "Stainless Steel"].map(mat => ({
-                    key: `${p.name}--${mat}`,
-                    name: p.name,
-                    material: mat,
-                    desc: `4B Forged Chain Pin — ${p.name}, ${mat}, for chain ${chain.chain_link} (P=${chain.P_mm}mm)`,
-                  }))
-                ).map(item => (
-                  <div key={item.key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#f8fafc", borderRadius: 10, border: `1px solid ${C.border}`, padding: "12px 16px" }}>
-                    <div>
-                      <div style={{ fontWeight: 700, fontSize: 13, color: C.text }}>{item.name}</div>
-                      <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{item.material}</div>
-                    </div>
-                    <button onClick={() => onAddRFQ({ description: item.desc })}
-                      style={{ background: C.navyMid, color: "white", border: "none", borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
-                      + Add to RFQ
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* SEGMENTS */}
-          {tab === "segments" && (
-            <div>
-              {trailers.length === 0 && sprockets.length === 0 ? (
-                <div style={{ textAlign: "center", padding: 32, color: C.muted }}>No segment data available. Contact Uniking Canada.</div>
-              ) : (
-                <div>
-                  <div style={{ fontSize: 13, color: C.muted, marginBottom: 16 }}>Segmented sprockets and return wheel segments for {chain.chain_link}.</div>
-                  {sprockets.length > 0 && (
-                    <div style={{ marginBottom: 20 }}>
-                      <div style={{ fontWeight: 700, color: C.navyMid, fontSize: 13, marginBottom: 10 }}>Sprocket Segments — {chain.sprocket_family}</div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                        {sprockets.map((s, i) => (
-                          <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#f8fafc", borderRadius: 10, border: `1px solid ${C.border}`, padding: "10px 16px" }}>
-                            <div>
-                              <span style={{ fontWeight: 700, fontSize: 13, color: C.text }}>{s.teeth}-Tooth Segmented Sprocket</span>
-                              <span style={{ fontSize: 11, color: C.muted, marginLeft: 10 }}>PCD={s.pcd_mm}mm · ØA={s.A_mm}mm</span>
-                            </div>
-                            <button onClick={() => onAddRFQ({ description: `4B Segmented Sprocket ${chain.sprocket_family} — ${s.teeth} Teeth (Segmented), PCD=${s.pcd_mm}mm, T=${s.T_mm}mm, WB1=${s.WB1_mm}mm` })}
-                              style={{ background: C.orange, color: "white", border: "none", borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
-                              + Add to RFQ
-                            </button>
+                      {trailers.length > 0 && (
+                        <div style={{ marginTop: 20 }}>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid, marginBottom: 10 }}>Trailer / Return Wheels</div>
+                          <div style={{ overflowX: "auto" }}>
+                            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+                              <thead><tr style={{ background: C.navyLight, color: "white" }}>
+                                {["PCD mm","C max (smooth)","WB2 smooth","WB3 segmental","T1 rim",""].map(h => (
+                                  <th key={h} style={{ padding: "8px 10px", textAlign: "center", fontWeight: 600 }}>{h}</th>
+                                ))}
+                              </tr></thead>
+                              <tbody>
+                                {trailers.map((t, i) => (
+                                  <tr key={i} style={{ background: i % 2 ? "#f5f7fb" : "white" }}>
+                                    {[t.pcd_mm, t.C_max_smooth_mm, t.WB2_smooth_mm, t.WB3_segmental_mm, t.T1_rim_width_mm].map((v, j) => (
+                                      <td key={j} style={{ padding: "7px 10px", textAlign: "center", borderBottom: `1px solid ${C.border}` }}>{v}</td>
+                                    ))}
+                                    <td style={{ padding: "5px 8px", textAlign: "center", borderBottom: `1px solid ${C.border}` }}>
+                                      <button onClick={() => onAddRFQ({ description: `4B Trailer/Return Wheel ${chain.sprocket_family} — PCD=${t.pcd_mm}mm, WB2=${t.WB2_smooth_mm}mm, WB3=${t.WB3_segmental_mm}mm, T1=${t.T1_rim_width_mm}mm` })}
+                                        style={{ background: C.navyLight, color: "white", border: "none", borderRadius: 6, padding: "4px 10px", cursor: "pointer", fontSize: 11, fontWeight: 700 }}>+ RFQ</button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
-                        ))}
-                      </div>
-                    </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               )}
+
+              {/* PINS — each as its own card with image */}
+              {tab === "pins" && (
+                <div>
+                  <div style={{ fontSize: 13, color: C.muted, marginBottom: 16 }}>Each pin style is an individual orderable product. Click a pin to view details and add to RFQ.</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                    {PIN_OPTIONS.map((p, idx) => {
+                      const pos = PIN_IMG_POSITION[p.name] || "center";
+                      const descs = {
+                        "Forged Head Pin + Collar and Roll Pin": "Standard assembly — forged head retained by collar and roll pin. Maximum strength.",
+                        "Forged Head Pin + One Clamp": "Forged head with single clamp. Easy to service, ideal for frequent disassembly.",
+                        "Plain Pin + Two Clamps": "Plain pin with two clamps — removable from either side. Best for confined spaces.",
+                      };
+                      return (
+                        <div key={p.name} onClick={() => setSelectedPin(p.name)}
+                          style={{ display: "flex", gap: 0, borderRadius: 12, border: `2px solid ${C.border}`, overflow: "hidden", cursor: "pointer", transition: "all 0.15s" }}
+                          onMouseEnter={e => { e.currentTarget.style.borderColor = C.navyMid; e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)"; }}
+                          onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = ""; }}>
+                          {/* Cropped image */}
+                          <div style={{ width: 100, height: 80, overflow: "hidden", flexShrink: 0, position: "relative", background: "#f0f4f8" }}>
+                            <img src={IMG.pin_all} alt={p.name}
+                              style={{ width: "100%", height: 240, objectFit: "cover", objectPosition: `center ${pos}`,
+                                position: "absolute", top: pos === "top" ? 0 : pos === "bottom" ? "auto" : "50%",
+                                transform: pos === "center" ? "translateY(-50%)" : "none", bottom: pos === "bottom" ? 0 : "auto" }} />
+                          </div>
+                          <div style={{ padding: "12px 16px", flex: 1 }}>
+                            <div style={{ fontWeight: 700, color: C.navyMid, fontSize: 13, marginBottom: 4 }}>{p.name}</div>
+                            <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.5 }}>{descs[p.name]}</div>
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", padding: "0 16px" }}>
+                            <span style={{ background: C.navyMid, color: "white", borderRadius: 6, padding: "4px 12px", fontSize: 11, fontWeight: 700 }}>Order →</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* SEGMENTS */}
+              {tab === "segments" && (
+                <div style={{ textAlign: "center", padding: 32, color: C.muted }}>
+                  <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 8 }}>Segment / Trailer Data</div>
+                  <div style={{ fontSize: 13 }}>Contact Uniking Canada for segment specifications for this chain series.</div>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
+
+      {/* Sprocket product modal */}
+      {selectedSprocket && (
+        <SprocketModal sprocket={selectedSprocket} chainLink={chain.chain_link} sprocketFamily={chain.sprocket_family}
+          onClose={() => setSelectedSprocket(null)} onAddRFQ={(item) => { onAddRFQ(item); setSelectedSprocket(null); }} />
+      )}
+
+      {/* Pin product modal */}
+      {selectedPin && (
+        <PinModal pinName={selectedPin} chainLink={chain.chain_link}
+          onClose={() => setSelectedPin(null)} onAddRFQ={(item) => { onAddRFQ(item); setSelectedPin(null); }} />
+      )}
     </div>
   );
 }
 
-// ── Main Page ─────────────────────────────────────────────────────────────────
+// ── MAIN PAGE ─────────────────────────────────────────────────────────────────
 export default function ForgedChainConfigurator() {
   const [chains, setChains] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -911,17 +1092,61 @@ export default function ForgedChainConfigurator() {
     setTimeout(() => setRfqToast(null), 3000);
   };
 
-  const groupByPitch = chains.reduce((acc, c) => {
+  // Separate Bolt N Go from standard chains — they are their own product line
+  const standardChains = chains.filter(c => !c.bolt_n_go_compatible);
+  const boltNGoChains = chains.filter(c => c.bolt_n_go_compatible);
+
+  const groupByPitch = (arr) => arr.reduce((acc, c) => {
     const key = `${c.P_mm}mm`;
     if (!acc[key]) acc[key] = [];
     acc[key].push(c);
     return acc;
   }, {});
 
+  const standardGroups = groupByPitch(standardChains);
+  const bngGroups = groupByPitch(boltNGoChains);
+
+  const ChainCard = ({ chain }) => (
+    <div onClick={() => setSelected(chain)}
+      style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, cursor: "pointer", overflow: "hidden", transition: "all 0.15s" }}
+      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.10)"; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}>
+      <div style={{ height: 3, background: chain.bolt_n_go_compatible ? `linear-gradient(90deg, ${C.green}, #15803d)` : `linear-gradient(90deg, ${C.navyMid}, ${C.navyLight})` }} />
+      <div style={{ padding: 14 }}>
+        <div style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 10 }}>
+          <img src={getLinkImg(chain.link_type)} alt={chain.link_type}
+            style={{ width: 64, height: 64, objectFit: "cover", borderRadius: 8, border: `1px solid ${C.border}`, flexShrink: 0 }} />
+          <div>
+            <div style={{ fontSize: 16, fontWeight: 800, color: C.navy }}>{chain.chain_link}</div>
+            <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{chain.link_type} Link</div>
+            <div style={{ fontSize: 11, color: C.muted }}>P = {chain.P_mm} mm | H = {chain.H_mm} mm</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12 }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span style={{ color: C.muted }}>Breaking Load</span>
+            <span style={{ fontWeight: 700, color: C.text }}>{chain.min_breaking_load_kn} kN</span>
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span style={{ color: C.muted }}>Weight / Link</span>
+            <span style={{ fontWeight: 600 }}>{chain.weight_per_link_kg} kg</span>
+          </div>
+        </div>
+        {chain.stainless_available && (
+          <div style={{ marginTop: 8 }}>
+            <span style={{ fontSize: 9, background: "#f1f5f9", color: C.muted, padding: "1px 6px", borderRadius: 8 }}>Stainless Avail.</span>
+          </div>
+        )}
+      </div>
+      <div style={{ padding: "8px 14px", borderTop: `1px solid ${C.border}`, background: "#f8fafc", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span style={{ fontSize: 11, color: C.muted }}>Click to configure</span>
+        <span style={{ fontSize: 11, color: C.navyMid, fontWeight: 700 }}>Details →</span>
+      </div>
+    </div>
+  );
+
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "Inter, Arial, sans-serif" }}>
-
-      {/* Toast */}
       {rfqToast && (
         <div style={{ position: "fixed", bottom: 24, right: 24, background: C.green, color: "white", padding: "12px 20px", borderRadius: 10, fontWeight: 700, fontSize: 13, zIndex: 99999, boxShadow: "0 4px 16px rgba(0,0,0,0.2)" }}>
           ✓ {rfqToast}
@@ -944,68 +1169,55 @@ export default function ForgedChainConfigurator() {
       </div>
 
       {/* Feature bar */}
-      <div style={{ background: "white", borderBottom: `1px solid ${C.border}`, padding: "10px 32px", display: "flex", gap: 24 }}>
+      <div style={{ background: "white", borderBottom: `1px solid ${C.border}`, padding: "10px 32px", display: "flex", gap: 24, flexWrap: "wrap" }}>
         {["Case Hardened C57–C62", "Ductile Core C40", "Pitches 102–260 mm", "Double & Triple Strand", "Custom Flights Available", "Stainless Available"].map(f => (
           <span key={f} style={{ fontSize: 11, color: C.muted, fontWeight: 600 }}>✓ {f}</span>
         ))}
       </div>
 
-      {/* Grid */}
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "28px 20px" }}>
-        {Object.entries(groupByPitch).map(([pitch, items]) => (
-          <div key={pitch} style={{ marginBottom: 36 }}>
-            <div style={{ fontSize: 13, fontWeight: 800, color: C.navyMid, textTransform: "uppercase", letterSpacing: 1, marginBottom: 14, paddingBottom: 6, borderBottom: `2px solid ${C.border}` }}>
-              {pitch} Pitch
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
-              {items.map(chain => (
-                <div key={chain.id} onClick={() => setSelected(chain)}
-                  style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, cursor: "pointer", overflow: "hidden", transition: "all 0.15s" }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.10)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}>
-                  <div style={{ height: 3, background: `linear-gradient(90deg, ${C.navyMid}, ${C.navyLight})` }} />
-                  <div style={{ padding: 14 }}>
-                    <div style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 10 }}>
-                      <img src={getLinkImg(chain.link_type)} alt={chain.link_type}
-                        style={{ width: 64, height: 64, objectFit: "cover", borderRadius: 8, border: `1px solid ${C.border}`, flexShrink: 0 }} />
-                      <div>
-                        <div style={{ fontSize: 16, fontWeight: 800, color: C.navy }}>{chain.chain_link}</div>
-                        <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{chain.link_type} Link</div>
-                        <div style={{ fontSize: 11, color: C.muted }}>P = {chain.P_mm} mm</div>
-                      </div>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12 }}>
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span style={{ color: C.muted }}>Breaking Load</span>
-                        <span style={{ fontWeight: 700, color: C.text }}>{chain.min_breaking_load_kn} kN</span>
-                      </div>
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span style={{ color: C.muted }}>Height</span>
-                        <span style={{ fontWeight: 600 }}>{chain.H_mm} mm</span>
-                      </div>
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span style={{ color: C.muted }}>Weight / Link</span>
-                        <span style={{ fontWeight: 600 }}>{chain.weight_per_link_kg} kg</span>
-                      </div>
-                    </div>
-                    <div style={{ display: "flex", gap: 5, marginTop: 10, flexWrap: "wrap" }}>
-                      {chain.bolt_n_go_compatible && <span style={{ fontSize: 9, background: C.greenBg, color: C.green, padding: "1px 6px", borderRadius: 8, fontWeight: 700 }}>⚡ Bolt N Go</span>}
-                      {chain.stainless_available && <span style={{ fontSize: 9, background: "#f1f5f9", color: C.muted, padding: "1px 6px", borderRadius: 8 }}>Stainless Avail.</span>}
-                    </div>
-                  </div>
-                  <div style={{ padding: "8px 14px", borderTop: `1px solid ${C.border}`, background: "#f8fafc", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: 11, color: C.muted }}>Click to view details</span>
-                    <span style={{ fontSize: 11, color: C.navyMid, fontWeight: 700 }}>Details →</span>
-                  </div>
+
+        {/* ── STANDARD CHAIN SECTION ── */}
+        {Object.keys(standardGroups).length > 0 && (
+          <div style={{ marginBottom: 48 }}>
+            <div style={{ fontSize: 18, fontWeight: 900, color: C.navy, marginBottom: 4 }}>Standard Drop Forged Chain</div>
+            <div style={{ fontSize: 13, color: C.muted, marginBottom: 24 }}>Order by the link. Configure with flights, pins, and attachments.</div>
+            {Object.entries(standardGroups).map(([pitch, items]) => (
+              <div key={pitch} style={{ marginBottom: 32 }}>
+                <div style={{ fontSize: 12, fontWeight: 800, color: C.navyMid, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12, paddingBottom: 6, borderBottom: `2px solid ${C.border}` }}>
+                  {pitch} Pitch
                 </div>
-              ))}
-            </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
+                  {items.map(chain => <ChainCard key={chain.id} chain={chain} />)}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
+
+        {/* ── BOLT N GO SECTION ── */}
+        {Object.keys(bngGroups).length > 0 && (
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 4 }}>
+              <div style={{ fontSize: 18, fontWeight: 900, color: C.navy }}>⚡ Bolt N Go Chain</div>
+              <span style={{ background: C.greenBg, color: C.green, fontSize: 12, fontWeight: 700, padding: "3px 12px", borderRadius: 99 }}>Pre-Assembled</span>
+            </div>
+            <div style={{ fontSize: 13, color: C.muted, marginBottom: 24 }}>Pre-assembled with pins and clamps installed — drop in and go. Dramatically reduces installation time.</div>
+            {Object.entries(bngGroups).map(([pitch, items]) => (
+              <div key={pitch} style={{ marginBottom: 32 }}>
+                <div style={{ fontSize: 12, fontWeight: 800, color: C.green, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12, paddingBottom: 6, borderBottom: `2px solid ${C.greenBg}` }}>
+                  {pitch} Pitch
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
+                  {items.map(chain => <ChainCard key={chain.id} chain={chain} />)}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Modal */}
-      {selected && <ChainModal chain={selected} onClose={() => setSelected(null)} onAddRFQ={(item) => { handleAddRFQ(item); }} />}
+      {selected && <ChainModal chain={selected} onClose={() => setSelected(null)} onAddRFQ={handleAddRFQ} />}
     </div>
   );
 }
