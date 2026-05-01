@@ -269,59 +269,219 @@ function BoltNGoModal({ chain, onClose, onAddRFQ }) {
   );
 }
 
-// ── INPUT HELPERS ─────────────────────────────────────────────────────────────
-function FieldRow({ label, children, note }) {
-  return (
-    <div style={{ marginBottom: 14 }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, marginBottom: 6 }}>{label}</div>
-      {children}
-      {note && <div style={{ fontSize: 11, color: C.muted, marginTop: 4 }}>{note}</div>}
-    </div>
-  );
-}
-function TextInput({ value, onChange, unit, placeholder }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-      <input type="text" value={value || ""} onChange={e => onChange(e.target.value)} placeholder={placeholder || ""}
-        style={{ flex: 1, border: `1px solid ${C.border}`, borderRadius: 8, padding: "9px 12px", fontSize: 13, outline: "none" }} />
-      {unit && <span style={{ fontSize: 12, color: C.muted, minWidth: 24 }}>{unit}</span>}
-    </div>
-  );
-}
-function SelectInput({ value, onChange, options }) {
-  return (
-    <select value={value || ""} onChange={e => onChange(e.target.value)}
-      style={{ width: "100%", border: `1px solid ${C.border}`, borderRadius: 8, padding: "9px 12px", fontSize: 13, outline: "none", background: "white" }}>
-      <option value="">Select...</option>
-      {options.map(o => <option key={o} value={o}>{o}</option>)}
-    </select>
-  );
-}
+// ── LIVE FLIGHT SCHEMATIC (single attachment, updates as dims typed) ────────────
+function FlightSchematic({ att, imperial }) {
+  const style = att?.flightStyle || "B";
+  const unit = imperial ? "in" : "mm";
+  const W_raw = parseFloat(att?.dims?.W) || 0;
+  const H_raw = parseFloat(att?.dims?.H) || 0;
+  const bar_raw = parseFloat(att?.dims?.barSize) || 0;
+  const K_raw = parseFloat(att?.dims?.K) || 0;
+  const hasUHMW = att?.uhmw;
+  const uhmwT_raw = parseFloat(att?.uhmwDims?.thickness) || 0;
+  const hasBacking = att?.hasBackingPlate;
+  const bpT_raw = parseFloat(att?.backingPlateThickness) || 0;
+  const seq = parseInt(att?.sequence) || 4;
 
-const PIN_OPTIONS = [
-  { name: "Forged Head Pin + Collar and Roll Pin" },
-  { name: "Forged Head Pin + One Clamp" },
-  { name: "Plain Pin + Two Clamps" },
-];
+  // SVG canvas
+  const VW = 380, VH = 260;
+  const cx = VW / 2;
+  // Chain attachment points — two circles representing the chain
+  const chainY = 170;
+  const chainR = 14;
+  const chainSpan = 80; // distance between the two chain links shown
+  const baseY = chainY - chainR;
 
-const STEEL_TYPES = ["Mild Steel (A36)", "AR200", "AR400", "AR500", "304 Stainless", "316 Stainless"];
-const NUT_STYLES = ["Standard Hex Nut", "Nylon Lock Nut", "Flange Nut", "Serrated Flange Nut", "Wing Nut"];
+  // Scale flight dims to SVG pixels — relative to canvas
+  const maxW = 300, maxH = 120;
+  const W_px = W_raw > 0 ? Math.min(Math.max(W_raw * 0.55, 40), maxW) : 160;
+  const H_px = H_raw > 0 ? Math.min(Math.max(H_raw * 0.55, 20), maxH) : 60;
+  const bar_px = bar_raw > 0 ? Math.min(Math.max(bar_raw * 0.55, 6), 28) : 12;
+  const K_px  = K_raw > 0 ? Math.min(Math.max(K_raw * 0.4, 6), 36) : 14;
+  const uhmwT_px = uhmwT_raw > 0 ? Math.min(Math.max(uhmwT_raw * 0.4, 4), 20) : 8;
+  const bpT_px = bpT_raw > 0 ? Math.min(Math.max(bpT_raw * 0.4, 4), 14) : 6;
+  const wallT = Math.max(bar_px * 0.55, 6);
 
-function emptyAttachment(idx) {
-  return {
-    _key: Date.now() + idx,
-    flightName: "", flightStyle: "",
-    sequence: "4", // every Nth link
-    hasBackingPlate: false,
-    backingPlateThickness: "",
-    backingPlateSequence: "",
-    dims: { W: "", H: "", G: "", K: "", barSize: "", barShape: "", steelType: "" },
-    uhmw: false,
-    uhmwDims: { thickness: "", overallW: "", overallH: "", type: "Regular UHMW", bottomStyle: "Flush to bottom", overlap: "", boltDiameter: "", nutStyle: "", boltPlacement: "" },
+  // Colors
+  const flightFill = "#4a7cba";
+  const flightStroke = C.navyMid;
+  const shadowFill = "#2e5a8a";
+  const uhmwFill = "rgba(180,210,255,0.75)";
+  const chainFill = "#8a9ab8";
+
+  // ── Draw chain attachment (two link ovals) ──
+  const chainElem = (
+    <g>
+      {/* Link left */}
+      <ellipse cx={cx - chainSpan/2} cy={chainY} rx={chainR*1.4} ry={chainR*0.7} fill={chainFill} stroke={C.navyMid} strokeWidth="1.5" />
+      <ellipse cx={cx - chainSpan/2} cy={chainY} rx={chainR*0.55} ry={chainR*0.3} fill="#c8d4e8" stroke={C.navyMid} strokeWidth="0.8" />
+      {/* Link right */}
+      <ellipse cx={cx + chainSpan/2} cy={chainY} rx={chainR*1.4} ry={chainR*0.7} fill={chainFill} stroke={C.navyMid} strokeWidth="1.5" />
+      <ellipse cx={cx + chainSpan/2} cy={chainY} rx={chainR*0.55} ry={chainR*0.3} fill="#c8d4e8" stroke={C.navyMid} strokeWidth="0.8" />
+      {/* Connecting bar */}
+      <rect x={cx - chainSpan/2 + chainR*1.2} y={chainY - chainR*0.45} width={chainSpan - chainR*2.4} height={chainR*0.9} fill="#b0bdd4" stroke={C.navyMid} strokeWidth="1" />
+    </g>
+  );
+
+  // ── Flight body based on style ──
+  let flightElem = null;
+  let dimAnnotations = [];
+
+  if (style === "B") {
+    // Bar flight — horizontal bar sitting on chain
+    const barY = baseY - bar_px;
+    flightElem = (
+      <g>
+        <rect x={cx - W_px/2} y={barY} width={W_px} height={bar_px} fill={flightFill} stroke={flightStroke} strokeWidth="1.5" rx="2" />
+        <rect x={cx + W_px/2} y={barY + 2} width={5} height={bar_px} fill={shadowFill} />
+        <rect x={cx - W_px/2} y={barY + bar_px} width={W_px + 5} height={4} fill={shadowFill} />
+      </g>
+    );
+    dimAnnotations = [
+      // W arrow
+      { type: "h", x1: cx - W_px/2, x2: cx + W_px/2, y: barY - 18, label: W_raw > 0 ? `W = ${toDisplay(W_raw, imperial)} ${unit}` : "W = ?" },
+      // Bar size
+      { type: "v", x: cx - W_px/2 - 22, y1: barY, y2: barY + bar_px, label: bar_raw > 0 ? `${toDisplay(bar_raw, imperial)}` : "?" },
+    ];
+  } else if (style === "U" || style === "CU") {
+    const topY = baseY - H_px;
+    const closed = style === "CU";
+    flightElem = (
+      <g>
+        {/* Left wall */}
+        <rect x={cx - W_px/2} y={topY} width={wallT} height={H_px} fill={flightFill} stroke={flightStroke} strokeWidth="1.5" />
+        {/* Right wall */}
+        <rect x={cx + W_px/2 - wallT} y={topY} width={wallT} height={H_px} fill={flightFill} stroke={flightStroke} strokeWidth="1.5" />
+        {/* Bottom bar */}
+        <rect x={cx - W_px/2} y={baseY - wallT} width={W_px} height={wallT} fill={flightFill} stroke={flightStroke} strokeWidth="1.5" />
+        {/* Top cap if Closed U */}
+        {closed && <rect x={cx - W_px/2} y={topY} width={W_px} height={wallT} fill={shadowFill} stroke={flightStroke} strokeWidth="1" />}
+        {/* Shadow */}
+        <rect x={cx + W_px/2} y={topY + 3} width={5} height={H_px} fill={shadowFill} />
+      </g>
+    );
+    dimAnnotations = [
+      { type: "h", x1: cx - W_px/2, x2: cx + W_px/2, y: topY - 18, label: W_raw > 0 ? `W = ${toDisplay(W_raw, imperial)} ${unit}` : "W = ?" },
+      { type: "v", x: cx + W_px/2 + 22, y1: topY, y2: baseY, label: H_raw > 0 ? `H = ${toDisplay(H_raw, imperial)} ${unit}` : "H = ?" },
+    ];
+  } else if (style === "OO") {
+    const topY = baseY - H_px;
+    flightElem = (
+      <g>
+        {/* Left wall */}
+        <rect x={cx - W_px/2} y={topY} width={wallT} height={H_px} fill={flightFill} stroke={flightStroke} strokeWidth="1.5" />
+        {/* Right wall */}
+        <rect x={cx + W_px/2 - wallT} y={topY} width={wallT} height={H_px} fill={flightFill} stroke={flightStroke} strokeWidth="1.5" />
+        {/* Bottom bar */}
+        <rect x={cx - W_px/2} y={baseY - wallT} width={W_px} height={wallT} fill={flightFill} stroke={flightStroke} strokeWidth="1.5" />
+        {/* Top cap (OO is closed top too) */}
+        <rect x={cx - W_px/2} y={topY} width={W_px} height={wallT} fill={shadowFill} stroke={flightStroke} strokeWidth="1" />
+        {/* OO lips extending outward */}
+        <rect x={cx - W_px/2 - K_px} y={baseY - wallT} width={K_px} height={wallT} fill={shadowFill} stroke={flightStroke} strokeWidth="1" />
+        <rect x={cx + W_px/2} y={baseY - wallT} width={K_px} height={wallT} fill={shadowFill} stroke={flightStroke} strokeWidth="1" />
+        {/* Shadow */}
+        <rect x={cx + W_px/2 + K_px} y={topY + 3} width={5} height={H_px} fill={shadowFill} />
+      </g>
+    );
+    dimAnnotations = [
+      { type: "h", x1: cx - W_px/2 - K_px, x2: cx + W_px/2 + K_px, y: topY - 18, label: W_raw > 0 ? `W = ${toDisplay(W_raw, imperial)} ${unit}` : "W = ?" },
+      { type: "v", x: cx + W_px/2 + K_px + 22, y1: topY, y2: baseY, label: H_raw > 0 ? `H = ${toDisplay(H_raw, imperial)} ${unit}` : "H = ?" },
+      { type: "h", x1: cx + W_px/2, x2: cx + W_px/2 + K_px, y: baseY + 18, label: K_raw > 0 ? `K = ${toDisplay(K_raw, imperial)} ${unit}` : "K = ?" },
+    ];
+  } else {
+    // Paddle / filler: solid flat plate
+    const plateH = Math.max(H_px, 20);
+    flightElem = (
+      <g>
+        <rect x={cx - W_px/2} y={baseY - plateH} width={W_px} height={plateH} fill={flightFill} stroke={flightStroke} strokeWidth="1.5" />
+        <rect x={cx + W_px/2} y={baseY - plateH + 3} width={5} height={plateH} fill={shadowFill} />
+      </g>
+    );
+    dimAnnotations = [
+      { type: "h", x1: cx - W_px/2, x2: cx + W_px/2, y: baseY - plateH - 18, label: W_raw > 0 ? `W = ${toDisplay(W_raw, imperial)} ${unit}` : "W = ?" },
+      { type: "v", x: cx - W_px/2 - 22, y1: baseY - plateH, y2: baseY, label: H_raw > 0 ? `H = ${toDisplay(H_raw, imperial)} ${unit}` : "H = ?" },
+    ];
+  }
+
+  // UHMW overlay (front face of flight)
+  const uhmwElem = hasUHMW && uhmwT_px > 0 ? (() => {
+    if (style === "B") {
+      return <rect x={cx - W_px/2} y={baseY - bar_px - uhmwT_px} width={W_px} height={uhmwT_px} fill={uhmwFill} stroke="#4a80cc" strokeWidth="1" strokeDasharray="4,2" />;
+    }
+    const topY = baseY - H_px;
+    // Interior face liner
+    return (
+      <g>
+        <rect x={cx - W_px/2 + wallT} y={topY + wallT} width={uhmwT_px} height={H_px - wallT*2} fill={uhmwFill} stroke="#4a80cc" strokeWidth="0.8" strokeDasharray="3,2" />
+        <rect x={cx + W_px/2 - wallT - uhmwT_px} y={topY + wallT} width={uhmwT_px} height={H_px - wallT*2} fill={uhmwFill} stroke="#4a80cc" strokeWidth="0.8" strokeDasharray="3,2" />
+      </g>
+    );
+  })() : null;
+
+  // Backing plate
+  const bpElem = hasBacking ? (
+    <g>
+      <rect x={cx - W_px/2 + 6} y={chainY + chainR + 4} width={W_px - 12} height={bpT_px + 4} fill="#8a9ab8" stroke={C.navyMid} strokeWidth="1" />
+      <text x={cx} y={chainY + chainR + 12 + bpT_px} textAnchor="middle" fontSize="9" fill={C.muted}>Backing Plate</text>
+    </g>
+  ) : null;
+
+  // ── Arrow annotation helper ──
+  const arrowHead = (id, dir) => (
+    <marker key={id} id={id} markerWidth="6" markerHeight="6" refX={dir==="end"?5:1} refY="3" orient="auto">
+      <path d={dir==="end"?"M0,1 L5,3 L0,5 Z":"M5,1 L0,3 L5,5 Z"} fill="#555" />
+    </marker>
+  );
+
+  const renderAnnotation = (ann, idx) => {
+    const aId = `a${idx}s`; const bId = `a${idx}e`;
+    if (ann.type === "h") {
+      return (
+        <g key={idx}>
+          <defs>{arrowHead(aId,"start")}{arrowHead(bId,"end")}</defs>
+          <line x1={ann.x1} y1={ann.y} x2={ann.x2} y2={ann.y} stroke="#555" strokeWidth="1" markerStart={`url(#${aId})`} markerEnd={`url(#${bId})`} />
+          <line x1={ann.x1} y1={ann.y - 6} x2={ann.x1} y2={ann.y + 6} stroke="#555" strokeWidth="0.8" />
+          <line x1={ann.x2} y1={ann.y - 6} x2={ann.x2} y2={ann.y + 6} stroke="#555" strokeWidth="0.8" />
+          <rect x={(ann.x1+ann.x2)/2 - 32} y={ann.y - 18} width={64} height={14} fill="white" rx="3" />
+          <text x={(ann.x1+ann.x2)/2} y={ann.y - 7} textAnchor="middle" fontSize="10" fontWeight="600" fill={C.navyMid}>{ann.label}</text>
+        </g>
+      );
+    } else {
+      return (
+        <g key={idx}>
+          <defs>{arrowHead(aId,"start")}{arrowHead(bId,"end")}</defs>
+          <line x1={ann.x} y1={ann.y1} x2={ann.x} y2={ann.y2} stroke="#555" strokeWidth="1" markerStart={`url(#${aId})`} markerEnd={`url(#${bId})`} />
+          <line x1={ann.x - 6} y1={ann.y1} x2={ann.x + 6} y2={ann.y1} stroke="#555" strokeWidth="0.8" />
+          <line x1={ann.x - 6} y1={ann.y2} x2={ann.x + 6} y2={ann.y2} stroke="#555" strokeWidth="0.8" />
+          <rect x={ann.x - 28} y={(ann.y1+ann.y2)/2 - 8} width={56} height={14} fill="white" rx="3" />
+          <text x={ann.x} y={(ann.y1+ann.y2)/2 + 4} textAnchor="middle" fontSize="10" fontWeight="600" fill={C.navyMid}>{ann.label}</text>
+        </g>
+      );
+    }
   };
+
+  // Sequence annotation
+  const seqLabel = seq > 0 ? `1 flight every ${seq} links` : "";
+
+  return (
+    <div style={{ background: "#f8fafc", borderRadius: 12, border: `1px solid ${C.border}`, padding: "8px", marginBottom: 16 }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4, paddingLeft: 4 }}>
+        Live Preview — {att?.flightName || "Flight"}{seqLabel ? ` · ${seqLabel}` : ""}
+      </div>
+      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ display: "block" }}>
+        {chainElem}
+        {flightElem}
+        {uhmwElem}
+        {bpElem}
+        {dimAnnotations.map((a, i) => renderAnnotation(a, i))}
+        {/* UHMW label */}
+        {hasUHMW && <text x={cx} y={VH - 10} textAnchor="middle" fontSize="9" fill="#4a80cc" fontWeight="600">UHMW liner shown in blue</text>}
+      </svg>
+    </div>
+  );
 }
 
-// ── ISOMETRIC-STYLE SEQUENCE SCHEMATIC ───────────────────────────────────────
+// ── SEQUENCE SCHEMATIC (review page — multi-attachment) ───────────────────────
 function SequenceSchematic({ chain, attachments }) {
   const att = attachments[0];
   const seq = parseInt(att?.sequence) || 4;
@@ -329,163 +489,122 @@ function SequenceSchematic({ chain, attachments }) {
   const fw = parseFloat(att?.dims?.W) || 300;
   const fh = parseFloat(att?.dims?.H) || 120;
   const barSize = parseFloat(att?.dims?.barSize) || 16;
-  const linkP = parseFloat(chain?.P_mm) || 142;
   const hasUHMW = att?.uhmw;
   const uhmwT = parseFloat(att?.uhmwDims?.thickness) || 12;
   const hasBacking = att?.hasBackingPlate;
   const backingSeq = parseInt(att?.backingPlateSequence) || 2;
 
-  // Draw 4 links in a row, flights on every `seq` links
-  const W = 560, H = 200;
+  const W = 520, H = 180;
   const numLinks = Math.max(seq * 2 + 1, 5);
-  const linkW = Math.min(60, (W - 80) / numLinks);
-  const startX = 40;
-  const chainY = H - 60;
+  const linkW = Math.min(54, (W - 60) / numLinks);
+  const startX = 30;
+  const chainY = H - 55;
   const links = Array.from({ length: numLinks }, (_, i) => i);
 
-  // Flight rendering based on style
   const drawFlight = (i) => {
-    const cx = startX + i * linkW + linkW / 2;
-    const baseY = chainY - 12;
+    const cx2 = startX + i * linkW + linkW / 2;
+    const baseY2 = chainY - 10;
     const scale = Math.min(fw / 300, 1.0);
-    const flightW = Math.min(fw * scale * 0.18, 80);
-    const flightH = Math.min(fh * scale * 0.55, 65);
-    const bar = Math.max(barSize * 0.18, 4);
-
-    let flightElem = null;
-
+    const flightW2 = Math.min(fw * scale * 0.16, 72);
+    const flightH2 = Math.min(fh * scale * 0.5, 58);
+    const bar2 = Math.max(barSize * 0.16, 4);
+    const t2 = Math.max(bar2, 5);
+    let el = null;
     if (style === "B") {
-      // Bar flight — horizontal bar across chain
-      flightElem = (
-        <g>
-          <rect x={cx - flightW / 2} y={baseY - bar} width={flightW} height={bar} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
-          {/* Isometric side shadow */}
-          <rect x={cx + flightW / 2} y={baseY - bar + 2} width={4} height={bar} fill="#3a5a8a" />
-          <rect x={cx - flightW / 2} y={baseY} width={flightW + 4} height={3} fill="#3a5a8a" />
-        </g>
-      );
+      el = <rect x={cx2 - flightW2/2} y={baseY2 - bar2} width={flightW2} height={bar2} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />;
     } else if (style === "U" || style === "CU") {
-      const t = Math.max(bar, 5);
-      flightElem = (
-        <g>
-          <rect x={cx - flightW / 2} y={baseY - flightH} width={t} height={flightH} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
-          <rect x={cx + flightW / 2 - t} y={baseY - flightH} width={t} height={flightH} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
-          <rect x={cx - flightW / 2} y={baseY - t} width={flightW} height={t} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
-          {style === "CU" && <rect x={cx - flightW / 2} y={baseY - flightH} width={flightW} height={t} fill="#4a6a9a" stroke={C.navyMid} strokeWidth="1" />}
-          {/* Shadow */}
-          <rect x={cx + flightW / 2} y={baseY - flightH + 2} width={4} height={flightH} fill="#3a5a8a" />
-        </g>
-      );
+      el = <g>
+        <rect x={cx2 - flightW2/2} y={baseY2 - flightH2} width={t2} height={flightH2} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+        <rect x={cx2 + flightW2/2 - t2} y={baseY2 - flightH2} width={t2} height={flightH2} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+        <rect x={cx2 - flightW2/2} y={baseY2 - t2} width={flightW2} height={t2} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+        {style === "CU" && <rect x={cx2 - flightW2/2} y={baseY2 - flightH2} width={flightW2} height={t2} fill="#3a5a8a" stroke={C.navyMid} strokeWidth="1" />}
+      </g>;
     } else if (style === "OO") {
-      const t = Math.max(bar, 5), kH = flightH * 0.3;
-      flightElem = (
-        <g>
-          <rect x={cx - flightW / 2} y={baseY - flightH} width={t} height={flightH} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
-          <rect x={cx + flightW / 2 - t} y={baseY - flightH} width={t} height={flightH} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
-          <rect x={cx - flightW / 2} y={baseY - t} width={flightW} height={t} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
-          <rect x={cx - flightW / 2} y={baseY - flightH} width={flightW} height={t} fill="#4a6a9a" stroke={C.navyMid} strokeWidth="1" />
-          {/* OO lip extension */}
-          <rect x={cx - flightW / 2 - kH} y={baseY - t} width={kH} height={t} fill="#4a6a9a" />
-          <rect x={cx + flightW / 2} y={baseY - flightH + 2} width={4} height={flightH} fill="#3a5a8a" />
-        </g>
-      );
+      const kH2 = flightH2 * 0.28;
+      el = <g>
+        <rect x={cx2 - flightW2/2} y={baseY2 - flightH2} width={t2} height={flightH2} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+        <rect x={cx2 + flightW2/2 - t2} y={baseY2 - flightH2} width={t2} height={flightH2} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+        <rect x={cx2 - flightW2/2} y={baseY2 - t2} width={flightW2} height={t2} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
+        <rect x={cx2 - flightW2/2} y={baseY2 - flightH2} width={flightW2} height={t2} fill="#3a5a8a" stroke={C.navyMid} strokeWidth="1" />
+        <rect x={cx2 - flightW2/2 - kH2} y={baseY2 - t2} width={kH2} height={t2} fill="#3a5a8a" />
+        <rect x={cx2 + flightW2/2} y={baseY2 - t2} width={kH2} height={t2} fill="#3a5a8a" />
+      </g>;
     } else {
-      // Default bar
-      flightElem = (
-        <rect x={cx - flightW / 2} y={baseY - bar} width={flightW} height={bar} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />
-      );
+      el = <rect x={cx2 - flightW2/2} y={baseY2 - Math.max(flightH2,12)} width={flightW2} height={Math.max(flightH2,12)} fill="#5a7aaa" stroke={C.navyMid} strokeWidth="1" />;
     }
-
-    // UHMW overlay on the flight
-    const uhmwElem = hasUHMW ? (
-      <rect x={cx - flightW / 2} y={baseY - bar - uhmwT * 0.4} width={flightW} height={uhmwT * 0.4}
-        fill="rgba(200,220,255,0.7)" stroke="#4a80cc" strokeWidth="0.8" strokeDasharray="3,2" />
-    ) : null;
-
-    // Backing plate (below chain)
-    const shouldDrawBacking = hasBacking && (Math.floor(i / backingSeq) * backingSeq === i);
-    const backingElem = shouldDrawBacking ? (
-      <g>
-        <rect x={cx - flightW / 2 + 4} y={chainY + 12} width={flightW - 8} height={6} fill="#8a9ab8" stroke={C.navyMid} strokeWidth="0.8" />
-        <text x={cx} y={chainY + 24} textAnchor="middle" fontSize="7" fill={C.muted}>BP</text>
-      </g>
-    ) : null;
-
-    return <g key={`f${i}`}>{flightElem}{uhmwElem}{backingElem}</g>;
+    const uhmwEl = hasUHMW ? <rect x={cx2 - flightW2/2} y={baseY2 - bar2 - uhmwT * 0.35} width={flightW2} height={uhmwT * 0.35} fill="rgba(180,210,255,0.7)" stroke="#4a80cc" strokeWidth="0.7" strokeDasharray="3,2" /> : null;
+    const bpEl = hasBacking && (Math.floor(i / backingSeq) * backingSeq === i) ? <rect x={cx2 - flightW2/2 + 3} y={chainY + 10} width={flightW2 - 6} height={5} fill="#8a9ab8" stroke={C.navyMid} strokeWidth="0.7" /> : null;
+    return <g key={`f${i}`}>{el}{uhmwEl}{bpEl}</g>;
   };
 
-  // Dimension annotations
-  const firstFlightX = startX + (seq - 1) * linkW + linkW / 2;
-  const secondFlightX = startX + (seq * 2 - 1) * linkW + linkW / 2;
-
   return (
-    <div>
-      <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 8 }}>Chain Assembly — Profile View</div>
+    <div style={{ marginBottom: 12 }}>
+      <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 6 }}>Chain Assembly — Sequence View</div>
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ background: "#f8fafc", borderRadius: 10, border: `1px solid ${C.border}` }}>
-        {/* Flights at every seq-th link */}
+        <defs>
+          <marker id="sa" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0.5 L4,2.5 L0,4.5 Z" fill="#666"/></marker>
+          <marker id="sb" markerWidth="5" markerHeight="5" refX="1" refY="2.5" orient="auto"><path d="M4,0.5 L0,2.5 L4,4.5 Z" fill="#666"/></marker>
+        </defs>
         {links.filter(i => (i + 1) % seq === 0).map(i => drawFlight(i))}
-
-        {/* Pitch label */}
-        {links.length > 2 && (
-          <g>
-            <defs>
-              <marker id="pa" markerWidth="4" markerHeight="4" refX="3" refY="2" orient="auto"><path d="M0,0 L4,2 L0,4 Z" fill="#666"/></marker>
-              <marker id="pb" markerWidth="4" markerHeight="4" refX="1" refY="2" orient="auto"><path d="M4,0 L0,2 L4,4 Z" fill="#666"/></marker>
-            </defs>
-            <line x1={startX} y1={chainY + 35} x2={startX + linkW} y2={chainY + 35} stroke="#666" strokeWidth="0.8" markerEnd="url(#pa)" markerStart="url(#pb)" />
-            <text x={startX + linkW / 2} y={chainY + 46} textAnchor="middle" fontSize="9" fill="#666">P={chain?.P_mm}mm</text>
-          </g>
-        )}
-
-        {/* Flight spacing label */}
-        {links.some(i => (i + 1) % seq === 0) && (() => {
-          const f1 = links.find(i => (i + 1) % seq === 0);
-          const f2 = links.find(i => (i + 1) % seq === 0 && i > f1);
-          if (f1 === undefined || f2 === undefined) return null;
-          const x1 = startX + f1 * linkW + linkW / 2;
-          const x2 = startX + f2 * linkW + linkW / 2;
-          return (
-            <g>
-              <line x1={x1} y1={chainY - 75} x2={x2} y2={chainY - 75} stroke={C.navyMid} strokeWidth="0.8" markerEnd="url(#pa)" markerStart="url(#pb)" />
-              <text x={(x1 + x2) / 2} y={chainY - 80} textAnchor="middle" fontSize="9" fill={C.navyMid}>Every {seq} links</text>
-            </g>
-          );
+        {/* Pitch arrow */}
+        <line x1={startX} y1={chainY + 32} x2={startX + linkW} y2={chainY + 32} stroke="#666" strokeWidth="0.8" markerEnd="url(#sa)" markerStart="url(#sb)" />
+        <text x={startX + linkW/2} y={chainY + 43} textAnchor="middle" fontSize="8" fill="#666">P={chain?.P_mm}mm</text>
+        {/* Spacing arrow between flights */}
+        {(() => {
+          const f1 = links.find(i => (i+1) % seq === 0);
+          const f2 = links.find(i => (i+1) % seq === 0 && i > f1);
+          if (f1 == null || f2 == null) return null;
+          const x1 = startX + f1 * linkW + linkW/2, x2 = startX + f2 * linkW + linkW/2;
+          return <g>
+            <line x1={x1} y1={chainY - 65} x2={x2} y2={chainY - 65} stroke={C.navyMid} strokeWidth="0.8" markerEnd="url(#sa)" markerStart="url(#sb)" />
+            <text x={(x1+x2)/2} y={chainY - 70} textAnchor="middle" fontSize="8" fill={C.navyMid}>Every {seq} links</text>
+          </g>;
         })()}
-
-        {/* Flight height label */}
-        {style && (() => {
-          const fi = links.find(i => (i + 1) % seq === 0);
-          if (fi === undefined) return null;
-          const fx = startX + fi * linkW + linkW / 2;
-          const scale = Math.min(fw / 300, 1.0);
-          const fhPx = Math.min(fh * scale * 0.55, 65);
-          return (
-            <g>
-              <line x1={fx + 44} y1={chainY - 12} x2={fx + 44} y2={chainY - 12 - fhPx} stroke="#999" strokeWidth="0.7" markerEnd="url(#pa)" markerStart="url(#pb)" />
-              <text x={fx + 54} y={chainY - 12 - fhPx / 2 + 4} fontSize="8" fill="#888">H={att?.dims?.H||"?"}mm</text>
-            </g>
-          );
-        })()}
-
-        {/* UHMW label */}
-        {hasUHMW && (() => {
-          const fi = links.find(i => (i + 1) % seq === 0);
-          if (fi === undefined) return null;
-          const fx = startX + fi * linkW + linkW / 2;
-          return <text x={fx} y={chainY - 35} textAnchor="middle" fontSize="8" fill="#4a80cc" fontWeight="600">UHMW T={att?.uhmwDims?.thickness||"?"}mm</text>;
-        })()}
-
-        {/* Backing plate label */}
-        {hasBacking && (
-          <text x={W / 2} y={chainY + 38} textAnchor="middle" fontSize="8" fill={C.muted}>Backing Plate every {att?.backingPlateSequence||"?"} attachment(s){att?.backingPlateThickness ? ` — T=${att.backingPlateThickness}mm` : ""}</text>
-        )}
       </svg>
     </div>
   );
 }
 
-// ── CHAIN CONFIGURATOR (WIZARD) ───────────────────────────────────────────────
+// ── CHAIN CONFIGURATOR (WIZARD) ──────────────────────────────────────────────
+const STEEL_TYPES = ["Mild Steel (A36/S235)", "Carbon Steel (1045)", "Stainless Steel 304", "Stainless Steel 316", "Hardox 400", "AR400 Abrasion Resistant"];
+const PIN_OPTIONS = [
+  { name: "Forged Head Pin + Collar and Roll Pin", desc: "Standard — maximum strength, most common heavy-duty config." },
+  { name: "Forged Head Pin + One Clamp",           desc: "Easier to service — ideal for frequent disassembly." },
+  { name: "Plain Pin + Two Clamps",                desc: "Removal from either side — preferred in confined spaces." },
+];
+function emptyAttachment(idx) {
+  return { id: idx, flightName: "", flightStyle: "", sequence: "4", dims: { W:"", H:"", G:"", K:"", barSize:"", barShape:"Round", steelType:"" }, hasBackingPlate: false, backingPlateThickness:"", backingPlateSequence:"2", uhmw: false, uhmwDims: { thickness:"", overallW:"", overallH:"", type:"Regular UHMW", bottomStyle:"Flush to bottom", overlap:"", boltDiameter:"", nutStyle:"", boltPlacement:"" } };
+}
+
+function FieldRow({ label, note, children }) {
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, marginBottom: 4 }}>{label}{note && <span style={{ fontWeight: 400, marginLeft: 6, color: "#94a3b8" }}>— {note}</span>}</div>
+      {children}
+    </div>
+  );
+}
+function TextInput({ value, onChange, placeholder, unit }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      <input type="number" value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder||""}
+        style={{ flex: 1, border: `1px solid ${C.border}`, borderRadius: 8, padding: "9px 12px", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+      {unit && <span style={{ fontSize: 12, color: C.muted, minWidth: 24 }}>{unit}</span>}
+    </div>
+  );
+}
+function SelectInput({ value, onChange, options }) {
+  return (
+    <select value={value} onChange={e => onChange(e.target.value)}
+      style={{ width: "100%", border: `1px solid ${C.border}`, borderRadius: 8, padding: "9px 12px", fontSize: 13, outline: "none", background: "white" }}>
+      <option value="">Select...</option>
+      {options.map(o => <option key={o} value={o}>{o}</option>)}
+    </select>
+  );
+}
+
 function ChainConfigurator({ chain, onComplete, onClose }) {
+  // Steps: 0=Flights? 1=FlightType 2=Dimensions 3=More? 4=Pins 5=Footage 6=Review
   const [step, setStep] = useState(0);
   const [footage, setFootage] = useState("");
   const [footageUnit, setFootageUnit] = useState("feet");
@@ -500,361 +619,341 @@ function ChainConfigurator({ chain, onComplete, onClose }) {
   const att = attachments[activeAtt] || emptyAttachment(0);
 
   const stepLabels = ["Flights?", "Flight Type", "Dimensions", "More?", "Pins", "Footage", "Review"];
-  const totalSteps = 7;
+  const unit = imperial ? "in" : "mm";
+
+  function updateAtt(field, val) { setAttachments(prev => prev.map((a,i) => i===activeAtt ? {...a,[field]:val} : a)); }
+  function updateDim(field, val) { setAttachments(prev => prev.map((a,i) => i===activeAtt ? {...a,dims:{...a.dims,[field]:val}} : a)); }
+  function updateUhmw(field, val) { setAttachments(prev => prev.map((a,i) => i===activeAtt ? {...a,uhmwDims:{...a.uhmwDims,[field]:val}} : a)); }
 
   const ConfigHeader = () => (
     <div style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.navyMid})`, padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
       <div>
         <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 11, marginBottom: 2 }}>Configuring: {chain.chain_link}</div>
-        <div style={{ color: "white", fontSize: 13, fontWeight: 700 }}>Step {step + 1} of {totalSteps}: {stepLabels[step] || ""}</div>
+        <div style={{ color: "white", fontSize: 13, fontWeight: 700 }}>Step {step+1} of 7 — {stepLabels[step]||""}</div>
       </div>
       <button onClick={onClose} style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", color: "white", cursor: "pointer", borderRadius: 8, padding: "6px 14px", fontSize: 13, fontWeight: 700 }}>✕ Exit</button>
     </div>
   );
 
-  function updateAtt(field, val) {
-    setAttachments(prev => prev.map((a, i) => i === activeAtt ? { ...a, [field]: val } : a));
-  }
-  function updateDim(field, val) {
-    setAttachments(prev => prev.map((a, i) => i === activeAtt ? { ...a, dims: { ...a.dims, [field]: val } } : a));
-  }
-  function updateUhmw(field, val) {
-    setAttachments(prev => prev.map((a, i) => i === activeAtt ? { ...a, uhmwDims: { ...a.uhmwDims, [field]: val } } : a));
-  }
-
-  const steps = ["Footage", "Flights?", "Flight Type", "Dimensions", "More?", "Pins", "Review"];
-
-  // Step 5: Footage (asked last, before review)
-  if (step === 5) return (
+  // Step 0: Flights?
+  if (step === 0) return (
     <div>
       <ConfigHeader />
       <div style={{ padding: 24 }}>
-      <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>How much chain do you need?</div>
-      <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Enter the total length required.</div>
-      <FieldRow label="Unit">
-        <div style={{ display: "flex", gap: 10 }}>
-          {["feet", "metres", "links"].map(u => (
-            <button key={u} onClick={() => setFootageUnit(u)}
-              style={{ flex: 1, background: footageUnit === u ? C.navyMid : "#f1f5f9", color: footageUnit === u ? "white" : C.text,
-                border: `2px solid ${footageUnit === u ? C.navyMid : C.border}`, borderRadius: 8, padding: "10px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
-              {u}
+        <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Does this chain need flights / attachments?</div>
+        <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Flights are bar, U-type, or OO-type steel attachments welded or bolted to links to push or carry material.</div>
+        <div style={{ display: "flex", gap: 12 }}>
+          {[["Yes", true], ["No — Chain Links Only", false]].map(([label, val]) => (
+            <button key={label} onClick={() => { setHasFlights(val); setStep(val ? 1 : 4); }}
+              style={{ flex: 1, background: C.navyMid, color: "white", border: "none", borderRadius: 10, padding: "18px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+              {label}
             </button>
           ))}
         </div>
-      </FieldRow>
-      <FieldRow label={`Quantity (${footageUnit})`}>
-        <TextInput value={footage} onChange={setFootage} placeholder={footageUnit === "links" ? "e.g. 50" : "e.g. 100"} />
-      </FieldRow>
-      <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
-        <button onClick={() => setStep(4)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
-        <button onClick={() => { if (footage) setStep(6); }} disabled={!footage}
-          style={{ background: footage ? C.navyMid : "#e5e7eb", color: footage ? "white" : C.muted, border: "none", borderRadius: 8, padding: "12px 28px", cursor: footage ? "pointer" : "default", fontSize: 13, fontWeight: 700 }}>
-          Review →
-        </button>
       </div>
     </div>
   );
 
-  // Step 0: Flights?
-  if (step === 0) return (
-    <div style={{ padding: 24 }}>
-      <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Does this chain need flights / attachments?</div>
-      <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Flights are bar, U-type, or OO-type steel attachments welded or bolted to links to push or carry material.</div>
-      <div style={{ display: "flex", gap: 12 }}>
-        {[["Yes", true], ["No — Chain Links Only", false]].map(([label, val]) => (
-          <button key={label} onClick={() => { setHasFlights(val); setStep(val ? 2 : 5); }}
-            style={{ flex: 1, background: C.navyMid, color: "white", border: "none", borderRadius: 10, padding: "16px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
-            {label}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-
-  // Step 1: Flight type selection
+  // Step 1: Flight type — AUTO-ADVANCE on selection
   if (step === 1) return (
     <div>
       <ConfigHeader />
       <div style={{ padding: 24 }}>
-      <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>
-        {attachments.length > 1 ? `Attachment ${activeAtt + 1} — ` : ""}Flight / Attachment Type
-      </div>
-      <div style={{ color: C.muted, fontSize: 12, marginBottom: 16 }}>Select the profile that matches your application.</div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
-        {flights.map(f => (
-          <button key={f.name} onClick={() => { updateAtt("flightName", f.name); updateAtt("flightStyle", f.style); }}
-            style={{ background: att.flightName === f.name ? C.navyMid : C.card, border: `2px solid ${att.flightName === f.name ? C.navyMid : C.border}`,
-              borderRadius: 10, padding: "10px 14px", cursor: "pointer", textAlign: "left",
-              display: "flex", alignItems: "center", gap: 12 }}>
-            {IMG[f.name] && <img src={IMG[f.name]} alt={f.name} style={{ width: 50, height: 36, objectFit: "cover", borderRadius: 6, border: `1px solid ${C.border}` }} />}
-            <span style={{ fontSize: 13, fontWeight: 600, color: att.flightName === f.name ? "white" : C.text }}>{f.name}</span>
-          </button>
-        ))}
-      </div>
-      <div style={{ display: "flex", gap: 10 }}>
-        <button onClick={() => setStep(0)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
-        <button onClick={() => { if (att.flightName) setStep(1); }} disabled={!att.flightName}
-          style={{ background: att.flightName ? C.navyMid : "#e5e7eb", color: att.flightName ? "white" : C.muted, border: "none", borderRadius: 8, padding: "10px 24px", cursor: att.flightName ? "pointer" : "default", fontSize: 13, fontWeight: 700 }}>
-          Next →
-        </button>
+        <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>
+          {attachments.length > 1 ? `Attachment ${activeAtt+1} — ` : ""}Flight / Attachment Type
+        </div>
+        <div style={{ color: C.muted, fontSize: 12, marginBottom: 16 }}>Tap a profile to select — you'll move straight to dimensions.</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {flights.map(f => (
+            <button key={f.name}
+              onClick={() => { updateAtt("flightName", f.name); updateAtt("flightStyle", f.style); setTimeout(() => setStep(2), 120); }}
+              style={{ background: att.flightName === f.name ? C.navyMid : C.card, border: `2px solid ${att.flightName === f.name ? C.navyMid : C.border}`,
+                borderRadius: 10, padding: "12px 16px", cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: 12, transition: "all 0.15s" }}>
+              {IMG[f.name] && <img src={IMG[f.name]} alt={f.name} style={{ width: 48, height: 34, objectFit: "cover", borderRadius: 6, border: `1px solid ${C.border}`, flexShrink: 0 }} />}
+              <span style={{ fontSize: 13, fontWeight: 600, color: att.flightName === f.name ? "white" : C.text }}>{f.name}</span>
+            </button>
+          ))}
+        </div>
+        <button onClick={() => setStep(0)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontSize: 12, marginTop: 16 }}>← Back</button>
       </div>
     </div>
   );
 
-  // Step 2: Dimensions + spacing + backing plate + UHMW
+  // Step 2: Dimensions — live SVG schematic
   if (step === 2) return (
     <div>
       <ConfigHeader />
-      <div style={{ padding: 24, maxHeight: "60vh", overflowY: "auto" }}>
-      <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>{att.flightName} — Dimensions</div>
-      {IMG[att.flightName] && (
-        <img src={IMG[att.flightName]} alt={att.flightName}
-          style={{ width: "100%", height: 130, objectFit: "cover", borderRadius: 8, border: `1px solid ${C.border}`, marginBottom: 16 }} />
-      )}
+      <div style={{ padding: "16px 24px 24px", maxHeight: "75vh", overflowY: "auto" }}>
+        <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 12 }}>{att.flightName} — Dimensions</div>
 
-      {/* Metric / Imperial toggle */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, background: "#f0f7ff", borderRadius: 8, padding: "8px 14px" }}>
-        <span style={{ fontSize: 12, fontWeight: 700, color: C.muted }}>Units:</span>
-        {[["Metric (mm)", false], ["Imperial (in)", true]].map(([label, val]) => (
-          <button key={label} onClick={() => setImperial(val)}
-            style={{ background: imperial === val ? C.navyMid : "white", color: imperial === val ? "white" : C.muted,
-              border: `1px solid ${imperial === val ? C.navyMid : C.border}`, borderRadius: 6, padding: "4px 14px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
-            {label}
-          </button>
-        ))}
-      </div>
+        {/* Live schematic */}
+        <FlightSchematic att={att} imperial={imperial} />
 
-      {/* Common dims */}
-      <FieldRow label={`Overall Flight Width (W) — ${imperial ? "in" : "mm"}`} note="Measured tip to tip across the chain">
-        <TextInput value={toDisplay(att.dims.W, imperial)} onChange={v => updateDim("W", toMM(v, imperial))} unit={imperial ? "in" : "mm"} />
-      </FieldRow>
+        {/* Metric / Imperial toggle */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, background: "#f0f7ff", borderRadius: 8, padding: "8px 14px" }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: C.muted }}>Units:</span>
+          {[["mm", false], ["inches", true]].map(([label, val]) => (
+            <button key={label} onClick={() => setImperial(val)}
+              style={{ background: imperial === val ? C.navyMid : "white", color: imperial === val ? "white" : C.muted,
+                border: `1px solid ${imperial === val ? C.navyMid : C.border}`, borderRadius: 6, padding: "4px 14px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+              {label}
+            </button>
+          ))}
+        </div>
 
-      {(att.flightStyle === "U" || att.flightStyle === "CU" || att.flightStyle === "OO") && (
-        <>
+        {/* Width — all styles */}
+        <FieldRow label={`Overall Flight Width (W)`} note="tip to tip across chain">
+          <TextInput value={toDisplay(att.dims.W, imperial)} onChange={v => updateDim("W", toMM(v, imperial))} unit={unit} />
+        </FieldRow>
+
+        {/* Height — U, CU, OO, Paddle */}
+        {(att.flightStyle === "U" || att.flightStyle === "CU" || att.flightStyle === "OO" || att.flightStyle === "P") && (
           <FieldRow label="Flight Height (H)">
-            <TextInput value={toDisplay(att.dims.H, imperial)} onChange={v => updateDim("H", toMM(v, imperial))} unit={imperial ? "in" : "mm"} />
+            <TextInput value={toDisplay(att.dims.H, imperial)} onChange={v => updateDim("H", toMM(v, imperial))} unit={unit} />
           </FieldRow>
-          {att.flightStyle === "CU" && (
-            <FieldRow label="Internal Gap (G)" note="Opening width inside closed U">
-              <TextInput value={toDisplay(att.dims.G, imperial)} onChange={v => updateDim("G", toMM(v, imperial))} unit={imperial ? "in" : "mm"} />
-            </FieldRow>
-          )}
-          {att.flightStyle === "OO" && (
-            <FieldRow label="Lip Extension (K)" note="How far the OO lip extends beyond the side wall">
-              <TextInput value={toDisplay(att.dims.K, imperial)} onChange={v => updateDim("K", toMM(v, imperial))} unit={imperial ? "in" : "mm"} />
-            </FieldRow>
-          )}
-        </>
-      )}
+        )}
 
-      {att.flightStyle === "B" && (
-        <>
-          <FieldRow label="Bar Size" note="Diameter (round) or side length (square/flat)">
+        {/* Gap — Closed U */}
+        {att.flightStyle === "CU" && (
+          <FieldRow label="Internal Gap (G)" note="opening width inside closed U">
+            <TextInput value={toDisplay(att.dims.G, imperial)} onChange={v => updateDim("G", toMM(v, imperial))} unit={unit} />
+          </FieldRow>
+        )}
+
+        {/* Lip — OO */}
+        {att.flightStyle === "OO" && (
+          <FieldRow label="Lip Extension (K)" note="how far OO lip extends beyond side wall">
+            <TextInput value={toDisplay(att.dims.K, imperial)} onChange={v => updateDim("K", toMM(v, imperial))} unit={unit} />
+          </FieldRow>
+        )}
+
+        {/* Bar size — bar flights */}
+        {att.flightStyle === "B" && (
+          <FieldRow label="Bar Size" note="diameter (round) or side (square/flat)">
             <div style={{ display: "flex", gap: 8 }}>
-              <TextInput value={toDisplay(att.dims.barSize, imperial)} onChange={v => updateDim("barSize", toMM(v, imperial))} unit={imperial ? "in" : "mm"} />
+              <TextInput value={toDisplay(att.dims.barSize, imperial)} onChange={v => updateDim("barSize", toMM(v, imperial))} unit={unit} />
               <SelectInput value={att.dims.barShape} onChange={v => updateDim("barShape", v)} options={["Round", "Square", "Flat"]} />
             </div>
           </FieldRow>
-        </>
-      )}
+        )}
 
-      <FieldRow label="Steel Type">
-        <SelectInput value={att.dims.steelType} onChange={v => updateDim("steelType", v)} options={STEEL_TYPES} />
-      </FieldRow>
+        <FieldRow label="Steel Type">
+          <SelectInput value={att.dims.steelType} onChange={v => updateDim("steelType", v)} options={STEEL_TYPES} />
+        </FieldRow>
 
-      {/* Attachment sequence */}
-      <FieldRow label="Attachment Sequence — every N links" note="e.g. 4 = one flight per 4 links">
-        <TextInput value={att.sequence} onChange={v => updateAtt("sequence", v)} placeholder="4" unit="links" />
-      </FieldRow>
+        <FieldRow label="Attachment Sequence — every N links" note="e.g. 4 = one flight per 4 links">
+          <TextInput value={att.sequence} onChange={v => updateAtt("sequence", v)} placeholder="4" unit="links" />
+        </FieldRow>
 
-      {/* Backing plate */}
-      <FieldRow label="Backing Plate?">
-        <div style={{ display: "flex", gap: 10 }}>
-          {[["Yes", true], ["No", false]].map(([label, val]) => (
-            <button key={label} onClick={() => updateAtt("hasBackingPlate", val)}
-              style={{ flex: 1, background: att.hasBackingPlate === val ? C.navyMid : "#f1f5f9", color: att.hasBackingPlate === val ? "white" : C.text,
-                border: `2px solid ${att.hasBackingPlate === val ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
-              {label}
-            </button>
-          ))}
+        <FieldRow label="Backing Plate?">
+          <div style={{ display: "flex", gap: 10 }}>
+            {[["Yes", true], ["No", false]].map(([label, val]) => (
+              <button key={label} onClick={() => updateAtt("hasBackingPlate", val)}
+                style={{ flex: 1, background: att.hasBackingPlate === val ? C.navyMid : "#f1f5f9", color: att.hasBackingPlate === val ? "white" : C.text,
+                  border: `2px solid ${att.hasBackingPlate === val ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </FieldRow>
+        {att.hasBackingPlate && (
+          <>
+            <FieldRow label="Backing Plate Thickness">
+              <TextInput value={toDisplay(att.backingPlateThickness, imperial)} onChange={v => updateAtt("backingPlateThickness", toMM(v, imperial))} unit={unit} />
+            </FieldRow>
+            <FieldRow label="Backing Plate Sequence — every N attachments">
+              <TextInput value={att.backingPlateSequence} onChange={v => updateAtt("backingPlateSequence", v)} placeholder="2" unit="attachments" />
+            </FieldRow>
+          </>
+        )}
+
+        <FieldRow label="UHMW Wear Liner?">
+          <div style={{ display: "flex", gap: 10 }}>
+            {[["Yes", true], ["No", false]].map(([label, val]) => (
+              <button key={label} onClick={() => updateAtt("uhmw", val)}
+                style={{ flex: 1, background: att.uhmw === val ? C.navyMid : "#f1f5f9", color: att.uhmw === val ? "white" : C.text,
+                  border: `2px solid ${att.uhmw === val ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </FieldRow>
+        {att.uhmw && (
+          <div style={{ background: "#f0f7ff", borderRadius: 10, padding: "14px 16px", marginTop: 4 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 12 }}>UHMW Details</div>
+            <FieldRow label="Thickness"><TextInput value={toDisplay(att.uhmwDims.thickness, imperial)} onChange={v => updateUhmw("thickness", toMM(v, imperial))} unit={unit} /></FieldRow>
+            <FieldRow label="Overall Width"><TextInput value={toDisplay(att.uhmwDims.overallW, imperial)} onChange={v => updateUhmw("overallW", toMM(v, imperial))} unit={unit} /></FieldRow>
+            <FieldRow label="Overall Height"><TextInput value={toDisplay(att.uhmwDims.overallH, imperial)} onChange={v => updateUhmw("overallH", toMM(v, imperial))} unit={unit} /></FieldRow>
+            <FieldRow label="UHMW Type"><SelectInput value={att.uhmwDims.type} onChange={v => updateUhmw("type", v)} options={["Regular UHMW", "High Heat UHMW"]} /></FieldRow>
+            <FieldRow label="Bottom Style"><SelectInput value={att.uhmwDims.bottomStyle} onChange={v => updateUhmw("bottomStyle", v)} options={["Flush to bottom", "Overlap"]} /></FieldRow>
+            {att.uhmwDims.bottomStyle === "Overlap" && (
+              <FieldRow label="Overlap Amount"><TextInput value={toDisplay(att.uhmwDims.overlap, imperial)} onChange={v => updateUhmw("overlap", toMM(v, imperial))} unit={unit} /></FieldRow>
+            )}
+            <FieldRow label="Bolt Diameter"><TextInput value={toDisplay(att.uhmwDims.boltDiameter, imperial)} onChange={v => updateUhmw("boltDiameter", toMM(v, imperial))} unit={unit} /></FieldRow>
+            <FieldRow label="Nut Style"><SelectInput value={att.uhmwDims.nutStyle} onChange={v => updateUhmw("nutStyle", v)} options={["Nylock", "Standard Hex", "Wing Nut"]} /></FieldRow>
+            <FieldRow label="Bolt Placement"><SelectInput value={att.uhmwDims.boltPlacement} onChange={v => updateUhmw("boltPlacement", v)} options={["Top", "Side", "Bottom"]} /></FieldRow>
+          </div>
+        )}
+
+        <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+          <button onClick={() => setStep(1)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
+          <button onClick={() => setStep(3)}
+            style={{ flex: 1, background: C.navyMid, color: "white", border: "none", borderRadius: 8, padding: "10px 24px", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>
+            Next →
+          </button>
         </div>
-      </FieldRow>
-      {att.hasBackingPlate && (
-        <>
-          <FieldRow label="Backing Plate Thickness">
-            <TextInput value={toDisplay(att.backingPlateThickness, imperial)} onChange={v => updateAtt("backingPlateThickness", toMM(v, imperial))} unit={imperial ? "in" : "mm"} />
-          </FieldRow>
-          <FieldRow label="Backing Plate Sequence — every N attachments" note="e.g. 2 = backing plate on every 2nd attachment">
-            <TextInput value={att.backingPlateSequence} onChange={v => updateAtt("backingPlateSequence", v)} placeholder="2" unit="attachments" />
-          </FieldRow>
-        </>
-      )}
-
-      {/* UHMW */}
-      <FieldRow label="UHMW Wear Liner?">
-        <div style={{ display: "flex", gap: 10 }}>
-          {[["Yes", true], ["No", false]].map(([label, val]) => (
-            <button key={label} onClick={() => updateAtt("uhmw", val)}
-              style={{ flex: 1, background: att.uhmw === val ? C.navyMid : "#f1f5f9", color: att.uhmw === val ? "white" : C.text,
-                border: `2px solid ${att.uhmw === val ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
-              {label}
-            </button>
-          ))}
-        </div>
-      </FieldRow>
-      {att.uhmw && (
-        <div style={{ background: "#f0f7ff", borderRadius: 10, padding: "14px 16px", marginTop: 8 }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 12 }}>UHMW Details</div>
-          <FieldRow label="Thickness"><TextInput value={toDisplay(att.uhmwDims.thickness, imperial)} onChange={v => updateUhmw("thickness", toMM(v, imperial))} unit={imperial ? "in" : "mm"} /></FieldRow>
-          <FieldRow label="Overall Width"><TextInput value={toDisplay(att.uhmwDims.overallW, imperial)} onChange={v => updateUhmw("overallW", toMM(v, imperial))} unit={imperial ? "in" : "mm"} /></FieldRow>
-          <FieldRow label="Overall Height"><TextInput value={toDisplay(att.uhmwDims.overallH, imperial)} onChange={v => updateUhmw("overallH", toMM(v, imperial))} unit={imperial ? "in" : "mm"} /></FieldRow>
-          <FieldRow label="UHMW Type">
-            <SelectInput value={att.uhmwDims.type} onChange={v => updateUhmw("type", v)} options={["Regular UHMW", "High Heat UHMW"]} />
-          </FieldRow>
-          <FieldRow label="Bottom Style">
-            <SelectInput value={att.uhmwDims.bottomStyle} onChange={v => updateUhmw("bottomStyle", v)} options={["Flush to bottom", "Overlap"]} />
-          </FieldRow>
-          {att.uhmwDims.bottomStyle === "Overlap" && (
-            <FieldRow label="Overlap Amount"><TextInput value={toDisplay(att.uhmwDims.overlap, imperial)} onChange={v => updateUhmw("overlap", toMM(v, imperial))} unit={imperial ? "in" : "mm"} /></FieldRow>
-          )}
-          <FieldRow label="Bolt Diameter" note="For attaching UHMW to the flight">
-            <TextInput value={att.uhmwDims.boltDiameter} onChange={v => updateUhmw("boltDiameter", v)} unit="mm" />
-          </FieldRow>
-          <FieldRow label="Nut Style">
-            <SelectInput value={att.uhmwDims.nutStyle} onChange={v => updateUhmw("nutStyle", v)} options={NUT_STYLES} />
-          </FieldRow>
-          <FieldRow label="Bolt Placement" note='e.g. "2 in from edge, 2 in from top"'>
-            <TextInput value={att.uhmwDims.boltPlacement} onChange={v => updateUhmw("boltPlacement", v)} placeholder='e.g. 2" from edge, 2" from top' />
-          </FieldRow>
-        </div>
-      )}
-
-      <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
-        <button onClick={() => setStep(1)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
-        <button onClick={() => setStep(3)} style={{ background: C.navyMid, color: "white", border: "none", borderRadius: 8, padding: "10px 24px", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Next →</button>
       </div>
     </div>
   );
 
-  // Step 3: Add another attachment?
+  // Step 3: More attachments?
   if (step === 3) return (
     <div>
       <ConfigHeader />
       <div style={{ padding: 24 }}>
-      <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Add Another Attachment Pattern?</div>
-      <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Some conveyors use two different flight patterns on the same chain (e.g. OO flights every 4th, with filler plate flights between them).</div>
-      <div style={{ marginBottom: 20 }}>
-        {attachments.map((a, i) => (
-          <div key={a._key} style={{ background: "#f0f7ff", borderRadius: 8, padding: "10px 14px", marginBottom: 8 }}>
-            <span style={{ fontWeight: 700, color: C.navyMid, fontSize: 13 }}>Attachment {i + 1}: </span>
-            <span style={{ fontSize: 13, color: C.text }}>{a.flightName}</span>
-            <span style={{ fontSize: 12, color: C.muted }}> · Every {a.sequence} link(s)</span>
-            {a.uhmw && <span style={{ fontSize: 11, background: "#bfdbfe", color: "#1d4ed8", borderRadius: 8, padding: "1px 7px", marginLeft: 8 }}>+ UHMW</span>}
-            {a.hasBackingPlate && <span style={{ fontSize: 11, background: "#fef3c7", color: "#92400e", borderRadius: 8, padding: "1px 7px", marginLeft: 4 }}>+ BP</span>}
-          </div>
-        ))}
+        <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Add Another Attachment Pattern?</div>
+        <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Some conveyors use two different flight patterns on the same chain.</div>
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, marginBottom: 10 }}>Current attachments:</div>
+          {attachments.map((a, i) => (
+            <div key={i} style={{ background: "#f8fafc", borderRadius: 8, padding: "8px 12px", marginBottom: 8, border: `1px solid ${C.border}`, fontSize: 13, color: C.text }}>
+              <strong>Attachment {i+1}:</strong> {a.flightName || "Not set"} — every {a.sequence||"?"} links
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: 10 }}>
+          <button onClick={() => {
+            const nextIdx = attachments.length;
+            setAttachments(prev => [...prev, emptyAttachment(nextIdx)]);
+            setActiveAtt(nextIdx);
+            setStep(1);
+          }} style={{ flex: 1, background: "#f0f7ff", border: `2px solid ${C.navyMid}`, color: C.navyMid, borderRadius: 10, padding: 14, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+            + Add Another
+          </button>
+          <button onClick={() => setStep(4)}
+            style={{ flex: 1, background: C.navyMid, color: "white", border: "none", borderRadius: 10, padding: 14, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+            Done →
+          </button>
+        </div>
+        <button onClick={() => setStep(2)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontSize: 12, marginTop: 12 }}>← Back</button>
       </div>
-      <div style={{ display: "flex", gap: 12 }}>
-        <button onClick={() => { const newAtt = emptyAttachment(attachments.length); setAttachments(prev => [...prev, newAtt]); setActiveAtt(attachments.length); setStep(2); }}
-          style={{ flex: 1, background: "#f0f7ff", border: `2px solid ${C.navyMid}`, color: C.navyMid, borderRadius: 10, padding: 14, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
-          + Add Another Attachment
-        </button>
-        <button onClick={() => setStep(4)}
-          style={{ flex: 1, background: C.navyMid, color: "white", border: "none", borderRadius: 10, padding: 14, fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
-          Done →
-        </button>
-      </div>
-      <button onClick={() => setStep(2)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 16px", cursor: "pointer", fontSize: 12, marginTop: 12 }}>← Back</button>
     </div>
   );
 
-  // Step 4: Pin selection
+  // Step 4: Pin style & material
   if (step === 4) return (
     <div>
       <ConfigHeader />
       <div style={{ padding: 24 }}>
-      <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Pin Style & Material</div>
-      <div style={{ color: C.muted, fontSize: 12, marginBottom: 16 }}>Select how this chain will be assembled. Each pin style is a separate orderable component.</div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
-        {PIN_OPTIONS.map(p => {
-          const pos = PIN_IMG_POSITION[p.name] || "center";
-          return (
-            <button key={p.name} onClick={() => setPinStyle(p.name)}
-              style={{ background: pinStyle === p.name ? C.navyMid : C.card, border: `2px solid ${pinStyle === p.name ? C.navyMid : C.border}`,
-                borderRadius: 10, padding: 0, cursor: "pointer", overflow: "hidden", display: "flex", alignItems: "center" }}>
-              {/* Cropped pin image */}
-              <div style={{ width: 72, height: 52, overflow: "hidden", flexShrink: 0, position: "relative" }}>
-                <img src={IMG.pin_all} alt={p.name}
-                  style={{ width: "100%", height: 156, objectFit: "cover", objectPosition: `center ${pos}`, position: "absolute",
-                    top: pos === "top" ? 0 : pos === "bottom" ? "auto" : "50%", transform: pos === "center" ? "translateY(-50%)" : "none", bottom: pos === "bottom" ? 0 : "auto" }} />
-              </div>
-              <span style={{ fontSize: 13, fontWeight: 600, color: pinStyle === p.name ? "white" : C.text, padding: "0 16px" }}>{p.name}</span>
-            </button>
-          );
-        })}
-      </div>
-      {pinStyle && (
-        <div style={{ marginBottom: 20 }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, marginBottom: 8 }}>Pin Material</div>
-          <div style={{ display: "flex", gap: 10 }}>
-            {["Alloy Steel", "Stainless Steel"].map(m => (
-              <button key={m} onClick={() => setPinMaterial(m)}
-                style={{ flex: 1, background: pinMaterial === m ? C.green : "#f1f5f9", color: pinMaterial === m ? "white" : C.text,
-                  border: `2px solid ${pinMaterial === m ? C.green : C.border}`, borderRadius: 8, padding: 10, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
-                {m}
+        <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Pin Style & Material</div>
+        <div style={{ color: C.muted, fontSize: 12, marginBottom: 16 }}>Select how this chain will be assembled.</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+          {PIN_OPTIONS.map(p => {
+            const pos = PIN_IMG_POSITION[p.name] || "center";
+            return (
+              <button key={p.name} onClick={() => setPinStyle(p.name)}
+                style={{ background: pinStyle === p.name ? C.navyMid : C.card, border: `2px solid ${pinStyle === p.name ? C.navyMid : C.border}`,
+                  borderRadius: 10, padding: 0, cursor: "pointer", overflow: "hidden", display: "flex", alignItems: "center" }}>
+                <div style={{ width: 72, height: 52, overflow: "hidden", flexShrink: 0, position: "relative" }}>
+                  <img src={IMG.pin_all} alt={p.name}
+                    style={{ width: "100%", height: 156, objectFit: "cover", objectPosition: `center ${pos}`, position: "absolute",
+                      top: pos==="top"?0:pos==="bottom"?"auto":"50%", transform: pos==="center"?"translateY(-50%)":"none", bottom: pos==="bottom"?0:"auto" }} />
+                </div>
+                <span style={{ fontSize: 13, fontWeight: 600, color: pinStyle === p.name ? "white" : C.text, padding: "0 16px" }}>{p.name}</span>
               </button>
-            ))}
-          </div>
+            );
+          })}
         </div>
-      )}
-      <div style={{ display: "flex", gap: 10 }}>
-        <button onClick={() => setStep(hasFlights ? 3 : 0)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
-        <button onClick={() => { if (pinStyle && pinMaterial) setStep(5); }} disabled={!pinStyle || !pinMaterial}
-          style={{ background: pinStyle && pinMaterial ? C.navyMid : "#e5e7eb", color: pinStyle && pinMaterial ? "white" : C.muted, border: "none", borderRadius: 8, padding: "10px 24px", cursor: pinStyle && pinMaterial ? "pointer" : "default", fontSize: 13, fontWeight: 700 }}>
-          Review & Add to RFQ →
-        </button>
+        {pinStyle && (
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, marginBottom: 8 }}>Pin Material</div>
+            <div style={{ display: "flex", gap: 10 }}>
+              {["Alloy Steel", "Stainless Steel"].map(m => (
+                <button key={m} onClick={() => setPinMaterial(m)}
+                  style={{ flex: 1, background: pinMaterial === m ? C.green : "#f1f5f9", color: pinMaterial === m ? "white" : C.text,
+                    border: `2px solid ${pinMaterial === m ? C.green : C.border}`, borderRadius: 8, padding: 10, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                  {m}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        <div style={{ display: "flex", gap: 10 }}>
+          <button onClick={() => setStep(hasFlights ? 3 : 0)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
+          <button onClick={() => { if (pinStyle && pinMaterial) setStep(5); }} disabled={!pinStyle || !pinMaterial}
+            style={{ flex: 1, background: pinStyle && pinMaterial ? C.navyMid : "#e5e7eb", color: pinStyle && pinMaterial ? "white" : C.muted, border: "none", borderRadius: 8, padding: "10px 24px", cursor: pinStyle && pinMaterial ? "pointer" : "default", fontSize: 13, fontWeight: 700 }}>
+            Next →
+          </button>
+        </div>
       </div>
     </div>
   );
 
-  // Step 6: Review + sequence schematic + Add to RFQ
+  // Step 5: Footage (last question before review)
+  if (step === 5) return (
+    <div>
+      <ConfigHeader />
+      <div style={{ padding: 24 }}>
+        <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>How much chain do you need?</div>
+        <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Enter the total length required.</div>
+        <FieldRow label="Unit">
+          <div style={{ display: "flex", gap: 10 }}>
+            {["feet", "metres", "links"].map(u => (
+              <button key={u} onClick={() => setFootageUnit(u)}
+                style={{ flex: 1, background: footageUnit === u ? C.navyMid : "#f1f5f9", color: footageUnit === u ? "white" : C.text,
+                  border: `2px solid ${footageUnit === u ? C.navyMid : C.border}`, borderRadius: 8, padding: "10px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                {u}
+              </button>
+            ))}
+          </div>
+        </FieldRow>
+        <FieldRow label={`Quantity (${footageUnit})`}>
+          <TextInput value={footage} onChange={setFootage} placeholder={footageUnit === "links" ? "e.g. 50" : "e.g. 100"} />
+        </FieldRow>
+        <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
+          <button onClick={() => setStep(4)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
+          <button onClick={() => { if (footage) setStep(6); }} disabled={!footage}
+            style={{ flex: 1, background: footage ? C.navyMid : "#e5e7eb", color: footage ? "white" : C.muted, border: "none", borderRadius: 8, padding: "12px 28px", cursor: footage ? "pointer" : "default", fontSize: 13, fontWeight: 700 }}>
+            Review →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Step 6: Review
   if (step === 6) {
     const chainDesc = `4B Drop Forged Chain ${chain.chain_link} (${chain.link_type} Link, P=${chain.P_mm}mm, ${chain.min_breaking_load_kn}kN) — ${footage} ${footageUnit}`;
     const flightDescs = hasFlights ? attachments.map((a, i) => {
-      let d = `Attachment ${i + 1}: ${a.flightName} every ${a.sequence} links`;
+      let d = `Attachment ${i+1}: ${a.flightName} every ${a.sequence} links`;
       const dp = [];
       if (a.dims.W) dp.push(`W=${a.dims.W}mm`);
       if (a.dims.H) dp.push(`H=${a.dims.H}mm`);
-      if (a.dims.G) dp.push(`G=${a.dims.G}mm`);
-      if (a.dims.K) dp.push(`K=${a.dims.K}mm`);
       if (a.dims.barSize) dp.push(`Bar ${a.dims.barSize}mm ${a.dims.barShape||""}`);
       if (a.dims.steelType) dp.push(a.dims.steelType);
       if (dp.length) d += ` [${dp.join(", ")}]`;
-      if (a.hasBackingPlate) d += ` | Backing Plate T=${a.backingPlateThickness}mm every ${a.backingPlateSequence} att.`;
-      if (a.uhmw) {
-        d += ` | UHMW: ${a.uhmwDims.type} T=${a.uhmwDims.thickness}mm, W=${a.uhmwDims.overallW}mm, H=${a.uhmwDims.overallH}mm, ${a.uhmwDims.bottomStyle}${a.uhmwDims.overlap ? ` OL=${a.uhmwDims.overlap}mm` : ""}, Bolt Ø${a.uhmwDims.boltDiameter}mm, ${a.uhmwDims.nutStyle}, Placement: ${a.uhmwDims.boltPlacement}`;
-      }
+      if (a.hasBackingPlate) d += ` | BP T=${a.backingPlateThickness}mm every ${a.backingPlateSequence} att.`;
+      if (a.uhmw) d += ` | UHMW T=${a.uhmwDims.thickness}mm ${a.uhmwDims.type}`;
       return d;
     }).join(" | ") : "No flights — chain links only";
-    const pinDesc = `Pin: ${pinStyle} — ${pinMaterial}`;
-    const fullDesc = [chainDesc, flightDescs, pinDesc].join(" · ");
-
+    const fullDesc = [chainDesc, flightDescs, `Pin: ${pinStyle} — ${pinMaterial}`].join(" · ");
     return (
       <div>
         <ConfigHeader />
         <div style={{ padding: 24 }}>
-        <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 16 }}>Configuration Summary</div>
-        {hasFlights && <SequenceSchematic chain={chain} attachments={attachments} />}
-        <div style={{ marginTop: 20, background: "#f8fafc", borderRadius: 10, border: `1px solid ${C.border}`, padding: "16px 18px" }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>RFQ Line Item</div>
-          <div style={{ fontSize: 12, color: C.text, lineHeight: 1.7, fontFamily: "monospace", background: "#fff", borderRadius: 6, padding: "10px 14px", border: `1px solid ${C.border}` }}>{fullDesc}</div>
-        </div>
-        <div style={{ marginTop: 16, display: "flex", gap: 10 }}>
-          <button onClick={() => setStep(5)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
-          <button onClick={() => onComplete({ description: fullDesc, chain, footage, footageUnit, attachments: hasFlights ? attachments : [], pinStyle, pinMaterial })}
-            style={{ flex: 1, background: C.green, color: "white", border: "none", borderRadius: 8, padding: "12px 24px", cursor: "pointer", fontSize: 14, fontWeight: 700 }}>
-            Add to RFQ Cart
-          </button>
+          <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 16 }}>Configuration Summary</div>
+          {hasFlights && <SequenceSchematic chain={chain} attachments={attachments} />}
+          <div style={{ background: "#f8fafc", borderRadius: 10, border: `1px solid ${C.border}`, padding: "16px 18px", marginTop: 12 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, marginBottom: 8, textTransform: "uppercase" }}>RFQ Line Item</div>
+            <div style={{ fontSize: 12, color: C.text, lineHeight: 1.7, fontFamily: "monospace", background: "#fff", borderRadius: 6, padding: "10px 14px", border: `1px solid ${C.border}` }}>{fullDesc}</div>
+          </div>
+          <div style={{ marginTop: 16, display: "flex", gap: 10 }}>
+            <button onClick={() => setStep(5)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
+            <button onClick={() => onComplete({ description: fullDesc, chain, footage, footageUnit, attachments: hasFlights ? attachments : [], pinStyle, pinMaterial })}
+              style={{ flex: 1, background: C.green, color: "white", border: "none", borderRadius: 8, padding: "12px 24px", cursor: "pointer", fontSize: 14, fontWeight: 700 }}>
+              Add to RFQ Cart
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -862,7 +961,6 @@ function ChainConfigurator({ chain, onComplete, onClose }) {
   return null;
 }
 
-// ── PRODUCT MODAL ─────────────────────────────────────────────────────────────
 function ChainModal({ chain, onClose, onAddRFQ }) {
   const [tab, setTab] = useState("specs");
   const [showConfigurator, setShowConfigurator] = useState(false);
