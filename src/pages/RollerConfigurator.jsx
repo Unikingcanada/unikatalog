@@ -1197,6 +1197,121 @@ function ConfigModal({ s, onClose, fmt, metric }) {
     <div class="code-label">Configuration Code</div>
     ${pc || "Incomplete — select all options"}
   </div>
+  ${(() => {
+    // ── Build inline SVG schematic for tear sheet ─────────────────────────
+    const rl = parseFloat(rl_mm) || 500;
+    const dia = selectedTube ? parseFloat(selectedTube.tube_mm) : 50;
+    const isConicalTS = selectedTube && selectedTube.conicity;
+    const isSpringTS = shaft && shaft.toLowerCase().includes("spring");
+    const hasDriveTS = !!drive;
+    const W = 680; const H = 160; const cx = W / 2; const cy = 72;
+    const BODY_W = Math.min(Math.max(200, Math.min(420, rl * 0.6)), 420);
+    const BODY_H_R = Math.min(Math.max(28, dia * 0.85), 62);
+    const BODY_H_L = isConicalTS ? Math.max(BODY_H_R * 0.55, 16) : BODY_H_R;
+    const bodyX = cx - BODY_W / 2; const bodyXR = cx + BODY_W / 2;
+    const topL = cy - BODY_H_L / 2; const topR = cy - BODY_H_R / 2;
+    const botL = cy + BODY_H_L / 2; const botR = cy + BODY_H_R / 2;
+    const SHAFT_W = Math.min(BODY_H_L * 0.22, 8);
+    const SHAFT_EXT = 40; const DRIVE_W = 20; const DRIVE_H = BODY_H_R + 18;
+    const accentColor = s.color || "#0F2340";
+
+    // groove x positions
+    const grooveLabels = ["A","B","C","D"];
+    const activeGrooves = grooveCount > 0 ? grooveLabels.slice(0, grooveCount) : [];
+    const grooveXs = activeGrooves.map((lbl, i) => {
+      const pos = groovePositions && groovePositions[lbl] ? parseFloat(groovePositions[lbl]) : null;
+      if (pos && rl > 0) return bodyX + (pos / rl) * BODY_W;
+      return bodyX + ((i + 1) / (activeGrooves.length + 1)) * BODY_W;
+    });
+
+    const rlLabel = rl_mm ? (metric ? \`RL = \${Math.round(rl)} mm\` : \`RL = \${(rl/25.4).toFixed(2)}"\`) : "RL = ?";
+    const diaLabel = metric ? \`Ø\${dia} mm\` : \`Ø\${(dia/25.4).toFixed(3)}"\`;
+    let elHint = "";
+    if (rl_mm) {
+      if (hasDriveTS) elHint = \`EL ≈ RL + 40 mm\`;
+      else if (isSpringTS) elHint = \`EL = RL+10 mm · AGL = RL+26 mm\`;
+      else elHint = \`EL = AGL = RL + 10 mm\`;
+    }
+
+    const sleeveSVG = (sleeve && sleeve !== "None") ? \`
+      <polygon points="\${bodyX},\${topL-5} \${bodyXR},\${topR-5} \${bodyXR},\${botR+5} \${bodyX},\${botL+5}"
+        fill="#f97316" opacity="0.25" stroke="#ea580c" stroke-width="1"/>
+      <text x="\${cx}" y="\${botR+28}" text-anchor="middle" font-size="8" fill="#ea580c" font-weight="700">Sleeve: \${sleeve}</text>
+    \` : "";
+
+    const springClipL = isSpringTS ? \`
+      <rect x="\${bodyX - SHAFT_EXT + 6}" y="\${cy-8}" width="12" height="16" rx="2" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+      <line x1="\${bodyX - SHAFT_EXT + 9}" y1="\${cy-8}" x2="\${bodyX - SHAFT_EXT + 9}" y2="\${cy+8}" stroke="#f59e0b" stroke-width="1.2"/>
+      <line x1="\${bodyX - SHAFT_EXT + 13}" y1="\${cy-8}" x2="\${bodyX - SHAFT_EXT + 13}" y2="\${cy+8}" stroke="#f59e0b" stroke-width="1.2"/>
+    \` : "";
+    const springClipR = isSpringTS && !hasDriveTS ? \`
+      <rect x="\${bodyXR + SHAFT_EXT - 18}" y="\${cy-8}" width="12" height="16" rx="2" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+      <line x1="\${bodyXR + SHAFT_EXT - 15}" y1="\${cy-8}" x2="\${bodyXR + SHAFT_EXT - 15}" y2="\${cy+8}" stroke="#f59e0b" stroke-width="1.2"/>
+      <line x1="\${bodyXR + SHAFT_EXT - 11}" y1="\${cy-8}" x2="\${bodyXR + SHAFT_EXT - 11}" y2="\${cy+8}" stroke="#f59e0b" stroke-width="1.2"/>
+    \` : "";
+
+    const driveSVG = hasDriveTS ? \`
+      <line x1="\${bodyXR}" y1="\${cy}" x2="\${bodyXR+8}" y2="\${cy}" stroke="#475569" stroke-width="\${SHAFT_W}" stroke-linecap="round"/>
+      <rect x="\${bodyXR+8}" y="\${cy - DRIVE_H/2}" width="\${DRIVE_W}" height="\${DRIVE_H}" rx="4" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1.5"/>
+      <rect x="\${bodyXR+8}" y="\${cy - DRIVE_H/2}" width="\${DRIVE_W}" height="\${DRIVE_H*0.4}" rx="3" fill="#93c5fd" opacity="0.4"/>
+      \${[0.2,0.5,0.8].map(t => \`<line x1="\${bodyXR+8+DRIVE_W*t}" y1="\${cy-DRIVE_H/2-6}" x2="\${bodyXR+8+DRIVE_W*t}" y2="\${cy-DRIVE_H/2}" stroke="#93c5fd" stroke-width="2.5" stroke-linecap="round"/><line x1="\${bodyXR+8+DRIVE_W*t}" y1="\${cy+DRIVE_H/2}" x2="\${bodyXR+8+DRIVE_W*t}" y2="\${cy+DRIVE_H/2+6}" stroke="#93c5fd" stroke-width="2.5" stroke-linecap="round"/>\`).join("")}
+      <text x="\${bodyXR+8+DRIVE_W/2}" y="\${cy+4}" text-anchor="middle" font-size="7" fill="#fff" font-weight="800">DRIVE</text>
+    \` : \`<line x1="\${bodyXR}" y1="\${cy}" x2="\${bodyXR+SHAFT_EXT}" y2="\${cy}" stroke="#475569" stroke-width="\${SHAFT_W}" stroke-linecap="round"/>\${springClipR}\`;
+
+    const grooveSVG = grooveXs.map((gx, i) => {
+      const frac = (gx - bodyX) / BODY_W;
+      const hTop = topL + (topR - topL) * frac;
+      const hBot = botL + (botR - botL) * frac;
+      const posLabel = groovePositions && groovePositions[grooveLabels[i]] ? groovePositions[grooveLabels[i]] + "mm" : "";
+      return \`<line x1="\${gx}" y1="\${hTop-1}" x2="\${gx}" y2="\${hBot+1}" stroke="\${accentColor}" stroke-width="3.5" stroke-linecap="round"/>
+              <text x="\${gx}" y="\${hTop-8}" text-anchor="middle" font-size="8" fill="\${accentColor}" font-weight="800">\${grooveLabels[i]}\${posLabel ? " "+posLabel : ""}</text>\`;
+    }).join("");
+
+    const conicLabel = isConicalTS ? \`<text x="\${cx}" y="\${topL - 10}" text-anchor="middle" font-size="8" fill="#7c3aed" font-weight="700">CONICAL / TAPERED</text>\` : "";
+
+    return \`
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px 16px;margin-bottom:16px;">
+      <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">Configuration Schematic</div>
+      <svg width="100%" viewBox="0 0 \${W} \${H}" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <defs>
+          <marker id="tsArr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <path d="M0,0 L7,3.5 L0,7 Z" fill="#94a3b8"/>
+          </marker>
+          <marker id="tsArrL" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto">
+            <path d="M7,0 L0,3.5 L7,7 Z" fill="#94a3b8"/>
+          </marker>
+          <linearGradient id="tsBody" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#e2e8f0"/>
+            <stop offset="40%" stop-color="#cbd5e1"/>
+            <stop offset="100%" stop-color="#94a3b8"/>
+          </linearGradient>
+        </defs>
+        \${conicLabel}
+        <!-- Left shaft -->
+        <line x1="\${bodyX - SHAFT_EXT}" y1="\${cy}" x2="\${bodyX}" y2="\${cy}" stroke="#475569" stroke-width="\${SHAFT_W}" stroke-linecap="round"/>
+        \${springClipL}
+        <!-- Right shaft or drive -->
+        \${driveSVG}
+        <!-- Sleeve -->
+        \${sleeveSVG}
+        <!-- Roller body -->
+        <polygon points="\${bodyX},\${topL} \${bodyXR},\${topR} \${bodyXR},\${botR} \${bodyX},\${botL}" fill="url(#tsBody)" stroke="#475569" stroke-width="2"/>
+        <!-- Bearing caps -->
+        <rect x="\${bodyX}" y="\${topL+2}" width="13" height="\${BODY_H_L-4}" rx="2" fill="#334155" opacity="0.85"/>
+        <rect x="\${bodyXR-13}" y="\${topR+2}" width="13" height="\${BODY_H_R-4}" rx="2" fill="#334155" opacity="0.85"/>
+        <!-- Grooves -->
+        \${grooveSVG}
+        <!-- RL dimension line -->
+        <line x1="\${bodyX}" y1="\${botR+10}" x2="\${bodyXR}" y2="\${botR+10}" stroke="#94a3b8" stroke-width="1" marker-end="url(#tsArr)" marker-start="url(#tsArrL)"/>
+        <text x="\${cx}" y="\${botR+22}" text-anchor="middle" font-size="9" fill="#475569" font-weight="700">\${rlLabel}</text>
+        <!-- Diameter line -->
+        <line x1="\${bodyX-24}" y1="\${topL}" x2="\${bodyX-24}" y2="\${botL}" stroke="#94a3b8" stroke-width="1" marker-end="url(#tsArr)" marker-start="url(#tsArrL)"/>
+        <text x="\${bodyX-38}" y="\${cy+3}" text-anchor="middle" font-size="8" fill="#475569" transform="rotate(-90,\${bodyX-38},\${cy})">\${diaLabel}</text>
+        <!-- EL hint -->
+        \${elHint ? \`<text x="\${W-8}" y="13" text-anchor="end" font-size="8" fill="#94a3b8">\${elHint}</text>\` : ""}
+      </svg>
+    </div>\`;
+  })()}
   <div class="warn">⚠ Pricing not included. Contact Uniking Canada for a formal quotation: <strong>514-886-5270 · sales@unikingcanada.com</strong></div>
   <div class="two-col">
     <table>
