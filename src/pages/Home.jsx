@@ -917,7 +917,7 @@ function ProductModal({ product, showBrand, onClose }) {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div style={{ display: "flex", gap: 16, alignItems: "flex-start", flex: 1 }}>
               {product.image_url ? (
-                <div style={{ background: "rgba(255,255,255,0.1)", borderRadius: 8, padding: 6, flexShrink: 0, width: 100, height: 76, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ background: "#ffffff", borderRadius: 8, padding: 8, flexShrink: 0, width: 100, height: 76, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <img src={product.image_url} alt="" style={{ maxWidth: 90, maxHeight: 68, objectFit: "contain" }} onError={e => { e.target.parentElement.style.display = "none"; }} />
                 </div>
               ) : null}
