@@ -5,17 +5,7 @@ import { CatalogProduct } from "@/api/entities";
 import { ElevatorBucket } from "@/api/entities";
 import { MacChainProduct } from "@/api/entities";
 
-const NAVY = "#1A3A5C";
-const C = {
-  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  gold: "#C9A84C", goldLight: "#e8c96d",
-  green: "#16a34a", greenBg: "#dcfce7",
-  red: "#dc2626", redBg: "#fee2e2",
-  orange: "#c2410c", orangeBg: "#ffedd5",
-  accent: "#2563eb",
-  bg: "#f8fafc", card: "#ffffff",
-  border: "#e2e8f0", text: "#0f172a", textMid: "#1e293b", muted: "#64748b",
-};
+const NAVY = "#1a3a5c";
 
 const TYPE_META = {
   "Elevator Bucket":        { color: "#b45309", bg: "#fef3c7" },
@@ -118,16 +108,11 @@ function Card({ rec, type, onClick }) {
 
       {/* Product Image */}
       {hasImage && (
-        <div style={{ background: "#f0f4f8", borderBottom: "1px solid #e5e7eb",
-          height: 160, overflow: "hidden", position: "relative" }}>
+        <div style={{ background: "#f8fafc", borderBottom: "1px solid #f1f5f9",
+          display: "flex", alignItems: "center", justifyContent: "center", height: 130, overflow: "hidden" }}>
           <img src={rec.image_url} alt={rec.series}
-            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
-            onError={e => { e.target.parentNode.style.display = "none"; }} />
-          {rec.page_range && (
-            <div style={{ position: "absolute", bottom: 6, right: 8, background: "rgba(0,0,0,0.45)", color: "#fff", fontSize: 9, padding: "2px 6px", borderRadius: 8 }}>
-              pp. {rec.page_range}
-            </div>
-          )}
+            style={{ maxHeight: 120, maxWidth: "100%", objectFit: "contain", padding: "8px" }}
+            onError={e => { e.target.style.display = "none"; }} />
         </div>
       )}
 
@@ -274,7 +259,7 @@ function Modal({ rec, type, onClose }) {
 
           <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
             {rec.image_url && (
-              <div style={{ background: "rgba(255,255,255,.1)", borderRadius: 10, padding: 8,
+              <div style={{ background: "#ffffff", borderRadius: 10, padding: 8, boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                 flexShrink: 0, width: 120, height: 90, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <img src={rec.image_url} alt={rec.series}
                   style={{ maxWidth: 110, maxHeight: 80, objectFit: "contain" }}
@@ -441,16 +426,12 @@ export default function Catalog() {
   useEffect(() => {
     async function load() {
       try {
-        const [intralox, unicatalog, buckets] = await Promise.all([
-          CatalogProduct.filter({}, 1, 500),
-          UniCatalog.filter({}, 1, 500),
-          ElevatorBucket.filter({}, 1, 500),
-        ]);
-        const [macBatch1, macBatch2] = await Promise.all([
+        const [intralox, unicatalog, buckets, macChains] = await Promise.all([
+          CatalogProduct.list(),
+          UniCatalog.list(),
+          ElevatorBucket.list(),
           MacChainProduct.filter({}, 1, 500),
-          MacChainProduct.filter({}, 2, 500),
         ]);
-        const macChains = [...macBatch1, ...macBatch2];
         const combined = [
           ...intralox.map(r => ({ ...r, _src: "intralox", _type: r.category || "Modular Plastic Belt" })),
           ...unicatalog.map(r => ({ ...r, _src: "uni", _type: r.product_type })),
