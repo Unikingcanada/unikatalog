@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import ForgedChainConfigurator from './pages/ForgedChainConfigurator';
 import Home from './pages/Home';
+import ForgedChainConfigurator from './pages/ForgedChainConfigurator';
 import RFQCart from './pages/RFQCart';
 import Catalog from './pages/Catalog';
 import RollerConfigurator from './pages/RollerConfigurator';
@@ -10,8 +10,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/Home" replace />} />
-        <Route path="/ForgedChainConfigurator" element={<ForgedChainConfigurator />} />
         <Route path="/Home" element={<Home />} />
+        <Route path="/ForgedChainConfigurator" element={<ForgedChainConfigurator />} />
         <Route path="/RFQCart" element={<RFQCart />} />
         <Route path="/Catalog" element={<Catalog />} />
         <Route path="/RollerConfigurator" element={<RollerConfigurator />} />
