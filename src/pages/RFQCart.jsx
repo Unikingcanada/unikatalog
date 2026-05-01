@@ -4,8 +4,14 @@ import { UniCatalog, CatalogProduct, ElevatorBucket, MacChainProduct } from "@/a
 
 const NAVY = "#0f2340";
 const C = {
-  navy: "#0f2340", navyMid: "#1a3a5c", accent: "#2563eb",
-  border: "#e2e8f0", bg: "#f8fafc", muted: "#64748b", text: "#0f172a",
+  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
+  gold: "#C9A84C", goldLight: "#e8c96d",
+  green: "#16a34a", greenBg: "#dcfce7",
+  red: "#dc2626", redBg: "#fee2e2",
+  orange: "#c2410c", orangeBg: "#ffedd5",
+  accent: "#2563eb",
+  bg: "#f8fafc", card: "#ffffff",
+  border: "#e2e8f0", text: "#0f172a", textMid: "#1e293b", muted: "#64748b",
 };
 const LOGO_URL = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png";
 const UNIT_OPTIONS = ["Feet", "Meters", "Pieces", "Sets", "Rolls", "Inches", "Yards", "Each"];

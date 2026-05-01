@@ -5,7 +5,17 @@ import { CatalogProduct } from "@/api/entities";
 import { ElevatorBucket } from "@/api/entities";
 import { MacChainProduct } from "@/api/entities";
 
-const NAVY = "#1a3a5c";
+const NAVY = "#1A3A5C";
+const C = {
+  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
+  gold: "#C9A84C", goldLight: "#e8c96d",
+  green: "#16a34a", greenBg: "#dcfce7",
+  red: "#dc2626", redBg: "#fee2e2",
+  orange: "#c2410c", orangeBg: "#ffedd5",
+  accent: "#2563eb",
+  bg: "#f8fafc", card: "#ffffff",
+  border: "#e2e8f0", text: "#0f172a", textMid: "#1e293b", muted: "#64748b",
+};
 
 const TYPE_META = {
   "Elevator Bucket":        { color: "#b45309", bg: "#fef3c7" },

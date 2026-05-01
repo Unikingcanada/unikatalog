@@ -2,10 +2,14 @@ import { useState, useEffect } from "react";
 import { ForgedChain } from "@/api/entities";
 
 const C = {
-  navy: "#0F2340", navyMid: "#1B3A6B", navyLight: "#2a5080",
-  gold: "#C9A84C", bg: "#f4f7fb", card: "#ffffff",
-  border: "#e2e8f0", text: "#1e293b", muted: "#64748b",
-  green: "#16a34a", greenBg: "#dcfce7", orange: "#c2410c", orangeBg: "#ffedd5",
+  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
+  gold: "#C9A84C", goldLight: "#e8c96d",
+  green: "#16a34a", greenBg: "#dcfce7",
+  red: "#dc2626", redBg: "#fee2e2",
+  orange: "#c2410c", orangeBg: "#ffedd5",
+  accent: "#2563eb",
+  bg: "#f8fafc", card: "#ffffff",
+  border: "#e2e8f0", text: "#0f172a", textMid: "#1e293b", muted: "#64748b",
 };
 
 const IMG = {
@@ -85,7 +89,7 @@ function PinModal({ pinName, chainLink, onClose, onAddRFQ }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 480, maxHeight: "90vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 480, width: "calc(100vw - 32px)", maxHeight: "90vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
         <div style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.navyMid})`, padding: "20px 24px", borderRadius: "16px 16px 0 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
             <div style={{ color: "white", fontWeight: 800, fontSize: 16 }}>{pinName}</div>
@@ -125,7 +129,7 @@ function PinModal({ pinName, chainLink, onClose, onAddRFQ }) {
           <button onClick={handleAdd} disabled={!material || !qty}
             style={{ width: "100%", background: added ? C.green : (!material || !qty ? "#e5e7eb" : C.navyMid), color: !material || !qty ? C.muted : "white",
               border: "none", borderRadius: 10, padding: "14px", fontSize: 14, fontWeight: 700, cursor: !material || !qty ? "default" : "pointer" }}>
-            {added ? "✓ Added to RFQ!" : "Add to RFQ"}
+            {added ? "✓ Added to RFQ" : "Add to RFQ"}
           </button>
         </div>
       </div>
@@ -150,7 +154,7 @@ function SprocketModal({ sprocket, chainLink, sprocketFamily, onClose, onAddRFQ 
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 10001, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 480, maxHeight: "90vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 480, width: "calc(100vw - 32px)", maxHeight: "90vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
         <div style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.navyMid})`, padding: "20px 24px", borderRadius: "16px 16px 0 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
             <div style={{ color: "white", fontWeight: 800, fontSize: 16 }}>{sprocketFamily} — {sprocket.teeth} Teeth</div>
@@ -204,7 +208,7 @@ function SprocketModal({ sprocket, chainLink, sprocketFamily, onClose, onAddRFQ 
           <button onClick={handleAdd} disabled={!boreSize || !qty}
             style={{ width: "100%", background: added ? C.green : (!boreSize || !qty ? "#e5e7eb" : C.navyMid), color: !boreSize || !qty ? C.muted : "white",
               border: "none", borderRadius: 10, padding: "14px", fontSize: 14, fontWeight: 700, cursor: !boreSize || !qty ? "default" : "pointer" }}>
-            {added ? "✓ Added to RFQ!" : "Add Sprocket to RFQ"}
+            {added ? "✓ Added to RFQ" : "Add Sprocket to RFQ"}
           </button>
         </div>
       </div>
@@ -227,7 +231,7 @@ function BoltNGoModal({ chain, onClose, onAddRFQ }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 10000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 480, boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 480, width: "calc(100vw - 32px)", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
         <div style={{ background: `linear-gradient(135deg, ${C.green}, #15803d)`, padding: "20px 24px", borderRadius: "16px 16px 0 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
             <div style={{ color: "white", fontWeight: 800, fontSize: 16 }}>⚡ Bolt N Go — {chain.chain_link}</div>
@@ -261,7 +265,7 @@ function BoltNGoModal({ chain, onClose, onAddRFQ }) {
           <button onClick={handleAdd} disabled={!footage}
             style={{ width: "100%", background: added ? C.green : (!footage ? "#e5e7eb" : C.navyMid), color: !footage ? C.muted : "white",
               border: "none", borderRadius: 10, padding: "14px", fontSize: 14, fontWeight: 700, cursor: !footage ? "default" : "pointer" }}>
-            {added ? "✓ Added to RFQ!" : "Add Bolt N Go to RFQ"}
+            {added ? "✓ Added to RFQ" : "Add Bolt N Go to RFQ"}
           </button>
         </div>
       </div>
@@ -944,8 +948,8 @@ function ChainConfigurator({ chain, onComplete, onClose }) {
           <div style={{ marginTop: 16, display: "flex", gap: 10 }}>
             <button onClick={() => setStep(5)} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
             <button onClick={() => onComplete({ description: fullDesc, chain, footage, footageUnit, attachments: hasFlights ? attachments : [], pinStyle, pinMaterial })}
-              style={{ flex: 1, background: C.green, color: "white", border: "none", borderRadius: 8, padding: "12px 24px", cursor: "pointer", fontSize: 14, fontWeight: 700 }}>
-              Add to RFQ Cart
+              style={{ flex: 1, background: C.green, color: "#fff", border: "none", borderRadius: 8, padding: "11px 22px", cursor: "pointer", fontSize: 13, fontWeight: 700, letterSpacing: "0.02em" }}>
+              Add to RFQ
             </button>
           </div>
         </div>
@@ -969,7 +973,7 @@ function ChainModal({ chain, variant, onClose, onAddRFQ }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 9000, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 720, maxHeight: "92vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+      <div style={{ background: "white", borderRadius: 16, width: "100%", maxWidth: 720, width: "calc(100vw - 24px)", maxHeight: "92vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
 
         {showConfigurator ? (
           <ChainConfigurator chain={chain}
@@ -1000,16 +1004,16 @@ function ChainModal({ chain, variant, onClose, onAddRFQ }) {
                 </div>
                 <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                   <button onClick={() => setShowConfigurator(true)}
-                    style={{ background: C.navyMid, color: "white", border: "none", borderRadius: 9, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                    Configure + Build Quote
+                    style={{ background: C.navyMid, color: "#fff", border: "none", borderRadius: 8, padding: "10px 20px", fontSize: 13, fontWeight: 700, cursor: "pointer", letterSpacing: "0.02em" }}>
+                    Configure →
                   </button>
                   <button onClick={() => { onAddRFQ({ description: `4B Drop Forged Chain ${chain.chain_link} (${chain.link_type} Link, P=${chain.P_mm}mm, ${chain.min_breaking_load_kn}kN, W=${chain.W_mm}mm) — Links Only` }); setRfqAdded(true); }}
-                    style={{ background: rfqAdded ? C.green : "#f1f5f9", color: rfqAdded ? "white" : C.text, border: `1px solid ${rfqAdded ? C.green : C.border}`, borderRadius: 9, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                    {rfqAdded ? "✓ Added" : "Add to RFQ (Links Only)"}
+                    style={{ background: rfqAdded ? C.green : "#f1f5f9", color: rfqAdded ? "white" : C.text, border: `1px solid ${rfqAdded ? C.green : C.border}`, borderRadius: 8, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                    {rfqAdded ? "✓ Added" : "Add to RFQ"}
                   </button>
                   {chain.bolt_n_go_compatible && (
                     <button onClick={() => setShowBoltNGo(true)}
-                      style={{ background: C.greenBg, color: C.green, border: `2px solid ${C.green}`, borderRadius: 9, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                      style={{ background: C.greenBg, color: C.green, border: `2px solid ${C.green}`, borderRadius: 8, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
                       ⚡ Order Bolt N Go
                     </button>
                   )}
@@ -1032,7 +1036,7 @@ function ChainModal({ chain, variant, onClose, onAddRFQ }) {
 
               {/* SPECS */}
               {tab === "specs" && (
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))", gap: 16 }}>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 10, textTransform: "uppercase" }}>Dimensions</div>
                     {[["Pitch (P)", `${chain.P_mm} mm`], ["Height (H)", `${chain.H_mm} mm`], ["Plate Thickness (T)", `${chain.T_mm} mm`], ["Width (W)", `${chain.W_mm} mm`], ["Pin-to-Edge (M)", `${chain.M_mm} mm`], ["Pin Hole Dia (D)", `${chain.D_mm} mm`], ...(chain.F_mm ? [["Overall Width (F)", `${chain.F_mm} mm`], ["Bar Gap (E)", `${chain.E_mm} mm`]] : [])].map(([k,v]) => (
@@ -1315,7 +1319,7 @@ export default function ForgedChainConfigurator() {
         ))}
       </div>
 
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "28px 20px" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "24px clamp(12px,4vw,28px)" }}>
         <div style={{ fontSize: 13, color: C.muted, marginBottom: 20 }}>
           Configure with flights, pins, and attachments. Chains marked <span style={{ color: C.green, fontWeight: 700 }}>⚡ Bolt N Go</span> are also available pre-assembled — toggle on the card before opening.
         </div>
@@ -1327,7 +1331,7 @@ export default function ForgedChainConfigurator() {
                 <span style={{ background: C.greenBg, color: C.green, fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 99 }}>⚡ Bolt N Go available</span>
               )}
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 210px), 1fr))", gap: 16 }}>
               {items.map(chain => <ChainCard key={chain.id} chain={chain} />)}
             </div>
           </div>

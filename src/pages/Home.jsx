@@ -63,9 +63,15 @@ const FILTER_LABELS = {
 };
 
 const C = {
-  navy: "#0f2340", navyMid: "#1a3a5c", navyLt: "#2d5986",
-  slate: "#334155", muted: "#64748b", border: "#e2e8f0",
-  bg: "#f8fafc", bgCard: "#ffffff", text: "#0f172a",
+  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
+  gold: "#C9A84C", goldLight: "#e8c96d",
+  green: "#16a34a", greenBg: "#dcfce7",
+  red: "#dc2626", redBg: "#fee2e2",
+  orange: "#c2410c", orangeBg: "#ffedd5",
+  accent: "#2563eb",
+  bg: "#f8fafc", bgCard: "#ffffff",
+  border: "#e2e8f0", text: "#0f172a", textMid: "#1e293b",
+  slate: "#334155", muted: "#64748b",
 };
 // ─── RFQ Cart Helpers ─────────────────────────────────────────────────────────
 function getRFQCart() {
@@ -904,7 +910,7 @@ function ProductModal({ product, showBrand, onClose }) {
 
   return (
     <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
-      <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 10, width: "100%", maxWidth: 700, maxHeight: "90vh", display: "flex", flexDirection: "column", boxShadow: "0 24px 64px rgba(0,0,0,0.22)" }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 10, width: "100%", maxWidth: 700, width: "calc(100vw - 24px)", maxHeight: "90vh", display: "flex", flexDirection: "column", boxShadow: "0 24px 64px rgba(0,0,0,0.22)" }}>
 
         {/* Header */}
         <div style={{ background: C.navyMid, padding: "20px 26px", borderRadius: "10px 10px 0 0", flexShrink: 0 }}>
@@ -1025,7 +1031,7 @@ function ProductCard({ product, showBrand, onClick }) {
 
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ background: C.bgCard, borderRadius: 8, border: "1px solid " + (hovered ? C.navyMid : C.border), boxShadow: hovered ? "0 4px 16px rgba(26,58,92,0.09)" : "none", transition: "border-color 0.13s, box-shadow 0.13s", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      style={{ background: C.card, borderRadius: 10, border: "1px solid " + (hovered ? C.navyLight : C.border), boxShadow: hovered ? "0 4px 16px rgba(15,35,64,0.10)" : "0 1px 4px rgba(15,35,64,0.05)", transition: "border-color 0.15s, box-shadow 0.15s", display: "flex", flexDirection: "column", overflow: "hidden" }}>
       <div style={{ height: 3, background: C.navyMid, flexShrink: 0 }} />
       {product.image_url ? (
         <div onClick={() => onClick(product)} style={{ background: "#f8fafc", borderBottom: "1px solid #f1f5f9", height: 110, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", cursor: "pointer" }}>
@@ -1049,7 +1055,7 @@ function ProductCard({ product, showBrand, onClick }) {
           </div>
         ) : null}
       </div>
-      <div style={{ borderTop: "1px solid " + C.bg, padding: "8px 15px", background: hovered ? "#f1f5f9" : C.bgCard, transition: "background 0.13s", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ borderTop: "1px solid " + C.bg, padding: "8px 15px", background: hovered ? "#f1f5f9" : C.card, transition: "background 0.13s", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <span onClick={() => onClick(product)} style={{ fontSize: 11, fontWeight: 600, color: C.navyMid, cursor: "pointer" }}>View Specifications ›</span>
         <button onClick={handleAddRFQ} style={{ padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: added ? "1px solid #16a34a" : "1px solid #2563eb", background: added ? "#f0fdf4" : "#eff6ff", color: added ? "#16a34a" : "#2563eb", whiteSpace: "nowrap", transition: "all 0.15s" }}>
           {added ? "✓ In RFQ" : "+ Add to RFQ"}
@@ -1084,7 +1090,7 @@ function ProductListRow({ product, showBrand, onClick }) {
 
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ background: C.bgCard, borderRadius: 8, border: "1px solid " + (hovered ? C.navyMid : C.border), boxShadow: hovered ? "0 2px 10px rgba(26,58,92,0.07)" : "none", transition: "border-color 0.13s, box-shadow 0.13s", display: "flex", alignItems: "center", gap: 0, overflow: "hidden", cursor: "pointer" }}>
+      style={{ background: C.card, borderRadius: 10, border: "1px solid " + (hovered ? C.navyLight : C.border), boxShadow: hovered ? "0 2px 8px rgba(15,35,64,0.08)" : "0 1px 3px rgba(15,35,64,0.04)", transition: "border-color 0.15s, box-shadow 0.15s", display: "flex", alignItems: "center", gap: 0, overflow: "hidden", cursor: "pointer" }}>
       {/* Accent bar */}
       <div style={{ width: 3, alignSelf: "stretch", background: C.navyMid, flexShrink: 0 }} />
       {/* Image */}
@@ -1295,7 +1301,7 @@ function TypeGrid({ types, counts, onSelect }) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
         {displayItems.map(t => (
           <div key={t.key} onClick={() => onSelect(t.key)} onMouseEnter={() => setHovered(t.key)} onMouseLeave={() => setHovered(null)}
-            style={{ background: hovered === t.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === t.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
+            style={{ background: hovered === t.key ? C.navyMid : C.card, border: "1px solid " + (hovered === t.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
             <div style={{ fontSize: 14, fontWeight: 700, color: hovered === t.key ? "#fff" : C.text }}>{t.label}</div>
             <div style={{ fontSize: 12, color: hovered === t.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{t.description}</div>
             <div style={{ fontSize: 11, color: hovered === t.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>
@@ -1336,7 +1342,7 @@ function EngineeredSubGrid({ allProducts, onSelect }) {
         {ENGINEERED_SUBCATEGORIES.map(sub => (
           <div key={sub.key} onClick={() => onSelect(sub.key)}
             onMouseEnter={() => setHovered(sub.key)} onMouseLeave={() => setHovered(null)}
-            style={{ background: hovered === sub.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === sub.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
+            style={{ background: hovered === sub.key ? C.navyMid : C.card, border: "1px solid " + (hovered === sub.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
             <div style={{ fontSize: 14, fontWeight: 700, color: hovered === sub.key ? "#fff" : C.text }}>{sub.label}</div>
             <div style={{ fontSize: 12, color: hovered === sub.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{sub.description}</div>
             <div style={{ fontSize: 11, color: hovered === sub.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>
@@ -1375,7 +1381,7 @@ function AnsiSubGrid({ allProducts, onSelect }) {
         {ANSI_SUBCATEGORIES.map(sub => (
           <div key={sub.key} onClick={() => onSelect(sub.key)}
             onMouseEnter={() => setHovered(sub.key)} onMouseLeave={() => setHovered(null)}
-            style={{ background: hovered === sub.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === sub.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
+            style={{ background: hovered === sub.key ? C.navyMid : C.card, border: "1px solid " + (hovered === sub.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
             <div style={{ fontSize: 14, fontWeight: 700, color: hovered === sub.key ? "#fff" : C.text }}>{sub.label}</div>
             <div style={{ fontSize: 12, color: hovered === sub.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{sub.description}</div>
             <div style={{ fontSize: 11, color: hovered === sub.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>
@@ -1508,7 +1514,7 @@ function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect
   return (
     <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.55)", zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", padding:20 }}
       onClick={onClose}>
-      <div style={{ background:C.bgCard, borderRadius:12, maxWidth:900, width:"100%", maxHeight:"90vh", overflowY:"auto", boxShadow:"0 20px 60px rgba(0,0,0,0.4)" }}
+      <div style={{ background:C.card, borderRadius:12, maxWidth:900, width:"100%", maxHeight:"90vh", overflowY:"auto", boxShadow:"0 20px 60px rgba(0,0,0,0.4)" }}
         onClick={e => e.stopPropagation()}>
         {/* Header */}
         <div style={{ padding:"20px 24px 0", borderBottom:"1px solid "+C.border }}>
@@ -1573,7 +1579,7 @@ function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect
                     </thead>
                     <tbody>
                       {displayRows.map((row, ri) => (
-                        <tr key={ri} style={{ background: ri%2===0 ? C.bg : C.bgCard, borderBottom:"1px solid "+C.border }}>
+                        <tr key={ri} style={{ background: ri%2===0 ? C.bg : C.card, borderBottom:"1px solid "+C.border }}>
                           {row.map((cell,ci) => <td key={ci} style={{ padding:"7px 10px", color:C.text, whiteSpace:"nowrap" }}>{cell}</td>)}
                         </tr>
                       ))}
@@ -1599,7 +1605,7 @@ function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect
                     </thead>
                     <tbody>
                       {displayMoreRows.map((row, ri) => (
-                        <tr key={ri} style={{ background: ri%2===0 ? C.bg : C.bgCard, borderBottom:"1px solid "+C.border }}>
+                        <tr key={ri} style={{ background: ri%2===0 ? C.bg : C.card, borderBottom:"1px solid "+C.border }}>
                           {row.map((cell,ci) => <td key={ci} style={{ padding:"7px 10px", color:C.text, whiteSpace:"nowrap" }}>{cell}</td>)}
                         </tr>
                       ))}
@@ -1731,7 +1737,7 @@ function WeldedChainCard({ chain, hovered, setHovered, onSelect }) {
   }
   return (
     <div onMouseEnter={() => setHovered(chain.part_number)} onMouseLeave={() => setHovered(null)}
-      style={{ background: isHov ? C.navyMid : C.bgCard, border:"1px solid "+(isHov ? C.navyMid : C.border), borderRadius:10, overflow:"hidden", transition:"all 0.15s", display:"flex", flexDirection:"column" }}>
+      style={{ background: isHov ? C.navyMid : C.card, border:"1px solid "+(isHov ? C.navyMid : C.border), borderRadius:10, overflow:"hidden", transition:"all 0.15s", display:"flex", flexDirection:"column" }}>
       {chain.product_image && (
         <div onClick={() => onSelect(chain)} style={{ cursor:"pointer", background:C.bg, borderBottom:"1px solid #f1f5f9", padding:8, display:"flex", alignItems:"center", justifyContent:"center", height:110 }}>
           <img src={chain.product_image} alt={chain.part_number} style={{ maxHeight:98, maxWidth:"86%", objectFit:"contain" }} />
@@ -1773,7 +1779,7 @@ function WeldedChainRow({ chain, onSelect }) {
   }
   return (
     <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ background: C.bgCard, border:"1px solid "+(hov ? C.navyMid : C.border), borderRadius:8, display:"flex", alignItems:"center", overflow:"hidden", transition:"all 0.15s", boxShadow: hov ? "0 2px 10px rgba(26,58,92,0.07)" : "none" }}>
+      style={{ background: C.card, border:"1px solid "+(hov ? C.navyMid : C.border), borderRadius:8, display:"flex", alignItems:"center", overflow:"hidden", transition:"all 0.15s", boxShadow: hov ? "0 2px 10px rgba(26,58,92,0.07)" : "none" }}>
       <div style={{ width:3, alignSelf:"stretch", background:C.navyMid, flexShrink:0 }} />
       {chain.product_image && (
         <div onClick={() => onSelect(chain)} style={{ width:64, height:56, display:"flex", alignItems:"center", justifyContent:"center", background:"#f8fafc", borderRight:"1px solid #f1f5f9", flexShrink:0, cursor:"pointer" }}>
@@ -1934,7 +1940,7 @@ function WeldedSeriesView({ rawMacRecords: _unused }) {
         {seriesOrder.filter(s => grouped[s]?.length > 0).map(sub => (
           <div key={sub} onClick={() => setSelectedSeries(sub)}
             onMouseEnter={() => setHovered(sub)} onMouseLeave={() => setHovered(null)}
-            style={{ background: hovered===sub ? C.navyMid : C.bgCard, border:"1px solid "+(hovered===sub ? C.navyMid : C.border), borderRadius:8, padding:"18px 20px", cursor:"pointer", transition:"all 0.15s" }}>
+            style={{ background: hovered===sub ? C.navyMid : C.card, border:"1px solid "+(hovered===sub ? C.navyMid : C.border), borderRadius:8, padding:"18px 20px", cursor:"pointer", transition:"all 0.15s" }}>
             <div style={{ fontSize:14, fontWeight:700, color: hovered===sub ? "#fff" : C.text, marginBottom:4 }}>{WELDED_SERIES_LABELS[sub] || sub}</div>
             <div style={{ fontSize:12, color: hovered===sub ? "rgba(255,255,255,0.6)" : C.muted, marginBottom:8 }}>
               {grouped[sub].length} chain series
@@ -1960,7 +1966,7 @@ function ChainSubGrid({ types, counts, onSelect }) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
         {types.map(t => (
           <div key={t.key} onClick={() => onSelect(t.key)} onMouseEnter={() => setHovered(t.key)} onMouseLeave={() => setHovered(null)}
-            style={{ background: hovered === t.key ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === t.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
+            style={{ background: hovered === t.key ? C.navyMid : C.card, border: "1px solid " + (hovered === t.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
             <div style={{ fontSize: 14, fontWeight: 700, color: hovered === t.key ? "#fff" : C.text }}>{t.label}</div>
             <div style={{ fontSize: 12, color: hovered === t.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{t.description}</div>
             <div style={{ fontSize: 11, color: hovered === t.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>
@@ -1984,10 +1990,10 @@ function BrandGrid({ products, typeDef, onSelect }) {
         <div style={{ fontSize: 20, fontWeight: 800, color: C.text, marginBottom: 4 }}>{typeDef?.label}</div>
         <div style={{ fontSize: 13, color: C.muted }}>Select a brand to browse products</div>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))", gap: 12 }}>
         {brands.map(b => (
           <div key={b} onClick={() => onSelect(b)} onMouseEnter={() => setHovered(b)} onMouseLeave={() => setHovered(null)}
-            style={{ background: hovered === b ? C.navyMid : C.bgCard, border: "1px solid " + (hovered === b ? C.navyMid : C.border), borderRadius: 8, padding: "20px 22px", cursor: "pointer", transition: "all 0.15s", textAlign: "center" }}>
+            style={{ background: hovered === b ? C.navyMid : C.card, border: "1px solid " + (hovered === b ? C.navyMid : C.border), borderRadius: 8, padding: "20px 22px", cursor: "pointer", transition: "all 0.15s", textAlign: "center" }}>
             <div style={{ fontSize: 16, fontWeight: 700, color: hovered === b ? "#fff" : C.text, marginBottom: 4 }}>{b}</div>
             <div style={{ fontSize: 12, color: hovered === b ? "rgba(255,255,255,0.5)" : C.muted }}>{products.filter(p => p.brand === b).length} products</div>
           </div>
@@ -2179,7 +2185,7 @@ export default function Home() {
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column" }}>
       <TopBar />
-      <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "32px 40px", boxSizing: "border-box" }}>
+      <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "24px clamp(12px,4vw,40px)", boxSizing: "border-box" }}>
         {view !== "home" ? <Breadcrumb items={breadcrumbs} onNav={navTo} /> : null}
         {loading ? (
           <div style={{ textAlign: "center", padding: 80, color: C.muted, fontSize: 14 }}>Loading catalog...</div>

@@ -2,10 +2,14 @@ import { useState, useMemo } from "react";
 import { createPageUrl } from "@/utils";
 
 const C = {
-  navy: "#0F2340", navyMid: "#1a3a5c", navyLight: "#2a5080",
+  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
   gold: "#C9A84C", goldLight: "#e8c96d",
-  bg: "#f8fafc", card: "#ffffff", border: "#e2e8f0",
-  text: "#1e293b", muted: "#64748b",
+  green: "#16a34a", greenBg: "#dcfce7",
+  red: "#dc2626", redBg: "#fee2e2",
+  orange: "#c2410c", orangeBg: "#ffedd5",
+  accent: "#2563eb",
+  bg: "#f8fafc", card: "#ffffff",
+  border: "#e2e8f0", text: "#0f172a", textMid: "#1e293b", muted: "#64748b",
 };
 
 // ─── UNIT HELPERS ─────────────────────────────────────────────────────────────
@@ -594,7 +598,7 @@ function DetailModal({ s, onClose, onConfigure, fmt, metric }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)", zIndex: 1000, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "16px", overflowY: "auto" }}>
-      <div style={{ background: "#fff", borderRadius: 16, width: "100%", maxWidth: 820, boxShadow: "0 24px 80px rgba(0,0,0,0.3)", position: "relative", marginBottom: 16 }}>
+      <div style={{ background: "#fff", borderRadius: 16, width: "100%", maxWidth: 820, width: "calc(100vw - 32px)", boxShadow: "0 24px 80px rgba(0,0,0,0.3)", position: "relative", marginBottom: 16 }}>
 
         {/* Hero */}
         {s.image_url && !imgErr && (
@@ -612,7 +616,7 @@ function DetailModal({ s, onClose, onConfigure, fmt, metric }) {
         <button onClick={onClose} style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.4)", border: "none", borderRadius: "50%", width: 32, height: 32, cursor: "pointer", color: "#fff", fontSize: 16, zIndex: 10 }}>✕</button>
 
         {/* Tab bar */}
-        <div style={{ display: "flex", borderBottom: "1px solid " + C.border, padding: "0 20px", overflowX: "auto" }}>
+        <div style={{ display: "flex", borderBottom: "1px solid " + C.border, padding: "0 clamp(12px,4vw,20px)", overflowX: "auto" }}>
           {tabs.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)}
               style={{ padding: "11px 14px", border: "none", background: "none", cursor: "pointer", fontSize: 12, fontWeight: tab === t.id ? 700 : 400,
@@ -836,8 +840,8 @@ function DetailModal({ s, onClose, onConfigure, fmt, metric }) {
         {/* Footer */}
         <div style={{ padding: "14px 24px", borderTop: "1px solid " + C.border, display: "flex", gap: 10, justifyContent: "flex-end", background: "#f8fafc", borderRadius: "0 0 16px 16px" }}>
           <button onClick={onClose} style={{ padding: "9px 18px", background: "#fff", border: "1px solid " + C.border, borderRadius: 8, cursor: "pointer", fontSize: 13, color: C.muted, fontWeight: 600 }}>Close</button>
-          <button onClick={() => onConfigure(s)} style={{ padding: "9px 20px", background: s.color, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 800 }}>
-            Configure & Add to RFQ →
+          <button onClick={() => onConfigure(s)} style={{ padding: "9px 18px", background: C.navyMid, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 700, letterSpacing: "0.02em" }}>
+            Configure →
           </button>
         </div>
       </div>
@@ -1394,7 +1398,7 @@ function ConfigModal({ s, onClose, fmt, metric }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)", zIndex: 1100, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "16px", overflowY: "auto" }}>
-      <div style={{ background: "#fff", borderRadius: 16, width: "100%", maxWidth: 640, boxShadow: "0 24px 80px rgba(0,0,0,0.3)", marginBottom: 16 }}>
+      <div style={{ background: "#fff", borderRadius: 16, width: "100%", maxWidth: 640, width: "calc(100vw - 32px)", boxShadow: "0 24px 80px rgba(0,0,0,0.3)", marginBottom: 16 }}>
 
         {/* Header */}
         <div style={{ background: C.navy, borderRadius: "16px 16px 0 0", padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -1575,7 +1579,7 @@ function ConfigModal({ s, onClose, fmt, metric }) {
               style={{ flex: 2, padding: "11px", background: tube && shaft ? s.color : "#e5e7eb",
                 color: tube && shaft ? "#fff" : "#9ca3af", border: "none", borderRadius: 10, cursor: tube && shaft ? "pointer" : "not-allowed",
                 fontSize: 14, fontWeight: 800, transition: "background 0.15s" }}>
-              {tube && shaft ? "Add to RFQ Cart →" : "Select tube and shaft to continue"}
+              {tube && shaft ? "Add to RFQ" : "Select tube and shaft to continue"}
             </button>
           </div>
         </div>
@@ -1620,7 +1624,7 @@ function SeriesCard({ s, onView, onConfigure, fmt }) {
         ) : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", fontSize: 40, color: s.color + "40" }}>⚙</div>}
         <div style={{ position: "absolute", top: 10, left: 10, background: s.color, color: "#fff", fontSize: 9, fontWeight: 800, padding: "3px 9px", borderRadius: 20 }}>{s.duty.toUpperCase()} DUTY</div>
         <div style={{ position: "absolute", bottom: 8, right: 8, background: "rgba(0,0,0,0.5)", color: "#fff", fontSize: 9, padding: "2px 7px", borderRadius: 10 }}>pp. {s.page_range}</div>
-        {s.grooves && typeof s.grooves === "object" && <div style={{ position: "absolute", top: 10, right: 10, background: "#16a34a", color: "#fff", fontSize: 9, fontWeight: 800, padding: "2px 8px", borderRadius: 10 }}>GROOVES</div>}
+        {s.grooves && typeof s.grooves === "object" && <div style={{ position: "absolute", top: 10, right: 10, background: C.green, color: "#fff", fontSize: 9, fontWeight: 800, padding: "2px 8px", borderRadius: 10 }}>GROOVES</div>}
       </div>
 
       {/* Body */}
@@ -1668,7 +1672,7 @@ export default function RollerConfigurator() {
 
       {/* Top nav */}
       <div style={{ background: C.navy, borderBottom: "3px solid " + C.gold, position: "sticky", top: 0, zIndex: 200 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 20px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(12px,4vw,20px)", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <a href={createPageUrl("Home")} style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
               <div style={{ width: 28, height: 28, background: C.gold, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1708,7 +1712,7 @@ export default function RollerConfigurator() {
       </div>
 
       {/* Grid */}
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px 20px 60px" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px clamp(12px,4vw,28px) 60px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))", gap: 18 }}>
           {filtered.map(s => (
             <SeriesCard key={s.id} s={s} fmt={fmt} onView={setViewing} onConfigure={setConfiguring} />
