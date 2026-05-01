@@ -31,6 +31,19 @@ const IMG = {
 function getLinkImg(t) { return t==="Double"?IMG.double:t==="Triple"?IMG.triple:IMG.standard; }
 function tryParse(v) { try { return JSON.parse(v||"[]"); } catch { return []; } }
 
+// ── Unit conversion helpers ───────────────────────────────────────────────────
+const MM_TO_IN = 0.03937008;
+const IN_TO_MM = 25.4;
+function toDisplay(mm, imperial) {
+  if (!mm && mm !== 0) return "";
+  return imperial ? (parseFloat(mm) * MM_TO_IN).toFixed(3) : String(mm);
+}
+function toMM(val, imperial) {
+  const n = parseFloat(val);
+  if (isNaN(n)) return "";
+  return imperial ? String(Math.round(n * IN_TO_MM * 10) / 10) : String(n);
+}
+
 // ── RFQ Context ───────────────────────────────────────────────────────────────
 function getRFQCart() { try { return JSON.parse(localStorage.getItem("rfq_cart")||"[]"); } catch { return []; } }
 function saveRFQCart(c) { localStorage.setItem("rfq_cart", JSON.stringify(c)); }
@@ -328,6 +341,7 @@ function emptyAttachment(idx = 0) {
 
 function FlightWizard({ chain, onComplete, onCancel }) {
   const [step, setStep] = useState(0);
+  const [imperial, setImperial] = useState(false);
   const [hasFlights, setHasFlights] = useState(null);
   const [attachments, setAttachments] = useState([emptyAttachment(0)]);
   const [activeAtt, setActiveAtt] = useState(0);
@@ -342,11 +356,11 @@ function FlightWizard({ chain, onComplete, onCancel }) {
   const updateUhmw = (key, val) => setAtt(a => ({ ...a, uhmwDims: { ...a.uhmwDims, [key]: val } }));
 
   const styleFields = {
-    B:  ["W", "P", "barSize", "steelType", "perpendicular", "carryBackCups", "cupsSize", "configuration"],
-    T:  ["W", "P", "barSize", "steelType", "perpendicular", "carryBackCups", "cupsSize", "configuration", "notchDetails", "holeDetails"],
-    U:  ["W", "P", "H", "barSize", "steelType", "mangTipping", "plateBlanking"],
-    CU: ["W", "P", "H", "G", "barSize", "steelType", "mangTipping", "plateBlanking"],
-    OO: ["W", "P", "H", "G", "K", "barSize", "steelType", "mangTipping", "plateBlanking"],
+    B:  ["W", "barSize", "steelType", "perpendicular", "carryBackCups", "cupsSize", "configuration"],
+    T:  ["W", "barSize", "steelType", "perpendicular", "carryBackCups", "cupsSize", "configuration", "notchDetails", "holeDetails"],
+    U:  ["W", "H", "barSize", "steelType", "mangTipping", "plateBlanking"],
+    CU: ["W", "H", "G", "barSize", "steelType", "mangTipping", "plateBlanking"],
+    OO: ["W", "H", "G", "K", "barSize", "steelType", "mangTipping", "plateBlanking"],
   };
 
   const fieldLabels = {
@@ -403,8 +417,20 @@ function FlightWizard({ chain, onComplete, onCancel }) {
     <div style={{ padding: "24px" }}>
       <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>{att.flightName} — Measurements</div>
-          <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Enter dimensions based on the ID Form. All measurements in mm unless noted.</div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+            <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid }}>{att.flightName} — Measurements</div>
+            <div style={{ display: "flex", background: "#f1f5f9", borderRadius: 8, padding: "3px" }}>
+              <button onClick={() => setImperial(false)}
+                style={{ padding: "4px 12px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 700, background: !imperial ? C.navyMid : "transparent", color: !imperial ? "white" : C.muted }}>
+                mm
+              </button>
+              <button onClick={() => setImperial(true)}
+                style={{ padding: "4px 12px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 11, fontWeight: 700, background: imperial ? C.navyMid : "transparent", color: imperial ? "white" : C.muted }}>
+                in
+              </button>
+            </div>
+          </div>
+          <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Enter dimensions from the ID Form. Toggle mm/in — values stored as mm internally.</div>
           {fields.map(f => (
             <FieldRow key={f} label={fieldLabels[f]}>
               {boolFields.includes(f) ? (
@@ -412,7 +438,7 @@ function FlightWizard({ chain, onComplete, onCancel }) {
               ) : f === "steelType" ? (
                 <SelectInput value={att.dims[f]} onChange={v => updateDims(f, v)} options={["Mild Steel", "Stainless Steel 304", "Stainless Steel 316", "Hardox", "AR400"]} />
               ) : (
-                <TextInput value={att.dims[f]} onChange={v => updateDims(f, v)} placeholder="0" unit={["W","P","H","G","K"].includes(f) ? "mm" : ""} />
+                <TextInput value={["W","H","G","K"].includes(f) ? (imperial && att.dims[f] ? toDisplay(att.dims[f], true) : att.dims[f]) : att.dims[f]} onChange={v => updateDims(f, ["W","H","G","K"].includes(f) ? toMM(v, imperial) : v)} placeholder="0" unit={["W","H","G","K"].includes(f) ? (imperial ? "in" : "mm") : ""} />
               )}
             </FieldRow>
           ))}
@@ -442,7 +468,19 @@ function FlightWizard({ chain, onComplete, onCancel }) {
   // Step 3: UHMW plates
   if (step === 3) return (
     <div style={{ padding: "24px" }}>
-      <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>UHMW Wear Plates</div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+        <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid }}>UHMW Wear Plates</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#f1f5f9", borderRadius: 8, padding: "4px 6px" }}>
+          <button onClick={() => setImperial(false)}
+            style={{ padding: "4px 12px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 700, background: !imperial ? C.navyMid : "transparent", color: !imperial ? "white" : C.muted }}>
+            Metric
+          </button>
+          <button onClick={() => setImperial(true)}
+            style={{ padding: "4px 12px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 700, background: imperial ? C.navyMid : "transparent", color: imperial ? "white" : C.muted }}>
+            Imperial
+          </button>
+        </div>
+      </div>
       <div style={{ color: C.muted, fontSize: 12, marginBottom: 20 }}>Does this flight have UHMW polyethylene plates bolted to it?</div>
       <div style={{ display: "flex", gap: 12, marginBottom: 24 }}>
         <button onClick={() => setAtt(a => ({ ...a, uhmw: true }))}
@@ -458,9 +496,9 @@ function FlightWizard({ chain, onComplete, onCancel }) {
       {att.uhmw && (
         <div style={{ background: "#f0f7ff", borderRadius: 10, border: `1px solid #bfdbfe`, padding: "18px 20px" }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid, marginBottom: 14 }}>UHMW Plate Details</div>
-          <FieldRow label="Plate Thickness"><TextInput value={att.uhmwDims.thickness} onChange={v => updateUhmw("thickness", v)} unit="mm" /></FieldRow>
-          <FieldRow label="Overall Width"><TextInput value={att.uhmwDims.overallW} onChange={v => updateUhmw("overallW", v)} unit="mm" /></FieldRow>
-          <FieldRow label="Overall Height"><TextInput value={att.uhmwDims.overallH} onChange={v => updateUhmw("overallH", v)} unit="mm" /></FieldRow>
+          <FieldRow label="Plate Thickness"><TextInput value={imperial && att.uhmwDims.thickness ? toDisplay(att.uhmwDims.thickness, true) : att.uhmwDims.thickness} onChange={v => updateUhmw("thickness", toMM(v, imperial))} unit={imperial ? "in" : "mm"} /></FieldRow>
+          <FieldRow label="Overall Width"><TextInput value={imperial && att.uhmwDims.overallW ? toDisplay(att.uhmwDims.overallW, true) : att.uhmwDims.overallW} onChange={v => updateUhmw("overallW", toMM(v, imperial))} unit={imperial ? "in" : "mm"} /></FieldRow>
+          <FieldRow label="Overall Height"><TextInput value={imperial && att.uhmwDims.overallH ? toDisplay(att.uhmwDims.overallH, true) : att.uhmwDims.overallH} onChange={v => updateUhmw("overallH", toMM(v, imperial))} unit={imperial ? "in" : "mm"} /></FieldRow>
           <FieldRow label="UHMW Type">
             <SelectInput value={att.uhmwDims.type} onChange={v => updateUhmw("type", v)} options={["Regular UHMW", "High Heat UHMW"]} />
           </FieldRow>
@@ -468,7 +506,7 @@ function FlightWizard({ chain, onComplete, onCancel }) {
             <SelectInput value={att.uhmwDims.bottomStyle} onChange={v => updateUhmw("bottomStyle", v)} options={["Flush to bottom", "Overlap"]} />
           </FieldRow>
           {att.uhmwDims.bottomStyle === "Overlap" && (
-            <FieldRow label="Overlap Amount"><TextInput value={att.uhmwDims.overlap} onChange={v => updateUhmw("overlap", v)} unit="mm" /></FieldRow>
+            <FieldRow label="Overlap Amount"><TextInput value={imperial && att.uhmwDims.overlap ? toDisplay(att.uhmwDims.overlap, true) : att.uhmwDims.overlap} onChange={v => updateUhmw("overlap", toMM(v, imperial))} unit={imperial ? "in" : "mm"} /></FieldRow>
           )}
         </div>
       )}
