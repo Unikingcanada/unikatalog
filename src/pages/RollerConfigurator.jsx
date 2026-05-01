@@ -846,6 +846,63 @@ function DetailModal({ s, onClose, onConfigure, fmt, metric }) {
 }
 
 // ─── CONFIGURE MODAL ─────────────────────────────────────────────────────────
+// ─── ROLLER DRAWING SVG ─────────────────────────────────────────────────────
+function RollerDrawing({ tubeDia_mm, rl_mm, shaftType, hasDrive, metric }) {
+  const rl = parseFloat(rl_mm) || 500;
+  const dia = parseFloat(tubeDia_mm) || 50;
+  const scale = Math.min(260 / rl, 3.5);
+  const bodyW = Math.max(rl * scale, 60);
+  const bodyH = Math.min(Math.max(dia * scale * 1.2, 18), 52);
+  const shaftExt = shaftType && shaftType.toLowerCase().includes("spring") ? 18 : 12;
+  const totalW = bodyW + shaftExt * 2 + 20;
+  const cx = totalW / 2;
+  const cy = 45;
+  const isSpring = shaftType && shaftType.toLowerCase().includes("spring");
+  const rlLabel = metric ? `RL = ${rl} mm` : `RL = ${(rl/25.4).toFixed(2)}"`;
+  const diaLabel = metric ? `Ø${dia} mm` : `Ø${(dia/25.4).toFixed(3)}"`;
+  const elAgl = metric ? `EL = AGL = RL + ${isSpring ? "10 / 26" : "10"} mm` : `EL = AGL = RL + ${isSpring ? "0.4\" / 1.0\"" : "0.4\""}`; 
+
+  return (
+    <svg width="100%" viewBox={`0 0 ${totalW} 90`} style={{ display: "block", overflow: "visible" }}>
+      <defs>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/>
+        </marker>
+        <marker id="arrl" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8"/>
+        </marker>
+      </defs>
+      {/* Shaft left */}
+      <line x1={cx - bodyW/2 - shaftExt} y1={cy} x2={cx - bodyW/2} y2={cy} stroke="#64748b" strokeWidth={Math.min(bodyH * 0.18, 6)} strokeLinecap="round"/>
+      {/* Shaft right */}
+      <line x1={cx + bodyW/2} y1={cy} x2={cx + bodyW/2 + shaftExt} y2={cy} stroke="#64748b" strokeWidth={Math.min(bodyH * 0.18, 6)} strokeLinecap="round"/>
+      {/* Spring indicators */}
+      {isSpring && <>
+        <circle cx={cx - bodyW/2 - shaftExt + 5} cy={cy} r={4} fill="none" stroke="#f59e0b" strokeWidth={1.5}/>
+        <circle cx={cx + bodyW/2 + shaftExt - 5} cy={cy} r={4} fill="none" stroke="#f59e0b" strokeWidth={1.5}/>
+      </>}
+      {/* Drive head indicator */}
+      {hasDrive && <>
+        <rect x={cx + bodyW/2 + shaftExt - 2} y={cy - bodyH/2 - 6} width={10} height={bodyH + 12} rx={3} fill="#3b82f6" opacity={0.8}/>
+        <text x={cx + bodyW/2 + shaftExt + 14} y={cy + 4} fontSize={7} fill="#3b82f6" fontWeight="700">Drive</text>
+      </>}
+      {/* Roller body */}
+      <rect x={cx - bodyW/2} y={cy - bodyH/2} width={bodyW} height={bodyH} rx={bodyH * 0.15} fill="#cbd5e1" stroke="#475569" strokeWidth={1.5}/>
+      {/* Bearing caps */}
+      <rect x={cx - bodyW/2} y={cy - bodyH/2 + 2} width={9} height={bodyH - 4} rx={2} fill="#334155" opacity={0.75}/>
+      <rect x={cx + bodyW/2 - 9} y={cy - bodyH/2 + 2} width={9} height={bodyH - 4} rx={2} fill="#334155" opacity={0.75}/>
+      {/* RL dimension line */}
+      <line x1={cx - bodyW/2} y1={cy + bodyH/2 + 10} x2={cx + bodyW/2} y2={cy + bodyH/2 + 10} stroke="#94a3b8" strokeWidth={1} markerEnd="url(#arr)" markerStart="url(#arrl)"/>
+      <text x={cx} y={cy + bodyH/2 + 20} textAnchor="middle" fontSize={8} fill="#64748b" fontWeight="600">{rlLabel}</text>
+      {/* Diameter label */}
+      <line x1={cx - bodyW/2 - 14} y1={cy - bodyH/2} x2={cx - bodyW/2 - 14} y2={cy + bodyH/2} stroke="#94a3b8" strokeWidth={1} markerEnd="url(#arr)" markerStart="url(#arrl)"/>
+      <text x={cx - bodyW/2 - 28} y={cy + 3} textAnchor="middle" fontSize={7.5} fill="#64748b" transform={`rotate(-90,${cx - bodyW/2 - 28},${cy})`}>{diaLabel}</text>
+      {/* EL formula label */}
+      <text x={cx} y={12} textAnchor="middle" fontSize={7.5} fill="#94a3b8">{elAgl}</text>
+    </svg>
+  );
+}
+
 function ConfigModal({ s, onClose, fmt, metric }) {
   const [tube, setTube] = useState(null);
   const [material, setMaterial] = useState(null);
@@ -882,6 +939,109 @@ function ConfigModal({ s, onClose, fmt, metric }) {
       notes ? `Notes: ${notes}` : "",
     ].filter(Boolean).join(" | ");
     return parts;
+  }
+
+  // Build Interroll-style part code: Series-TubeDia-Material-Shaft-RL
+  function buildPartCode() {
+    if (!tube || !shaft) return null;
+    const t = selectedTube;
+    const mat = material || (t && t.materials && t.materials.length === 1 ? t.materials[0] : null);
+    const tubePart = t ? `Ø${t.tube_mm}×${t.wall_mm}` : tube.split("—")[0].trim();
+    const matCode = mat ? mat.replace("Zinc-plated steel","ZP").replace("Stainless steel","SS").replace("Aluminum","AL").replace("PVC gray RAL7030","PVC-G").replace("PVC sky blue RAL5015","PVC-B").replace("Zinc-plated","ZP").replace("Stainless","SS").replace("Steel","ST").replace("Polypropylene","PP") : "";
+    const shaftCode = shaft.replace("Spring-loaded","SL").replace("Fixed shaft","FX").replace("Female thread ","FT-").replace("Male thread","MT").replace("Flatted shaft","FS").replace("Variable length","VL").replace(/[()]/g,"").replace(/\s+/g,"-");
+    const rlPart = rl_mm ? (metric ? `${rl_mm}mm` : `${(rl_mm/25.4).toFixed(2)}in`) : "??";
+    const drivePart = drive ? `-${drive.replace(/[^A-Za-z0-9]/g,"")}` : "";
+    const sleevePart = sleeve && sleeve !== "None" ? `-${sleeve.replace(/\s+/g,"-")}` : "";
+    const groovePart = grooveCount > 0 ? `-${grooveCount}G` : "";
+    return `${s.id} / ${tubePart} / ${matCode || "?"} / ${shaftCode} / RL:${rlPart}${drivePart}${sleevePart}${groovePart}`;
+  }
+
+  function handlePrintTearSheet() {
+    const pc = buildPartCode();
+    const rlDisp = rl_mm ? (metric ? `${rl_mm} mm` : `${(rl_mm/25.4).toFixed(2)}"`) : "Not specified";
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Roller Spec Sheet — ${s.name}</title>
+<style>
+  body{font-family:'Segoe UI',Arial,sans-serif;margin:0;padding:0;color:#1e293b;}
+  .header{background:#0F2340;color:#fff;padding:24px 36px;display:flex;justify-content:space-between;align-items:center;}
+  .logo-text{font-size:20px;font-weight:900;letter-spacing:0.5px;}
+  .logo-sub{font-size:10px;color:#C9A84C;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:3px;}
+  .gold-bar{height:4px;background:#C9A84C;}
+  .body{padding:28px 36px;}
+  .title{font-size:19px;font-weight:800;color:#0F2340;margin-bottom:3px;}
+  .subtitle{font-size:12px;color:#64748b;margin-bottom:20px;}
+  .code-box{background:#0F2340;color:#e8c96d;font-family:'Courier New',monospace;font-size:15px;font-weight:800;padding:14px 20px;border-radius:8px;margin-bottom:20px;letter-spacing:0.5px;}
+  .code-label{font-size:10px;color:rgba(255,255,255,0.5);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:5px;}
+  table{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:12px;}
+  th{background:#f1f5f9;color:#475569;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:8px 12px;text-align:left;border-bottom:2px solid #e2e8f0;}
+  td{padding:8px 12px;border-bottom:1px solid #f1f5f9;}
+  td:first-child{font-weight:600;color:#475569;width:38%;}
+  .warn{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:8px 14px;font-size:10px;color:#92400e;margin-bottom:16px;}
+  .footer{margin-top:32px;border-top:1px solid #e2e8f0;padding-top:12px;font-size:10px;color:#94a3b8;display:flex;justify-content:space-between;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <div class="logo-text">UNIKING CANADA</div>
+    <div class="logo-sub">Interroll Authorized Partner</div>
+  </div>
+  <div style="text-align:right;font-size:11px;color:rgba(255,255,255,0.6)">
+    Roller Spec Sheet<br/>Generated: ${new Date().toLocaleDateString('en-CA')}
+  </div>
+</div>
+<div class="gold-bar"></div>
+<div class="body">
+  <div style="display:flex;align-items:center;gap:20px;margin-bottom:16px">
+    ${s.image_url ? `<img src="${s.image_url}" style="height:72px;object-fit:contain;background:#f8fafc;border-radius:6px;padding:6px;border:1px solid #e2e8f0" alt="${s.name}" crossorigin="anonymous"/>` : ""}
+    <div>
+      <div class="title">${s.name} — ${s.subtitle}</div>
+      <div class="subtitle">${s.duty} Duty · ${s.driveType}</div>
+    </div>
+  </div>
+  <div class="code-box">
+    <div class="code-label">Configuration Code</div>
+    ${pc || "Incomplete — select all options"}
+  </div>
+  <div class="warn">⚠ Pricing not included. Contact Uniking Canada for a formal quotation: <strong>514-886-5270 · sales@unikingcanada.com</strong></div>
+  <div class="two-col">
+    <table>
+      <tr><th colspan="2">Selected Configuration</th></tr>
+      <tr><td>Tube</td><td>${tube || "—"}</td></tr>
+      <tr><td>Material</td><td>${material || "—"}</td></tr>
+      <tr><td>Shaft Type</td><td>${shaft || "—"}</td></tr>
+      ${drive ? `<tr><td>Drive Head</td><td>${drive}</td></tr>` : ""}
+      ${sleeve && sleeve !== "None" ? `<tr><td>Sleeve</td><td>${sleeve}</td></tr>` : ""}
+      ${grooveCount > 0 ? `<tr><td>Grooves</td><td>${grooveCount} groove(s)</td></tr>` : ""}
+      <tr><td>Roller Length (RL)</td><td>${rlDisp}</td></tr>
+      <tr><td>Quantity</td><td>${qty} pc${qty > 1 ? "s" : ""}</td></tr>
+      ${notes ? `<tr><td>Notes</td><td>${notes}</td></tr>` : ""}
+    </table>
+    <table>
+      <tr><th colspan="2">Series Technical Data</th></tr>
+      <tr><td>Max Load</td><td>${s.maxLoad_N ? s.maxLoad_N + " N" : "—"}</td></tr>
+      <tr><td>Max Speed</td><td>${s.maxSpeed_ms ? s.maxSpeed_ms + " m/s" : "—"}</td></tr>
+      <tr><td>Temperature Range</td><td>${s.temp_min_C !== undefined ? s.temp_min_C + "°C to +" + s.temp_max_C + "°C" : "—"}</td></tr>
+      <tr><td>Drive Type</td><td>${s.driveType || "—"}</td></tr>
+      <tr><td>Antistatic</td><td>${s.antistatic || "—"}</td></tr>
+      <tr><td>Catalog Ref.</td><td>Pages ${s.page_range || "—"}</td></tr>
+    </table>
+  </div>
+  ${s.notes ? `<div style="margin-top:8px;padding:10px 14px;background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0;font-size:11px;color:#475569"><strong>Notes:</strong> ${s.notes}</div>` : ""}
+  <div class="footer">
+    <span>Uniking Canada Inc. · 12985 Rue Brault, Mirabel, QC J7J 0W2 · 514-886-5270 · www.unikingcanada.com</span>
+    <span>Source: Interroll Conveyor Roller Catalog 2026</span>
+  </div>
+</div>
+</body>
+</html>`;
+    const win = window.open("", "_blank");
+    if (win) { win.document.write(html); win.document.close(); setTimeout(() => win.print(), 500); }
   }
 
   function handleAdd() {
@@ -1053,6 +1213,20 @@ function ConfigModal({ s, onClose, fmt, metric }) {
             </div>
           )}
 
+          {/* Live Roller Drawing */}
+          {rl_mm && selectedTube && (
+            <div style={{ marginTop: 14, background: "#f8fafc", borderRadius: 10, padding: "14px 12px 8px", border: "1px solid " + C.border }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 10, textAlign: "center" }}>Roller Preview (Schematic)</div>
+              <RollerDrawing
+                tubeDia_mm={selectedTube.tube_mm}
+                rl_mm={rl_mm}
+                shaftType={shaft || ""}
+                hasDrive={!!drive}
+                metric={metric}
+              />
+            </div>
+          )}
+
           {/* Quantity */}
           <SLabel>Quantity</SLabel>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -1067,13 +1241,33 @@ function ConfigModal({ s, onClose, fmt, metric }) {
           <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="e.g. carbonitrided surface, flanged tube, specific shaft material, IP55..."
             style={{ ...sel, minHeight: 64, resize: "vertical" }} />
 
-          {/* Add button */}
-          <button onClick={handleAdd} disabled={!tube || !shaft}
-            style={{ marginTop: 18, width: "100%", padding: "13px", background: tube && shaft ? s.color : "#e5e7eb",
-              color: tube && shaft ? "#fff" : "#9ca3af", border: "none", borderRadius: 10, cursor: tube && shaft ? "pointer" : "not-allowed",
-              fontSize: 14, fontWeight: 800, transition: "background 0.15s" }}>
-            {tube && shaft ? "Add to RFQ Cart →" : "Select tube and shaft to continue"}
-          </button>
+          {/* Generated Part Code */}
+          {tube && shaft && (
+            <div style={{ marginTop: 18, background: C.navy, borderRadius: 10, padding: "14px 18px" }}>
+              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 6 }}>Configuration Code</div>
+              <div style={{ fontFamily: "monospace", fontSize: 13, fontWeight: 800, color: C.goldLight, letterSpacing: "0.3px", lineHeight: 1.6, wordBreak: "break-all" }}>{buildPartCode()}</div>
+              <button onClick={() => navigator.clipboard.writeText(buildPartCode() || "")}
+                style={{ marginTop: 8, padding: "4px 12px", background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.7)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 6, cursor: "pointer", fontSize: 11, fontWeight: 600 }}>
+                Copy Code
+              </button>
+            </div>
+          )}
+
+          {/* Action buttons */}
+          <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
+            <button onClick={handlePrintTearSheet}
+              style={{ flex: 1, padding: "11px", background: tube && shaft ? C.gold : "#e5e7eb", color: tube && shaft ? C.navy : "#9ca3af",
+                border: "none", borderRadius: 10, cursor: tube && shaft ? "pointer" : "default",
+                fontSize: 13, fontWeight: 800, transition: "background 0.15s" }}>
+              Print Tear Sheet
+            </button>
+            <button onClick={handleAdd} disabled={!tube || !shaft}
+              style={{ flex: 2, padding: "11px", background: tube && shaft ? s.color : "#e5e7eb",
+                color: tube && shaft ? "#fff" : "#9ca3af", border: "none", borderRadius: 10, cursor: tube && shaft ? "pointer" : "not-allowed",
+                fontSize: 14, fontWeight: 800, transition: "background 0.15s" }}>
+              {tube && shaft ? "Add to RFQ Cart →" : "Select tube and shaft to continue"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
