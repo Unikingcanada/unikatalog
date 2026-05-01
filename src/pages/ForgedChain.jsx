@@ -961,10 +961,11 @@ function ChainConfigurator({ chain, onComplete, onClose }) {
   return null;
 }
 
-function ChainModal({ chain, onClose, onAddRFQ }) {
+function ChainModal({ chain, variant, onClose, onAddRFQ }) {
   const [tab, setTab] = useState("specs");
-  const [showConfigurator, setShowConfigurator] = useState(false);
-  const [showBoltNGo, setShowBoltNGo] = useState(false);
+  // If Bolt N Go variant selected, open BoltNGo directly; else open configurator
+  const [showConfigurator, setShowConfigurator] = useState(variant !== "bng");
+  const [showBoltNGo, setShowBoltNGo] = useState(variant === "bng");
   const [rfqAdded, setRfqAdded] = useState(false);
   const [selectedSprocket, setSelectedSprocket] = useState(null);
   const [selectedPin, setSelectedPin] = useState(null);
@@ -1210,10 +1211,6 @@ export default function ForgedChainConfigurator() {
     setTimeout(() => setRfqToast(null), 3000);
   };
 
-  // Separate Bolt N Go from standard chains — they are their own product line
-  const standardChains = chains.filter(c => !c.bolt_n_go_compatible);
-  const boltNGoChains = chains.filter(c => c.bolt_n_go_compatible);
-
   const groupByPitch = (arr) => arr.reduce((acc, c) => {
     const key = `${c.P_mm}mm`;
     if (!acc[key]) acc[key] = [];
@@ -1221,47 +1218,78 @@ export default function ForgedChainConfigurator() {
     return acc;
   }, {});
 
-  const standardGroups = groupByPitch(standardChains);
-  const bngGroups = groupByPitch(boltNGoChains);
+  const allGroups = groupByPitch(chains);
 
-  const ChainCard = ({ chain }) => (
-    <div onClick={() => setSelected(chain)}
-      style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, cursor: "pointer", overflow: "hidden", transition: "all 0.15s" }}
-      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.10)"; }}
-      onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}>
-      <div style={{ height: 3, background: chain.bolt_n_go_compatible ? `linear-gradient(90deg, ${C.green}, #15803d)` : `linear-gradient(90deg, ${C.navyMid}, ${C.navyLight})` }} />
-      <div style={{ padding: 14 }}>
-        <div style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 10 }}>
-          <img src={getLinkImg(chain.link_type)} alt={chain.link_type}
-            style={{ width: 64, height: 64, objectFit: "cover", borderRadius: 8, border: `1px solid ${C.border}`, flexShrink: 0 }} />
-          <div>
-            <div style={{ fontSize: 16, fontWeight: 800, color: C.navy }}>{chain.chain_link}</div>
-            <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{chain.link_type} Link</div>
-            <div style={{ fontSize: 11, color: C.muted }}>P = {chain.P_mm} mm | H = {chain.H_mm} mm</div>
+  // ChainCard — bolt_n_go_compatible chains show a Standard / Bolt N Go toggle before opening modal
+  const ChainCard = ({ chain }) => {
+    const [variant, setVariant] = useState("standard"); // "standard" | "bng"
+    const isBNG = chain.bolt_n_go_compatible;
+
+    const handleOpen = () => {
+      setSelected({ chain, variant });
+    };
+
+    return (
+      <div style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, overflow: "hidden", transition: "all 0.15s" }}
+        onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.10)"; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}>
+        <div style={{ height: 3, background: isBNG && variant === "bng" ? `linear-gradient(90deg, ${C.green}, #15803d)` : `linear-gradient(90deg, ${C.navyMid}, ${C.navyLight})` }} />
+        <div style={{ padding: 14 }}>
+          <div style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 10 }}>
+            <img src={getLinkImg(chain.link_type)} alt={chain.link_type}
+              style={{ width: 64, height: 64, objectFit: "cover", borderRadius: 8, border: `1px solid ${C.border}`, flexShrink: 0 }} />
+            <div>
+              <div style={{ fontSize: 16, fontWeight: 800, color: C.navy }}>{chain.chain_link}</div>
+              <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{chain.link_type} Link</div>
+              <div style={{ fontSize: 11, color: C.muted }}>P = {chain.P_mm} mm | H = {chain.H_mm} mm</div>
+            </div>
           </div>
+
+          {/* Variant toggle — only shown for Bolt N Go compatible chains */}
+          {isBNG && (
+            <div style={{ display: "flex", gap: 0, marginBottom: 10, borderRadius: 8, overflow: "hidden", border: `1px solid ${C.border}` }}>
+              <button onClick={e => { e.stopPropagation(); setVariant("standard"); }}
+                style={{ flex: 1, padding: "6px 0", fontSize: 11, fontWeight: 700, cursor: "pointer", border: "none",
+                  background: variant === "standard" ? C.navyMid : "#f8fafc",
+                  color: variant === "standard" ? "white" : C.muted,
+                  borderRight: `1px solid ${C.border}` }}>
+                Standard
+              </button>
+              <button onClick={e => { e.stopPropagation(); setVariant("bng"); }}
+                style={{ flex: 1, padding: "6px 0", fontSize: 11, fontWeight: 700, cursor: "pointer", border: "none",
+                  background: variant === "bng" ? C.green : "#f8fafc",
+                  color: variant === "bng" ? "white" : C.muted }}>
+                ⚡ Bolt N Go
+              </button>
+            </div>
+          )}
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span style={{ color: C.muted }}>Breaking Load</span>
+              <span style={{ fontWeight: 700, color: C.text }}>{chain.min_breaking_load_kn} kN</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span style={{ color: C.muted }}>Weight / Link</span>
+              <span style={{ fontWeight: 600 }}>{chain.weight_per_link_kg} kg</span>
+            </div>
+          </div>
+          {chain.stainless_available && (
+            <div style={{ marginTop: 8 }}>
+              <span style={{ fontSize: 9, background: "#f1f5f9", color: C.muted, padding: "1px 6px", borderRadius: 8 }}>Stainless Avail.</span>
+            </div>
+          )}
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12 }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span style={{ color: C.muted }}>Breaking Load</span>
-            <span style={{ fontWeight: 700, color: C.text }}>{chain.min_breaking_load_kn} kN</span>
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span style={{ color: C.muted }}>Weight / Link</span>
-            <span style={{ fontWeight: 600 }}>{chain.weight_per_link_kg} kg</span>
-          </div>
+        <div onClick={handleOpen} style={{ padding: "8px 14px", borderTop: `1px solid ${C.border}`, background: variant === "bng" ? C.greenBg : "#f8fafc",
+          display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}>
+          <span style={{ fontSize: 11, color: variant === "bng" ? C.green : C.muted, fontWeight: variant === "bng" ? 700 : 400 }}>
+            {variant === "bng" ? "⚡ Bolt N Go selected" : "Click to configure"}
+          </span>
+          <span style={{ fontSize: 11, color: variant === "bng" ? C.green : C.navyMid, fontWeight: 700 }}>Details →</span>
         </div>
-        {chain.stainless_available && (
-          <div style={{ marginTop: 8 }}>
-            <span style={{ fontSize: 9, background: "#f1f5f9", color: C.muted, padding: "1px 6px", borderRadius: 8 }}>Stainless Avail.</span>
-          </div>
-        )}
       </div>
-      <div style={{ padding: "8px 14px", borderTop: `1px solid ${C.border}`, background: "#f8fafc", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontSize: 11, color: C.muted }}>Click to configure</span>
-        <span style={{ fontSize: 11, color: C.navyMid, fontWeight: 700 }}>Details →</span>
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "Inter, Arial, sans-serif" }}>
@@ -1294,48 +1322,25 @@ export default function ForgedChainConfigurator() {
       </div>
 
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "28px 20px" }}>
-
-        {/* ── STANDARD CHAIN SECTION ── */}
-        {Object.keys(standardGroups).length > 0 && (
-          <div style={{ marginBottom: 48 }}>
-            <div style={{ fontSize: 18, fontWeight: 900, color: C.navy, marginBottom: 4 }}>Standard Drop Forged Chain</div>
-            <div style={{ fontSize: 13, color: C.muted, marginBottom: 24 }}>Order by the link. Configure with flights, pins, and attachments.</div>
-            {Object.entries(standardGroups).map(([pitch, items]) => (
-              <div key={pitch} style={{ marginBottom: 32 }}>
-                <div style={{ fontSize: 12, fontWeight: 800, color: C.navyMid, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12, paddingBottom: 6, borderBottom: `2px solid ${C.border}` }}>
-                  {pitch} Pitch
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
-                  {items.map(chain => <ChainCard key={chain.id} chain={chain} />)}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* ── BOLT N GO SECTION ── */}
-        {Object.keys(bngGroups).length > 0 && (
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 4 }}>
-              <div style={{ fontSize: 18, fontWeight: 900, color: C.navy }}>⚡ Bolt N Go Chain</div>
-              <span style={{ background: C.greenBg, color: C.green, fontSize: 12, fontWeight: 700, padding: "3px 12px", borderRadius: 99 }}>Pre-Assembled</span>
+        <div style={{ fontSize: 13, color: C.muted, marginBottom: 20 }}>
+          Configure with flights, pins, and attachments. Chains marked <span style={{ color: C.green, fontWeight: 700 }}>⚡ Bolt N Go</span> are also available pre-assembled — toggle on the card before opening.
+        </div>
+        {Object.entries(allGroups).map(([pitch, items]) => (
+          <div key={pitch} style={{ marginBottom: 36 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, color: C.navyMid, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12, paddingBottom: 6, borderBottom: `2px solid ${C.border}`, display: "flex", alignItems: "center", gap: 10 }}>
+              {pitch} Pitch
+              {items.some(c => c.bolt_n_go_compatible) && (
+                <span style={{ background: C.greenBg, color: C.green, fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 99 }}>⚡ Bolt N Go available</span>
+              )}
             </div>
-            <div style={{ fontSize: 13, color: C.muted, marginBottom: 24 }}>Pre-assembled with pins and clamps installed — drop in and go. Dramatically reduces installation time.</div>
-            {Object.entries(bngGroups).map(([pitch, items]) => (
-              <div key={pitch} style={{ marginBottom: 32 }}>
-                <div style={{ fontSize: 12, fontWeight: 800, color: C.green, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12, paddingBottom: 6, borderBottom: `2px solid ${C.greenBg}` }}>
-                  {pitch} Pitch
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
-                  {items.map(chain => <ChainCard key={chain.id} chain={chain} />)}
-                </div>
-              </div>
-            ))}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
+              {items.map(chain => <ChainCard key={chain.id} chain={chain} />)}
+            </div>
           </div>
-        )}
+        ))}
       </div>
 
-      {selected && <ChainModal chain={selected} onClose={() => setSelected(null)} onAddRFQ={handleAddRFQ} />}
+      {selected && <ChainModal chain={selected.chain} variant={selected.variant} onClose={() => setSelected(null)} onAddRFQ={handleAddRFQ} />}
     </div>
   );
 }
