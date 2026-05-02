@@ -2065,53 +2065,66 @@ export default function Home() {
   const [globalSelected, setGlobalSelected] = useState(null);
 
 
-  // ── PWA Manifest + Icons ────────────────────────────────────────────────────
+  // ── PWA Override: replace platform manifest with Uniking branding ───────────
   useEffect(() => {
+    const ICON_192 = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/dd1986c29_pwa_icon_192.png";
+    const ICON_512 = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/cb99cdae9_pwa_icon_512_final.png";
+
     const manifestData = {
-      name: "Uniking Canada Catalog",
+      name: "Uniking",
       short_name: "Uniking",
       description: "Uniking Canada Product Catalog",
-      start_url: "/",
+      start_url: window.location.origin + "/",
+      scope: "/",
       display: "standalone",
       background_color: "#0a1628",
       theme_color: "#0a1628",
       orientation: "portrait-primary",
       icons: [
-        {
-          src: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/dd1986c29_pwa_icon_192.png",
-          sizes: "192x192",
-          type: "image/png",
-          purpose: "any maskable"
-        },
-        {
-          src: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/cb99cdae9_pwa_icon_512_final.png",
-          sizes: "512x512",
-          type: "image/png",
-          purpose: "any maskable"
-        }
+        { src: ICON_192, sizes: "192x192", type: "image/png", purpose: "any maskable" },
+        { src: ICON_512, sizes: "512x512", type: "image/png", purpose: "any maskable" }
       ]
     };
-    const existingManifest = document.querySelector('link[rel="manifest"]');
-    if (existingManifest) existingManifest.remove();
-    const blob = new Blob([JSON.stringify(manifestData)], { type: "application/json" });
+
+    // Remove ALL existing manifest links (platform default)
+    document.querySelectorAll('link[rel="manifest"]').forEach(el => el.remove());
+    // Inject our manifest via blob URL
+    const blob = new Blob([JSON.stringify(manifestData)], { type: "application/manifest+json" });
     const manifestUrl = URL.createObjectURL(blob);
-    const link = document.createElement("link");
-    link.rel = "manifest";
-    link.href = manifestUrl;
-    document.head.appendChild(link);
-    const existingApple = document.querySelector('link[rel="apple-touch-icon"]');
-    if (existingApple) existingApple.remove();
+    const manifestLink = document.createElement("link");
+    manifestLink.rel = "manifest";
+    manifestLink.href = manifestUrl;
+    manifestLink.crossOrigin = "use-credentials";
+    document.head.insertBefore(manifestLink, document.head.firstChild);
+
+    // Apple touch icon
+    document.querySelectorAll('link[rel="apple-touch-icon"]').forEach(el => el.remove());
     const appleIcon = document.createElement("link");
     appleIcon.rel = "apple-touch-icon";
-    appleIcon.href = "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/cb99cdae9_pwa_icon_512_final.png";
+    appleIcon.sizes = "512x512";
+    appleIcon.href = ICON_512;
     document.head.appendChild(appleIcon);
-    const existingTheme = document.querySelector('meta[name="theme-color"]');
-    if (existingTheme) existingTheme.remove();
+
+    // Favicon
+    document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]').forEach(el => el.remove());
+    const favicon = document.createElement("link");
+    favicon.rel = "icon";
+    favicon.type = "image/png";
+    favicon.sizes = "192x192";
+    favicon.href = ICON_192;
+    document.head.appendChild(favicon);
+
+    // Theme color
+    document.querySelectorAll('meta[name="theme-color"]').forEach(el => el.remove());
     const themeMeta = document.createElement("meta");
     themeMeta.name = "theme-color";
     themeMeta.content = "#0a1628";
     document.head.appendChild(themeMeta);
-    return () => { URL.revokeObjectURL(manifestUrl); };
+
+    // App title
+    document.title = "Uniking";
+
+    return () => { try { URL.revokeObjectURL(manifestUrl); } catch(e) {} };
   }, []);
 
   useEffect(() => {
