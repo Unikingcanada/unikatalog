@@ -2064,6 +2064,56 @@ export default function Home() {
   const [globalSearch, setGlobalSearch] = useState("");
   const [globalSelected, setGlobalSelected] = useState(null);
 
+
+  // ── PWA Manifest + Icons ────────────────────────────────────────────────────
+  useEffect(() => {
+    const manifestData = {
+      name: "Uniking Canada Catalog",
+      short_name: "Uniking",
+      description: "Uniking Canada Product Catalog",
+      start_url: "/",
+      display: "standalone",
+      background_color: "#0a1628",
+      theme_color: "#0a1628",
+      orientation: "portrait-primary",
+      icons: [
+        {
+          src: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/dd1986c29_pwa_icon_192.png",
+          sizes: "192x192",
+          type: "image/png",
+          purpose: "any maskable"
+        },
+        {
+          src: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/cb99cdae9_pwa_icon_512_final.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "any maskable"
+        }
+      ]
+    };
+    const existingManifest = document.querySelector('link[rel="manifest"]');
+    if (existingManifest) existingManifest.remove();
+    const blob = new Blob([JSON.stringify(manifestData)], { type: "application/json" });
+    const manifestUrl = URL.createObjectURL(blob);
+    const link = document.createElement("link");
+    link.rel = "manifest";
+    link.href = manifestUrl;
+    document.head.appendChild(link);
+    const existingApple = document.querySelector('link[rel="apple-touch-icon"]');
+    if (existingApple) existingApple.remove();
+    const appleIcon = document.createElement("link");
+    appleIcon.rel = "apple-touch-icon";
+    appleIcon.href = "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/cb99cdae9_pwa_icon_512_final.png";
+    document.head.appendChild(appleIcon);
+    const existingTheme = document.querySelector('meta[name="theme-color"]');
+    if (existingTheme) existingTheme.remove();
+    const themeMeta = document.createElement("meta");
+    themeMeta.name = "theme-color";
+    themeMeta.content = "#0a1628";
+    document.head.appendChild(themeMeta);
+    return () => { URL.revokeObjectURL(manifestUrl); };
+  }, []);
+
   useEffect(() => {
     async function load() {
       try {
