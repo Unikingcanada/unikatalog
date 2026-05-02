@@ -876,24 +876,11 @@ export default function Catalog() {
   useEffect(() => {
     async function load() {
       try {
-        // Fetch all entities with pagination
-        async function fetchAll(entity) {
-          const results = [];
-          let skip = 0;
-          while (true) {
-            const page = await entity.filter({}, skip + 1, 500);
-            results.push(...page);
-            if (page.length < 500) break;
-            skip += 500;
-          }
-          return results;
-        }
-
         const [intralox, unicatalog, buckets, macChains] = await Promise.all([
           CatalogProduct.list(),
-          fetchAll(UniCatalog),
-          fetchAll(ElevatorBucket),
-          fetchAll(MacChainProduct),
+          UniCatalog.list(),
+          ElevatorBucket.list(),
+          MacChainProduct.list(),
         ]);
 
         setAllProducts([
