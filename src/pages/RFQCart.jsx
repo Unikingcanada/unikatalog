@@ -108,11 +108,21 @@ function AddProductPanel({ cartItems, onAdd, onClose }) {
     searchRef.current?.focus();
     (async () => {
       try {
+        async function fetchAll(entity) {
+          let all = [], skip = 0, hasMore = true;
+          while (hasMore) {
+            const batch = await entity.list({ limit: 500, skip });
+            all = [...all, ...batch];
+            hasMore = batch.length === 500;
+            skip += batch.length;
+          }
+          return all;
+        }
         const [cats, uni, elev, mac] = await Promise.all([
-          CatalogProduct.list(),
-          UniCatalog.list(),
-          ElevatorBucket.list(),
-          MacChainProduct.list(),
+          fetchAll(CatalogProduct),
+          fetchAll(UniCatalog),
+          fetchAll(ElevatorBucket),
+          fetchAll(MacChainProduct),
         ]);
         setAllProducts(normalizeForSearch([...cats, ...uni, ...elev, ...mac]));
       } catch (e) { console.error(e); }

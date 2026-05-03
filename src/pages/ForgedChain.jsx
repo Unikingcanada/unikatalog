@@ -1199,9 +1199,16 @@ export default function ForgedChainConfigurator() {
   const [rfqToast, setRfqToast] = useState(null);
 
   useEffect(() => {
-    ForgedChain.list().then(data => {
-      setChains([...data].sort((a, b) => a.P_mm - b.P_mm || a.chain_link.localeCompare(b.chain_link)));
-    });
+    (async () => {
+      let all = [], skip = 0, hasMore = true;
+      while (hasMore) {
+        const batch = await ForgedChain.list({ limit: 500, skip });
+        all = [...all, ...batch];
+        hasMore = batch.length === 500;
+        skip += batch.length;
+      }
+      setChains([...all].sort((a, b) => a.P_mm - b.P_mm || a.chain_link.localeCompare(b.chain_link)));
+    })();
   }, []);
 
   const handleAddRFQ = (item) => {
