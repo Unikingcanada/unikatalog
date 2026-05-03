@@ -38,7 +38,7 @@ const PRODUCT_TYPES = [
   { key: "Metal Chain", label: "Metal Chains", description: "Stainless steel and carbon steel slat-top and side-flexing conveyor chains", filters: ["style", "materials", "duty"] },
   { key: "Wire Mesh Belt", label: "Wire Mesh Belt", description: "Stainless and carbon steel wire mesh conveyor belts for food and industrial processing", filters: ["style", "materials", "duty"] },
   { key: "Steel Hinged Belt", label: "Steel Hinged Belt", description: "Steel hinged slat and plate conveyor belts for chip and scrap handling", filters: ["style", "materials"] },
-  { key: "ANSI/BS Chain", label: "Performance Roller Chain", description: "Precision roller chains to ANSI and BS specifications — standard, specialty and high-performance series", filters: ["style", "materials", "duty"] },
+  { key: "ANSI/BS Chain", label: "Performance Roller Chain", description: "Precision roller chains to ANSI and BS specifications — standard, specialty and high-performance series", filters: ["style", "category", "materials", "duty"] },
   { key: "Engineered Chain", label: "Engineered Chain", description: "Heavy-duty engineered steel chains for demanding industrial applications", filters: ["style", "materials", "duty"] },
   { key: "Cast Chain", label: "Cast Chain", description: "Malleable and ductile cast iron conveyor chains", filters: ["style", "materials"] },
   { key: "Welded Steel Chain", label: "Welded Steel Chain", description: "Welded steel drag and conveyor chains for bulk material handling", filters: ["style", "duty"] },
@@ -1821,7 +1821,8 @@ function WeldedSeriesView({ rawMacRecords: _unused }) {
   useEffect(() => {
     async function fetchWelded() {
       try {
-        const chains = await MacChainProduct.filter({ category: "Welded Steel Chain" }, 1, 500);
+        const all = await MacChainProduct.list();
+        const chains = all.filter(r => r.category === "Welded Steel Chain");
         setRawMacRecords(chains || []);
       } catch(e) {
         console.error("WeldedSeriesView fetch error:", e);
@@ -1835,13 +1836,9 @@ function WeldedSeriesView({ rawMacRecords: _unused }) {
     if (sprocketsLoaded) return;
     setSprocketsLoaded(true); // prevent double-fetch
     try {
-      let all = [], page = 1;
-      while (true) {
-        const batch = await MacChainProduct.filter({ product_type: "Sprocket" }, page, 200);
-        all = all.concat(batch);
-        if (batch.length < 200) break;
-        page++;
-      }
+      let all = [];
+      try { all = await MacChainProduct.list(); } catch(e) { all = []; }
+      all = all.filter(r => r.product_type === "Sprocket");
       const m = {};
       for (const r of all) {
         if (r.slug) m[r.slug] = r;
@@ -2162,16 +2159,12 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const [cat, elev, uni] = await Promise.all([
-          CatalogProduct.filter({}, 1, 500), ElevatorBucket.filter({}, 1, 500), UniCatalog.filter({}, 1, 500),
+        const [cat, elev, uni, allied] = await Promise.all([
+          CatalogProduct.list(),
+          ElevatorBucket.list(),
+          UniCatalog.list(),
+          MacChainProduct.list().catch(() => []),
         ]);
-        let allied = [];
-        try {
-          // Fetch all pages — safe wrapper returns [] on error/empty
-          const safeFetch = async (page) => { try { const r = await MacChainProduct.filter({}, page, 500); return r || []; } catch { return []; } };
-          const [b1, b2, b3] = await Promise.all([safeFetch(1), safeFetch(2), safeFetch(3)]);
-          allied = [...b1, ...b2, ...b3];
-        } catch(e2) { console.error("MacChain load error:", e2); }
         setRawMacRecords(allied);
         setAllData([
           ...cat.map(normalizeCatalogProduct),
@@ -2243,7 +2236,7 @@ export default function Home() {
     if (typeKey === "__chain__") { setInChainMenu(true); setView("chains"); return; }
     if (EXTERNAL_ROUTES[typeKey]) { window.location.href = EXTERNAL_ROUTES[typeKey]; return; }
     if (typeKey === "Engineered Chain") { setSelectedType("Engineered Chain"); setSelectedEngineeredSub(null); setSelectedAnsiSub(null); setView("engineered_subs"); return; }
-    if (typeKey === "ANSI/BS Chain") { setSelectedType("ANSI/BS Chain"); setSelectedAnsiSub(null); setSelectedEngineeredSub(null); setSelectedWeldedSub(null); setView("ansi_subs"); return; }
+    if (typeKey === "ANSI/BS Chain") { setSelectedType("ANSI/BS Chain"); setSelectedAnsiSub(null); setSelectedEngineeredSub(null); setSelectedWeldedSub(null); setView("products"); return; }
     if (typeKey === "Welded Steel Chain") { setSelectedType("Welded Steel Chain"); setSelectedWeldedSub(null); setSelectedAnsiSub(null); setSelectedEngineeredSub(null); setView("welded_products"); return; }
     setSelectedType(typeKey); setSelectedBrand(null); setSelectedAnsiSub(null); setSelectedWeldedSub(null); setView(BRAND_GATED.has(typeKey) ? "brands" : "products");
   }
