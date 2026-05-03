@@ -1,0 +1,48 @@
+{
+  "name": "Document",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the document"
+    },
+    "content": {
+      "type": "string",
+      "description": "Extracted text content of the document"
+    },
+    "file_url": {
+      "type": "string",
+      "description": "URL of the uploaded file"
+    },
+    "file_name": {
+      "type": "string",
+      "description": "Original file name"
+    },
+    "file_type": {
+      "type": "string",
+      "description": "MIME type or file extension"
+    },
+    "project": {
+      "type": "string",
+      "description": "Project or category this document belongs to"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for categorization"
+    },
+    "summary": {
+      "type": "string",
+      "description": "AI-generated summary of the document"
+    },
+    "size_bytes": {
+      "type": "number",
+      "description": "File size in bytes"
+    }
+  },
+  "required": [
+    "title"
+  ]
+}
