@@ -6199,83 +6199,9 @@ function RollerConfigView({ onBack, onGoRFQ }) {
 }
 
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// ── RFQ CART VIEW ─────────────────────────────────────────────────────────────
-// ═══════════════════════════════════════════════════════════════════════════════
-const LOGO_URL = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png";
-const UNIT_OPTIONS = ["Feet", "Meters", "Pieces", "Sets", "Rolls", "Inches", "Yards", "Each"];
+import RFQCartView from "@/components/RFQCartView";
 
-// getRFQCart/saveRFQCart defined above
-
-// ── Small components ──────────────────────────────────────────────────────────
-function Label({ children, required }) {
-  return (
-    <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 6 }}>
-      {children}{required && <span style={{ color: "#ef4444", marginLeft: 2 }}>*</span>}
-    </div>);
-
-}
-
-function FieldInput({ value, onChange, placeholder, type = "text", required }) {
-  const [focused, setFocused] = useState(false);
-  return (
-    <input type={type} value={value} onChange={onChange} placeholder={placeholder} required={required}
-    onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
-    style={{ width: "100%", boxSizing: "border-box", padding: "12px 14px", borderRadius: 8,
-      border: "1.5px solid " + (focused ? C.accent : C.border), fontSize: 15, color: C.text,
-      outline: "none", background: "#fff", WebkitAppearance: "none" }} />);
-
-}
-
-function StepBar({ step }) {
-  const steps = ["Cart", "Details", "Submit"];
-  return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 28 }}>
-      {steps.map((label, i) => {
-        const active = i === step,done = i < step;
-        return (
-          <div key={i} style={{ display: "flex", alignItems: "center" }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-              <div style={{ width: 34, height: 34, borderRadius: "50%", background: done ? "#16a34a" : active ? NAVY : "#e2e8f0", color: done || active ? "#fff" : "#94a3b8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800 }}>
-                {done ? "✓" : i + 1}
-              </div>
-              <div style={{ fontSize: 11, fontWeight: active ? 700 : 500, color: active ? NAVY : done ? "#16a34a" : "#94a3b8" }}>{label}</div>
-            </div>
-            {i < steps.length - 1 && <div style={{ width: 56, height: 2, background: done ? "#16a34a" : "#e2e8f0", margin: "0 4px", marginBottom: 18 }} />}
-          </div>);
-
-      })}
-    </div>);
-
-}
-
-// ── Normalize all catalog sources to a unified shape ─────────────────────────
-function normalizeForSearch(records) {
-  const out = [];
-  for (const r of records) {
-    if (r._source) {out.push(r);continue;} // already normalized
-    // CatalogProduct (Intralox belts)
-    if (r.series && r.pitch_in !== undefined) {
-      out.push({ id: r.id, _source: "catalogproduct", series: r.series, type: "Modular Belt", style: r.style || "", category: r.category || "", image_url: r.image_url || "", materials: r.materials || "" });
-    }
-    // ElevatorBucket
-    else if (r.bucket_sizes !== undefined) {
-      out.push({ id: r.id, _source: "elevbucket", series: r.series || r.style || "", type: "Elevator Bucket", style: r.style || "", category: r.profile || "", image_url: r.image_url || "", materials: r.material || "" });
-    }
-    // UniCatalog
-    else if (r.product_type !== undefined && r.series !== undefined) {
-      out.push({ id: r.id, _source: "unicatalog", series: r.series || r.model_code || "", type: r.product_type || "", style: r.style || "", category: r.application || "", image_url: r.image_url || "", materials: r.materials || "" });
-    }
-    // MacChainProduct
-    else if (r.part_number !== undefined) {
-      out.push({ id: r.id, _source: "mac", series: r.part_number, type: r.product_type || r.category || "Chain", style: r.subcategory || "", category: r.category || "", image_url: r.product_image || "", materials: "" });
-    }
-  }
-  return out;
-}
-
-// ── Inline product search panel ───────────────────────────────────────────────
-function AddProductPanel({ cartItems, onAdd, onClose }) {
+function __placeholder_START_DELETE() {
   const [query, setQuery] = useState("");
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
