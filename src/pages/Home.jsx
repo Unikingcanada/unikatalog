@@ -6972,18 +6972,30 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    async function fetchAll(entity) {
+      let all = [], skip = 0;
+      while (true) {
+        const batch = await entity.list({ limit: 500, skip });
+        if (!batch || !batch.length) break;
+        all = [...all, ...batch];
+        if (batch.length < 500) break;
+        skip += batch.length;
+      }
+      return all;
+    }
     async function load() {
       try {
-        // Use backend function (service role) so data loads for ALL users — authenticated or not
-        const res = await fetch("/api/fn/getCatalogData", { method: "GET" });
-        if (!res.ok) throw new Error(`getCatalogData returned ${res.status}`);
-        const { catalogProducts: cat, elevatorBuckets: elev, uniCatalog: uni, macChainProducts: allied } = await res.json();
+        const [cat, elev, uni, allied] = await Promise.all([
+          fetchAll(CatalogProduct),
+          fetchAll(ElevatorBucket),
+          fetchAll(UniCatalog),
+          fetchAll(MacChainProduct),
+        ]);
         setRawMacRecords(allied || []);
         setAllData([
           ...(cat || []).map(normalizeCatalogProduct),
           ...(elev || []).map(normalizeElevatorBucket),
           ...(uni || []).map(normalizeUniCatalog),
-          // Donghua hidden from UI (data preserved in DB)
           ...(allied || []).map(normalizeAllied),
         ]);
       } catch (e) { console.error("Catalog load error:", e); }

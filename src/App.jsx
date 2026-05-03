@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home';
-import ElevatorBuckets from './pages/ElevatorBuckets';
+import ForgedChainConfigurator from './pages/ForgedChainConfigurator';
 import ForgedChain from './pages/ForgedChain';
 import RollerConfigurator from './pages/RollerConfigurator';
 import RFQCart from './pages/RFQCart';
+import ElevatorBuckets from './pages/ElevatorBuckets';
 import Catalog from './pages/Catalog';
-import ForgedChainConfigurator from './pages/ForgedChainConfigurator';
 
 function App() {
   return (
@@ -13,12 +13,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/Home" replace />} />
         <Route path="/Home" element={<Home />} />
-        <Route path="/ElevatorBuckets" element={<ElevatorBuckets />} />
+        <Route path="/ForgedChainConfigurator" element={<ForgedChainConfigurator />} />
         <Route path="/ForgedChain" element={<ForgedChain />} />
         <Route path="/RollerConfigurator" element={<RollerConfigurator />} />
         <Route path="/RFQCart" element={<RFQCart />} />
+        <Route path="/ElevatorBuckets" element={<ElevatorBuckets />} />
         <Route path="/Catalog" element={<Catalog />} />
-        <Route path="/ForgedChainConfigurator" element={<ForgedChainConfigurator />} />
       </Routes>
     </BrowserRouter>
   )
