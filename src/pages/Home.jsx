@@ -6316,18 +6316,14 @@ export default function Home() {
     }
     async function load() {
       try {
-        const [cat, elev, uni, allied] = await Promise.all([
-        fetchAll(CatalogProduct),
-        fetchAll(ElevatorBucket),
-        fetchAll(UniCatalog),
-        fetchAll(MacChainProduct)]
-        );
+        const [cat, elev, uni, allied, donghua] = await Promise.all([fetchAll(CatalogProduct), fetchAll(ElevatorBucket), fetchAll(UniCatalog), fetchAll(MacChainProduct), fetchAll(DonghuaChain)]);
         setRawMacRecords(allied || []);
         setAllData([
         ...(cat || []).map(normalizeCatalogProduct),
         ...(elev || []).map(normalizeElevatorBucket),
         ...(uni || []).map(normalizeUniCatalog),
-        ...(allied || []).map(normalizeAllied)]
+        ...(allied || []).map(normalizeAllied),
+        ...(donghua || []).map(normalizeDonghuaChain)]
         );
       } catch (e) {console.error("Catalog load error:", e);} finally
       {setLoading(false);}
