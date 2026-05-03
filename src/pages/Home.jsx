@@ -1821,9 +1821,11 @@ function WeldedSeriesView({ rawMacRecords: _unused }) {
   useEffect(() => {
     async function fetchWelded() {
       try {
-        const all = await MacChainProduct.list();
-        const chains = all.filter(r => r.category === "Welded Steel Chain");
-        setRawMacRecords(chains || []);
+        const res = await fetch("/api/fn/getCatalogData", { method: "GET" });
+        if (!res.ok) throw new Error(`getCatalogData returned ${res.status}`);
+        const { macChainProducts } = await res.json();
+        const chains = (macChainProducts || []).filter(r => r.category === "Welded Steel Chain");
+        setRawMacRecords(chains);
       } catch(e) {
         console.error("WeldedSeriesView fetch error:", e);
         setRawMacRecords([]);
@@ -1837,8 +1839,11 @@ function WeldedSeriesView({ rawMacRecords: _unused }) {
     setSprocketsLoaded(true); // prevent double-fetch
     try {
       let all = [];
-      try { all = await MacChainProduct.list(); } catch(e) { all = []; }
-      all = all.filter(r => r.product_type === "Sprocket");
+      try {
+        const res = await fetch("/api/fn/getCatalogData", { method: "GET" });
+        const { macChainProducts } = await res.json();
+        all = (macChainProducts || []).filter(r => r.product_type === "Sprocket");
+      } catch(e) { all = []; }
       const m = {};
       for (const r of all) {
         if (r.slug) m[r.slug] = r;
@@ -2159,19 +2164,17 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const [cat, elev, uni, allied] = await Promise.all([
-          CatalogProduct.list(),
-          ElevatorBucket.list(),
-          UniCatalog.list(),
-          MacChainProduct.list().catch(() => []),
-        ]);
-        setRawMacRecords(allied);
+        // Use backend function (service role) so data loads for ALL users — authenticated or not
+        const res = await fetch("/api/fn/getCatalogData", { method: "GET" });
+        if (!res.ok) throw new Error(`getCatalogData returned ${res.status}`);
+        const { catalogProducts: cat, elevatorBuckets: elev, uniCatalog: uni, macChainProducts: allied } = await res.json();
+        setRawMacRecords(allied || []);
         setAllData([
-          ...cat.map(normalizeCatalogProduct),
-          ...elev.map(normalizeElevatorBucket),
-          ...uni.map(normalizeUniCatalog),
+          ...(cat || []).map(normalizeCatalogProduct),
+          ...(elev || []).map(normalizeElevatorBucket),
+          ...(uni || []).map(normalizeUniCatalog),
           // Donghua hidden from UI (data preserved in DB)
-          ...allied.map(normalizeAllied),
+          ...(allied || []).map(normalizeAllied),
         ]);
       } catch (e) { console.error("Catalog load error:", e); }
       finally { setLoading(false); }
