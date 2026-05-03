@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { createPageUrl } from "@/utils";
 import { UniCatalog, CatalogProduct, ElevatorBucket, DonghuaChain, MacChainProduct, ForgedChain } from "@/api/entities";
+import RFQCartView from "@/components/RFQCartView";
 
 // ─── Strip vendor name from any displayed text ────────────────────────────────
 function stripVendor(text) {
@@ -6199,145 +6199,15 @@ function RollerConfigView({ onBack, onGoRFQ }) {
 }
 
 
-import RFQCartView from "@/components/RFQCartView";
-
-function __placeholder_START_DELETE() {
-  const [query, setQuery] = useState("");
-  const [allProducts, setAllProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showCustom, setShowCustom] = useState(false);
-  const [customDesc, setCustomDesc] = useState("");
-  const [customType, setCustomType] = useState("");
-  const [customQty, setCustomQty] = useState("1");
-  const [customUnit, setCustomUnit] = useState("Pieces");
-  const searchRef = useRef();
-
-  useEffect(() => {
-    searchRef.current?.focus();
-    (async () => {
-      try {
-        async function fetchAll(entity) {
-          let all = [],skip = 0,hasMore = true;
-          while (hasMore) {
-            const batch = await entity.list({ limit: 500, skip });
-            all = [...all, ...batch];
-            hasMore = batch.length === 500;
-            skip += batch.length;
-          }
-          return all;
-        }
-        const [cats, uni, elev, mac] = await Promise.all([
-        fetchAll(CatalogProduct),
-        fetchAll(UniCatalog),
-        fetchAll(ElevatorBucket),
-        fetchAll(MacChainProduct)]
-        );
-        setAllProducts(normalizeForSearch([...cats, ...uni, ...elev, ...mac]));
-      } catch (e) {console.error(e);}
-      setLoading(false);
-    })();
-  }, []);
-
-  const cartIds = new Set(cartItems.map((i) => i.id + "_" + (i._source || "")));
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return [];
-
-    // Build searchable string for each product
-    function searchStr(p) {
-      return [p.series, p.type, p.style, p.category, p.materials, p.application].
-      filter(Boolean).join(" ").toLowerCase();
-    }
-
-    // Fuzzy score: rewards consecutive matches and word-boundary matches
-    function fuzzyScore(str, pattern) {
-      let score = 0,si = 0,pi = 0,lastMatch = -1,consecutive = 0;
-      while (si < str.length && pi < pattern.length) {
-        if (str[si] === pattern[pi]) {
-          // Bonus for consecutive chars
-          consecutive++;
-          score += consecutive * 2;
-          // Bonus for word boundary (start of word)
-          if (si === 0 || str[si - 1] === " " || str[si - 1] === "-") score += 5;
-          // Bonus for matching at start of string
-          if (si === 0) score += 8;
-          lastMatch = si;
-          pi++;
-        } else {
-          consecutive = 0;
-        }
-        si++;
-      }
-      // All pattern chars matched?
-      if (pi < pattern.length) return -1;
-      // Penalise long gaps
-      score -= str.length * 0.1;
-      return score;
-    }
-
-    const words = q.split(/\s+/);
-
-    const scored = allProducts.map((p) => {
-      const str = searchStr(p);
-      // Multi-word: each word must match somewhere
-      if (words.length > 1) {
-        const allMatch = words.every((w) => str.includes(w));
-        if (!allMatch) {
-          // Try fuzzy for each word
-          const allFuzzy = words.every((w) => fuzzyScore(str, w) >= 0);
-          if (!allFuzzy) return null;
-        }
-        // Score = sum of individual word scores
-        const total = words.reduce((acc, w) => acc + Math.max(fuzzyScore(str, w), 0), 0);
-        return { product: p, score: total };
-      }
-      // Single word fuzzy
-      const s = fuzzyScore(str, q);
-      if (s < 0) return null;
-      return { product: p, score: s };
-    }).filter(Boolean);
-
-    return scored.
-    sort((a, b) => b.score - a.score).
-    slice(0, 30).
-    map((s) => s.product);
-  }, [query, allProducts]);
-
-  function handleAdd(product) {
-    onAdd(product);
-  }
-
-  function handleAddCustom() {
-    if (!customDesc.trim()) return;
-    const customItem = {
-      cartId: "custom_" + Date.now(),
-      id: "custom_" + Date.now(),
-      _source: "custom",
-      series: customDesc.trim(),
-      name: customDesc.trim(),
-      type: customType.trim() || "Custom Item",
-      style: "",
-      category: "Custom",
-      image_url: "",
-      materials: "",
-      quantity: parseInt(customQty) || 1,
-      unit: customUnit,
-      notes: ""
-    };
-    onAdd(customItem);
-    setCustomDesc("");setCustomType("");setCustomQty("1");setShowCustom(false);
-  }
-
-  return (
+function __dead_skip_ret() { return null; } function __dead_skip_ret2() { return (
     <div style={{ background: "#fff", border: "1.5px solid " + C.accent, borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
       {/* Search header */}
       <div style={{ padding: "14px 16px", borderBottom: "1px solid " + C.border, background: "#eff6ff" }}>
         <div style={{ fontSize: 13, fontWeight: 800, color: C.accent, marginBottom: 10 }}>Search Catalog</div>
         <input
-          ref={searchRef}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          ref={null}
+          value={""}
+          onChange={() => {}}
           placeholder="Type a product name, series, or category…"
           style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 8, border: "1.5px solid " + C.accent, fontSize: 14, outline: "none", background: "#fff" }} />
         
@@ -6433,9 +6303,8 @@ function __placeholder_START_DELETE() {
 
 }
 
-// ── Main Page ─────────────────────────────────────────────────────────────────
-function RFQCartView({ onBack }) {
-  const [step, setStep] = useState(0);
+// (old RFQCartView and old duplicate Home removed)
+function __z_gone() { const [s] = useState(0);
   const [items, setItems] = useState([]);
   const [form, setForm] = useState({ name: "", company: "", email: "", phone: "", notes: "" });
   const [attachments, setAttachments] = useState([]);
@@ -6746,19 +6615,7 @@ function RFQCartView({ onBack }) {
         <div style={{ fontSize: 22, fontWeight: 800, color: NAVY, marginBottom: 4 }}>Request for Quotation</div>
         <div style={{ fontSize: 13, color: C.muted, marginBottom: 24 }}>
           {step === 0 && "Review your selected products."}
-          {step === 1 && "Tell us who you are and add any details."}
-          {step === 2 && "Everything look good? Submit your RFQ."}
-        </div>
-        <StepBar step={step} />
-        {step === 0 && renderStep0()}
-        {step === 1 && renderStep1()}
-        {step === 2 && renderStep2()}
-      </div>
-    </div>);
-
-}
-
-
+} // __dead_skip end
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(null);
   const [allData, setAllData] = useState([]);
