@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { createPageUrl } from "@/utils";
 import { ElevatorBucket } from "@/api/entities";
 
 const NAVY = "#1a3a5c";
@@ -385,6 +386,9 @@ export default function ElevatorBuckets() {
             <UniKingLogo size={22} />
             <div style={{ fontSize: 8, color: "rgba(255,255,255,0.4)", letterSpacing: 2, textTransform: "uppercase", marginTop: 1 }}>PRODUCT CATALOG</div>
           </div>
+          <a href={createPageUrl("Home")} style={{ display: "flex", alignItems: "center", gap: 5, color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: 11, fontWeight: 600, padding: "5px 10px", borderRadius: 6, border: "1px solid rgba(255,255,255,0.15)", background: "rgba(255,255,255,0.07)", whiteSpace: "nowrap" }}>
+            ← Catalog
+          </a>
           <div style={{ width: 1, height: 32, background: "rgba(255,255,255,0.15)", flexShrink: 0 }} />
           <div>
             <div style={{ fontSize: 13, fontWeight: 800, color: "#fff" }}>Buckets, Belts & Accessories</div>
