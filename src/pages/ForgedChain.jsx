@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPageUrl } from "@/utils";
 import { ForgedChain } from "@/api/entities";
 
 const C = {
@@ -1300,10 +1301,10 @@ export default function ForgedChainConfigurator() {
       {/* Header */}
       <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, ${C.navyMid} 100%)`, padding: "20px 32px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <button onClick={() => window.history.back()}
+          <a href={createPageUrl("Home")}
             style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "white", padding: "6px 14px", borderRadius: 6, cursor: "pointer", fontSize: 13 }}>
             ← Back
-          </button>
+          </a>
           <div>
             <div style={{ color: "white", fontSize: 22, fontWeight: 800 }}>Drop Forged Chain</div>
             <div style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, marginTop: 2 }}>4B Components · For Drag Conveyors</div>
