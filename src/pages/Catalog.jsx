@@ -1,5 +1,6 @@
 // v6 — Bucket UX: style card → style modal (material switcher) → size grid → size spec + SVG → RFQ
 import { useState, useEffect, useMemo } from "react";
+import { createPageUrl } from "@/utils";
 import { UniCatalog, CatalogProduct, ElevatorBucket, MacChainProduct } from "@/api/entities";
 
 const NAVY = "#1a3a5c";
@@ -986,7 +987,7 @@ export default function Catalog() {
       <div style={{ background: NAVY, padding: "0 24px", display: "flex", alignItems: "center",
         justifyContent: "space-between", height: 56, boxShadow: "0 2px 8px rgba(0,0,0,.18)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <a href="/" style={{ color: "rgba(255,255,255,.5)", textDecoration: "none", fontSize: 12 }}>Home</a>
+          <a href={createPageUrl("Home")} style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 14px", borderRadius: 8, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontWeight: 700, fontSize: 13, textDecoration: "none" }}>← Home</a>
           <span style={{ color: "rgba(255,255,255,.3)", fontSize: 12 }}>/</span>
           <span style={{ color: "#fff", fontSize: 13, fontWeight: 700 }}>Product Catalog</span>
         </div>

@@ -27,7 +27,7 @@ const EXTERNAL_ROUTES = {
 const CHAIN_SUBTYPE_KEYS = new Set([
   "ANSI/BS Chain", "Engineered Chain", "Cast Chain",
   "Welded Steel Chain", "Forged Chain", "Overhead Chain", "Sharptop Chain",
-  "Kiln Chain", "Thermoforming Chain", "Conveyor Chain",
+  "Kiln Chain", "Thermoforming Chain", "Conveyor Chain", "Table Top Chain",
   "Pintle Chain", "Long Link Chain", "Special Application Chain",
 ]);
 
@@ -47,6 +47,8 @@ const PRODUCT_TYPES = [
   { key: "Sharptop Chain", label: "Sharp Top Chain", description: "Sharp top and spike top chains for agricultural and forestry applications", filters: ["style", "materials"] },
   { key: "Kiln Chain", label: "Kiln Chain", description: "High-temperature kiln and dryer chains for cement and mineral processing", filters: ["style", "materials"] },
   { key: "Thermoforming Chain", label: "Thermoforming Chain", description: "Precision chains for plastic thermoforming and packaging machinery", filters: ["style", "materials"] },
+  { key: "Conveyor Chain", label: "Conveyor Chain", description: "Hollow pin, roller top and attachment chains for general conveying and assembly line applications", filters: ["style", "materials"] },
+  { key: "Table Top Chain", label: "Table Top Chain", description: "Straight-running and side-flexing table top chains in plastic and stainless steel for packaging and bottling lines", filters: ["style", "materials"] },
   { key: "Conveyor Rollers", label: "Conveyor Rollers", description: "Standard, lagging, motorized drive and specialty conveyor rollers", filters: ["style", "duty"] },
   { key: "Monitoring System", label: "4B Electronics & Monitoring", description: "Bucket elevator and conveyor safety monitoring systems and sensors", filters: ["style"] },
   { key: "Magnetic Conveyor", label: "Magnetic Conveyor", description: "Magnetic conveyor systems for ferrous material handling", filters: ["style"] },
@@ -173,9 +175,9 @@ function normalizeElevatorBucket(r) {
   };
 }
 
-const UNI_TYPE_REMAP = { "Modular Plastic Belt": "Modular Belt" };
+const UNI_TYPE_REMAP = { "Modular Plastic Belt": "Modular Belt", "Conveyor Roller": "Conveyor Rollers" };
 
-const CHAIN_TYPE_KEYS = new Set(["ANSI/BS Chain","Conveyor Chain","Engineered Chain","Cast Chain","Welded Steel Chain","Forged Chain","Overhead Chain","Sharptop Chain","Kiln Chain","Thermoforming Chain","Plastic Chain","Metal Chain"]);
+const CHAIN_TYPE_KEYS = new Set(["ANSI/BS Chain","Conveyor Chain","Table Top Chain","Engineered Chain","Cast Chain","Welded Steel Chain","Forged Chain","Overhead Chain","Sharptop Chain","Kiln Chain","Thermoforming Chain","Plastic Chain","Metal Chain"]);
 
 function normalizeUniCatalog(r) {
   const rawType = r.product_type || "General";
@@ -2194,7 +2196,7 @@ export default function Home() {
     }).filter(Boolean);
     return scored.sort((a, b) => b.score - a.score).slice(0, 40).map(s => s.p);
   }, [globalSearch, allData]);
-  const availableTypes = useMemo(() => PRODUCT_TYPES.filter(t => (typeCounts[t.key] || 0) > 0 || !!EXTERNAL_ROUTES[t.key]), [typeCounts]);
+  const availableTypes = useMemo(() => PRODUCT_TYPES, []);
   const typeProducts = useMemo(() => allData.filter(p => p.type === selectedType), [allData, selectedType]);
   const viewProducts = useMemo(() => {
     let prods = selectedBrand ? typeProducts.filter(p => p.brand === selectedBrand) : typeProducts;
