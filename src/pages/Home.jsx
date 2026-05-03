@@ -6199,17 +6199,9 @@ function RollerConfigView({ onBack, onGoRFQ }) {
 }
 
 
-function __dead_skip_ret() { return null; } function __dead_skip_ret2() { return (
-    <div style={{ background: "#fff", border: "1.5px solid " + C.accent, borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
-      {/* Search header */}
-      <div style={{ padding: "14px 16px", borderBottom: "1px solid " + C.border, background: "#eff6ff" }}>
-        <div style={{ fontSize: 13, fontWeight: 800, color: C.accent, marginBottom: 10 }}>Search Catalog</div>
-        <input
-          ref={null}
-          value={""}
-          onChange={() => {}}
-          placeholder="Type a product name, series, or category…"
-          style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 8, border: "1.5px solid " + C.accent, fontSize: 14, outline: "none", background: "#fff" }} />
+function __dead_skip_ret() { return null; } function __dead_skip_ret2() { return null;
+  // dead code below removed
+  /*
         
         {loading && <div style={{ fontSize: 12, color: C.muted, marginTop: 8 }}>Loading catalog…</div>}
         {!loading && query.trim() && filtered.length === 0 &&
@@ -6303,102 +6295,12 @@ function __dead_skip_ret() { return null; } function __dead_skip_ret2() { return
 
 }
 
-// (old RFQCartView and old duplicate Home removed)
-function __z_gone() { const [s] = useState(0);
-  const [items, setItems] = useState([]);
-  const [form, setForm] = useState({ name: "", company: "", email: "", phone: "", notes: "" });
-  const [attachments, setAttachments] = useState([]);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState("");
-  const [removeAnim, setRemoveAnim] = useState(null);
-  const [dragOver, setDragOver] = useState(false);
-  const [showAddPanel, setShowAddPanel] = useState(false);
-  const fileInputRef = useRef();
-
-  useEffect(() => {
-    try {
-      const stored = JSON.parse(localStorage.getItem("uniking_rfq_cart") || "[]");
-      setItems(stored);
-    } catch {setItems([]);}
-  }, []);
-
-  useEffect(() => {window.scrollTo({ top: 0, behavior: "smooth" });}, [step]);
-
-  const saveItems = (newItems) => {
-    setItems(newItems);
-    saveRFQCart(newItems);
-  };
-
-  const updateItem = (idx, field, val) => saveItems(items.map((item, i) => i === idx ? { ...item, [field]: val } : item));
-
-  const removeItem = (idx) => {
-    setRemoveAnim(idx);
-    setTimeout(() => {saveItems(items.filter((_, i) => i !== idx));setRemoveAnim(null);}, 250);
-  };
-
-  function handleAddProduct(product) {
-    const already = items.find((i) => i.id === product.id && i._source === product._source);
-    if (already) return;
-    const newItem = product._source === "custom" ? product : {
-      cartId: product.id + "_" + Date.now(),
-      id: product.id, _source: product._source,
-      series: product.series, name: product.series,
-      type: product.type, style: product.style || "",
-      category: product.category || "", image_url: product.image_url || "",
-      materials: product.materials || "",
-      quantity: 1, unit: "Feet", notes: ""
-    };
-    saveItems([...items, newItem]);
-  }
-
-  const handleFiles = (files) => {
-    const newFiles = Array.from(files).filter((f) => f.size <= 10 * 1024 * 1024);
-    setAttachments((prev) => [...prev, ...newFiles]);
-  };
-  const handleDrop = (e) => {e.preventDefault();setDragOver(false);handleFiles(e.dataTransfer.files);};
-
-  const handleSubmit = async () => {
-    setError("");setSubmitting(true);
-    try {
-      const attachmentData = await Promise.all(
-        attachments.map((file) => new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve({ name: file.name, type: file.type, size: file.size, data: reader.result });
-          reader.readAsDataURL(file);
-        }))
-      );
-      const res = await fetch("/api/fn/sendRFQEmail", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ customer: form, items, attachments: attachmentData })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to send");
-      setSubmitted(true);saveItems([]);
-    } catch {setError("Something went wrong. Please try again or email rfq@unikingcanada.com directly.");} finally
-    {setSubmitting(false);}
-  };
-
-  // ── Success ────────────────────────────────────────────────────────────────
-  if (submitted) {
-    return (
-      <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: 24, fontFamily: "Arial,sans-serif" }}>
-        <div style={{ background: "#fff", borderRadius: 16, padding: "48px 32px", maxWidth: 440, width: "100%", textAlign: "center" }}>
-          <div style={{ width: 68, height: 68, background: "#dcfce7", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", fontSize: 30 }}>✓</div>
-          <div style={{ fontSize: 22, fontWeight: 800, color: NAVY, marginBottom: 10 }}>RFQ Submitted!</div>
-          <div style={{ fontSize: 14, color: C.muted, lineHeight: 1.75, marginBottom: 28 }}>
-            Your request has been sent to our team.<br />A confirmation was sent to <strong>{form.email}</strong>.
-          </div>
-          <a href="#" onClick={(e) => {e.preventDefault();onBack();}} style={{ display: "inline-block", background: NAVY, color: "#fff", padding: "13px 32px", borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Back to Catalog</a>
-        </div>
-      </div>);
-
-  }
-
-  // ── Step 0: Cart ───────────────────────────────────────────────────────────
-  const renderStep0 = () =>
+  */ }
+// dead code removed
+function __z_gone() { return null; }
+if (false) { const renderStep0 = () =>
   <div>
-      {items.length === 0 && !showAddPanel ?
+      {[].length === 0 && false ?
     <div style={{ textAlign: "center", padding: "48px 16px" }}>
           <div style={{ fontSize: 48, opacity: 0.2, marginBottom: 14 }}>📋</div>
           <div style={{ fontSize: 18, fontWeight: 800, color: NAVY, marginBottom: 8 }}>Your cart is empty</div>
@@ -6602,19 +6504,7 @@ function __z_gone() { const [s] = useState(0);
     </div>;
 
 
-  // ── Shell ─────────────────────────────────────────────────────────────────
-  return (
-    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "Arial,sans-serif" }}>
-      <div style={{ background: NAVY, height: 56, display: "flex", alignItems: "center", padding: "0 20px", justifyContent: "space-between" }}>
-        <a href="#" onClick={(e) => {e.preventDefault();onBack();}} style={{ color: "#93c5fd", fontSize: 13, fontWeight: 600, textDecoration: "none" }}>← Back to Catalog</a>
-        <img src={LOGO_URL} style={{ maxHeight: 26, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.9 }} alt="Uniking Canada" />
-        <span style={{ width: 80 }} />
-      </div>
-
-      <div style={{ maxWidth: 600, margin: "0 auto", padding: "28px 16px 80px" }}>
-        <div style={{ fontSize: 22, fontWeight: 800, color: NAVY, marginBottom: 4 }}>Request for Quotation</div>
-        <div style={{ fontSize: 13, color: C.muted, marginBottom: 24 }}>
-          {step === 0 && "Review your selected products."}
+  // dead code removed
 } // __dead_skip end
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(null);
