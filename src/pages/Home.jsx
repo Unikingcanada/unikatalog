@@ -14,8 +14,8 @@ function stripVendor(text) {
 }
 
 
-const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics", "Plastic Chain", "Metal Chain"]);
-const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket", "Plastic Chain", "Metal Chain"]);
+const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics"]);
+const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket"]);
 const EXTERNAL_ROUTES = {
   "Elevator Bucket": "/ElevatorBuckets",
   "Conveyor Rollers": "/RollerConfigurator",
@@ -2056,19 +2056,48 @@ function Breadcrumb({ items, onNav }) {
 export default function Home() {
   const [allData, setAllData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState("home");
-  const [selectedType, setSelectedType] = useState(null);
-  const [selectedBrand, setSelectedBrand] = useState(null);
-  const [inChainMenu, setInChainMenu] = useState(false);
-  const [selectedEngineeredSub, setSelectedEngineeredSub] = useState(null);
-  const [selectedAnsiSub, setSelectedAnsiSub] = useState(null);
-  const [selectedWeldedSub, setSelectedWeldedSub] = useState(null);
+
+  // Restore navigation state from sessionStorage (survives pull-to-refresh)
+  function getNav(key, def) {
+    try { const v = sessionStorage.getItem("unk_nav_" + key); return v !== null ? JSON.parse(v) : def; } catch { return def; }
+  }
+  function setNav(key, val) {
+    try { sessionStorage.setItem("unk_nav_" + key, JSON.stringify(val)); } catch {}
+  }
+
+  const [view, _setView] = useState(() => getNav("view", "home"));
+  const [selectedType, _setSelectedType] = useState(() => getNav("selectedType", null));
+  const [selectedBrand, _setSelectedBrand] = useState(() => getNav("selectedBrand", null));
+  const [inChainMenu, _setInChainMenu] = useState(() => getNav("inChainMenu", false));
+  const [selectedEngineeredSub, _setSelectedEngineeredSub] = useState(() => getNav("selectedEngineeredSub", null));
+  const [selectedAnsiSub, _setSelectedAnsiSub] = useState(() => getNav("selectedAnsiSub", null));
+  const [selectedWeldedSub, _setSelectedWeldedSub] = useState(() => getNav("selectedWeldedSub", null));
+
+  function setView(v) { _setView(v); setNav("view", v); }
+  function setSelectedType(v) { _setSelectedType(v); setNav("selectedType", v); }
+  function setSelectedBrand(v) { _setSelectedBrand(v); setNav("selectedBrand", v); }
+  function setInChainMenu(v) { _setInChainMenu(v); setNav("inChainMenu", v); }
+  function setSelectedEngineeredSub(v) { _setSelectedEngineeredSub(v); setNav("selectedEngineeredSub", v); }
+  function setSelectedAnsiSub(v) { _setSelectedAnsiSub(v); setNav("selectedAnsiSub", v); }
+  function setSelectedWeldedSub(v) { _setSelectedWeldedSub(v); setNav("selectedWeldedSub", v); }
+
   const [rawMacRecords, setRawMacRecords] = useState([]);
   const [globalSearch, setGlobalSearch] = useState("");
   const [globalSelected, setGlobalSelected] = useState(null);
 
 
   // ── PWA Override: replace platform manifest with Uniking branding ───────────
+  // ── Disable pull-to-refresh & prevent swipe-to-go-back resetting state ─────
+  useEffect(() => {
+    // Prevent browser pull-to-refresh on mobile
+    document.body.style.overscrollBehaviorY = "contain";
+    document.documentElement.style.overscrollBehaviorY = "contain";
+    return () => {
+      document.body.style.overscrollBehaviorY = "";
+      document.documentElement.style.overscrollBehaviorY = "";
+    };
+  }, []);
+
   useEffect(() => {
     const ICON_192 = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/dd1986c29_pwa_icon_192.png";
     const ICON_512 = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/cb99cdae9_pwa_icon_512_final.png";
@@ -2253,7 +2282,7 @@ export default function Home() {
   if (selectedBrand) breadcrumbs.push(selectedBrand);
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column" }}>
+    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column", overscrollBehavior: "contain" }}>
       <TopBar />
       <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "24px clamp(12px,4vw,40px)", boxSizing: "border-box" }}>
         {view !== "home" ? <Breadcrumb items={breadcrumbs} onNav={navTo} /> : null}
