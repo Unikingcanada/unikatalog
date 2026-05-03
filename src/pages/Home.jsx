@@ -2025,7 +2025,7 @@ function TopBar({ onGoRFQ }) {
         <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 13 }} className=" hidden">Product Catalog</span>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <a href="#" onClick={(e) => {e.preventDefault();onGoRFQ && onGoRFQ();}} style={{ display: "flex", alignItems: "center", gap: 7, textDecoration: "none", background: cartCount > 0 ? "#2563eb" : "rgba(255,255,255,0.1)", color: "#fff", padding: "7px 14px", borderRadius: 7, fontSize: 12, fontWeight: 700, border: "1px solid " + (cartCount > 0 ? "#3b82f6" : "rgba(255,255,255,0.2)"), transition: "background 0.2s" }} className="rounded-none hidden">
+        <a href="#" onClick={(e) => {e.preventDefault();onGoRFQ && onGoRFQ();}} style={{ display: "flex", alignItems: "center", gap: 7, textDecoration: "none", background: cartCount > 0 ? "#2563eb" : "rgba(255,255,255,0.1)", color: "#fff", padding: "7px 14px", borderRadius: 7, fontSize: 12, fontWeight: 700, border: "1px solid " + (cartCount > 0 ? "#3b82f6" : "rgba(255,255,255,0.2)"), transition: "background 0.2s" }} className="rounded-none hidden hidden hidden">
           <span>📋</span>
           <span>RFQ Cart{cartCount > 0 ? ` (${cartCount})` : ""}</span>
         </a>
