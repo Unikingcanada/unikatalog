@@ -21,17 +21,6 @@ const BRANDS = [
     features: ["Straight-Running", "Radius", "Spiral", "Belt Support Tools", "24 Straight + 6 Radius + 2 Spiral Series"],
   },
   {
-    key: "movex",
-    name: "Movex",
-    tagline: "Plastic Modular Belts & Chains",
-    description: "Italian manufacturer of modular plastic belts and side-flexing conveyor chains for food, beverage, and general industry.",
-    logo: null,
-    accentColor: "#1565C0",
-    logoText: "MOVEX",
-    available: false,
-    features: ["Flat Top Belts", "Flush Grid Belts", "Side-Flexing Chains", "Food Processing"],
-  },
-  {
     key: "rexnord",
     name: "Rexnord",
     tagline: "Modular Conveyor Belts & Components",
