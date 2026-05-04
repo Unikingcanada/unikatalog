@@ -6,6 +6,7 @@
 
 import { useRef } from "react";
 import BeltSchematic from "./BeltSchematic";
+import { jsPDF } from "jspdf";
 
 const UNIKING_LOGO = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png";
 const INTRALOX_RED = "#E31837";
@@ -35,8 +36,54 @@ export default function UniKingTearSheet({ config, series, beltStyle, fields, be
     setTimeout(() => { win.focus(); win.print(); }, 600);
   }
 
-  function handleDownloadPDF() {
-    handlePrint();
+  async function handleDownloadPDF() {
+    const content = printRef.current;
+    if (!content) return;
+
+    // Use html2canvas + jsPDF to produce a real PDF download
+    try {
+      const { default: html2canvas } = await import("html2canvas");
+      const canvas = await html2canvas(content, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: "#ffffff",
+        logging: false,
+      });
+      const imgData = canvas.toDataURL("image/jpeg", 0.92);
+      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "letter" });
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const ratio = canvas.height / canvas.width;
+      const imgW = pageW;
+      const imgH = pageW * ratio;
+
+      let yPos = 0;
+      let remaining = imgH;
+      let srcY = 0;
+
+      while (remaining > 0) {
+        const sliceH = Math.min(remaining, pageH);
+        const sliceCanvas = document.createElement("canvas");
+        sliceCanvas.width = canvas.width;
+        sliceCanvas.height = (sliceH / imgH) * canvas.height;
+        const ctx = sliceCanvas.getContext("2d");
+        ctx.drawImage(canvas, 0, srcY, canvas.width, sliceCanvas.height, 0, 0, canvas.width, sliceCanvas.height);
+        const sliceData = sliceCanvas.toDataURL("image/jpeg", 0.92);
+        if (yPos > 0) pdf.addPage();
+        pdf.addImage(sliceData, "JPEG", 0, 0, imgW, sliceH);
+        srcY += sliceCanvas.height;
+        yPos += sliceH;
+        remaining -= sliceH;
+      }
+
+      const fileName = `Uniking-${(series?.name || "Belt").replace(/\s/g, "-")}-${(beltStyle?.label || "Config").replace(/\s/g, "-")}.pdf`;
+      pdf.save(fileName);
+    } catch (err) {
+      console.error("PDF generation failed:", err);
+      // Fallback: open print dialog
+      handlePrint();
+    }
   }
 
   const date = new Date().toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" });
@@ -58,11 +105,11 @@ export default function UniKingTearSheet({ config, series, beltStyle, fields, be
         <button onClick={handlePrint} style={{
           background: GOLD, color: NAVY, border: "none", borderRadius: 8,
           padding: "8px 18px", cursor: "pointer", fontSize: 13, fontWeight: 800,
-        }}>🖨 Print / Save PDF</button>
+        }}>🖨 Print</button>
         <button onClick={handleDownloadPDF} style={{
           background: "#1e40af", color: "#fff", border: "none", borderRadius: 8,
           padding: "8px 18px", cursor: "pointer", fontSize: 13, fontWeight: 700,
-        }}>⬇ Download</button>
+        }}>⬇ Download PDF</button>
         <button onClick={onClose} style={{
           background: "rgba(255,255,255,0.12)", color: "#fff", border: "1px solid rgba(255,255,255,0.25)",
           borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 13, fontWeight: 700,
