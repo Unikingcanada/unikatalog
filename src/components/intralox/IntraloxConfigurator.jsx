@@ -885,24 +885,32 @@ ${fields.map(([k, v]) => `      <tr><td>${k}</td><td>${v?.includes("To be confir
 
     function handlePrintTearSheet() {
       const html = generateTearSheetHTML();
-      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const w = window.open(url, "_blank");
-      // Revoke after delay to allow load
-      if (w) setTimeout(() => URL.revokeObjectURL(url), 30000);
+      // Write into a hidden iframe and trigger print — avoids popup blocker
+      const iframe = document.createElement("iframe");
+      iframe.style.cssText = "position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;";
+      document.body.appendChild(iframe);
+      iframe.contentDocument.open();
+      iframe.contentDocument.write(html);
+      iframe.contentDocument.close();
+      iframe.contentWindow.focus();
+      setTimeout(() => {
+        iframe.contentWindow.print();
+        setTimeout(() => document.body.removeChild(iframe), 2000);
+      }, 500);
     }
 
     function handleDownloadTearSheet() {
       const html = generateTearSheetHTML();
-      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
+      const fileName = `Intralox-${(seriesData?.name || "belt").replace(/\s/g, "-")}-${(styleData?.label || "config").replace(/\s/g, "-")}.html`;
+      // Use data URI to avoid popup blocker issues in iframes
+      const dataUri = "data:text/html;charset=utf-8," + encodeURIComponent(html);
       const a = document.createElement("a");
-      a.href = url;
-      a.download = `Intralox-${seriesData?.name?.replace(/\s/g, "-")}-${styleData?.label?.replace(/\s/g, "-") || "config"}.html`;
+      a.href = dataUri;
+      a.download = fileName;
+      a.style.display = "none";
       document.body.appendChild(a);
       a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      setTimeout(() => document.body.removeChild(a), 1000);
     }
 
     function handleAddRFQ() {
