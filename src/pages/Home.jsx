@@ -1003,7 +1003,7 @@ function ProductModal({ product, showBrand, onClose }) {
 
 // ─── Product Card ─────────────────────────────────────────────────────────────
 
-function ProductCard({ product, showBrand, onClick }) {
+function ProductCard({ product, showBrand, onClick, onToggleCompare, inCompare }) {
   const [hovered, setHovered] = useState(false);
   const [added, setAdded] = useState(() => getRFQCart().some((i) => i.id === product.id));
   const topSpecs = Object.entries(product.specs).
@@ -1049,19 +1049,16 @@ function ProductCard({ product, showBrand, onClick }) {
           </div> :
         null}
       </div>
-      <div style={{ borderTop: "1px solid " + C.bg, padding: "8px 15px", background: hovered ? "#f1f5f9" : C.card, transition: "background 0.13s", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span onClick={() => onClick(product)} style={{ fontSize: 11, fontWeight: 600, color: C.navyMid, cursor: "pointer" }}>View Specifications ›</span>
-        <button onClick={handleAddRFQ} style={{ padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: added ? "1px solid #16a34a" : "1px solid #2563eb", background: added ? "#f0fdf4" : "#eff6ff", color: added ? "#16a34a" : "#2563eb", whiteSpace: "nowrap", transition: "all 0.15s" }}>
-          {added ? "✓ In RFQ" : "+ Add to RFQ"}
+      <div style={{ borderTop: "1px solid " + C.bg, padding: "7px 12px", background: hovered ? "#f1f5f9" : C.card, transition: "background 0.13s", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 4 }}>
+        <span onClick={() => onClick(product)} style={{ fontSize: 11, fontWeight: 600, color: C.navyMid, cursor: "pointer", whiteSpace: "nowrap" }}>View ›</span>
+        {onToggleCompare && <button onClick={e=>{e.stopPropagation();onToggleCompare(product);}} style={{ padding: "3px 7px", borderRadius: 5, fontSize: 10, fontWeight: 700, cursor: "pointer", border: inCompare?"1px solid #7c3aed":"1px solid #cbd5e1", background: inCompare?"#ede9fe":"#f8fafc", color: inCompare?"#7c3aed":C.muted, whiteSpace: "nowrap" }}>{inCompare?"✓ Cmp":"Cmp"}</button>}
+        <button onClick={handleAddRFQ} style={{ padding: "4px 9px", borderRadius: 5, fontSize: 10, fontWeight: 700, cursor: "pointer", border: added?"1px solid #16a34a":"1px solid #2563eb", background: added?"#f0fdf4":"#eff6ff", color: added?"#16a34a":"#2563eb", whiteSpace: "nowrap", transition: "all 0.15s" }}>
+          {added ? "✓ RFQ" : "+ RFQ"}
         </button>
       </div>
     </div>);
-
 }
-
-
 // ─── Product List Row (list view) ────────────────────────────────────────────
-
 function ProductListRow({ product, showBrand, onClick }) {
   const [hovered, setHovered] = useState(false);
   const [added, setAdded] = useState(() => getRFQCart().some((i) => i.id === product.id));
@@ -1175,30 +1172,23 @@ function ViewToggle({ view, onChange }) {
 }
 
 // ─── Product List ─────────────────────────────────────────────────────────────
-
 function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacRecords }) {
   const [activeFilters, setActiveFilters] = useState({});
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
   const [viewMode, setViewMode] = useState("grid");
-
+  const [compareItems, setCompareItems] = useState([]);
+  const [showCompare, setShowCompare] = useState(false);
+  function toggleCompare(p) { setCompareItems(prev => { const ex = prev.find(x=>x.id===p.id); if(ex) return prev.filter(x=>x.id!==p.id); if(prev.length>=4) return prev; return [...prev,p]; }); }
   const filtered = useMemo(() => {
     let list = applyFilters(allProducts, activeFilters);
     const q = search.trim().toLowerCase();
     if (q) {
-      function searchStr(p) {
-        return [p.series, p.style, p.category, p.notes, p.materials, p.application, p.type].filter(Boolean).join(" ").toLowerCase();
-      }
+      function searchStr(p) { return [p.series, p.style, p.category, p.notes, p.materials, p.application, p.type].filter(Boolean).join(" ").toLowerCase(); }
       function fuzzyScore(str, pattern) {
         let score = 0,si = 0,pi = 0,consecutive = 0;
         while (si < str.length && pi < pattern.length) {
-          if (str[si] === pattern[pi]) {
-            consecutive++;
-            score += consecutive * 2;
-            if (si === 0 || str[si - 1] === " " || str[si - 1] === "-") score += 5;
-            if (si === 0) score += 8;
-            pi++;
-          } else {consecutive = 0;}
+          if (str[si] === pattern[pi]) { consecutive++; score += consecutive * 2; if (si === 0 || str[si-1]===" "||str[si-1]==="-") score+=5; if(si===0)score+=8; pi++; } else {consecutive=0;}
           si++;
         }
         if (pi < pattern.length) return -1;
@@ -1208,41 +1198,23 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacR
       const words = q.split(/\s+/);
       const scored = list.map((p) => {
         const str = searchStr(p);
-        if (words.length > 1) {
-          const allFuzzy = words.every((w) => fuzzyScore(str, w) >= 0);
-          if (!allFuzzy) return null;
-          const total = words.reduce((acc, w) => acc + Math.max(fuzzyScore(str, w), 0), 0);
-          return { p, score: total };
-        }
-        const s = fuzzyScore(str, q);
-        if (s < 0) return null;
-        return { p, score: s };
+        if (words.length > 1) { const ok = words.every((w) => fuzzyScore(str, w) >= 0); if (!ok) return null; return { p, score: words.reduce((a,w)=>a+Math.max(fuzzyScore(str,w),0),0) }; }
+        const s = fuzzyScore(str, q); if (s < 0) return null; return { p, score: s };
       }).filter(Boolean);
       return scored.sort((a, b) => b.score - a.score).map((s) => s.p);
     }
-    return list.sort((a, b) => {
-      const na = parseFloat((a.series || "").replace(/[^\d.]/g, "")) || 0;
-      const nb = parseFloat((b.series || "").replace(/[^\d.]/g, "")) || 0;
-      if (na !== nb) return na - nb;
-      return (a.style || "").localeCompare(b.style || "");
-    });
+    return list.sort((a, b) => { const na = parseFloat((a.series||"").replace(/[^\d.]/g,""))||0; const nb = parseFloat((b.series||"").replace(/[^\d.]/g,""))||0; if(na!==nb)return na-nb; return (a.style||"").localeCompare(b.style||""); });
   }, [allProducts, activeFilters, search]);
-
-  function handleFilter(field, val) {
-    if (field === "__clear__") {setActiveFilters({});return;}
-    setActiveFilters((prev) => ({ ...prev, [field]: val }));
-  }
-
+  function handleFilter(field, val) { if (field === "__clear__") {setActiveFilters({});return;} setActiveFilters((prev) => ({ ...prev, [field]: val })); }
   return (
-    <div>
+    <div style={{ paddingBottom: compareItems.length ? 72 : 0 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 10 }}>
         <div>
           <div style={{ fontSize: 19, fontWeight: 800, color: C.text }}>{TYPE_MAP[typeKey]?.label || typeKey}{brand ? " — " + brand : ""}</div>
-          <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{filtered.length} product{filtered.length !== 1 ? "s" : ""}</div>
+          <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{filtered.length} product{filtered.length !== 1 ? "s" : ""}{compareItems.length > 0 && <span style={{ marginLeft: 10, background: "#ede9fe", color: "#7c3aed", padding: "2px 9px", borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{compareItems.length} selected for compare</span>}</div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search..."
-          style={{ padding: "8px 13px", border: "1px solid " + C.border, borderRadius: 6, fontSize: 13, outline: "none", width: 180 }} />
+          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search..." style={{ padding: "8px 13px", border: "1px solid " + C.border, borderRadius: 6, fontSize: 13, outline: "none", width: 180 }} />
           <ViewToggle view={viewMode} onChange={setViewMode} />
         </div>
       </div>
@@ -1251,23 +1223,15 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacR
       <div style={{ textAlign: "center", padding: 60, color: C.muted, fontSize: 14 }}>No products match your filters.</div> :
       viewMode === "grid" ?
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 14 }}>
-          {filtered.map((p) => <ProductCard key={p.id} product={p} showBrand={showBrand} onClick={setSelected} />)}
+          {filtered.map((p) => <ProductCard key={p.id} product={p} showBrand={showBrand} onClick={setSelected} onToggleCompare={toggleCompare} inCompare={compareItems.some(x=>x.id===p.id)} />)}
         </div> :
-
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {filtered.map((p) => <ProductListRow key={p.id} product={p} showBrand={showBrand} onClick={setSelected} />)}
-        </div>
-      }
-      {(() => {
-        if (!selected) return null;
-        if (selected._source === "allied") {
-          const rawRecord = (rawMacRecords || []).find((r) => r.id === selected.id) || null;
-          if (rawRecord) return <MacProductModal record={rawRecord} slugMap={{}} sprocketMap={{}} loadSprockets={() => {}} onSelect={() => {}} onClose={() => setSelected(null)} />;
-        }
-        return <ProductModal product={selected} showBrand={showBrand} onClose={() => setSelected(null)} />;
-      })()}
+        </div>}
+      {(() => { if (!selected) return null; if (selected._source === "allied") { const rawRecord = (rawMacRecords || []).find((r) => r.id === selected.id) || null; if (rawRecord) return <MacProductModal record={rawRecord} slugMap={{}} sprocketMap={{}} loadSprockets={() => {}} onSelect={() => {}} onClose={() => setSelected(null)} />; } return <ProductModal product={selected} showBrand={showBrand} onClose={() => setSelected(null)} />; })()}
+      <CompareBar selected={compareItems} onCompare={() => setShowCompare(true)} onClear={() => setCompareItems([])} onRemove={id => setCompareItems(prev => prev.filter(x=>x.id!==id))} />
+      {showCompare && <ComparePanel products={compareItems} onClose={() => setShowCompare(false)} />}
     </div>);
-
 }
 
 // ─── Type Grid ────────────────────────────────────────────────────────────────
@@ -3161,12 +3125,7 @@ const IMG = {
   "Return Cups": "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/2be898a6a_RETURN-CUPS.jpg"
 };
 
-// Pin type individual images (using object-position to crop the combined photo)
-const PIN_IMG_POSITION = {
-  "Forged Head Pin + Collar and Roll Pin": "top", // top row in combined photo
-  "Forged Head Pin + One Clamp": "center", // middle row
-  "Plain Pin + Two Clamps": "bottom" // bottom row
-};
+const PIN_IMG_POSITION = {"Forged Head Pin + Collar and Roll Pin":"top","Forged Head Pin + One Clamp":"center","Plain Pin + Two Clamps":"bottom"};
 
 function getLinkImg(t) {return t === "Double" ? IMG.double : t === "Triple" ? IMG.triple : IMG.standard;}
 function tryParse(v) {try {return JSON.parse(v || "[]");} catch {return [];}}
@@ -3182,8 +3141,6 @@ function toMM(val, imperial) {
   if (isNaN(n)) return "";
   return imperial ? String(Math.round(n * IN_TO_MM * 10) / 10) : String(n);
 }
-
-// getRFQCart/saveRFQCart/addToRFQ defined above
 
 // ── PIN PRODUCT PAGE ──────────────────────────────────────────────────────────
 function PinModal({ pinName, chainLink, onClose, onAddRFQ }) {
@@ -4488,6 +4445,7 @@ function makeFmt(metric) {
 import { ROLLER_SERIES as SERIES } from "@/lib/rollerSeriesData";
 import IntraloxCatalog from "@/components/intralox/IntraloxCatalog";
 import HomeGlobalSearch from "@/components/HomeGlobalSearch";
+import ComparePanel, { CompareBar } from "@/components/ComparePanel";
 // ─── DETAIL MODAL ─────────────────────────────────────────────────────────────
 function DetailModal({ s, onClose, onConfigure, fmt, metric }) {
   const [tab, setTab] = useState("overview");
@@ -4498,8 +4456,7 @@ function DetailModal({ s, onClose, onConfigure, fmt, metric }) {
   { id: "drive", label: "Drive Heads" },
   { id: "grooves", label: "Grooves" },
   { id: "loads", label: "Load Table" },
-  { id: "dims", label: "Dimensions" }].
-  filter((t) => {
+  { id: "dims", label: "Dimensions" }].filter((t) => {
     if (t.id === "grooves" && !s.grooves) return false;
     if (t.id === "drive" && !s.sprockets) return false;
     return true;
