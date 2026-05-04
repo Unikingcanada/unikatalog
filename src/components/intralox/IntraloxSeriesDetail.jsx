@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getSeriesCADDownloads, getSeriesFlightData } from "@/lib/intraloxFlightData";
 
 const C = {
   navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
@@ -256,12 +257,16 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
   const [viewingStyle, setViewingStyle] = useState(null);
   const [rfqMsg, setRfqMsg] = useState(null);
 
+  const cadDownloads = getSeriesCADDownloads(series.id);
+  const flightData = getSeriesFlightData(series.id);
+
   const tabs = [
     { key: "styles", label: "Belt Styles" },
     { key: "sprockets", label: "Compatible Sprockets" },
-    { key: "flights", label: "Flights & Sideguards" },
+    { key: "flights", label: "Flights & Attachments" },
     { key: "accessories", label: "Accessories" },
     { key: "techcharts", label: "Technical Charts" },
+    { key: "downloads", label: `Downloads${cadDownloads.length ? " (" + cadDownloads.reduce((a, g) => a + g.files.length, 0) + ")" : ""}` },
   ];
 
   function addToRFQ(item) {
@@ -372,32 +377,66 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
           </div>
         )}
 
-        {/* Flights & Sideguards */}
+        {/* Flights & Attachments */}
         {activeTab === "flights" && (
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: C.navyMid, marginBottom: 12 }}>Flights & Sideguards — {series.name}</div>
-            {(flights.length > 0 || sideguards.length > 0) ? (
-              <div>
-                {flights.length > 0 && (
-                  <div style={{ marginBottom: 16 }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 8 }}>Flights</div>
-                    <div style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden" }}>
-                      {flights.map((f, i) => <AccessoryRow key={i} acc={f} onAddRFQ={addToRFQ} />)}
+            <div style={{ fontSize: 14, fontWeight: 700, color: C.navyMid, marginBottom: 4 }}>Flights & Attachments — {series.name}</div>
+            {flightData.seriesNote && (
+              <div style={{ background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#0369a1", marginBottom: 12 }}>
+                {flightData.seriesNote}
+              </div>
+            )}
+            {flightData.flightTypes?.length > 0 ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 20 }}>
+                {flightData.flightTypes.map((ft, i) => (
+                  <div key={ft.key} style={{ background: "#fff", borderRadius: 12, border: `1px solid ${C.border}`, overflow: "hidden" }}>
+                    <div style={{ display: "flex" }}>
+                      {ft.image && (
+                        <div style={{ width: 90, flexShrink: 0, background: "#f0f4f8" }}>
+                          <img src={ft.image} alt={ft.name} style={{ width: "100%", height: 90, objectFit: "cover" }} onError={e => e.target.style.display = "none"} />
+                        </div>
+                      )}
+                      <div style={{ padding: "12px 14px", flex: 1 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
+                          <div style={{ fontSize: 14, fontWeight: 800, color: C.navyMid }}>{ft.name}</div>
+                          {ft.cadUrl && (
+                            <a href={ft.cadUrl} target="_blank" rel="noreferrer"
+                              style={{ fontSize: 10, color: INTRALOX_RED, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0 }}>
+                              CAD ↗
+                            </a>
+                          )}
+                        </div>
+                        <div style={{ fontSize: 12, color: C.muted, marginTop: 3, lineHeight: 1.5 }}>{ft.description}</div>
+                        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
+                          <span style={{ fontSize: 10, background: "#eef3f8", color: C.navyMid, padding: "2px 8px", borderRadius: 8, fontWeight: 600 }}>
+                            Heights: {ft.availableHeightsIn.join('", ')}"{ft.customHeightAvailable ? " + custom" : ""}
+                          </span>
+                          <span style={{ fontSize: 10, background: "#f1f5f9", color: C.muted, padding: "2px 8px", borderRadius: 8 }}>
+                            Min indent: {ft.minIndentIn}"
+                          </span>
+                          {ft.materials.slice(0, 4).map(m => (
+                            <span key={m} style={{ fontSize: 10, background: "#f0fdf4", color: "#166534", padding: "2px 8px", borderRadius: 8 }}>{m}</span>
+                          ))}
+                        </div>
+                        {ft.notes?.length > 0 && ft.notes.map((n, ni) => (
+                          <div key={ni} style={{ fontSize: 11, color: "#92400e", marginTop: 4 }}>⚠ {n}</div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                )}
-                {sideguards.length > 0 && (
-                  <div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 8 }}>Sideguards</div>
-                    <div style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden" }}>
-                      {sideguards.map((s, i) => <AccessoryRow key={i} acc={s} onAddRFQ={addToRFQ} />)}
-                    </div>
-                  </div>
-                )}
+                ))}
               </div>
             ) : (
-              <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "14px", fontSize: 13, color: "#92400e" }}>
-                Flights and sideguards availability: <strong>To be confirmed by Uniking.</strong> Contact us for {series.name} accessory options.
+              <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "14px", fontSize: 13, color: "#92400e", marginBottom: 14 }}>
+                Flight details for {series.name}: <strong>To be confirmed by Uniking.</strong> Contact us for accessory options.
+              </div>
+            )}
+            {(sideguards.length > 0) && (
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 8 }}>Sideguards</div>
+                <div style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden" }}>
+                  {sideguards.map((s, i) => <AccessoryRow key={i} acc={s} onAddRFQ={addToRFQ} />)}
+                </div>
               </div>
             )}
           </div>
@@ -481,6 +520,68 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
             </div>
           </div>
         )}
+        {/* Downloads */}
+        {activeTab === "downloads" && (
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: C.navyMid, marginBottom: 4 }}>CAD Drawings & Downloads — {series.name}</div>
+            <div style={{ fontSize: 12, color: C.muted, marginBottom: 16 }}>
+              Official Intralox 2D CAD drawings (DXF format) for belt profiles, flights, and components. Sourced directly from the Intralox Belt Finder.
+            </div>
+            {cadDownloads.length > 0 ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {cadDownloads.map((group, gi) => (
+                  <div key={gi} style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden" }}>
+                    <div style={{ background: C.navyMid, padding: "8px 14px", color: "#fff", fontSize: 12, fontWeight: 700 }}>{group.group}</div>
+                    <div style={{ padding: "8px 0" }}>
+                      {group.files.map((f, fi) => (
+                        <a key={fi} href={f.url} target="_blank" rel="noreferrer" download={f.type === "DXF"}
+                          style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 14px", textDecoration: "none", borderBottom: fi < group.files.length - 1 ? `1px solid #f1f5f9` : "none" }}
+                          onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
+                          onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                          <span style={{ fontSize: 18, flexShrink: 0 }}>{f.type === "DXF" ? "📐" : "🔗"}</span>
+                          <span style={{ flex: 1, fontSize: 12, color: C.navyMid, fontWeight: 600 }}>{f.label}</span>
+                          <span style={{ fontSize: 10, background: f.type === "DXF" ? "#eef3f8" : "#f0fdf4", color: f.type === "DXF" ? C.navyMid : "#166534", padding: "2px 8px", borderRadius: 8, fontWeight: 700, flexShrink: 0 }}>
+                            {f.type}
+                          </span>
+                          <span style={{ fontSize: 11, color: INTRALOX_RED, fontWeight: 600, flexShrink: 0 }}>⬇</span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "14px 16px" }}>
+                <div style={{ fontSize: 13, color: "#92400e", marginBottom: 8 }}>
+                  CAD drawings for {series.name} are available directly from the Intralox Belt Finder.
+                </div>
+                <a href={`https://www.intralox.com/belt-finder/modular-plastic-belting/${series.id.toLowerCase()}`}
+                  target="_blank" rel="noreferrer"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6, background: INTRALOX_RED, color: "#fff", padding: "9px 18px", borderRadius: 8, fontWeight: 700, fontSize: 12, textDecoration: "none" }}>
+                  📐 Browse {series.name} CAD Files on Intralox ↗
+                </a>
+              </div>
+            )}
+            <div style={{ marginTop: 14, background: "#f8fafc", borderRadius: 8, border: `1px solid ${C.border}`, padding: "12px 14px" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 6 }}>Engineering Manual & Resources</div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <a href={series.techChartUrl} target="_blank" rel="noreferrer"
+                  style={{ background: INTRALOX_RED, color: "#fff", padding: "8px 16px", borderRadius: 7, fontWeight: 700, fontSize: 12, textDecoration: "none" }}>
+                  📄 2026 MPB Engineering Manual
+                </a>
+                <a href={`https://www.intralox.com/belt-finder/modular-plastic-belting/${series.id.toLowerCase()}`} target="_blank" rel="noreferrer"
+                  style={{ background: C.navyMid, color: "#fff", padding: "8px 16px", borderRadius: 7, fontWeight: 700, fontSize: 12, textDecoration: "none" }}>
+                  🔗 Intralox Belt Finder
+                </a>
+                <a href="https://www.intralox.com/resources/calclab" target="_blank" rel="noreferrer"
+                  style={{ background: "#f1f5f9", color: C.navyMid, padding: "8px 16px", borderRadius: 7, fontWeight: 700, fontSize: 12, textDecoration: "none", border: `1px solid ${C.border}` }}>
+                  🧮 CalcLab Engineering Tool
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
 
       {/* Specs modal */}

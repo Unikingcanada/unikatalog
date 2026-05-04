@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { INTRALOX_SERIES, INTRALOX_INDUSTRIES } from "@/lib/intraloxData";
+import { getSeriesFlightData, INDENT_OPTIONS, INDENT_PLACEMENT_OPTIONS, FRICTION_TOP_OPTIONS } from "@/lib/intraloxFlightData";
 
 const C = {
   navy: "#0F2340", navyMid: "#1A3A5C", gold: "#C9A84C",
@@ -196,6 +197,14 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
     beltLength: "",
     beltLengthUnit: "feet",
     flights: "",           // "" | "no" | "yes"
+    flightType: "",        // key of selected flight type
+    flightHeightIn: "",    // selected height in inches
+    flightHeightCustom: "", // custom height if "custom"
+    flightIndentOption: "", // key from INDENT_OPTIONS
+    flightIndentPlacement: "", // key from INDENT_PLACEMENT_OPTIONS
+    flightIndentCustom: "", // custom indent value
+    flightMaterial: "",    // selected flight material
+    flightFrictionTopOption: "", // for friction top belts
     flightDetails: "",
     sideguards: "",        // "" | "no" | "yes"
     sideguardDetails: "",
@@ -532,46 +541,302 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
     </div>
   );
 
-  // ── STEP 7: Flights ─────────────────────────────────────────────────────────
+  // ── STEP 7: Flights (smart wizard) ──────────────────────────────────────────
   if (step === STEP.FLIGHTS) {
-    const flightOpts = series?.accessories?.filter(a => a.type === "flight") || [];
+    const flightData = getSeriesFlightData(series?.id);
+    const catalogFlights = flightData.flightTypes || [];
+    const isFrictionTop = beltStyle?.key?.includes("friction");
+    const selectedFlightType = catalogFlights.find(f => f.key === config.flightType);
+
+    // SubStep 0: Do you need flights?
+    if (!config.flights) return (
+      <div><Header step={step} onClose={onClose} /><ProgressBar step={step} />
+        <div style={body}>
+          <BeltSchematic config={config} series={series} beltStyle={beltStyle} units={units} />
+          <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Flights / Attachments</div>
+          <div style={{ fontSize: 12, color: C.muted, marginBottom: 12 }}>
+            Flights (also called attachments) are molded modules that create cleats, scoops, or buckets on the belt surface for incline conveying or product containment.
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <Opt label="No flights / attachments required" sub="Standard belt only"
+              selected={config.flights === "no"}
+              onClick={() => { set("flights", "no"); setTimeout(next, 150); }} />
+            <Opt label="Yes — flights / attachments required" sub="Select type, height, and indent options"
+              selected={config.flights === "yes"}
+              onClick={() => set("flights", "yes")} />
+          </div>
+          <NavButtons step={step} onBack={back} onNext={next} canNext={config.flights !== ""} />
+        </div>
+      </div>
+    );
+
+    // If no flights, proceed
+    if (config.flights === "no") return (
+      <div><Header step={step} onClose={onClose} /><ProgressBar step={step} />
+        <div style={body}>
+          <div style={{ textAlign: "center", padding: "32px 16px", color: C.green, fontSize: 14, fontWeight: 700 }}>✓ No flights — standard belt selected</div>
+          <NavButtons step={step} onBack={() => { set("flights", ""); }} onNext={next} canNext={true} />
+        </div>
+      </div>
+    );
+
+    // Friction top indent selection
+    if (config.flights === "yes" && isFrictionTop) return (
+      <div><Header step={step} onClose={onClose} /><ProgressBar step={step} />
+        <div style={body}>
+          <BeltSchematic config={config} series={series} beltStyle={beltStyle} units={units} />
+          <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Friction Top — Indent Configuration</div>
+          <div style={{ fontSize: 12, color: C.muted, marginBottom: 4 }}>
+            Friction top belts have rubber or polyurethane inserts. The insert does not extend to the belt edge — the indent defines the clear width on each side.
+          </div>
+          <div style={{ background: "#eff6ff", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#1e40af", marginBottom: 14 }}>
+            ℹ Intralox catalog: Minimum indent without sideguards is <strong>1.3 in (33 mm)</strong>. Indent options and placement must be specified.
+          </div>
+          <SLabel>Friction Top Indent Option</SLabel>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
+            {FRICTION_TOP_OPTIONS.map(o => (
+              <Opt key={o.key} label={o.label} selected={config.flightFrictionTopOption === o.key}
+                onClick={() => set("flightFrictionTopOption", o.key)} />
+            ))}
+          </div>
+          {config.flightFrictionTopOption === "full_width" && (
+            <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#92400e" }}>
+              ⚠ Full-width (no indent) is non-standard. Contact Intralox Customer Service to confirm availability.
+            </div>
+          )}
+          <NavButtons step={step} onBack={() => { set("flights", ""); set("flightFrictionTopOption", ""); }}
+            onNext={next} canNext={!!config.flightFrictionTopOption} />
+        </div>
+      </div>
+    );
+
+    // Main flight wizard (catalog flights available)
+    if (config.flights === "yes" && catalogFlights.length > 0) {
+      // Sub-step A: Select flight type
+      if (!config.flightType) return (
+        <div><Header step={step} onClose={onClose} /><ProgressBar step={step} />
+          <div style={body}>
+            <BeltSchematic config={config} series={series} beltStyle={beltStyle} units={units} />
+            <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 2 }}>Select Flight Type</div>
+            <div style={{ fontSize: 11, color: C.green, fontWeight: 700, marginBottom: 12 }}>
+              ✓ {catalogFlights.length} catalog-confirmed flight type{catalogFlights.length !== 1 ? "s" : ""} for {series?.name}
+            </div>
+            {flightData.seriesNote && (
+              <div style={{ background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#0369a1", marginBottom: 12 }}>
+                {flightData.seriesNote}
+              </div>
+            )}
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {catalogFlights.map(ft => (
+                <button key={ft.key} onClick={() => { set("flightType", ft.key); set("flightHeightIn", ""); set("flightIndentOption", ""); set("flightIndentPlacement", ""); set("flightMaterial", ""); }}
+                  style={{ background: config.flightType === ft.key ? C.navyMid : "#fff", border: `2px solid ${config.flightType === ft.key ? C.navyMid : C.border}`, borderRadius: 10, padding: 0, cursor: "pointer", textAlign: "left", overflow: "hidden", transition: "all 0.15s" }}>
+                  <div style={{ display: "flex", gap: 0 }}>
+                    {ft.image && (
+                      <div style={{ width: 80, flexShrink: 0, background: "#f0f4f8", overflow: "hidden" }}>
+                        <img src={ft.image} alt={ft.name} style={{ width: "100%", height: 72, objectFit: "cover" }} onError={e => e.target.style.display = "none"} />
+                      </div>
+                    )}
+                    <div style={{ padding: "12px 14px", flex: 1 }}>
+                      <div style={{ fontSize: 13, fontWeight: 800, color: config.flightType === ft.key ? "#fff" : C.navyMid }}>{ft.name}</div>
+                      <div style={{ fontSize: 11, color: config.flightType === ft.key ? "rgba(255,255,255,0.7)" : C.muted, marginTop: 2, lineHeight: 1.5 }}>{ft.description?.slice(0, 120)}</div>
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 6 }}>
+                        <span style={{ fontSize: 10, background: config.flightType === ft.key ? "rgba(255,255,255,0.15)" : "#eef3f8", color: config.flightType === ft.key ? "#fff" : C.navyMid, padding: "1px 7px", borderRadius: 8, fontWeight: 600 }}>
+                          Heights: {ft.availableHeightsIn.join('",')}"{ft.customHeightAvailable ? " + custom" : ""}
+                        </span>
+                        <span style={{ fontSize: 10, background: config.flightType === ft.key ? "rgba(255,255,255,0.15)" : "#f1f5f9", color: config.flightType === ft.key ? "#fff" : C.muted, padding: "1px 7px", borderRadius: 8 }}>
+                          {ft.materials.slice(0, 3).join(", ")}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+            <NavButtons step={step} onBack={() => { set("flights", ""); }} onNext={() => {}} canNext={false}
+              nextLabel="Select a flight type above →" />
+          </div>
+        </div>
+      );
+
+      // Sub-step B: Select height
+      if (config.flightType && !config.flightHeightIn) return (
+        <div><Header step={step} onClose={onClose} /><ProgressBar step={step} />
+          <div style={body}>
+            <BeltSchematic config={config} series={series} beltStyle={beltStyle} units={units} />
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+              <button onClick={() => set("flightType", "")} style={{ background: "none", border: "none", color: C.navyMid, cursor: "pointer", fontSize: 12, fontWeight: 600 }}>← Flight Type</button>
+            </div>
+            <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 2 }}>Flight Height — {selectedFlightType?.name}</div>
+            <div style={{ fontSize: 12, color: C.muted, marginBottom: 14 }}>Select a standard height or cut to custom height.</div>
+            <SLabel>Standard Heights (catalog)</SLabel>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))", gap: 8, marginBottom: 12 }}>
+              {(selectedFlightType?.availableHeightsIn || []).map(h => (
+                <button key={h} onClick={() => set("flightHeightIn", String(h))}
+                  style={{ background: config.flightHeightIn === String(h) ? C.navyMid : "#f1f5f9", color: config.flightHeightIn === String(h) ? "#fff" : C.text, border: `2px solid ${config.flightHeightIn === String(h) ? C.navyMid : C.border}`, borderRadius: 10, padding: "14px 8px", cursor: "pointer", textAlign: "center", fontWeight: 700 }}>
+                  <div style={{ fontSize: 18 }}>{h}"</div>
+                  <div style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>{selectedFlightType.availableHeightsMm?.[selectedFlightType.availableHeightsIn.indexOf(h)] ?? Math.round(h * 25.4)} mm</div>
+                </button>
+              ))}
+              {selectedFlightType?.customHeightAvailable && (
+                <button onClick={() => set("flightHeightIn", "custom")}
+                  style={{ background: config.flightHeightIn === "custom" ? C.gold : "#f1f5f9", color: config.flightHeightIn === "custom" ? C.navy : C.muted, border: `2px solid ${config.flightHeightIn === "custom" ? C.gold : C.border}`, borderRadius: 10, padding: "14px 8px", cursor: "pointer", textAlign: "center", fontWeight: 700 }}>
+                  <div style={{ fontSize: 14 }}>Custom</div>
+                  <div style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>Specify</div>
+                </button>
+              )}
+            </div>
+            {config.flightHeightIn === "custom" && (
+              <div style={{ marginBottom: 12 }}>
+                <SLabel>Custom Height (specify in inches or mm)</SLabel>
+                <input type="text" value={config.flightHeightCustom} onChange={e => set("flightHeightCustom", e.target.value)}
+                  placeholder={`e.g. 2.5" or 64mm (min ${selectedFlightType?.customHeightMinIn || 0.5}")`}
+                  style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 8, border: `1px solid ${C.border}`, fontSize: 13, outline: "none" }} />
+                {selectedFlightType?.customHeightMinIn && (
+                  <div style={{ fontSize: 11, color: C.muted, marginTop: 4 }}>Minimum height: {selectedFlightType.customHeightMinIn}" ({Math.round(selectedFlightType.customHeightMinIn * 25.4)} mm)</div>
+                )}
+              </div>
+            )}
+            <NavButtons step={step} onBack={() => set("flightType", "")}
+              onNext={() => {}} canNext={false} nextLabel="Select a height above →" />
+          </div>
+        </div>
+      );
+
+      // Sub-step C: Select indent
+      if (config.flightType && config.flightHeightIn && !config.flightIndentOption) return (
+        <div><Header step={step} onClose={onClose} /><ProgressBar step={step} />
+          <div style={body}>
+            <BeltSchematic config={config} series={series} beltStyle={beltStyle} units={units} />
+            <div style={{ display: "flex", gap: 8, marginBottom: 4 }}>
+              <button onClick={() => set("flightHeightIn", "")} style={{ background: "none", border: "none", color: C.navyMid, cursor: "pointer", fontSize: 12, fontWeight: 600 }}>← Height</button>
+            </div>
+            <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Indent Selection — {selectedFlightType?.name}</div>
+            <div style={{ background: "#eff6ff", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#1e40af", marginBottom: 12 }}>
+              ℹ The indent is the clear distance from the belt edge to the edge of the flight module.<br/>
+              <strong>Catalog minimum: 1.3" (33 mm) without sideguards.</strong>
+            </div>
+            <SLabel>Indent Size</SLabel>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
+              {INDENT_OPTIONS.filter(o => (selectedFlightType?.indentOptions || ["1.3_in"]).includes(o.key) || o.key === "custom").map(o => (
+                <Opt key={o.key} label={o.label} sub={o.notes} selected={config.flightIndentOption === o.key}
+                  onClick={() => set("flightIndentOption", o.key)} />
+              ))}
+            </div>
+            {config.flightIndentOption === "custom" && (
+              <div style={{ marginBottom: 12 }}>
+                <SLabel>Custom Indent Value</SLabel>
+                <input type="text" value={config.flightIndentCustom} onChange={e => set("flightIndentCustom", e.target.value)}
+                  placeholder='e.g. 1.5" or 38mm'
+                  style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 8, border: `1px solid ${C.border}`, fontSize: 13, outline: "none" }} />
+              </div>
+            )}
+            {config.flightIndentOption && config.flightIndentOption !== "none" && (
+              <div style={{ marginTop: 12 }}>
+                <SLabel>Indent Placement</SLabel>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {INDENT_PLACEMENT_OPTIONS.filter(p => (selectedFlightType?.indentPlacements || ["left","right","both","alternating","none"]).includes(p.key)).map(p => (
+                    <Opt key={p.key} label={p.label} selected={config.flightIndentPlacement === p.key}
+                      onClick={() => set("flightIndentPlacement", p.key)} />
+                  ))}
+                </div>
+              </div>
+            )}
+            <NavButtons step={step} onBack={() => set("flightHeightIn", "")}
+              onNext={() => {}}
+              canNext={false}
+              nextLabel="Select indent options above →" />
+          </div>
+        </div>
+      );
+
+      // Sub-step D: Select material
+      if (config.flightType && config.flightHeightIn && config.flightIndentOption && !config.flightMaterial) return (
+        <div><Header step={step} onClose={onClose} /><ProgressBar step={step} />
+          <div style={body}>
+            <div style={{ display: "flex", gap: 8, marginBottom: 4 }}>
+              <button onClick={() => set("flightIndentOption", "")} style={{ background: "none", border: "none", color: C.navyMid, cursor: "pointer", fontSize: 12, fontWeight: 600 }}>← Indent</button>
+            </div>
+            <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Flight Material — {selectedFlightType?.name}</div>
+            <div style={{ fontSize: 12, color: C.muted, marginBottom: 12 }}>Select the material for the flight modules.</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {(selectedFlightType?.materials || []).map(m => (
+                <Opt key={m} label={m} selected={config.flightMaterial === m}
+                  onClick={() => set("flightMaterial", m)} />
+              ))}
+              <Opt label="Unknown — Uniking to recommend" sub="Describe your application in the Notes step"
+                selected={config.flightMaterial === "unknown"}
+                onClick={() => set("flightMaterial", "unknown")} />
+            </div>
+            <NavButtons step={step} onBack={() => set("flightIndentOption", "")}
+              onNext={next} canNext={!!config.flightMaterial} />
+          </div>
+        </div>
+      );
+
+      // All sub-steps complete — show summary and proceed
+      if (config.flightType && config.flightHeightIn && config.flightIndentOption && config.flightMaterial) {
+        const heightLabel = config.flightHeightIn === "custom" ? config.flightHeightCustom : `${config.flightHeightIn}" (${Math.round(parseFloat(config.flightHeightIn) * 25.4)} mm)`;
+        const indentLabel = INDENT_OPTIONS.find(o => o.key === config.flightIndentOption)?.label || config.flightIndentOption;
+        const placementLabel = INDENT_PLACEMENT_OPTIONS.find(p => p.key === config.flightIndentPlacement)?.label || "";
+        return (
+          <div><Header step={step} onClose={onClose} /><ProgressBar step={step} />
+            <div style={body}>
+              <BeltSchematic config={config} series={series} beltStyle={beltStyle} units={units} />
+              <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 12 }}>Flight Configuration Summary</div>
+              <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10, padding: "14px 16px", marginBottom: 14 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#166534", marginBottom: 8 }}>✓ Flight configured:</div>
+                {[
+                  ["Type", selectedFlightType?.name],
+                  ["Height", heightLabel],
+                  ["Indent", indentLabel],
+                  ["Placement", placementLabel],
+                  ["Material", config.flightMaterial],
+                ].filter(([, v]) => v).map(([k, v]) => (
+                  <div key={k} style={{ display: "flex", gap: 10, fontSize: 12, marginBottom: 3 }}>
+                    <span style={{ color: C.muted, width: 80, flexShrink: 0 }}>{k}:</span>
+                    <span style={{ color: C.text, fontWeight: 600 }}>{v}</span>
+                  </div>
+                ))}
+              </div>
+              {selectedFlightType?.notes?.map((n, i) => (
+                <div key={i} style={{ fontSize: 11, color: "#92400e", background: "#fffbeb", borderRadius: 6, padding: "6px 10px", marginBottom: 6 }}>⚠ {n}</div>
+              ))}
+              {selectedFlightType?.cadUrl && (
+                <a href={selectedFlightType.cadUrl} target="_blank" rel="noreferrer"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "#E31837", fontWeight: 600, marginBottom: 12, textDecoration: "none" }}>
+                  📐 View CAD drawings for {selectedFlightType.name} ↗
+                </a>
+              )}
+              <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+                <button onClick={() => { set("flightType", ""); set("flightHeightIn", ""); set("flightIndentOption", ""); set("flightMaterial", ""); }}
+                  style={{ background: "none", border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 12, color: C.muted }}>
+                  ← Change flight
+                </button>
+              </div>
+              <NavButtons step={step} onBack={back} onNext={next} canNext={true} nextLabel="Confirm & Continue →" />
+            </div>
+          </div>
+        );
+      }
+    }
+
+    // No catalog flights for this series — describe requirements
     return (
       <div><Header step={step} onClose={onClose} /><ProgressBar step={step} />
         <div style={body}>
           <BeltSchematic config={config} series={series} beltStyle={beltStyle} units={units} />
-          <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Flights</div>
-          <div style={{ fontSize: 12, color: C.muted, marginBottom: 12 }}>Are flights required for this belt?</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <Opt label="No flights required" selected={config.flights === "no"}
-              onClick={() => { set("flights", "no"); setTimeout(next, 150); }} />
-            <Opt label="Yes — flights required" selected={config.flights === "yes"}
-              onClick={() => set("flights", "yes")} />
+          <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Flights — {series?.name}</div>
+          <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#92400e", marginBottom: 12 }}>
+            ⚠ Catalog-specific flight data for {series?.name} is to be confirmed by Uniking. Please describe your requirements below — type, height, indent, and material.
           </div>
-
-          {config.flights === "yes" && (
-            <div style={{ marginTop: 16 }}>
-              {flightOpts.length > 0 ? (
-                <div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: C.green, marginBottom: 8 }}>✓ Catalog-confirmed flight options for {series?.name}:</div>
-                  {flightOpts.map((f, i) => (
-                    <div key={i} style={{ background: "#f8fafc", border: `1px solid ${C.border}`, borderRadius: 8, padding: "12px 14px", marginBottom: 8 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid }}>{f.name}</div>
-                      <div style={{ fontSize: 12, color: C.muted }}>{f.notes}</div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#92400e", marginBottom: 10 }}>
-                  ⚠ Specific flight options for {series?.name} are to be confirmed by Uniking. Please describe your flight requirements below.
-                </div>
-              )}
-              <SLabel>Flight Details / Requirements</SLabel>
-              <textarea value={config.flightDetails} onChange={e => set("flightDetails", e.target.value)}
-                placeholder="e.g. 50mm high flights, 300mm spacing, polypropylene, full-width cleats for incline…"
-                rows={3} style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 8, border: `1px solid ${C.border}`, fontSize: 13, outline: "none", resize: "vertical" }} />
-            </div>
-          )}
-          <NavButtons step={step} onBack={back} onNext={next} canNext={config.flights !== ""} />
+          <SLabel>Flight Requirements</SLabel>
+          <textarea value={config.flightDetails} onChange={e => set("flightDetails", e.target.value)}
+            placeholder="e.g. 3&quot; Scoop Flights, 1.3&quot; indent both sides, Acetal, every 6 pitches; or 2&quot; Streamline flights, full-width, PP…"
+            rows={4} style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 8, border: `1px solid ${C.border}`, fontSize: 13, outline: "none", resize: "vertical" }} />
+          <div style={{ fontSize: 11, color: C.muted, marginTop: 6 }}>
+            Include: flight type, height, indent size &amp; placement, material, and any spacing requirements.
+          </div>
+          <NavButtons step={step} onBack={() => set("flights", "")} onNext={next} canNext={!!config.flightDetails} />
         </div>
       </div>
     );
@@ -622,49 +887,12 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
     );
   }
 
-  // ── STEP 9: Attachments & Top Finish ───────────────────────────────────────
+  // ── STEP 9: Attachments — auto-skip (Flights step now covers all attachments) ─
   if (step === STEP.ATTACHMENTS) {
-    const accOpts = series?.accessories?.filter(a => a.type !== "flight" && a.type !== "sideguard") || [];
-    return (
-      <div><Header step={step} onClose={onClose} /><ProgressBar step={step} />
-        <div style={body}>
-          <BeltSchematic config={config} series={series} beltStyle={beltStyle} units={units} />
-          <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Attachments & Top Finish</div>
-          <div style={{ fontSize: 12, color: C.muted, marginBottom: 12 }}>Are special attachments or top finishes required?</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <Opt label="No attachments / standard top finish" selected={config.attachments === "no"}
-              onClick={() => { set("attachments", "no"); setTimeout(next, 150); }} />
-            <Opt label="Yes — attachments or special top finish required" selected={config.attachments === "yes"}
-              onClick={() => set("attachments", "yes")} />
-          </div>
-
-          {config.attachments === "yes" && (
-            <div style={{ marginTop: 16 }}>
-              {accOpts.length > 0 ? (
-                <div>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: C.green, marginBottom: 8 }}>✓ Available for {series?.name}:</div>
-                  {accOpts.map((a, i) => (
-                    <div key={i} style={{ background: "#f8fafc", border: `1px solid ${C.border}`, borderRadius: 8, padding: "12px 14px", marginBottom: 8 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid }}>{a.name}</div>
-                      <div style={{ fontSize: 12, color: C.muted }}>{a.notes}</div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#92400e", marginBottom: 10 }}>
-                  ⚠ Available attachments/finishes for {series?.name} {beltStyle?.label} are to be confirmed by Uniking.
-                </div>
-              )}
-              <SLabel>Attachment / Top Finish Details</SLabel>
-              <textarea value={config.attachmentDetails} onChange={e => set("attachmentDetails", e.target.value)}
-                placeholder="e.g. Friction top inserts, rubber top coating, cleated surface, perforated variant…"
-                rows={3} style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 8, border: `1px solid ${C.border}`, fontSize: 13, outline: "none", resize: "vertical" }} />
-            </div>
-          )}
-          <NavButtons step={step} onBack={back} onNext={next} canNext={config.attachments !== ""} />
-        </div>
-      </div>
-    );
+    // Auto-advance — flights/attachments are now handled in Step 7
+    if (!config.attachments) set("attachments", "covered_in_flights");
+    setTimeout(next, 50);
+    return <div><Header step={step} onClose={onClose} /><ProgressBar step={step} /><div style={body}><div style={{ textAlign: "center", padding: 30, color: C.muted, fontSize: 13 }}>Continuing…</div></div></div>;
   }
 
   // ── STEP 10: Product Conveyed ───────────────────────────────────────────────
@@ -790,7 +1018,14 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
       ["Temperature Rating", tempRating],
       ["Belt Width", config.beltWidth ? `${config.beltWidth} ${units}` : config.unknownFields?.includes("beltWidth") ? "To be confirmed by Uniking" : ""],
       ["Belt Length", config.beltLength ? `${config.beltLength} ${config.beltLengthUnit}` : config.unknownFields?.includes("beltLength") ? "To be confirmed by Uniking" : ""],
-      ["Flights", config.flights === "no" ? "None" : config.flights === "yes" ? (config.flightDetails || "Yes — details to be confirmed by Uniking") : ""],
+      ["Flights", config.flights === "no" ? "None" : config.flights === "yes" ? (() => {
+        if (config.flightFrictionTopOption) return `Friction Top — ${config.flightFrictionTopOption.replace(/_/g, " ")}`;
+        if (config.flightType) {
+          const parts = [config.flightType.replace(/_/g, " "), config.flightHeightIn === "custom" ? config.flightHeightCustom : config.flightHeightIn ? `${config.flightHeightIn}"` : "", config.flightIndentOption?.replace(/_/g, " "), config.flightIndentPlacement?.replace(/_/g, " "), config.flightMaterial].filter(Boolean);
+          return parts.join(" · ");
+        }
+        return config.flightDetails || "Yes — details to be confirmed by Uniking";
+      })() : ""],
       ["Sideguards", config.sideguards === "no" ? "None" : config.sideguards === "yes" ? (config.sideguardDetails || "Yes — details to be confirmed by Uniking") : ""],
       ["Attachments / Top Finish", config.attachments === "no" ? "None / Standard" : config.attachments === "yes" ? (config.attachmentDetails || "Yes — details to be confirmed by Uniking") : ""],
       ["Quantity", `${config.quantity} ${config.quantityUnit}`],
