@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { INTRALOX_SERIES, INTRALOX_INDUSTRIES } from "@/lib/intraloxData";
 import { getSeriesFlightData, INDENT_OPTIONS, INDENT_PLACEMENT_OPTIONS, FRICTION_TOP_OPTIONS } from "@/lib/intraloxFlightData";
+import BeltSchematic from "./BeltSchematic";
 
 const C = {
   navy: "#0F2340", navyMid: "#1A3A5C", gold: "#C9A84C",
@@ -45,92 +46,6 @@ const STEP = {
   WIDTH: 5, LENGTH: 6, FLIGHTS: 7, SIDEGUARDS: 8, ATTACHMENTS: 9,
   PRODUCT: 10, QUANTITY: 11, UPLOADS: 12, NOTES: 13, REVIEW: 14
 };
-
-// ── Live Belt Schematic ────────────────────────────────────────────────────────
-function BeltSchematic({ config, series, beltStyle, units }) {
-  const W = 560, H = 220;
-  const beltX = 60, beltY = 60, beltW = 440, beltH = 80;
-  const widthNum = parseFloat(config.beltWidth) || 0;
-  const lengthNum = parseFloat(config.beltLength) || 0;
-
-  const isOpen = beltStyle?.surface?.toLowerCase().includes("grid") || beltStyle?.surface?.toLowerCase().includes("open");
-  const wireColor = "#6B8CAE";
-
-  const matKey = config.moduleMaterial;
-  const matColor = matKey === "AC" || matKey === "XAC" ? "#b0c4de"
-    : matKey === "PP" || matKey === "DPP" ? "#d4e8c2"
-    : matKey === "NY" || matKey === "HHR" ? "#ffd9a0"
-    : matKey === "PE" ? "#c8e6ff"
-    : "#dbe8f5";
-
-  const meshLines = [];
-  if (isOpen) {
-    for (let x = beltX + 16; x < beltX + beltW - 8; x += 22) {
-      meshLines.push(<line key={`v${x}`} x1={x} y1={beltY + 5} x2={x} y2={beltY + beltH - 5} stroke={wireColor} strokeWidth={1.5} opacity={0.5} />);
-    }
-  }
-  for (let y = beltY + 12; y < beltY + beltH - 8; y += 16) {
-    meshLines.push(<line key={`h${y}`} x1={beltX + 4} y1={y} x2={beltX + beltW - 4} y2={y} stroke={wireColor} strokeWidth={isOpen ? 1.2 : 2.2} opacity={isOpen ? 0.6 : 0.85} />);
-  }
-
-  const hasFlights = config.flights === "yes";
-  const hasSideguards = config.sideguards === "yes";
-
-  const widthLabel = widthNum > 0
-    ? (units === "mm" ? `W = ${(widthNum * 25.4).toFixed(0)} mm` : `W = ${widthNum}"`)
-    : "Width = ?";
-  const lengthLabel = lengthNum > 0
-    ? `L = ${lengthNum} ${config.beltLengthUnit || "feet"}`
-    : "Length = ?";
-
-  return (
-    <div style={{ background: "#0f2340", borderRadius: 12, padding: "12px 12px 8px", marginBottom: 16, border: "1px solid rgba(255,255,255,0.08)" }}>
-      <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 6, textAlign: "center" }}>
-        Live Belt Schematic — {series?.name || "Select Series"} {beltStyle?.label ? `· ${beltStyle.label}` : ""}
-      </div>
-      <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: "block" }}>
-        <rect x={beltX} y={beltY} width={beltW} height={beltH} fill={matColor} stroke={C.navyMid} strokeWidth={2} rx={2} opacity={0.9} />
-        {meshLines}
-        {hasSideguards ? (
-          <>
-            <rect x={beltX} y={beltY} width={beltW} height={10} fill={C.gold} opacity={0.9} rx={1} />
-            <rect x={beltX} y={beltY + beltH - 10} width={beltW} height={10} fill={C.gold} opacity={0.9} rx={1} />
-          </>
-        ) : (
-          <>
-            <rect x={beltX} y={beltY} width={beltW} height={4} fill={wireColor} opacity={0.7} rx={1} />
-            <rect x={beltX} y={beltY + beltH - 4} width={beltW} height={4} fill={wireColor} opacity={0.7} rx={1} />
-          </>
-        )}
-        {hasFlights && [0.2, 0.45, 0.7].map((t, i) => (
-          <rect key={i} x={beltX + beltW * t} y={beltY - 14} width={6} height={beltH + 28} fill={C.navyMid} opacity={0.7} rx={2} />
-        ))}
-        <ellipse cx={beltX} cy={beltY + beltH / 2} rx={13} ry={beltH / 2 + 4} fill="#1e3a5c" stroke={C.navyMid} strokeWidth={2} />
-        <ellipse cx={beltX + beltW} cy={beltY + beltH / 2} rx={13} ry={beltH / 2 + 4} fill="#1e3a5c" stroke={C.navyMid} strokeWidth={2} />
-        {series?.pitch_in && series.pitch_in !== "To be confirmed by Uniking" && (
-          <text x={beltX + beltW / 2} y={beltY - 8} textAnchor="middle" fontSize={8} fill={C.gold} fontWeight="600">
-            Pitch: {series.pitch_in}" ({series.pitch_mm} mm)
-          </text>
-        )}
-        <defs>
-          <marker id="ia" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8" /></marker>
-          <marker id="ib" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="#94a3b8" /></marker>
-        </defs>
-        <line x1={beltX - 28} y1={beltY} x2={beltX - 28} y2={beltY + beltH} stroke="#94a3b8" strokeWidth={1} markerEnd="url(#ia)" markerStart="url(#ib)" />
-        <text x={beltX - 46} y={beltY + beltH / 2 + 4} textAnchor="middle" fontSize={9} fill="#94a3b8" transform={`rotate(-90, ${beltX - 46}, ${beltY + beltH / 2 + 4})`}>{widthLabel}</text>
-        <line x1={beltX} y1={beltY + beltH + 22} x2={beltX + beltW} y2={beltY + beltH + 22} stroke="#94a3b8" strokeWidth={1} markerEnd="url(#ia)" markerStart="url(#ib)" />
-        <text x={beltX + beltW / 2} y={beltY + beltH + 36} textAnchor="middle" fontSize={9} fill="#94a3b8" fontWeight="700">{lengthLabel}</text>
-        {config.moduleMaterial && config.moduleMaterial !== "UNKNOWN" && (
-          <text x={beltX + 10} y={beltY + beltH + 54} fontSize={8} fill="#94a3b8">
-            {MODULE_MATERIALS.find(m => m.key === config.moduleMaterial)?.label}{config.rodMaterial && config.rodMaterial !== "UNKNOWN" ? ` / Rod: ${ROD_MATERIALS.find(r => r.key === config.rodMaterial)?.label}` : ""}
-          </text>
-        )}
-        {hasSideguards && <text x={beltX + beltW + 20} y={beltY + 16} fontSize={8} fill={C.gold} fontWeight="600">Sideguard →</text>}
-        {hasFlights && <text x={beltX + 12} y={beltY + beltH + 62} fontSize={8} fill="#94a3b8">✦ Flights included</text>}
-      </svg>
-    </div>
-  );
-}
 
 // ── Shared sub-components ──────────────────────────────────────────────────────
 function Header({ step, onClose }) {
