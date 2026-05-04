@@ -1,8 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { UniCatalog, CatalogProduct, ElevatorBucket, DonghuaChain, MacChainProduct, ForgedChain } from "@/api/entities";
 import RFQCartView from "@/components/RFQCartView";
-
-// ─── Strip vendor name from any displayed text ────────────────────────────────
+import WireMeshConfigurator from "@/components/WireMeshConfigurator";
 function stripVendor(text) {
   if (!text) return text;
   return text.
@@ -4490,92 +4489,9 @@ function makeFmt(metric) {
   };
 }
 
-// ─── COMPLETE INTERROLL SERIES DATA (2026 CATALOG) ───────────────────────────
-const SERIES = [
-{
-  id: "1100", name: "Series 1100", subtitle: "Gravity Conveyor Roller",
-  platform: "1100", duty: "Light", color: "#3b82f6",
-  driveType: "Gravity / Push (non-driven)", maxLoad_N: 350, maxSpeed_ms: 0.3,
-  temp_min_C: -5, temp_max_C: 40, antistatic: "Available (grooved/sleeved versions)",
-  image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/643c8bc1a_1100_p32_i0.jpeg",
-  page_range: "32–37", tags: ["Gravity", "Light Duty", "Food Grade"],
-  applications: ["Gravity conveyors", "Light parcels", "Food / washdown (FDA grease)", "Push conveyors"],
-  notes: "FDA-compliant grease standard. PVC tube max temp: avoid sustained load above +30°C.",
-  tubes: [
-  { label: "Ø16 × 1 mm — Stainless steel", tube_mm: 16, wall_mm: 1, materials: ["Stainless steel"] },
-  { label: "Ø20 × 1.5 mm — Zinc-plated / Stainless / Aluminum / PVC (stone gray)", tube_mm: 20, wall_mm: 1.5, materials: ["Zinc-plated steel", "Stainless steel", "Aluminum", "PVC gray RAL7030"] },
-  { label: "Ø30 × 1.2 mm — Zinc-plated / Stainless / Aluminum / PVC (stone gray)", tube_mm: 30, wall_mm: 1.2, materials: ["Zinc-plated steel", "Stainless steel", "Aluminum", "PVC gray RAL7030"] },
-  { label: "Ø40 × 1.2 mm — Zinc-plated / Stainless / Aluminum / PVC (stone gray)", tube_mm: 40, wall_mm: 1.2, materials: ["Zinc-plated steel", "Stainless steel", "Aluminum", "PVC gray RAL7030"] },
-  { label: "Ø50 × 1.5 mm — Zinc-plated / Stainless / Aluminum / PVC (stone gray / sky blue)", tube_mm: 50, wall_mm: 1.5, materials: ["Zinc-plated steel", "Stainless steel", "Aluminum", "PVC gray RAL7030", "PVC sky blue RAL5015"] }],
-
-  pvc_max_lengths: { 16: 300, 20: 400, 30: 500, 40: 600, 50: 600, 63: 800 },
-  shafts: [
-  { label: "Spring-loaded (both sides)", code: "spring", ext_mm: null },
-  { label: "Fixed shaft", code: "fixed", ext_mm: null },
-  { label: "Female thread M6", code: "female_M6", ext_mm: null },
-  { label: "Female thread M8", code: "female_M8", ext_mm: null },
-  { label: "Male thread", code: "male", ext_mm: null },
-  { label: "Flatted shaft", code: "flat", ext_mm: null },
-  { label: "Variable length", code: "variable", ext_mm: null }],
-
-  sleeves: ["None", "PVC sleeve", "PU sleeve", "Lagging"],
-  grooves: false,
-  sprockets: false,
-  dim_formula: "EL = AGL = RL + 10 mm (female/male thread) | Spring: EL = RL + 10 mm, AGL = RL + 26 mm",
-  load_table: {
-    cols_mm: [200, 400, 600],
-    rows: [
-    { label: "Ø16×1 SS, Ø5 shaft", loads: [30, 10, null] },
-    { label: "Ø20×1.5 SS, Ø6 shaft", loads: [70, 25, null] },
-    { label: "Ø30×1.2 ZP, Ø8 shaft", loads: [150, 55, 25] },
-    { label: "Ø40×1.2 ZP, Ø10 shaft", loads: [250, 100, 50] },
-    { label: "Ø50×1.5 ZP, Ø12 shaft", loads: [350, 150, 80] }]
-
-  }
-},
-{
-  id: "1200", name: "Series 1200", subtitle: "Steel Conveyor Roller",
-  platform: "1200", duty: "Medium", color: "#8b5cf6",
-  driveType: "Gravity / Belt / Driven", maxLoad_N: 1200, maxSpeed_ms: 0.8,
-  temp_min_C: -30, temp_max_C: 80, antistatic: "Standard (all versions)",
-  image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/0a354bdce_1200_p38_i0.jpeg",
-  page_range: "38–43", tags: ["Deep Freeze", "Belt Drive", "Antistatic"],
-  applications: ["General conveying", "Belt conveyors", "Deep freeze (−30°C)", "High-temp (+80°C)"],
-  notes: "Steel bearing housing for extreme temps. Lubrication: oiled to Ø40 mm, greased from Ø50 mm. All antistatic.",
-  tubes: [
-  { label: "Ø30 × 1.2 mm — Zinc-plated / Stainless / Aluminum", tube_mm: 30, wall_mm: 1.2, materials: ["Zinc-plated steel", "Stainless steel", "Aluminum"] },
-  { label: "Ø40 × 1.2 mm — Zinc-plated / Stainless / Aluminum", tube_mm: 40, wall_mm: 1.2, materials: ["Zinc-plated steel", "Stainless steel", "Aluminum"] },
-  { label: "Ø50 × 1.5 mm — Zinc-plated / Stainless / Aluminum", tube_mm: 50, wall_mm: 1.5, materials: ["Zinc-plated steel", "Stainless steel", "Aluminum"] },
-  { label: "Ø60 × 1.5 mm — Zinc-plated / Stainless / Aluminum", tube_mm: 60, wall_mm: 1.5, materials: ["Zinc-plated steel", "Stainless steel", "Aluminum"] }],
-
-  shafts: [
-  { label: "Spring-loaded", code: "spring" },
-  { label: "Fixed shaft", code: "fixed" },
-  { label: "Female thread M8", code: "female_M8" },
-  { label: "Male thread", code: "male" }],
-
-  sleeves: ["None", "PVC sleeve", "PU sleeve", "Lagging"],
-  grooves: false, sprockets: false,
-  dim_formula: "EL = AGL = RL + shaft-specific extension. Contact Uniking for full dimension table (pp. 38–43).",
-  load_table: {
-    cols_mm: [200, 400, 600, 800, 1000, 1200],
-    rows: [
-    { label: "Ø30×1.2 ZP, Ø8", loads: [250, 100, 50, 30, null, null] },
-    { label: "Ø40×1.2 ZP, Ø10", loads: [500, 220, 130, 90, null, null] },
-    { label: "Ø50×1.5 ZP, Ø12", loads: [900, 450, 280, 195, 150, 120] },
-    { label: "Ø60×1.5 ZP, Ø14", loads: [1200, 700, 450, 330, 260, 215] }]
-
-  }
-},
-{
-  id: "1450", name: "Series 1450", subtitle: "Heavy-Duty Universal Conveyor Roller",
-  platform: "1450", duty: "Heavy", color: "#ef4444",
-  driveType: "Gravity / Chain / Belt (driven or non-driven)", maxLoad_N: 5000, maxSpeed_ms: 0.8,
-  temp_min_C: -5, temp_max_C: 40, antistatic: "Optional",
-  image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/1ac6db2ed_1450_p44_i0.jpeg",
-  page_range: "44–49", tags: ["Heavy Duty", "5000 N", "Pallet"],
-  applications: ["Palletizers", "Heavy containers", "Barrels & drums", "Steel containers"],
-  notes: "Polyamide housing: 5000 N, −5 to +40°C. Steel housing (deep freeze): 2500 N, −30 to +80°C. Grooves for round belt on Ø80×2 only.",
+import { ROLLER_SERIES as SERIES } from "@/lib/rollerSeriesData";
+// SERIES from lib/rollerSeriesData.js; dead block below is unused
+const _DEAD_SERIES_DATA = [{id: "1500_removed",
   tubes: [
   { label: "Ø60 × 2 mm — Zinc-plated / Stainless (Polyamide housing, 5000 N)", tube_mm: 60, wall_mm: 2, materials: ["Zinc-plated steel", "Stainless steel"], housing: "Polyamide" },
   { label: "Ø60 × 3 mm — Zinc-plated / Stainless (Polyamide housing, screw-connected)", tube_mm: 60, wall_mm: 3, materials: ["Zinc-plated steel", "Stainless steel"], housing: "Polyamide", bearing: "6204 2RZ" },
@@ -5035,17 +4951,7 @@ const SERIES = [
 
   sleeves: ["None (Ø51 tube)", "PU sleeve (Ø50 tube — mandatory)"],
   grooves: false, sprockets: false,
-  dim_formula: "Ø51 spring/fixed: EL = RL + 10 mm, AGL = EL + 22 mm, U = RL − 28 mm | Ø51 female thread: EL = AGL = RL + 10 mm | Ø54 (PU sleeve) female: EL = AGL = RL + 10 mm, U = RL − 26 mm",
-  load_table: {
-    cols_mm: [200, 400, 600, 800, 1000, 1200, 1400],
-    rows: [
-    { label: "Ø51×2 ZP — spring/fixed/female, 11 HEX", loads: [350, 350, 350, 350, 350, 350, 350] },
-    { label: "Ø50×1.5 + PU sleeve, 11 HEX", loads: [350, 350, 350, 350, 350, 350, 350] }]
-
-  }
-}];
-
-
+  dim_formula: "placeholder"}]; // end _DEAD_SERIES_DATA
 // ─── DETAIL MODAL ─────────────────────────────────────────────────────────────
 function DetailModal({ s, onClose, onConfigure, fmt, metric }) {
   const [tab, setTab] = useState("overview");
@@ -6387,25 +6293,17 @@ export default function Home() {
   function selectType(typeKey) {
     if (typeKey === "__chain__") {setInChainMenu(true);setView("chains");return;}
     if (typeKey === "Elevator Bucket") {setCurrentPage("elevatorBuckets");window.scrollTo(0, 0);return;}
-    if (typeKey === "Conveyor Rollers") {setCurrentPage("rollerConfig");window.scrollTo(0, 0);return;}
-    if (typeKey === "Forged Chain") {setCurrentPage("forgedChain");window.scrollTo(0, 0);return;}
-    if (typeKey === "Engineered Chain") {setSelectedType("Engineered Chain");setSelectedEngineeredSub(null);setSelectedAnsiSub(null);setView("engineered_subs");return;}
-    if (typeKey === "ANSI/BS Chain") {setSelectedType("ANSI/BS Chain");setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setSelectedWeldedSub(null);setView("ansi_subs");return;}
-    if (typeKey === "Welded Steel Chain") {setSelectedType("Welded Steel Chain");setSelectedWeldedSub(null);setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setView("welded_products");return;}
+    if (typeKey==="Conveyor Rollers") {setCurrentPage("rollerConfig");window.scrollTo(0,0);return;}
+    if (typeKey==="Wire Mesh Belt") {setCurrentPage("wireMesh");window.scrollTo(0,0);return;}
+    if (typeKey==="Forged Chain") {setCurrentPage("forgedChain");window.scrollTo(0,0);return;}
+    if (typeKey==="Engineered Chain") {setSelectedType("Engineered Chain");setSelectedEngineeredSub(null);setSelectedAnsiSub(null);setView("engineered_subs");return;}
+    if (typeKey==="ANSI/BS Chain") {setSelectedType("ANSI/BS Chain");setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setSelectedWeldedSub(null);setView("ansi_subs");return;}
+    if (typeKey==="Welded Steel Chain") {setSelectedType("Welded Steel Chain");setSelectedWeldedSub(null);setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setView("welded_products");return;}
     setSelectedType(typeKey);setSelectedBrand(null);setSelectedAnsiSub(null);setSelectedWeldedSub(null);setView(BRAND_GATED.has(typeKey) ? "brands" : "products");
   }
-  function selectEngineeredSub(subKey) {
-    setSelectedEngineeredSub(subKey);
-    setView("products");
-  }
-  function selectAnsiSub(subKey) {
-    setSelectedAnsiSub(subKey);
-    setView("products");
-  }
-  function selectWeldedSub(subKey) {
-    setSelectedWeldedSub(subKey);
-    setView("products");
-  }
+  function selectEngineeredSub(subKey) {setSelectedEngineeredSub(subKey);setView("products");}
+  function selectAnsiSub(subKey) {setSelectedAnsiSub(subKey);setView("products");}
+  function selectWeldedSub(subKey) {setSelectedWeldedSub(subKey);setView("products");}
   function selectBrand(brand) {setSelectedBrand(brand);setView("products");}
   function navTo(level) {
     if (level === 0) {setView("home");setSelectedType(null);setSelectedBrand(null);setInChainMenu(false);setSelectedEngineeredSub(null);setSelectedAnsiSub(null);setSelectedWeldedSub(null);} else
@@ -6432,11 +6330,11 @@ export default function Home() {
   function goBack() {setCurrentPage(null);window.scrollTo(0, 0);}
   function goRFQ() {setCurrentPage("rfqCart");window.scrollTo(0, 0);}
 
-  if (currentPage === "elevatorBuckets") return <ElevBucketsView onBack={goBack} onGoRFQ={goRFQ} />;
-  if (currentPage === "forgedChain") return <ForgedChainView onBack={goBack} onGoRFQ={goRFQ} />;
-  if (currentPage === "rollerConfig") return <RollerConfigView onBack={goBack} onGoRFQ={goRFQ} />;
-  if (currentPage === "rfqCart") return <RFQCartView onBack={goBack} />;
-
+  if (currentPage==="elevatorBuckets") return <ElevBucketsView onBack={goBack} onGoRFQ={goRFQ}/>;
+  if (currentPage==="forgedChain") return <ForgedChainView onBack={goBack} onGoRFQ={goRFQ}/>;
+  if (currentPage==="rollerConfig") return <RollerConfigView onBack={goBack} onGoRFQ={goRFQ}/>;
+  if (currentPage==="wireMesh") return <WireMeshConfigurator onBack={goBack} onGoRFQ={goRFQ}/>;
+  if (currentPage==="rfqCart") return <RFQCartView onBack={goBack}/>;
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column", overscrollBehavior: "contain" }}>
       <TopBar onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0, 0);}} />
