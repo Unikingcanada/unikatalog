@@ -6390,7 +6390,7 @@ export default function Home() {
     if (typeKey === "Conveyor Rollers") {setCurrentPage("rollerConfig");window.scrollTo(0, 0);return;}
     if (typeKey === "Forged Chain") {setCurrentPage("forgedChain");window.scrollTo(0, 0);return;}
     if (typeKey === "Engineered Chain") {setSelectedType("Engineered Chain");setSelectedEngineeredSub(null);setSelectedAnsiSub(null);setView("engineered_subs");return;}
-    if (typeKey === "ANSI/BS Chain") {setSelectedType("ANSI/BS Chain");setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setSelectedWeldedSub(null);setView("products");return;}
+    if (typeKey === "ANSI/BS Chain") {setSelectedType("ANSI/BS Chain");setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setSelectedWeldedSub(null);setView("ansi_subs");return;}
     if (typeKey === "Welded Steel Chain") {setSelectedType("Welded Steel Chain");setSelectedWeldedSub(null);setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setView("welded_products");return;}
     setSelectedType(typeKey);setSelectedBrand(null);setSelectedAnsiSub(null);setSelectedWeldedSub(null);setView(BRAND_GATED.has(typeKey) ? "brands" : "products");
   }
