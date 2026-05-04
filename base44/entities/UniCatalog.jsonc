@@ -1,0 +1,77 @@
+{
+  "name": "UniCatalog",
+  "type": "object",
+  "properties": {
+    "product_type": {
+      "type": "string",
+      "description": "Product type key matching PRODUCT_TYPES"
+    },
+    "series": {
+      "type": "string",
+      "description": "Series/family name"
+    },
+    "model_code": {
+      "type": "string",
+      "description": "Specific model code (used as display name for chains)"
+    },
+    "style": {
+      "type": "string",
+      "description": "Style or variant"
+    },
+    "application": {
+      "type": "string",
+      "description": "Application / use case"
+    },
+    "materials": {
+      "type": "string",
+      "description": "Available materials"
+    },
+    "duty": {
+      "type": "string",
+      "description": "Duty rating"
+    },
+    "features": {
+      "type": "string",
+      "description": "Key features description"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "key_specs": {
+      "type": "string",
+      "description": "JSON string of key specifications"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Product image URL"
+    },
+    "catalog_url": {
+      "type": "string",
+      "description": "Catalog PDF URL"
+    },
+    "tech_doc_url": {
+      "type": "string",
+      "description": "Technical documentation URL"
+    },
+    "belt_data": {
+      "type": "string",
+      "description": "JSON belt data"
+    },
+    "sprocket_data": {
+      "type": "string",
+      "description": "JSON sprocket data"
+    },
+    "vendor": {
+      "type": "string",
+      "description": "Vendor/brand name"
+    },
+    "page_range": {
+      "type": "string",
+      "description": "Catalog page reference"
+    }
+  },
+  "required": [
+    "product_type"
+  ]
+}

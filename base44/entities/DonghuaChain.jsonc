@@ -1,0 +1,102 @@
+{
+  "name": "DonghuaChain",
+  "type": "object",
+  "properties": {
+    "series": {
+      "type": "string",
+      "description": "Chain series name"
+    },
+    "chain_type": {
+      "type": "string",
+      "description": "Chain type: Drive Chain, Conveyor Chain, Agricultural Chain"
+    },
+    "chain_no": {
+      "type": "string",
+      "description": "Chain number designation"
+    },
+    "ansi_no": {
+      "type": "string",
+      "description": "ANSI designation"
+    },
+    "bs_no": {
+      "type": "string",
+      "description": "British Standard designation"
+    },
+    "iso_no": {
+      "type": "string",
+      "description": "ISO designation"
+    },
+    "strands": {
+      "type": "string",
+      "description": "Number of strands"
+    },
+    "pitch_mm": {
+      "type": "number",
+      "description": "Pitch in mm"
+    },
+    "roller_dia_mm": {
+      "type": "number",
+      "description": "Roller diameter in mm"
+    },
+    "inner_width_mm": {
+      "type": "number",
+      "description": "Inner width in mm"
+    },
+    "pin_dia_mm": {
+      "type": "number",
+      "description": "Pin diameter in mm"
+    },
+    "pin_length_mm": {
+      "type": "number",
+      "description": "Pin length in mm"
+    },
+    "plate_height_mm": {
+      "type": "number",
+      "description": "Plate height in mm"
+    },
+    "plate_thickness_mm": {
+      "type": "number",
+      "description": "Plate thickness in mm"
+    },
+    "transverse_pitch_mm": {
+      "type": "number",
+      "description": "Transverse pitch in mm"
+    },
+    "tensile_strength_kn": {
+      "type": "number",
+      "description": "Minimum tensile strength in kN"
+    },
+    "tensile_strength_lbf": {
+      "type": "number",
+      "description": "Minimum tensile strength in lbf"
+    },
+    "weight_kg_m": {
+      "type": "number",
+      "description": "Weight in kg/m"
+    },
+    "materials": {
+      "type": "string",
+      "description": "Material(s)"
+    },
+    "application": {
+      "type": "string",
+      "description": "Application notes"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "catalog_url": {
+      "type": "string",
+      "description": "Catalog URL"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Product image URL"
+    }
+  },
+  "required": [
+    "series",
+    "chain_type"
+  ]
+}

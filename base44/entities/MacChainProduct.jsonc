@@ -1,0 +1,110 @@
+{
+  "name": "MacChainProduct",
+  "type": "object",
+  "properties": {
+    "part_number": {
+      "type": "string",
+      "description": "Chain part number / item number"
+    },
+    "product_type": {
+      "type": "string",
+      "description": "High-level product type (e.g. ANSI Roller Chain)"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category used for routing: High-End Roller Chain, Engineered Chain, Welded Steel Chain, Long Link Chain, Pintle Chain, Special Application Chain"
+    },
+    "subcategory": {
+      "type": "string",
+      "description": "Subcategory key matching ANSI_SUBCATEGORIES / ENGINEERED_SUBCATEGORIES"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short product description"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Key features list"
+    },
+    "materials": {
+      "type": "string",
+      "description": "Material(s)"
+    },
+    "industry": {
+      "type": "string",
+      "description": "Target industry"
+    },
+    "basic_headers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Column headers for spec table"
+    },
+    "basic_rows": {
+      "type": "array",
+      "items": {
+        "type": "array"
+      },
+      "description": "Rows of spec data"
+    },
+    "more_headers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Additional spec table headers"
+    },
+    "more_rows": {
+      "type": "array",
+      "items": {
+        "type": "array"
+      },
+      "description": "Additional spec table rows"
+    },
+    "product_image": {
+      "type": "string",
+      "description": "URL of product photo"
+    },
+    "diagram_image": {
+      "type": "string",
+      "description": "URL of dimensional drawing"
+    },
+    "catalog_url": {
+      "type": "string",
+      "description": "Link to catalog PDF page"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL slug for cross-reference"
+    },
+    "related_sprockets": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Compatible sprocket references"
+    },
+    "related_pins": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Compatible pins/connecting links"
+    },
+    "related_attachments": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Available attachments"
+    }
+  },
+  "required": [
+    "part_number",
+    "category"
+  ]
+}
