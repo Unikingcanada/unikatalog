@@ -4,6 +4,7 @@ import IntraloxSeriesCard from "./IntraloxSeriesCard";
 import IntraloxSeriesDetail from "./IntraloxSeriesDetail";
 import IntraloxConfigurator from "./IntraloxConfigurator";
 import ModularBrandSelector from "./ModularBrandSelector";
+import MovexCatalog from "@/components/movex/MovexCatalog";
 
 const C = {
   navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
@@ -111,10 +112,15 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
   if (!brand) {
     return (
       <ModularBrandSelector
-        onSelectBrand={b => { if (b === "intralox") setBrand("intralox"); }}
+        onSelectBrand={b => setBrand(b)}
         onBack={onBack}
       />
     );
+  }
+
+  // Movex catalog
+  if (brand === "movex") {
+    return <MovexCatalog onBack={() => setBrand(null)} />;
   }
 
   const tabSeries = { straight: STRAIGHT_SERIES, radius: RADIUS_SERIES, spiral: SPIRAL_SERIES, tools: [] }[activeTab] || [];

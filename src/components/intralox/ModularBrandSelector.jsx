@@ -65,6 +65,17 @@ const BRANDS = [
     features: ["Sideflexing Chains", "Flat Top Chains", "Modular Belts", "Food Grade Materials"],
   },
   {
+    key: "movex",
+    name: "Movex",
+    tagline: "Italian Innovation — Blueline® Food Grade",
+    description: "Movex S.p.A. (Italy) manufactures high-quality modular belts for beverage, food, logistics, and automotive industries. The Blueline® range covers meat, poultry, seafood, and bakery. 8–50.8 mm pitch. Full interchangeability with major belt producers.",
+    logo: null,
+    accentColor: "#E63946",
+    logoText: "MVX",
+    available: true,
+    features: ["8 mm to 50.8 mm Pitch", "Blueline® Food Grade", "Sideflexing Belts", "BluLub® Self-Lubricating POM", "Interchangeable Design"],
+  },
+  {
     key: "forbo",
     name: "Forbo / Forbo Siegling",
     tagline: "Conveyor & Processing Belts",
