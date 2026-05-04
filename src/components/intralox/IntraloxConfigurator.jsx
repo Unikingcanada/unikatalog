@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
-import { INTRALOX_SERIES, INTRALOX_INDUSTRIES, INTRALOX_EQUIPMENT_TYPES } from "@/lib/intraloxData";
+import { INTRALOX_SERIES, INTRALOX_INDUSTRIES, INTRALOX_EQUIPMENT_TYPES, STRAIGHT_SERIES, RADIUS_SERIES, SPIRAL_SERIES } from "@/lib/intraloxData";
+const ALL_SERIES = INTRALOX_SERIES;
 
 const C = {
   navy: "#0F2340", navyMid: "#1A3A5C", gold: "#C9A84C", goldLight: "#e8c96d",
@@ -221,7 +222,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
               <div>
                 <div style={{ fontSize: 14, fontWeight: 700, color: config.seriesId === s.id ? "#fff" : C.text }}>{s.name}</div>
                 <div style={{ fontSize: 11, color: config.seriesId === s.id ? "rgba(255,255,255,0.7)" : C.muted, marginTop: 2 }}>
-                  Pitch: {s.pitch_in}" · {s.styleCount}+ styles · {s.applications.slice(0, 2).join(", ")}
+                  {s.pitch_in && s.pitch_in !== "To be confirmed by Uniking" ? `Pitch: ${s.pitch_in}" · ` : ""}{s.styles?.length || 0} styles · {(s.applications || []).slice(0, 2).join(", ")}
                 </div>
               </div>
             </button>

@@ -149,16 +149,18 @@ function SpecsModal({ series, style, onConfigure, onClose }) {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, fontSize: 12 }}>
               {[
                 ["Series", series.name],
-                ["Belt Pitch", `${series.pitch_in}" (${series.pitch_mm} mm)`],
+                ["Belt Type", series.beltType],
+                ["Belt Pitch", series.pitch_in && series.pitch_in !== "To be confirmed by Uniking" ? `${series.pitch_in}" (${series.pitch_mm} mm)` : "To be confirmed by Uniking"],
                 ["Surface Type", style.surface],
                 ["Open Area", style.openArea],
-                ["Min Width", `${series.min_width_in}" (${series.min_width_mm} mm)`],
-                ["Width Increments", `${series.width_increment_in}" (${series.width_increment_mm} mm)`],
+                ["2026 Catalog Page", series.catalogPage ? `p. ${series.catalogPage}` : null],
+                ["Min Width", series.min_width_in ? `${series.min_width_in}" (${series.min_width_mm} mm)` : "To be confirmed by Uniking"],
+                ["Width Increments", series.width_increment_in ? `${series.width_increment_in}" (${series.width_increment_mm} mm)` : "To be confirmed by Uniking"],
                 ["Rod Diameter", series.rod_dia_in ? `${series.rod_dia_in}" (${series.rod_dia_mm} mm)` : "To be confirmed by Uniking"],
-                ["Rod Retention", series.rod_retention],
-                ["Hinge Style", series.hinge],
+                ["Rod Retention", series.rod_retention || "To be confirmed by Uniking"],
+                ["Hinge Style", series.hinge || "To be confirmed by Uniking"],
                 ["Nosebar (if applicable)", series.nosebar_in ? `${series.nosebar_in}" (${series.nosebar_mm} mm)` : "—"],
-              ].map(([k, v]) => (
+              ].filter(([, v]) => v != null && v !== "").map(([k, v]) => (
                 <div key={k}>
                   <div style={{ fontWeight: 600, color: C.navyMid }}>{k}</div>
                   <div style={{ color: C.muted, marginTop: 1 }}>{v}</div>
@@ -303,11 +305,14 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
         <h1 style={{ color: "#fff", fontSize: 22, fontWeight: 900, margin: "0 0 4px" }}>{series.name}</h1>
         <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: "0 0 12px", maxWidth: 600 }}>{series.description}</p>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-          <span style={{ background: "rgba(201,168,76,0.25)", color: C.gold, padding: "4px 10px", borderRadius: 16, fontSize: 11, fontWeight: 700 }}>Pitch: {series.pitch_in}" ({series.pitch_mm} mm)</span>
-          <span style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)", padding: "4px 10px", borderRadius: 16, fontSize: 11 }}>Min width: {series.min_width_in}"</span>
-          <span style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)", padding: "4px 10px", borderRadius: 16, fontSize: 11 }}>Width incr: {series.width_increment_in}"</span>
-          <span style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)", padding: "4px 10px", borderRadius: 16, fontSize: 11 }}>{series.styleCount}+ Belt Styles</span>
-          <button onClick={() => onConfigure(series.styles[0])}
+          {series.pitch_in && series.pitch_in !== "To be confirmed by Uniking" && (
+            <span style={{ background: "rgba(201,168,76,0.25)", color: C.gold, padding: "4px 10px", borderRadius: 16, fontSize: 11, fontWeight: 700 }}>Pitch: {series.pitch_in}" ({series.pitch_mm} mm)</span>
+          )}
+          {series.min_width_in && <span style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)", padding: "4px 10px", borderRadius: 16, fontSize: 11 }}>Min width: {series.min_width_in}"</span>}
+          {series.width_increment_in && <span style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)", padding: "4px 10px", borderRadius: 16, fontSize: 11 }}>Width incr: {series.width_increment_in}"</span>}
+          <span style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)", padding: "4px 10px", borderRadius: 16, fontSize: 11 }}>{series.styles?.length || 0} Belt Style{series.styles?.length !== 1 ? "s" : ""}</span>
+          <span style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.85)", padding: "4px 10px", borderRadius: 16, fontSize: 11 }}>{series.beltType}</span>
+          <button onClick={() => onConfigure(series.styles?.[0])}
             style={{ background: C.gold, color: C.navy, border: "none", borderRadius: 8, padding: "7px 18px", cursor: "pointer", fontSize: 13, fontWeight: 800, marginLeft: "auto" }}>
             Configure Belt →
           </button>
@@ -334,10 +339,10 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: C.navyMid, marginBottom: 4 }}>Belt Styles — {series.name}</div>
             <div style={{ fontSize: 12, color: C.muted, marginBottom: 16 }}>
-              {series.styles.length} styles shown. Visit <a href={`https://www.intralox.com/belt-finder/modular-plastic-belting/${series.id.toLowerCase()}`} target="_blank" rel="noreferrer" style={{ color: INTRALOX_RED }}>Intralox Belt Finder ↗</a> for the complete listing.
+              {series.styles?.length || 0} styles shown. Visit <a href={`https://www.intralox.com/belt-finder/modular-plastic-belting/${series.id.toLowerCase()}`} target="_blank" rel="noreferrer" style={{ color: INTRALOX_RED }}>Intralox Belt Finder ↗</a> for the complete listing.
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 14 }}>
-              {series.styles.map(style => (
+              {(series.styles || []).map(style => (
                 <BeltStyleCard key={style.key} style={style}
                   onViewSpecs={setViewingStyle}
                   onConfigure={s => onConfigure(s, series)} />
@@ -436,7 +441,7 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
             </div>
 
             {/* Inline belt data for series with known data */}
-            {series.styles.filter(s => Array.isArray(s.beltData)).map(style => (
+            {(series.styles || []).filter(s => Array.isArray(s.beltData)).map(style => (
               <div key={style.key} style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, padding: "16px 20px", marginBottom: 12 }}>
                 <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid, marginBottom: 10 }}>{series.name} — {style.label} Belt Data</div>
                 <div style={{ overflowX: "auto" }}>
