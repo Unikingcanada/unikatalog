@@ -678,7 +678,7 @@ export const RADIUS_SERIES = [
     name: "Series 3000",
     beltType: "Radius",
     catalogPage: 385,
-    image: CDN + "f045209f-e054-4c2f-a058-7cc4476e062b/modular-plastic-belting-40_21.jpg?w=568&h=298.2&rect=0,0,2400,1260&fit=&q=85&auto=format",
+    image: IMG.S2200,
     description: "Series 3000 radius belt for 180° turns and complex multi-directional layouts. Suitable for compact conveyor systems that require tight turns.",
     applications: ["180° turns", "Compact conveyor layouts", "Multi-directional systems", "Packaging & food processing"],
     advantages: ["180° turning capability", "Compact layout design", "Multiple surface options"],
@@ -695,7 +695,7 @@ export const RADIUS_SERIES = [
     name: "Series 4000",
     beltType: "Radius",
     catalogPage: 391,
-    image: CDN + "f045209f-e054-4c2f-a058-7cc4476e062b/modular-plastic-belting-40_21.jpg?w=568&h=298.2&rect=0,0,2400,1260&fit=&q=85&auto=format",
+    image: IMG.S2400,
     description: "Series 4000 high-performance radius belt with enhanced module design for reliability in food and industrial horizontal curve applications.",
     applications: ["High-performance horizontal curves", "Food processing", "Industrial curve conveying"],
     advantages: ["High-performance radius design", "Reliable module construction", "FDA materials available"],
@@ -716,7 +716,7 @@ export const SPIRAL_SERIES = [
     name: "Series 2600",
     beltType: "Spiral",
     catalogPage: 409,
-    image: CDN + "f045209f-e054-4c2f-a058-7cc4476e062b/modular-plastic-belting-40_21.jpg?w=568&h=298.2&rect=0,0,2400,1260&fit=&q=85&auto=format",
+    image: IMG.S2600,
     description: "Series 2600 spiral belt for spiral freezer and cooler systems. Designed to withstand the demanding conditions of spiral conveyor towers.",
     applications: ["Spiral freezers", "Spiral coolers", "Proofing towers", "Vertical conveying systems"],
     advantages: ["Designed for spiral systems", "High tension strength", "Self-stacking for compact footprint", "FDA materials available"],
@@ -734,7 +734,7 @@ export const SPIRAL_SERIES = [
     name: "Series 2700",
     beltType: "Spiral",
     catalogPage: 421,
-    image: CDN + "f045209f-e054-4c2f-a058-7cc4476e062b/modular-plastic-belting-40_21.jpg?w=568&h=298.2&rect=0,0,2400,1260&fit=&q=85&auto=format",
+    image: IMG.S2700,
     description: "Series 2700 enhanced spiral belt with improved module design for higher-tension spiral applications and wider belt widths.",
     applications: ["High-tension spiral systems", "Wide spiral freezers", "Commercial spiral coolers", "Proofing towers"],
     advantages: ["Higher tension than S2600", "Wider belt options", "Improved module design", "FDA materials available"],
@@ -751,7 +751,7 @@ export const SPIRAL_SERIES = [
     name: "Series 2800",
     beltType: "Spiral",
     catalogPage: 433,
-    image: CDN + "f045209f-e054-4c2f-a058-7cc4476e062b/modular-plastic-belting-40_21.jpg?w=568&h=298.2&rect=0,0,2400,1260&fit=&q=85&auto=format",
+    image: IMG.S2800,
     description: "Series 2800 spiral belt for high-capacity spiral freezers and coolers. Features reinforced module design for increased tension loads in large commercial spiral systems.",
     applications: ["High-capacity spiral freezers", "Commercial spiral coolers", "Large-format spiral systems", "Proofing towers"],
     advantages: ["Higher capacity than S2700", "Reinforced module design", "Increased tension load capability", "FDA materials available"],
@@ -769,7 +769,7 @@ export const SPIRAL_SERIES = [
     name: "Series 2900",
     beltType: "Spiral",
     catalogPage: 441,
-    image: CDN + "f045209f-e054-4c2f-a058-7cc4476e062b/modular-plastic-belting-40_21.jpg?w=568&h=298.2&rect=0,0,2400,1260&fit=&q=85&auto=format",
+    image: IMG.S2900,
     description: "Series 2900 spiral belt engineered for demanding spiral freezer/cooler applications requiring maximum strength and reliability in continuous operation environments.",
     applications: ["Demanding spiral freezer applications", "High-throughput coolers", "Continuous operation spiral systems"],
     advantages: ["Maximum strength for spiral systems", "Reliable continuous operation design", "Durable module construction", "FDA materials available"],
@@ -786,7 +786,7 @@ export const SPIRAL_SERIES = [
     name: "Series 2950",
     beltType: "Spiral",
     catalogPage: 453,
-    image: CDN + "f045209f-e054-4c2f-a058-7cc4476e062b/modular-plastic-belting-40_21.jpg?w=568&h=298.2&rect=0,0,2400,1260&fit=&q=85&auto=format",
+    image: IMG.S2950,
     description: "Series 2950 premium spiral belt for the most demanding spiral conveyor applications. Highest tension ratings in the Intralox spiral belt range.",
     applications: ["Premium spiral freezer systems", "Highest-demand coolers", "High-load spiral proofing towers"],
     advantages: ["Highest tension ratings in spiral range", "Premium spiral module design", "Maximum reliability for critical applications", "FDA materials available"],
@@ -1015,6 +1015,7 @@ export const BELT_SUPPORT_TOOLS = [
 
 // ── Combined exports for legacy compatibility ─────────────────────────────────
 export const INTRALOX_SERIES = [...STRAIGHT_SERIES, ...RADIUS_SERIES, ...SPIRAL_SERIES];
+export const IMG_STYLE_COUNTS = IMG.STYLE_COUNTS;
 
 export const INTRALOX_INDUSTRIES = [
   "Meat & Poultry Processing", "Food & Beverage", "Bakery & Snack",

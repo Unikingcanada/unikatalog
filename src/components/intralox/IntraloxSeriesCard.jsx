@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { IMG_STYLE_COUNTS } from "@/lib/intraloxData";
 
 const C = {
   navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
@@ -10,6 +11,7 @@ const BELT_TYPE_COLORS = {
   "Straight-Running": { bg: "#e0f2fe", color: "#0369a1" },
   "Radius":           { bg: "#fce7f3", color: "#be185d" },
   "Spiral":           { bg: "#ede9fe", color: "#7c3aed" },
+  "Side-Flexing":     { bg: "#fef9c3", color: "#92400e" },
   "Belt Support Tool":{ bg: "#d1fae5", color: "#065f46" },
 };
 
@@ -20,6 +22,9 @@ export default function IntraloxSeriesCard({ series, onViewSeries, onConfigure }
   const pitchLabel = series.pitch_in && series.pitch_in !== "To be confirmed by Uniking"
     ? `${series.pitch_in}" pitch`
     : null;
+
+  // Accurate style count from Belt Finder data
+  const styleCount = IMG_STYLE_COUNTS?.[series.id] || series.styles?.length || null;
 
   return (
     <div
@@ -64,10 +69,15 @@ export default function IntraloxSeriesCard({ series, onViewSeries, onConfigure }
           )}
         </div>
 
-        {/* Intralox badge + series name at bottom */}
+        {/* Intralox badge + series name + style count at bottom */}
         <div style={{ position: "absolute", bottom: 10, left: 12, right: 12, display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
-          <div style={{ color: "#fff", fontSize: 16, fontWeight: 900, lineHeight: 1.2, textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>{series.name}</div>
-          <div style={{ background: INTRALOX_RED, borderRadius: 4, padding: "2px 6px" }}>
+          <div>
+            <div style={{ color: "#fff", fontSize: 16, fontWeight: 900, lineHeight: 1.2, textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>{series.name}</div>
+            {styleCount && (
+              <div style={{ color: "rgba(255,255,255,0.85)", fontSize: 10, fontWeight: 600, marginTop: 2 }}>{styleCount} Style{styleCount !== 1 ? "s" : ""}</div>
+            )}
+          </div>
+          <div style={{ background: INTRALOX_RED, borderRadius: 4, padding: "2px 6px", flexShrink: 0 }}>
             <span style={{ fontSize: 8, fontWeight: 800, color: "#fff", letterSpacing: "0.5px" }}>INTRALOX</span>
           </div>
         </div>
@@ -75,10 +85,17 @@ export default function IntraloxSeriesCard({ series, onViewSeries, onConfigure }
 
       {/* Body */}
       <div style={{ padding: "12px 14px", flex: 1, display: "flex", flexDirection: "column", gap: 8 }}>
-        {/* Catalog page ref */}
-        {series.catalogPage && (
-          <div style={{ fontSize: 10, color: C.muted }}>📄 2026 Catalog p.{series.catalogPage}</div>
-        )}
+        {/* Catalog page ref + style count */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          {series.catalogPage && (
+            <div style={{ fontSize: 10, color: C.muted }}>📄 2026 Catalog p.{series.catalogPage}</div>
+          )}
+          {styleCount && (
+            <div style={{ fontSize: 10, fontWeight: 700, color: C.navyMid, background: "#eef3f8", padding: "2px 8px", borderRadius: 10 }}>
+              {styleCount} Style{styleCount !== 1 ? "s" : ""}
+            </div>
+          )}
+        </div>
 
         {/* Description */}
         <p style={{ fontSize: 12, color: C.muted, lineHeight: 1.6, margin: 0 }}>
