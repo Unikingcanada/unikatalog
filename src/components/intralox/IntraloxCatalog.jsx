@@ -15,7 +15,7 @@ const MPB_MANUAL_URL = "https://assets-us-01.kc-usercontent.com/19eb64b5-1815-00
 const TABS = [
   { key: "straight", label: "Straight-Running", count: STRAIGHT_SERIES.length, desc: "All straight-running belt series" },
   { key: "radius", label: "Radius", count: RADIUS_SERIES.length, desc: "Horizontal curve belt series" },
-  { key: "spiral", label: "Spiral", count: SPIRAL_SERIES.length, desc: "Spiral freezer / cooler belt series" },
+  { key: "spiral", label: "Spiral", count: SPIRAL_SERIES.length, desc: "Spiral freezer / cooler belt series (2600–2950)" },
   { key: "tools", label: "Belt Support Tools", count: BELT_SUPPORT_TOOLS.length, desc: "Wear strips, nosebars, drives" },
 ];
 
