@@ -257,11 +257,10 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
             {activeTab !== "tools" && (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))", gap: 18, marginBottom: 48 }}>
                 {tabSeries.map(series => (
-                  <IntraloxSeriesCard
+                   <IntraloxSeriesCard
                     key={series.id}
                     series={series}
                     onViewSeries={handleViewSeries}
-                    onConfigure={s => handleConfigure(s.styles?.[0], s)}
                   />
                 ))}
               </div>

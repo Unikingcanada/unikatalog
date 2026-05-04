@@ -15,7 +15,7 @@ const BELT_TYPE_COLORS = {
   "Belt Support Tool":{ bg: "#d1fae5", color: "#065f46" },
 };
 
-export default function IntraloxSeriesCard({ series, onViewSeries, onConfigure }) {
+export default function IntraloxSeriesCard({ series, onViewSeries }) {
   const [hov, setHov] = useState(false);
   const typeCfg = BELT_TYPE_COLORS[series.beltType] || { bg: "#f1f5f9", color: "#334155" };
 
@@ -129,14 +129,10 @@ export default function IntraloxSeriesCard({ series, onViewSeries, onConfigure }
       </div>
 
       {/* Actions */}
-      <div style={{ padding: "10px 14px", borderTop: `1px solid ${C.border}`, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+      <div style={{ padding: "10px 14px", borderTop: `1px solid ${C.border}` }}>
         <button onClick={() => onViewSeries(series)}
-          style={{ padding: "8px", background: "#f1f5f9", color: C.navyMid, border: "none", borderRadius: 8, cursor: "pointer", fontSize: 11, fontWeight: 700 }}>
-          View Series
-        </button>
-        <button onClick={() => onConfigure(series)}
-          style={{ padding: "8px", background: C.navyMid, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 11, fontWeight: 800 }}>
-          Configure →
+          style={{ width: "100%", padding: "9px", background: C.navyMid, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>
+          View Series →
         </button>
       </div>
     </div>

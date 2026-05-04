@@ -22,39 +22,80 @@ function TabButton({ label, active, onClick }) {
 
 function BeltStyleCard({ style, onViewSpecs, onConfigure }) {
   const [hov, setHov] = useState(false);
+  const hasCatalogData = Array.isArray(style.beltData);
+  const isMissingData = style.beltData === "Missing Data – Needs Mapping";
   return (
     <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
         background: "#fff", borderRadius: 12, border: `2px solid ${hov ? C.navyMid : C.border}`,
-        overflow: "hidden", transition: "all 0.16s", boxShadow: hov ? "0 6px 20px rgba(15,35,64,0.1)" : "0 1px 4px rgba(0,0,0,0.05)"
+        overflow: "hidden", transition: "all 0.16s", boxShadow: hov ? "0 6px 20px rgba(15,35,64,0.1)" : "0 1px 4px rgba(0,0,0,0.05)",
+        display: "flex", flexDirection: "column"
       }}>
-      <div style={{ height: 120, overflow: "hidden", background: "#f0f4f8" }}>
+      {/* Image */}
+      <div style={{ height: 140, overflow: "hidden", background: "#f0f4f8", position: "relative", flexShrink: 0 }}>
         {style.image ? (
           <img src={style.image} alt={style.label}
             style={{ width: "100%", height: "100%", objectFit: "cover", transform: hov ? "scale(1.03)" : "scale(1)", transition: "transform 0.3s" }}
-            onError={e => e.target.style.display = "none"} />
-        ) : (
-          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: C.muted, fontSize: 28 }}>⛓️</div>
+            onError={e => { e.target.style.display = "none"; e.target.nextSibling && (e.target.nextSibling.style.display = "flex"); }} />
+        ) : null}
+        {!style.image && (
+          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 6, color: C.muted }}>
+            <div style={{ fontSize: 28 }}>🖼️</div>
+            <div style={{ fontSize: 9, textAlign: "center", padding: "0 12px" }}>Image to be added by Uniking</div>
+          </div>
+        )}
+        {/* Data quality badge */}
+        {hasCatalogData && (
+          <div style={{ position: "absolute", top: 8, right: 8, background: "#16a34a", color: "#fff", fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 6 }}>
+            ✓ Data
+          </div>
+        )}
+        {isMissingData && (
+          <div style={{ position: "absolute", top: 8, right: 8, background: "#f59e0b", color: "#fff", fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 6 }}>
+            ⚠ Data TBC
+          </div>
         )}
       </div>
-      <div style={{ padding: "10px 12px" }}>
-        <div style={{ fontSize: 13, fontWeight: 800, color: C.navyMid, marginBottom: 2 }}>{style.label}</div>
-        <div style={{ display: "flex", gap: 6, marginBottom: 6, flexWrap: "wrap" }}>
-          <span style={{ background: "#eef3f8", color: C.navyMid, fontSize: 10, fontWeight: 600, padding: "1px 7px", borderRadius: 8 }}>
-            Open Area: {style.openArea}
-          </span>
-          <span style={{ background: "#f1f5f9", color: C.muted, fontSize: 10, padding: "1px 7px", borderRadius: 8 }}>
-            {style.surface}
-          </span>
+      {/* Body */}
+      <div style={{ padding: "10px 12px", flex: 1, display: "flex", flexDirection: "column" }}>
+        <div style={{ fontSize: 13, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>{style.label}</div>
+        <div style={{ display: "flex", gap: 5, marginBottom: 6, flexWrap: "wrap" }}>
+          {style.openArea && style.openArea !== "To be confirmed by Uniking" && (
+            <span style={{ background: "#eef3f8", color: C.navyMid, fontSize: 10, fontWeight: 600, padding: "1px 7px", borderRadius: 8 }}>
+              {style.openArea} open area
+            </span>
+          )}
+          {style.surface && style.surface !== "To be confirmed by Uniking" && (
+            <span style={{ background: "#f1f5f9", color: C.muted, fontSize: 10, padding: "1px 7px", borderRadius: 8 }}>
+              {style.surface}
+            </span>
+          )}
         </div>
-        <p style={{ fontSize: 11, color: C.muted, lineHeight: 1.5, margin: "0 0 8px" }}>{style.description?.slice(0, 90)}…</p>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+        <p style={{ fontSize: 11, color: C.muted, lineHeight: 1.5, margin: "0 0 8px", flex: 1 }}>
+          {style.description?.slice(0, 100)}{style.description?.length > 100 ? "…" : ""}
+        </p>
+        {hasCatalogData && (
+          <div style={{ marginBottom: 8 }}>
+            <div style={{ fontSize: 10, color: C.muted, fontWeight: 600, marginBottom: 2 }}>Materials:</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+              {style.beltData.slice(0, 3).map((r, i) => (
+                <span key={i} style={{ fontSize: 9, background: "#f0fdf4", color: "#166534", padding: "1px 6px", borderRadius: 6, fontWeight: 600 }}>
+                  {r.material.split(" ")[0]}
+                </span>
+              ))}
+              {style.beltData.length > 3 && (
+                <span style={{ fontSize: 9, background: "#f1f5f9", color: C.muted, padding: "1px 6px", borderRadius: 6 }}>+{style.beltData.length - 3}</span>
+              )}
+            </div>
+          </div>
+        )}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginTop: "auto" }}>
           <button onClick={() => onViewSpecs(style)}
-            style={{ padding: "6px", background: "#f1f5f9", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 11, fontWeight: 700, color: C.navyMid }}>
-            View Specs
+            style={{ padding: "7px", background: "#f1f5f9", border: "none", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 700, color: C.navyMid }}>
+            View Details
           </button>
           <button onClick={() => onConfigure(style)}
-            style={{ padding: "6px", background: C.navyMid, border: "none", borderRadius: 6, cursor: "pointer", fontSize: 11, fontWeight: 800, color: "#fff" }}>
+            style={{ padding: "7px", background: C.navyMid, border: "none", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 800, color: "#fff" }}>
             Configure →
           </button>
         </div>
@@ -99,17 +140,23 @@ function AccessoryRow({ acc, onAddRFQ }) {
     <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", background: "#fff", borderBottom: "1px solid #f1f5f9" }}>
       {acc.image ? (
         <img src={acc.image} alt={acc.name}
-          style={{ width: 52, height: 40, objectFit: "cover", borderRadius: 6, background: "#f8fafc", flexShrink: 0 }}
-          onError={e => e.target.style.display = "none"} />
+          style={{ width: 70, height: 52, objectFit: "cover", borderRadius: 6, background: "#f8fafc", flexShrink: 0 }}
+          onError={e => { e.target.style.display = "none"; }} />
       ) : (
-        <div style={{ width: 52, height: 40, background: "#f1f5f9", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>🔩</div>
+        <div style={{ width: 70, height: 52, background: "#f1f5f9", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>
+          {acc.type === "flight" ? "🔧" : acc.type === "sideguard" ? "🛡️" : "🔩"}
+        </div>
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid }}>{acc.name}</div>
-        <div style={{ fontSize: 11, color: C.muted }}>{acc.notes}</div>
+        {acc.type && <div style={{ fontSize: 10, color: C.muted, textTransform: "capitalize", marginBottom: 2 }}>{acc.type}</div>}
+        <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.4 }}>{acc.notes}</div>
+        {acc.url && (
+          <a href={acc.url} target="_blank" rel="noreferrer" style={{ fontSize: 10, color: INTRALOX_RED, fontWeight: 600, textDecoration: "none" }}>View on Intralox ↗</a>
+        )}
       </div>
       <button onClick={() => onAddRFQ(acc)}
-        style={{ padding: "6px 12px", background: C.navy, color: "#fff", border: "none", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 800, flexShrink: 0 }}>
+        style={{ padding: "7px 14px", background: C.navy, color: "#fff", border: "none", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 800, flexShrink: 0 }}>
         + RFQ
       </button>
     </div>
@@ -206,8 +253,11 @@ function SpecsModal({ series, style, onConfigure, onClose }) {
               )}
             </div>
           ) : (
-            <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#92400e", marginBottom: 16 }}>
-              Belt data: <strong>To be confirmed by Uniking.</strong> Contact us for full specifications.
+            <div style={{ background: style.beltData === "Missing Data – Needs Mapping" ? "#fef3c7" : "#fffbeb", border: `1px solid ${style.beltData === "Missing Data – Needs Mapping" ? "#fde68a" : "#fde68a"}`, borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#92400e", marginBottom: 16 }}>
+              {style.beltData === "Missing Data – Needs Mapping"
+                ? <span>⚠ <strong>Missing Data – Needs Mapping.</strong> Belt data exists in the 2026 catalog but has not yet been entered. Contact Uniking for full specifications.</span>
+                : <span>Belt data: <strong>To be confirmed by Uniking.</strong> Contact us for full specifications.</span>
+              }
             </div>
           )}
 
@@ -261,11 +311,10 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
   const flightData = getSeriesFlightData(series.id);
 
   const tabs = [
-    { key: "styles", label: "Belt Styles" },
-    { key: "sprockets", label: "Compatible Sprockets" },
-    { key: "flights", label: "Flights & Attachments" },
-    { key: "accessories", label: "Accessories" },
-    { key: "techcharts", label: "Technical Charts" },
+    { key: "styles", label: `Belt Styles (${series.styles?.length || 0})` },
+    { key: "sprockets", label: `Sprockets (${series.sprockets?.length || 0})` },
+    { key: "flights", label: "Flights & Accessories" },
+    { key: "techcharts", label: "Technical Data" },
     { key: "downloads", label: `Downloads${cadDownloads.length ? " (" + cadDownloads.reduce((a, g) => a + g.files.length, 0) + ")" : ""}` },
   ];
 
@@ -317,10 +366,6 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
           {series.width_increment_in && <span style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)", padding: "4px 10px", borderRadius: 16, fontSize: 11 }}>Width incr: {series.width_increment_in}"</span>}
           <span style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)", padding: "4px 10px", borderRadius: 16, fontSize: 11 }}>{series.styles?.length || 0} Belt Style{series.styles?.length !== 1 ? "s" : ""}</span>
           <span style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.85)", padding: "4px 10px", borderRadius: 16, fontSize: 11 }}>{series.beltType}</span>
-          <button onClick={() => onConfigure(series.styles?.[0])}
-            style={{ background: C.gold, color: C.navy, border: "none", borderRadius: 8, padding: "7px 18px", cursor: "pointer", fontSize: 13, fontWeight: 800, marginLeft: "auto" }}>
-            Configure Belt →
-          </button>
         </div>
       </div>
 
@@ -343,8 +388,15 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
         {activeTab === "styles" && (
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: C.navyMid, marginBottom: 4 }}>Belt Styles — {series.name}</div>
-            <div style={{ fontSize: 12, color: C.muted, marginBottom: 16 }}>
-              {series.styles?.length || 0} styles shown. Visit <a href={`https://www.intralox.com/belt-finder/modular-plastic-belting/${series.id.toLowerCase()}`} target="_blank" rel="noreferrer" style={{ color: INTRALOX_RED }}>Intralox Belt Finder ↗</a> for the complete listing.
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
+              <div style={{ fontSize: 12, color: C.muted }}>
+                {series.styles?.length || 0} catalog styles · Click <strong>View Details</strong> for full specs or <strong>Configure</strong> to build your belt.
+              </div>
+              <a href={`https://www.intralox.com/belt-finder/modular-plastic-belting/${series.id.toLowerCase().replace(/^s(\d)/, "series-$1")}`}
+                target="_blank" rel="noreferrer"
+                style={{ fontSize: 11, color: INTRALOX_RED, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap" }}>
+                View on Intralox Belt Finder ↗
+              </a>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 14 }}>
               {(series.styles || []).map(style => (
@@ -361,18 +413,56 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: C.navyMid, marginBottom: 4 }}>Compatible Sprockets — {series.name}</div>
             <div style={{ fontSize: 12, color: C.muted, marginBottom: 12 }}>
-              Only sprockets confirmed compatible with {series.name}. Click "+ RFQ" to add directly to your quote.
+              Sprockets confirmed compatible with {series.name} from the 2026 catalog. Click "+ RFQ" to add to your quote.
             </div>
-            <div style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "60px 1fr 100px 100px 70px", background: C.navyMid, padding: "8px 14px", gap: 12 }}>
-                {["", "Sprocket Name & Notes", "Material", "Intralox", "Action"].map(h => (
-                  <div key={h} style={{ fontSize: 10, fontWeight: 700, color: "#fff", textTransform: "uppercase" }}>{h}</div>
+            {series.sprockets?.length > 0 ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {series.sprockets.map((sp, i) => (
+                  <div key={i} style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden", display: "flex" }}>
+                    {sp.image ? (
+                      <div style={{ width: 100, flexShrink: 0 }}>
+                        <img src={sp.image} alt={sp.name} style={{ width: "100%", height: 80, objectFit: "cover" }} onError={e => e.target.style.display = "none"} />
+                      </div>
+                    ) : (
+                      <div style={{ width: 100, height: 80, flexShrink: 0, background: "#f0f4f8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>⚙️</div>
+                    )}
+                    <div style={{ padding: "10px 14px", flex: 1, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                      <div style={{ flex: 1, minWidth: 200 }}>
+                        <div style={{ fontSize: 13, fontWeight: 800, color: C.navyMid }}>{sp.name}</div>
+                        <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>
+                          Material: <strong>{sp.material}</strong>
+                          {sp.notes && <span> · {sp.notes}</span>}
+                        </div>
+                        {sp.toothCounts && (
+                          <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>Tooth counts: {sp.toothCounts}</div>
+                        )}
+                        {sp.boreTypes && (
+                          <div style={{ fontSize: 11, color: C.muted }}>Bore: {sp.boreTypes}</div>
+                        )}
+                      </div>
+                      <div style={{ display: "flex", gap: 8, flexShrink: 0, alignItems: "center" }}>
+                        {sp.url && (
+                          <a href={sp.url} target="_blank" rel="noreferrer"
+                            style={{ color: INTRALOX_RED, fontSize: 11, fontWeight: 700, textDecoration: "none", whiteSpace: "nowrap" }}>
+                            Intralox ↗
+                          </a>
+                        )}
+                        <button onClick={() => addToRFQ(sp)}
+                          style={{ padding: "7px 14px", background: C.navy, color: "#fff", border: "none", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 800, whiteSpace: "nowrap" }}>
+                          + RFQ
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
-              {series.sprockets.map((sp, i) => <SprocketRow key={i} sprocket={sp} onAddRFQ={addToRFQ} />)}
-            </div>
-            <div style={{ marginTop: 10, fontSize: 11, color: C.muted }}>
-              Sprocket pitch, tooth count, and bore data: <a href={series.techChartUrl} target="_blank" rel="noreferrer" style={{ color: INTRALOX_RED }}>Engineering Manual p.{series.engineeringManualPage} ↗</a>. Contact Uniking for detailed sprocket selection.
+            ) : (
+              <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "14px", fontSize: 13, color: "#92400e" }}>
+                Sprocket data: <strong>To be confirmed by Uniking.</strong> Contact us for {series.name} compatible sprockets.
+              </div>
+            )}
+            <div style={{ marginTop: 12, fontSize: 11, color: C.muted }}>
+              Full sprocket pitch, tooth count, and bore data: <a href={series.techChartUrl} target="_blank" rel="noreferrer" style={{ color: INTRALOX_RED }}>Engineering Manual p.{series.engineeringManualPage} ↗</a>. Contact Uniking for detailed sprocket selection.
             </div>
           </div>
         )}
@@ -431,63 +521,70 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
                 Flight details for {series.name}: <strong>To be confirmed by Uniking.</strong> Contact us for accessory options.
               </div>
             )}
-            {(sideguards.length > 0) && (
-              <div>
+            {sideguards.length > 0 && (
+              <div style={{ marginTop: 20 }}>
                 <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 8 }}>Sideguards</div>
                 <div style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden" }}>
                   {sideguards.map((s, i) => <AccessoryRow key={i} acc={s} onAddRFQ={addToRFQ} />)}
                 </div>
               </div>
             )}
-          </div>
-        )}
-
-        {/* Accessories */}
-        {activeTab === "accessories" && (
-          <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: C.navyMid, marginBottom: 12 }}>Accessories & Components — {series.name}</div>
-            {otherAcc.length > 0 ? (
-              <div style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden" }}>
-                {otherAcc.map((a, i) => <AccessoryRow key={i} acc={a} onAddRFQ={addToRFQ} />)}
+            {otherAcc.length > 0 && (
+              <div style={{ marginTop: 20 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 8 }}>Accessories & Components</div>
+                <div style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden" }}>
+                  {otherAcc.map((a, i) => <AccessoryRow key={i} acc={a} onAddRFQ={addToRFQ} />)}
+                </div>
               </div>
-            ) : (
-              <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "14px", fontSize: 13, color: "#92400e" }}>
-                Additional accessories: <strong>To be confirmed by Uniking.</strong> Contact us for {series.name} compatible accessories.
+            )}
+            {sideguards.length === 0 && otherAcc.length === 0 && !flightData.flightTypes?.length && (
+              <div style={{ marginTop: 12, background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "12px 14px", fontSize: 12, color: "#92400e" }}>
+                ⚠ Accessories & components for {series.name}: <strong>To be confirmed by Uniking.</strong> Contact us for details.
               </div>
             )}
           </div>
         )}
 
-        {/* Technical Charts */}
+
+
+        {/* Technical Data */}
         {activeTab === "techcharts" && (
           <div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: C.navyMid, marginBottom: 12 }}>Technical Charts — {series.name}</div>
-            <div style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, padding: "20px 24px", marginBottom: 16 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid, marginBottom: 8 }}>Engineering Manual Reference</div>
-              <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.7, marginBottom: 12 }}>
-                Full belt data tables, sprocket selection charts, width increment tables, and installation guides are available in the official Intralox Engineering Manual.
-              </p>
-              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                <a href={series.techChartUrl} target="_blank" rel="noreferrer"
-                  style={{ background: INTRALOX_RED, color: "#fff", padding: "10px 20px", borderRadius: 8, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
-                  📄 Download Engineering Manual
-                </a>
-                <a href={`https://www.intralox.com/belt-finder/modular-plastic-belting/${series.id.toLowerCase()}`} target="_blank" rel="noreferrer"
-                  style={{ background: C.navyMid, color: "#fff", padding: "10px 20px", borderRadius: 8, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
-                  🔗 Intralox Belt Finder
-                </a>
+            <div style={{ fontSize: 14, fontWeight: 700, color: C.navyMid, marginBottom: 12 }}>Technical Data — {series.name}</div>
+
+            {/* Series overview specs */}
+            <div style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, padding: "16px 20px", marginBottom: 14 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.5px" }}>Series Specifications</div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10 }}>
+                {[
+                  ["Belt Type", series.beltType],
+                  ["Belt Pitch", series.pitch_in && series.pitch_in !== "To be confirmed by Uniking" ? `${series.pitch_in}" (${series.pitch_mm} mm)` : "To be confirmed by Uniking"],
+                  ["2026 Catalog Page", series.catalogPage ? `p. ${series.catalogPage}` : null],
+                  ["Min Belt Width", series.min_width_in ? `${series.min_width_in}" (${series.min_width_mm} mm)` : "To be confirmed by Uniking"],
+                  ["Width Increment", series.width_increment_in ? `${series.width_increment_in}" (${series.width_increment_mm} mm)` : "To be confirmed by Uniking"],
+                  ["Rod Diameter", series.rod_dia_in ? `${series.rod_dia_in}" (${series.rod_dia_mm} mm)` : "To be confirmed by Uniking"],
+                  ["Rod Retention", series.rod_retention || "To be confirmed by Uniking"],
+                  ["Hinge Style", series.hinge || "To be confirmed by Uniking"],
+                  ["Nosebar (min)", series.nosebar_in ? `${series.nosebar_in}" (${series.nosebar_mm} mm)` : "—"],
+                  ["Total Styles", `${series.styles?.length || 0} styles`],
+                ].filter(([, v]) => v != null && v !== "").map(([k, v]) => (
+                  <div key={k} style={{ background: C.bg, borderRadius: 8, padding: "10px 12px" }}>
+                    <div style={{ fontSize: 10, color: C.muted, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.4px" }}>{k}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid, marginTop: 3 }}>{v}</div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Inline belt data for series with known data */}
+            {/* Per-style belt data tables */}
             {(series.styles || []).filter(s => Array.isArray(s.beltData)).map(style => (
               <div key={style.key} style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, padding: "16px 20px", marginBottom: 12 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid, marginBottom: 10 }}>{series.name} — {style.label} Belt Data</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid, marginBottom: 10 }}>{series.name} — {style.label} Material Data</div>
                 <div style={{ overflowX: "auto" }}>
                   <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
                     <thead>
                       <tr style={{ background: C.navyMid }}>
-                        {["Belt Material", "Rod Material", "Strength lbf/ft", "Strength N/m", "Temp °F", "Temp °C", "Mass lb/ft²", "Mass kg/m²"].map(h => (
+                        {["Belt Material", "Rod Material", "Strength (lbf/ft)", "Strength (N/m)", "Temp (°F)", "Temp (°C)", "Mass (lb/ft²)", "Mass (kg/m²)"].map(h => (
                           <th key={h} style={{ padding: "7px 10px", color: "#fff", fontWeight: 700, textAlign: "left", whiteSpace: "nowrap" }}>{h}</th>
                         ))}
                       </tr>
@@ -495,28 +592,63 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
                     <tbody>
                       {style.beltData.map((row, i) => (
                         <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff" }}>
-                          <td style={{ padding: "6px 10px", fontWeight: 600, color: C.navyMid }}>{row.material}</td>
-                          <td style={{ padding: "6px 10px", color: C.muted }}>{row.rodMaterial}</td>
-                          <td style={{ padding: "6px 10px" }}>{row.strengthLbfFt?.toLocaleString()}</td>
-                          <td style={{ padding: "6px 10px" }}>{row.strengthNm?.toLocaleString()}</td>
-                          <td style={{ padding: "6px 10px" }}>{row.tempF}</td>
-                          <td style={{ padding: "6px 10px" }}>{row.tempC}</td>
-                          <td style={{ padding: "6px 10px" }}>{row.massLbFt2}</td>
-                          <td style={{ padding: "6px 10px" }}>{row.massKgM2}</td>
+                          <td style={{ padding: "7px 10px", fontWeight: 700, color: C.navyMid }}>{row.material}</td>
+                          <td style={{ padding: "7px 10px", color: C.muted }}>{row.rodMaterial}</td>
+                          <td style={{ padding: "7px 10px" }}>{row.strengthLbfFt?.toLocaleString()}</td>
+                          <td style={{ padding: "7px 10px" }}>{row.strengthNm?.toLocaleString()}</td>
+                          <td style={{ padding: "7px 10px" }}>{row.tempF}</td>
+                          <td style={{ padding: "7px 10px" }}>{row.tempC}</td>
+                          <td style={{ padding: "7px 10px" }}>{row.massLbFt2}</td>
+                          <td style={{ padding: "7px 10px" }}>{row.massKgM2}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-                {style.beltData.some(r => r.note) && (
-                  <div style={{ marginTop: 6, fontSize: 10, color: C.muted }}>
-                    {style.beltData.filter(r => r.note).map((r, i) => <div key={i}>* {r.note}</div>)}
+                {style.notes?.length > 0 && (
+                  <div style={{ marginTop: 8 }}>
+                    {style.notes.map((n, i) => (
+                      <div key={i} style={{ fontSize: 11, color: "#92400e", display: "flex", gap: 5, marginBottom: 2 }}>
+                        <span style={{ color: INTRALOX_RED }}>•</span>{n}
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
             ))}
-            <div style={{ fontSize: 11, color: C.muted, marginTop: 8 }}>
-              Source: Intralox 2024 MPB Engineering Manual — Section {series.engineeringManualPage}. All specifications subject to confirmation.
+
+            {/* Styles without catalog data */}
+            {(series.styles || []).filter(s => !Array.isArray(s.beltData)).length > 0 && (
+              <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "12px 14px", marginBottom: 14 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#92400e", marginBottom: 6 }}>⚠ Styles pending full data mapping:</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {(series.styles || []).filter(s => !Array.isArray(s.beltData)).map(s => (
+                    <span key={s.key} style={{ background: "#fef3c7", color: "#92400e", fontSize: 11, fontWeight: 600, padding: "2px 8px", borderRadius: 8 }}>{s.label}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Engineering manual links */}
+            <div style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, padding: "16px 20px" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 8 }}>Engineering Resources</div>
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                <a href={series.techChartUrl} target="_blank" rel="noreferrer"
+                  style={{ background: INTRALOX_RED, color: "#fff", padding: "9px 18px", borderRadius: 8, fontWeight: 700, fontSize: 12, textDecoration: "none" }}>
+                  📄 2026 MPB Engineering Manual (p.{series.engineeringManualPage})
+                </a>
+                <a href={`https://www.intralox.com/belt-finder/modular-plastic-belting/${series.id.toLowerCase().replace(/^s(\d)/, "series-$1")}`} target="_blank" rel="noreferrer"
+                  style={{ background: C.navyMid, color: "#fff", padding: "9px 18px", borderRadius: 8, fontWeight: 700, fontSize: 12, textDecoration: "none" }}>
+                  🔗 Intralox Belt Finder — {series.name}
+                </a>
+                <a href="https://www.intralox.com/resources/calclab" target="_blank" rel="noreferrer"
+                  style={{ background: "#f1f5f9", color: C.navyMid, padding: "9px 18px", borderRadius: 8, fontWeight: 700, fontSize: 12, textDecoration: "none", border: `1px solid ${C.border}` }}>
+                  🧮 CalcLab
+                </a>
+              </div>
+              <div style={{ marginTop: 10, fontSize: 11, color: C.muted }}>
+                Source: Intralox 2026 MPB Engineering Manual — Section {series.engineeringManualPage}. All specifications subject to confirmation by Uniking before production.
+              </div>
             </div>
           </div>
         )}
