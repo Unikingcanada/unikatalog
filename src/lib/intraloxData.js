@@ -43,7 +43,7 @@ const IMG = {
   S1650: CDN + "5605cf88-b97b-4b8c-a532-500fc65fa0f3/202383_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
   S1700: CDN + "e52082ab-e275-447e-9700-9081080a7c46/202074-ts_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
   S1750: CDN + "d2f2f044-6e30-44d3-9572-e501cffaafbe/5002546_IMG_3770_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
-  S1800: CDN + "20a32c1d-5b99-4e99-a557-8390dbcab9d1/5014239_DSCF2195_S800-Flat-Top_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
+  S1800: null,
   S1900: CDN + "d0dea248-1e70-42d8-991f-0fdfe1b7cb5f/202303surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
   S2100: CDN + "61313927-cc44-468c-a800-2b1053654a7e/5000180_P1470067.jpg?w=568&h=298&fit=crop&q=85&auto=format",
   S2200: CDN + "41ff3bce-91cd-4867-8017-dab5c73c7d59/5014239_DTA29940_S2200-Radius-Flush-Grid_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
@@ -51,9 +51,9 @@ const IMG = {
   S2400: CDN + "51f69ab6-7066-4a57-821d-b41a04ef68ee/5014239_DTA29740_S2400-Tight-Turning-Radius_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
   S2600: CDN + "93ab759a-7e0e-4205-9486-66a743decde8/5014239_DSCF3280_S2600-Spiral-3.2_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
   S2700: CDN + "79a9409f-5e55-4c50-8448-b026b488654d/202212surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
-  S2800: CDN + "93ab759a-7e0e-4205-9486-66a743decde8/5014239_DSCF3280_S2600-Spiral-3.2_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
-  S2900: CDN + "93ab759a-7e0e-4205-9486-66a743decde8/5014239_DSCF3280_S2600-Spiral-3.2_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
-  S2950: CDN + "93ab759a-7e0e-4205-9486-66a743decde8/5014239_DSCF3280_S2600-Spiral-3.2_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
+  S2800: null,
+  S2900: null,
+  S2950: null,
   // Style counts from Belt Finder (accurate as of 2026)
   STYLE_COUNTS: { S100:2,S200:3,S400:13,S560:2,S570:1,S800:21,S850:2,S888:4,S900:23,S1000:13,S1100:10,S1200:5,S1400:18,S1500:2,S1600:8,S1650:1,S1700:3,S1750:1,S1800:4,S1900:1,S2100:1,S2200:6,S2300:5,S2400:17,S2600:6,S2700:7,S2800:5,S2900:4,S2950:3,S3000:4,S4000:3,S4400:2,S4500:2,S9000:2,S10000:2 },
 };
@@ -219,7 +219,7 @@ export const STRAIGHT_SERIES = [
       // ── 2. Perforated Flat Top ───────────────────────────────────
       {
         key: "perforated_flat_top", label: "Perforated Flat Top", openArea: "18%", surface: "Perforated",
-        image: CDN + "20a32c1d-5b99-4e99-a557-8390dbcab9d1/5014239_DSCF2195_S800-Flat-Top_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
+        image: null,
         description: "18% open area perforated version of S800 Flat Top. Tailored perforations for quick drainage while maintaining closed-top product support.",
         applications: ["Drainage", "Washing", "Cooling", "Marinating", "Direct food contact"],
         beltData: [
@@ -250,7 +250,7 @@ export const STRAIGHT_SERIES = [
       // ── 4. Open Hinge Flat Top ───────────────────────────────────
       {
         key: "open_hinge_flat_top", label: "Open Hinge Flat Top", openArea: "0%", surface: "Closed / Open Hinge",
-        image: CDN + "20a32c1d-5b99-4e99-a557-8390dbcab9d1/5014239_DSCF2195_S800-Flat-Top_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
+        image: null,
         description: "Exposes more hinge and rod area for easier cleaning. Cam-link designed hinges provide unsurpassed sanitation access. Compatible with S800 Flat Top sprockets.",
         applications: ["High-hygiene food processing", "Meat & poultry", "Wash-down applications", "Sanitary environments"],
         beltData: [
@@ -280,7 +280,7 @@ export const STRAIGHT_SERIES = [
       // ── 6. Flush Grid Nub Top™ ────────────────────────────────────
       {
         key: "flush_grid_nub_top", label: "Flush Grid Nub Top™", openArea: "27% (15% contact)", surface: "Open Grid / Nub",
-        image: CDN + "837cac22-0a98-48c7-8163-a606b20909ab/5014239_DTA29161_S900-Open-Grid_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
+        image: null,
         description: "27% open area flush grid with 0.1-in nubs for product release and drainage. Ideal for seafood glazing. Bi-directional, occluded edge unheaded rod.",
         applications: ["Seafood glazing", "Drainage with product release", "Wet food processing"],
         beltData: [
@@ -545,7 +545,7 @@ export const STRAIGHT_SERIES = [
     engineeringManualPage: "171",
     styles: [
       { key: "flat_top", label: "Flat Top", openArea: "0%", surface: "Closed / Smooth", image: null, description: "Smooth closed 1-inch pitch belt for food and industrial conveying.", applications: ["Food processing", "Packaging", "General conveying"], beltData: "To be confirmed by Uniking", notes: ["1.00 in (25.4 mm) pitch."] },
-      { key: "flush_grid", label: "Flush Grid", openArea: "~45%", surface: "Open Grid", image: CDN + "5caec7b8-a7d6-4445-acb4-ba1cad5e1a6c/5014995_DSCF7337.jpg?w=568&h=298.2&rect=0,442,6240,3276&fit=&q=85&auto=format", description: "Open grid for drainage and airflow.", applications: ["Drainage", "Baking", "Cooling", "Blanching"], beltData: "To be confirmed by Uniking", notes: [] },
+      { key: "flush_grid", label: "Flush Grid", openArea: "~45%", surface: "Open Grid", image: null, description: "Open grid for drainage and airflow.", applications: ["Drainage", "Baking", "Cooling", "Blanching"], beltData: "To be confirmed by Uniking", notes: [] },
     ],
   },
   {
@@ -600,7 +600,7 @@ export const STRAIGHT_SERIES = [
         ],
         notes: ["Small pitch reduces chordal action and gap at transfer dead plate.", "Can be used over 0.875 in (22.2 mm) nosebar for tight transfers."],
       },
-      { key: "flush_grid", label: "Flush Grid", openArea: "~35%", surface: "Open Grid", image: CDN + "2466a77a-96d1-46b2-b3aa-3a42cd664acf/5014239_28DTA28188_S1100%20Flush%20Grid%20Streamline%20Base%20Flight.jpg?w=568&h=298.2&rect=&fit=crop&q=85&auto=format", description: "Open grid for drainage and airflow with 0.60-in pitch.", applications: ["Drainage", "Cooling", "Airflow"], beltData: "To be confirmed by Uniking", notes: [] },
+      { key: "flush_grid", label: "Flush Grid", openArea: "~35%", surface: "Open Grid", image: null, description: "Open grid for drainage and airflow with 0.60-in pitch.", applications: ["Drainage", "Cooling", "Airflow"], beltData: "To be confirmed by Uniking", notes: [] },
       { key: "perforated_flat_top", label: "Perforated Flat Top", openArea: "~15%", surface: "Perforated", image: null, description: "Perforated closed surface for partial drainage.", applications: ["Drainage", "Washing", "Drying"], beltData: "To be confirmed by Uniking", notes: [] },
     ],
   },
@@ -789,7 +789,7 @@ export const STRAIGHT_SERIES = [
     pitch_in: 2.00,
     pitch_mm: 50.8,
     catalogPage: 301,
-    image: IMG.S800,
+    image: null,
     description: "Series 4400 is a side-flexing modular belt that can navigate horizontal curves as well as straight runs, reducing the need for transfer plates.",
     applications: ["Horizontal curves", "Straight & curved conveying", "Packaging lines", "Accumulation"],
     advantages: ["Side-flexing capability", "Eliminates curve conveyor transfers", "2-in pitch", "Multiple surface styles"],
@@ -808,7 +808,7 @@ export const STRAIGHT_SERIES = [
     pitch_in: 2.00,
     pitch_mm: 50.8,
     catalogPage: 307,
-    image: IMG.S800,
+    image: null,
     description: "Series 4500 enhanced side-flexing belt for tighter curve radii than Series 4400. Suitable for complex conveyor layouts.",
     applications: ["Tight horizontal curves", "Complex layouts", "Packaging lines"],
     advantages: ["Tighter curve radius than S4400", "Smooth product surface", "Side-flexing modular design"],
@@ -937,7 +937,7 @@ export const RADIUS_SERIES = [
     name: "Series 3000",
     beltType: "Radius",
     catalogPage: 385,
-    image: IMG.S2200,
+    image: null,
     description: "Series 3000 radius belt for 180° turns and complex multi-directional layouts. Suitable for compact conveyor systems that require tight turns.",
     applications: ["180° turns", "Compact conveyor layouts", "Multi-directional systems", "Packaging & food processing"],
     advantages: ["180° turning capability", "Compact layout design", "Multiple surface options"],
@@ -954,7 +954,7 @@ export const RADIUS_SERIES = [
     name: "Series 4000",
     beltType: "Radius",
     catalogPage: 391,
-    image: IMG.S2400,
+    image: null,
     description: "Series 4000 high-performance radius belt with enhanced module design for reliability in food and industrial horizontal curve applications.",
     applications: ["High-performance horizontal curves", "Food processing", "Industrial curve conveying"],
     advantages: ["High-performance radius design", "Reliable module construction", "FDA materials available"],
