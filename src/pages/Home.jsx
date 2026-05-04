@@ -4490,8 +4490,7 @@ function makeFmt(metric) {
 }
 
 import { ROLLER_SERIES as SERIES } from "@/lib/rollerSeriesData";
-// SERIES from lib/rollerSeriesData.js; dead block below is unused
-const _DEAD_SERIES_DATA = [{id: "1500_removed",
+import IntraloxCatalog from "@/components/intralox/IntraloxCatalog";const _DEAD_SERIES_DATA=[{id:"1500_removed",
   tubes: [
   { label: "Ø60 × 2 mm — Zinc-plated / Stainless (Polyamide housing, 5000 N)", tube_mm: 60, wall_mm: 2, materials: ["Zinc-plated steel", "Stainless steel"], housing: "Polyamide" },
   { label: "Ø60 × 3 mm — Zinc-plated / Stainless (Polyamide housing, screw-connected)", tube_mm: 60, wall_mm: 3, materials: ["Zinc-plated steel", "Stainless steel"], housing: "Polyamide", bearing: "6204 2RZ" },
@@ -6334,8 +6333,8 @@ export default function Home() {
   if (currentPage==="forgedChain") return <ForgedChainView onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="rollerConfig") return <RollerConfigView onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="wireMesh") return <WireMeshConfigurator onBack={goBack} onGoRFQ={goRFQ}/>;
-  if (currentPage==="rfqCart") return <RFQCartView onBack={goBack}/>;
-  return (
+  if (currentPage==="intraloxCatalog") return <IntraloxCatalog onBack={goBack} onGoRFQ={goRFQ}/>;
+  if (currentPage==="rfqCart") return <RFQCartView onBack={goBack}/>;return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column", overscrollBehavior: "contain" }}>
       <TopBar onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0, 0);}} />
       <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "24px clamp(12px,4vw,40px)", boxSizing: "border-box" }}>
@@ -6421,14 +6420,9 @@ export default function Home() {
         <WeldedSeriesView rawMacRecords={rawMacRecords} /> :
         view === "brands" ?
         <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} /> :
-
         <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} rawMacRecords={rawMacRecords} />
         }
       </div>
-      <div style={{ borderTop: "1px solid " + C.border, padding: "14px 40px", textAlign: "center", fontSize: 11, color: "#cbd5e1" }}>
-        Uniking Canada · Technical Product Reference · <span onClick={() => setCurrentPage("rfqCart")} style={{ color: "#93c5fd", textDecoration: "none", fontWeight: 600, cursor: "pointer" }}>Submit an RFQ →</span>
-      </div>
-      <FloatingRFQButton onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0, 0);}} />
-    </div>);
-
-}
+      <div style={{ borderTop: "1px solid " + C.border, padding: "14px 40px", textAlign: "center", fontSize: 11, color: "#cbd5e1" }}>Uniking Canada · <span onClick={() => setCurrentPage("rfqCart")} style={{ color: "#93c5fd", fontWeight: 600, cursor: "pointer" }}>Submit an RFQ →</span></div>
+      <FloatingRFQButton onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0,0);}} />
+    </div>);}
