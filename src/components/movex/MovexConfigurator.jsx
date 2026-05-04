@@ -3,7 +3,7 @@
  * Mirrors IntraloxConfigurator structure 1:1 for Movex belts.
  */
 import { useState, useRef } from "react";
-import { MOVEX_SERIES } from "@/lib/movexData.js";
+import { MOVEX_SERIES } from "@/lib/movexData";
 import BeltSchematic from "@/components/intralox/BeltSchematic";
 import UniKingTearSheet from "@/components/intralox/UnkingTearSheet";
 import { jsPDF } from "jspdf";

@@ -6,7 +6,7 @@ import { useState } from "react";
 import MovexSeriesCard from "./MovexSeriesCard";
 import MovexSeriesDetail from "./MovexSeriesDetail";
 import MovexConfigurator from "./MovexConfigurator";
-import { MOVEX_SERIES, MOVEX_STRAIGHT_SERIES, MOVEX_SIDEFLEXING_SERIES, MOVEX_CATALOG_URL, MOVEX_BLUELINE_URL } from "@/lib/movexData.js";
+import { MOVEX_SERIES, MOVEX_STRAIGHT_SERIES, MOVEX_SIDEFLEXING_SERIES, MOVEX_CATALOG_URL, MOVEX_BLUELINE_URL } from "@/lib/movexData";
 
 const C = {
   navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
