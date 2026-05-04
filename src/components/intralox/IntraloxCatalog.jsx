@@ -16,7 +16,7 @@ const TABS = [
   { key: "straight", label: "Straight-Running", count: STRAIGHT_SERIES.length, desc: "All straight-running belt series" },
   { key: "radius", label: "Radius", count: RADIUS_SERIES.length, desc: "Horizontal curve belt series" },
   { key: "spiral", label: "Spiral", count: SPIRAL_SERIES.length, desc: "Spiral freezer / cooler belt series (2600–2950)" },
-  { key: "tools", label: "Belt Support Tools", count: BELT_SUPPORT_TOOLS.length, desc: "Wear strips, nosebars, drives" },
+  { key: "tools", label: "Belt Support Tools", count: BELT_SUPPORT_TOOLS.length, desc: "Shafts, rings, wearstrips, scrapers, transfer plates & more" },
 ];
 
 function BeltTypeTag({ type }) {
@@ -193,7 +193,7 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
               </div>
               <h1 style={{ color: "#fff", fontSize: 24, fontWeight: 900, margin: "0 0 8px" }}>Intralox Modular Plastic Belts</h1>
               <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: "0 0 16px", maxWidth: 600, lineHeight: 1.7 }}>
-                {STRAIGHT_SERIES.length} straight-running, {RADIUS_SERIES.length} radius, and {SPIRAL_SERIES.length} spiral series. Browse all belt styles, configure your belt, and add directly to RFQ.
+                {STRAIGHT_SERIES.length} straight-running, {RADIUS_SERIES.length} radius, {SPIRAL_SERIES.length} spiral series, and {BELT_SUPPORT_TOOLS.length} belt support tools — sourced from the 2026 Intralox MPB Engineering Manual. Browse all belt styles, configure your belt, and add directly to RFQ.
               </p>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 {["2026 Catalog", "Series 100 to 10000", "FDA-Compliant Materials", "Snap-Lock & Open-Hinge", "EZ Clean™ Sprockets"].map(tag => (
@@ -240,7 +240,7 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
                 {activeTab === "straight" && `${STRAIGHT_SERIES.length} series — 2026 catalog pages 31–329. Click View Series for belt styles, sprockets & technical data, or Configure to build your RFQ.`}
                 {activeTab === "radius" && `${RADIUS_SERIES.length} series — 2026 catalog pages 331–405. Radius belts navigate horizontal curves.`}
                 {activeTab === "spiral" && `${SPIRAL_SERIES.length} series — 2026 catalog pages 407–455. Spiral belts for freezer/cooler towers.`}
-                {activeTab === "tools" && `Belt support tools — 2026 catalog pages 457+. Wear strips, nosebars, transfer plates, and drive components.`}
+                {activeTab === "tools" && `${BELT_SUPPORT_TOOLS.length} belt support tools — 2026 catalog pages 457–481. Square shafts, retainer rings, returnway rings, OneTrack™ rollers, sprocket spacers, round bore adapters, scroll idlers, wearstrips, custom wearstrips, pusher bars, transfer plates, EZ Clean CIP, hold down rollers, abrasion resistance system, hinge rods, and EZ Mount scrapers.`}
               </div>
             </div>
 
