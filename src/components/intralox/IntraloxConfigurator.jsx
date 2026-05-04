@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { INTRALOX_SERIES, INTRALOX_INDUSTRIES } from "@/lib/intraloxData";
 import { getSeriesFlightData, INDENT_OPTIONS, INDENT_PLACEMENT_OPTIONS, FRICTION_TOP_OPTIONS } from "@/lib/intraloxFlightData";
 import BeltSchematic from "./BeltSchematic";
+import UniKingTearSheet from "./UnkingTearSheet";
 
 const C = {
   navy: "#0F2340", navyMid: "#1A3A5C", gold: "#C9A84C",
@@ -102,6 +103,7 @@ function Opt({ label, sub, selected, onClick }) {
 export default function IntraloxConfigurator({ initialSeries, initialStyle, onComplete, onClose }) {
   const [step, setStep] = useState(initialSeries ? (initialStyle ? STEP.INDUSTRY : STEP.STYLE) : STEP.SERIES);
   const [units, setUnits] = useState("inches"); // global unit toggle
+  const [showTearSheet, setShowTearSheet] = useState(false);
   const [config, setConfig] = useState({
     seriesId: initialSeries?.id || "",
     beltStyleKey: initialStyle?.key || "",
@@ -947,7 +949,20 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
       ["Notes", config.notes],
     ].filter(([, v]) => v && String(v).trim());
 
-    // ── Tear sheet HTML generator ──
+    // ── Tear sheet ──
+    if (showTearSheet) return (
+      <UniKingTearSheet
+        config={config}
+        series={seriesData}
+        beltStyle={styleData}
+        fields={fields}
+        beltRow={beltRow}
+        units={units}
+        onClose={() => setShowTearSheet(false)}
+      />
+    );
+
+    // ── Legacy HTML generator (kept for fallback) ──
     function generateTearSheetHTML() {
       return `<!DOCTYPE html>
 <html lang="en">
@@ -1125,8 +1140,7 @@ ${fields.map(([k, v]) => `      <tr><td>${k}</td><td>${v?.includes("To be confir
 
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <button onClick={back} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 16px", cursor: "pointer", fontSize: 13 }}>← Back</button>
-            <button onClick={handlePrintTearSheet} style={{ flex: 1, padding: "11px", background: C.gold, color: C.navy, border: "none", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 800 }}>🖨 Print Tear Sheet</button>
-            <button onClick={handleDownloadTearSheet} style={{ flex: 1, padding: "11px", background: "#1e40af", color: "#fff", border: "none", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>⬇ Download</button>
+            <button onClick={() => setShowTearSheet(true)} style={{ flex: 1, padding: "11px", background: C.gold, color: C.navy, border: "none", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 800 }}>📄 View / Print Tear Sheet</button>
             <button onClick={handleAddRFQ} style={{ flex: 2, padding: "11px", background: C.green, color: "#fff", border: "none", borderRadius: 10, cursor: "pointer", fontSize: 14, fontWeight: 800, minWidth: "100%" }}>Add to RFQ ✓</button>
           </div>
         </div>

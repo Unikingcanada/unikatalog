@@ -30,6 +30,7 @@ export default function IntraloxSeriesCard({ series, onViewSeries }) {
     <div
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
+      onClick={() => onViewSeries(series)}
       style={{
         background: "#fff",
         borderRadius: 14,
@@ -40,6 +41,7 @@ export default function IntraloxSeriesCard({ series, onViewSeries }) {
         transform: hov ? "translateY(-3px)" : "none",
         display: "flex",
         flexDirection: "column",
+        cursor: "pointer",
       }}
     >
       {/* Image */}
