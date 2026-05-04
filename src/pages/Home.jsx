@@ -15,9 +15,6 @@ function stripVendor(text) {
 
 const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics"]);
 const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket"]);
-// Navigation handled internally via currentPage state
-
-
 // ─── Chain grouping ──────────────────────────────────────────────────────────
 const CHAIN_SUBTYPE_KEYS = new Set([
 "ANSI/BS Chain", "Engineered Chain", "Cast Chain",
@@ -414,8 +411,7 @@ function applyFilters(products, activeFilters) {
   );
 }
 
-// ─── Tear Sheet ───────────────────────────────────────────────────────────────
-
+// ─── Tear Sheet ──────────────────────────────────────────────────────────────
 function printTearSheet(product) {
   const typeDef = TYPE_MAP[product.type];
   const specs = Object.entries(product.specs || {}).filter(([, v]) => v != null && v !== "" && v !== "N/A");
@@ -6109,7 +6105,6 @@ export default function Home() {
   const [allData, setAllData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Restore navigation state from sessionStorage (survives pull-to-refresh)
   function getNav(key, def) {
     try {const v = sessionStorage.getItem("unk_nav_" + key);return v !== null ? JSON.parse(v) : def;} catch {return def;}
   }
@@ -6294,7 +6289,7 @@ export default function Home() {
     if (typeKey === "Elevator Bucket") {setCurrentPage("elevatorBuckets");window.scrollTo(0, 0);return;}
     if (typeKey==="Conveyor Rollers") {setCurrentPage("rollerConfig");window.scrollTo(0,0);return;}
     if (typeKey==="Wire Mesh Belt") {setCurrentPage("wireMesh");window.scrollTo(0,0);return;}
-    if (typeKey==="Forged Chain") {setCurrentPage("forgedChain");window.scrollTo(0,0);return;}
+    if (typeKey==="Modular Belt") {setCurrentPage("intraloxCatalog");window.scrollTo(0,0);return;} if (typeKey==="Forged Chain") {setCurrentPage("forgedChain");window.scrollTo(0,0);return;}
     if (typeKey==="Engineered Chain") {setSelectedType("Engineered Chain");setSelectedEngineeredSub(null);setSelectedAnsiSub(null);setView("engineered_subs");return;}
     if (typeKey==="ANSI/BS Chain") {setSelectedType("ANSI/BS Chain");setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setSelectedWeldedSub(null);setView("ansi_subs");return;}
     if (typeKey==="Welded Steel Chain") {setSelectedType("Welded Steel Chain");setSelectedWeldedSub(null);setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setView("welded_products");return;}
