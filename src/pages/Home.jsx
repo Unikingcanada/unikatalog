@@ -1234,44 +1234,7 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacR
 }
 
 // ─── Type Grid ────────────────────────────────────────────────────────────────
-
-function TypeGrid({ types, counts, onSelect }) {
-  const [hovered, setHovered] = useState(null);
-
-  // Separate chain types from non-chain types
-  const chainTypes = types.filter((t) => CHAIN_SUBTYPE_KEYS.has(t.key));
-  const nonChainTypes = types.filter((t) => !CHAIN_SUBTYPE_KEYS.has(t.key));
-  const totalChainProducts = chainTypes.reduce((sum, t) => sum + (counts[t.key] || 0), 0);
-
-  // Build display list: Chain mega card first, then non-chain types
-  const displayItems = [
-  { key: "__chain__", label: "Chain", description: "Roller chain, engineered, welded steel, pintle and specialty chains for all industrial applications", _isChain: true },
-  ...nonChainTypes];
-
-
-  return (
-    <div>
-      <div style={{ marginBottom: 28 }}>
-        <div style={{ fontSize: 22, fontWeight: 800, color: C.text, marginBottom: 4 }}>Product Catalog</div>
-        <div style={{ fontSize: 14, color: C.muted }}>Select a product category to browse specifications</div>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
-        {displayItems.map((t) =>
-        <div key={t.key} onClick={() => onSelect(t.key)} onMouseEnter={() => setHovered(t.key)} onMouseLeave={() => setHovered(null)}
-        style={{ background: hovered === t.key ? C.navyMid : C.card, border: "1px solid " + (hovered === t.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: hovered === t.key ? "#fff" : C.text }}>{t.label}</div>
-            <div style={{ fontSize: 12, color: hovered === t.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{t.description}</div>
-            <div style={{ fontSize: 11, color: hovered === t.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>
-              {t._isChain ?
-            `${chainTypes.length} subcategories · ${totalChainProducts} products` :
-            counts[t.key] ? `${counts[t.key]} products` : "View →"}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>);
-
-}
+import TypeGrid from "@/components/catalog/TypeGrid";
 
 
 // ─── Engineered Chain Subcategory Grid ────────────────────────────────────────
