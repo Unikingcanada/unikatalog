@@ -391,16 +391,8 @@ function normalizeAllied(r) {
 }
 
 
-function getFilterOptions(products, field) {
-  const vals = new Set();
-  for (const p of products) {
-    const raw = p[field];
-    if (!raw) continue;
-    String(raw).split(",").map((s) => s.trim()).filter(Boolean).forEach((v) => vals.add(v));
-  }
-  return [...vals].sort();
-}
-
+function normalizeFourBProduct(p){const sp={...(p.specs||{}),...(p.approvals?.length?{Certifications:p.approvals.join(", ")}:{}),...(p.partNumbers?.length?{"Part Numbers":p.partNumbers.join(", ")}:{}),...(p.keyFunction?{"Key Function":p.keyFunction}:{}),...(p.applications?.length?{Applications:p.applications.join(", ")}:{})};return{id:"fourb-"+p.id,_source:"fourb",type:"Monitoring System",brand:"4B Braime™",series:p.name,part_number:p.partNumbers?.[0]||"",style:p.keyFunction||"",category:p.subcategory||"",application:p.applications?.join(", ")||"",materials:"",duty:"",notes:p.description||"",features:p.features||[],image_url:p.image||"",belt_data:null,sprocket_data:null,specs:sp};}
+function getFilterOptions(products, field) {const vals=new Set();for(const p of products){const raw=p[field];if(!raw)continue;String(raw).split(",").map((s)=>s.trim()).filter(Boolean).forEach((v)=>vals.add(v));}return[...vals].sort();}
 function applyFilters(products, activeFilters) {
   return products.filter((p) =>
   Object.entries(activeFilters).every(([field, val]) => {
@@ -4167,7 +4159,7 @@ function makeFmt(metric) {
   };
 }
 
-import { ROLLER_SERIES as SERIES } from "@/lib/rollerSeriesData";
+import { ROLLER_SERIES as SERIES } from "@/lib/rollerSeriesData";import { PRODUCTS as FOURB_PRODUCTS } from "@/lib/fourBData";
 import IntraloxCatalog from "@/components/intralox/IntraloxCatalog";import FourBCatalog from "@/components/fourB/FourBCatalog";
 import HomeGlobalSearch from "@/components/HomeGlobalSearch";
 import ComparePanel, { CompareBar } from "@/components/ComparePanel";
@@ -5441,13 +5433,7 @@ export default function Home() {
       try {
         const [cat, elev, uni, allied, donghua] = await Promise.all([fetchAll(CatalogProduct), fetchAll(ElevatorBucket), fetchAll(UniCatalog), fetchAll(MacChainProduct), fetchAll(DonghuaChain)]);
         setRawMacRecords(allied || []);
-        setAllData([
-        ...(cat || []).map(normalizeCatalogProduct),
-        ...(elev || []).map(normalizeElevatorBucket),
-        ...(uni || []).map(normalizeUniCatalog),
-        ...(allied || []).map(normalizeAllied),
-        ...(donghua || []).map(normalizeDonghuaChain)]
-        );
+        setAllData([...(cat||[]).map(normalizeCatalogProduct),...(elev||[]).map(normalizeElevatorBucket),...(uni||[]).map(normalizeUniCatalog),...(allied||[]).map(normalizeAllied),...(donghua||[]).map(normalizeDonghuaChain),...FOURB_PRODUCTS.map(normalizeFourBProduct)]);
       } catch (e) {console.error("Catalog load error:", e);} finally
       {setLoading(false);}
     }
