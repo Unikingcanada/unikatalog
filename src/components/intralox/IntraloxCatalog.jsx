@@ -12,6 +12,7 @@ const C = {
   gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
 };
 const INTRALOX_RED = "#E31837";
+const INTRALOX_LOGO = "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/64536dc1d_intralox-logo-box-194a1e40631d2cf9cd7d463fa5afc04b.svg";
 const MPB_MANUAL_URL = "https://assets-us-01.kc-usercontent.com/19eb64b5-1815-003a-d268-e7109927ccad/b2679b1e-559b-4919-b559-6992adc8b1f3/5012156.4%202026%20MPB%20Engineering%20Manual.pdf";
 
 const TABS = [
@@ -147,9 +148,7 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
             </a>
             <div style={{ width: 1, height: 22, background: "rgba(255,255,255,0.15)" }} />
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <div style={{ background: INTRALOX_RED, borderRadius: 4, padding: "2px 6px" }}>
-                <span style={{ fontSize: 9, fontWeight: 800, color: "#fff", letterSpacing: "0.5px" }}>INTRALOX</span>
-              </div>
+              <img src={INTRALOX_LOGO} alt="Intralox" style={{ height: 22, width: "auto" }} />
               <span style={{ color: C.gold, fontSize: 13, fontWeight: 600 }}>Modular Plastic Belting</span>
             </div>
           </div>
@@ -198,9 +197,7 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
           <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, ${C.navyLight} 100%)`, padding: "28px 20px 24px" }}>
             <div style={{ maxWidth: 1200, margin: "0 auto" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                <div style={{ background: INTRALOX_RED, borderRadius: 5, padding: "4px 10px" }}>
-                  <span style={{ fontSize: 10, fontWeight: 800, color: "#fff", letterSpacing: "0.8px" }}>INTRALOX</span>
-                </div>
+                <img src={INTRALOX_LOGO} alt="Intralox" style={{ height: 28, width: "auto" }} />
                 <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 12 }}>2026 Catalog · Modular Plastic Belting (MPB)</span>
               </div>
               <h1 style={{ color: "#fff", fontSize: 24, fontWeight: 900, margin: "0 0 8px" }}>Intralox Modular Plastic Belts</h1>
@@ -281,9 +278,7 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
             {/* Intralox resources */}
             <div style={{ background: "#fff", borderRadius: 14, border: `1px solid ${C.border}`, padding: "24px 28px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-                <div style={{ background: INTRALOX_RED, borderRadius: 4, padding: "3px 8px" }}>
-                  <span style={{ fontSize: 9, fontWeight: 800, color: "#fff" }}>INTRALOX</span>
-                </div>
+                <img src={INTRALOX_LOGO} alt="Intralox" style={{ height: 22, width: "auto" }} />
                 <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid }}>Engineering Resources</div>
               </div>
               <div style={{ fontSize: 13, color: C.muted, marginBottom: 16 }}>Official Intralox engineering documents and tools — 2026 catalog edition.</div>

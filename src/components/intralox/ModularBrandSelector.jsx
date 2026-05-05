@@ -7,6 +7,7 @@ const C = {
 };
 const INTRALOX_RED = "#E31837";
 const LOGO_URL = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png";
+const INTRALOX_LOGO = "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/64536dc1d_intralox-logo-box-194a1e40631d2cf9cd7d463fa5afc04b.svg";
 
 const BRANDS = [
   {
@@ -156,9 +157,12 @@ export default function ModularBrandSelector({ onSelectBrand, onBack }) {
 
               {/* Brand header */}
               <div style={{ padding: "18px 20px 14px", display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 10, background: brand.accentColor, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <span style={{ color: "#fff", fontWeight: 900, fontSize: 11, letterSpacing: "0.5px" }}>{brand.logoText}</span>
-                </div>
+                <div style={{ width: 48, height: 48, borderRadius: 10, background: brand.key === "intralox" ? "#fff" : brand.accentColor, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: brand.key === "intralox" ? `1px solid ${C.border}` : "none" }}>
+                    {brand.key === "intralox"
+                      ? <img src={INTRALOX_LOGO} alt="Intralox" style={{ width: 38, height: 38, objectFit: "contain" }} />
+                      : <span style={{ color: "#fff", fontWeight: 900, fontSize: 11, letterSpacing: "0.5px" }}>{brand.logoText}</span>
+                    }
+                  </div>
                 <div>
                   <div style={{ fontSize: 17, fontWeight: 800, color: C.text }}>{brand.name}</div>
                   <div style={{ fontSize: 11, color: C.muted, marginTop: 1 }}>{brand.tagline}</div>
