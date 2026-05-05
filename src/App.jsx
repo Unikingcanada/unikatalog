@@ -6,6 +6,7 @@ import RollerConfigurator from './pages/RollerConfigurator';
 import RFQCart from './pages/RFQCart';
 import ElevatorBuckets from './pages/ElevatorBuckets';
 import Catalog from './pages/Catalog';
+import TableTopChains from './pages/TableTopChains';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/RFQCart" element={<RFQCart />} />
         <Route path="/ElevatorBuckets" element={<ElevatorBuckets />} />
         <Route path="/Catalog" element={<Catalog />} />
+        <Route path="/TableTopChains" element={<TableTopChains />} />
       </Routes>
     </BrowserRouter>
   )

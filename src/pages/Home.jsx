@@ -40,7 +40,7 @@ const PRODUCT_TYPES = [
 { key: "Kiln Chain", label: "Kiln Chain", description: "High-temperature kiln and dryer chains for cement and mineral processing", filters: ["style", "materials"] },
 { key: "Thermoforming Chain", label: "Thermoforming Chain", description: "Precision chains for plastic thermoforming and packaging machinery", filters: ["style", "materials"] },
 { key: "Conveyor Chain", label: "Conveyor Chain", description: "Hollow pin, roller top and attachment chains for general conveying and assembly line applications", filters: ["style", "materials"] },
-{ key: "Table Top Chain", label: "Table Top Chain", description: "Straight-running and side-flexing table top chains in plastic and stainless steel for packaging and bottling lines", filters: ["style", "materials"] },
+{ key: "Table Top Chain", label: "Table Top Chains ↗", description: "Plastic & Steel table top chains — product-first procurement with unified material comparison across all brands", filters: ["style", "materials"], _externalRoute: "/TableTopChains" },
 { key: "Conveyor Rollers", label: "Conveyor Rollers", description: "Standard, lagging, motorized drive and specialty conveyor rollers", filters: ["style", "duty"] },
 { key: "Monitoring System", label: "4B Electronics & Monitoring", description: "Bucket elevator and conveyor safety monitoring systems and sensors", filters: ["style"] },
 { key: "Magnetic Conveyor", label: "Magnetic Conveyor", description: "Magnetic conveyor systems for ferrous material handling", filters: ["style"] },
@@ -1258,14 +1258,12 @@ function TypeGrid({ types, counts, onSelect }) {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
         {displayItems.map((t) =>
-        <div key={t.key} onClick={() => onSelect(t.key)} onMouseEnter={() => setHovered(t.key)} onMouseLeave={() => setHovered(null)}
-        style={{ background: hovered === t.key ? C.navyMid : C.card, border: "1px solid " + (hovered === t.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: hovered === t.key ? "#fff" : C.text }}>{t.label}</div>
-            <div style={{ fontSize: 12, color: hovered === t.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{t.description}</div>
-            <div style={{ fontSize: 11, color: hovered === t.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>
-              {t._isChain ?
-            `${chainTypes.length} subcategories · ${totalChainProducts} products` :
-            counts[t.key] ? `${counts[t.key]} products` : "View →"}
+        <div key={t.key} onClick={() => t._externalRoute ? (window.location.href=t._externalRoute) : onSelect(t.key)} onMouseEnter={() => setHovered(t.key)} onMouseLeave={() => setHovered(null)}
+        style={{ background: hovered===t.key ? C.navyMid : C.card, border:"1px solid "+(hovered===t.key ? C.navyMid : C.border), borderRadius:8, padding:"18px 20px", cursor:"pointer", transition:"all 0.15s", display:"flex", flexDirection:"column", gap:6 }}>
+            <div style={{ fontSize:14, fontWeight:700, color:hovered===t.key ? "#fff" : C.text }}>{t.label}</div>
+            <div style={{ fontSize:12, color:hovered===t.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight:1.5 }}>{t.description}</div>
+            <div style={{ fontSize:11, color:hovered===t.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop:4 }}>
+              {t._isChain ? `${chainTypes.length} subcategories · ${totalChainProducts} products` : t._externalRoute ? "Open Catalog →" : counts[t.key] ? `${counts[t.key]} products` : "View →"}
             </div>
           </div>
         )}
