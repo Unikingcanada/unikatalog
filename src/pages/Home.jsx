@@ -40,7 +40,7 @@ const PRODUCT_TYPES = [
 { key: "Kiln Chain", label: "Kiln Chain", description: "High-temperature kiln and dryer chains for cement and mineral processing", filters: ["style", "materials"] },
 { key: "Thermoforming Chain", label: "Thermoforming Chain", description: "Precision chains for plastic thermoforming and packaging machinery", filters: ["style", "materials"] },
 { key: "Conveyor Chain", label: "Conveyor Chain", description: "Hollow pin, roller top and attachment chains for general conveying and assembly line applications", filters: ["style", "materials"] },
-{ key: "Table Top Chain", label: "Table Top Chains ↗", description: "Plastic & Steel table top chains — product-first procurement with unified material comparison across all brands", filters: ["style", "materials"], _externalRoute: "/TableTopChains" },
+{ key: "Table Top Chain", label: "Table Top Chain", description: "Straight-running and side-flexing table top chains in plastic and stainless steel for packaging and bottling lines", filters: ["style", "materials"] },
 { key: "Conveyor Rollers", label: "Conveyor Rollers", description: "Standard, lagging, motorized drive and specialty conveyor rollers", filters: ["style", "duty"] },
 { key: "Monitoring System", label: "4B Electronics & Monitoring", description: "Bucket elevator and conveyor safety monitoring systems and sensors", filters: ["style"] },
 { key: "Magnetic Conveyor", label: "Magnetic Conveyor", description: "Magnetic conveyor systems for ferrous material handling", filters: ["style"] },
@@ -1258,12 +1258,14 @@ function TypeGrid({ types, counts, onSelect }) {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
         {displayItems.map((t) =>
-        <div key={t.key} onClick={() => t._externalRoute ? (window.location.href=t._externalRoute) : onSelect(t.key)} onMouseEnter={() => setHovered(t.key)} onMouseLeave={() => setHovered(null)}
-        style={{ background: hovered===t.key ? C.navyMid : C.card, border:"1px solid "+(hovered===t.key ? C.navyMid : C.border), borderRadius:8, padding:"18px 20px", cursor:"pointer", transition:"all 0.15s", display:"flex", flexDirection:"column", gap:6 }}>
-            <div style={{ fontSize:14, fontWeight:700, color:hovered===t.key ? "#fff" : C.text }}>{t.label}</div>
-            <div style={{ fontSize:12, color:hovered===t.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight:1.5 }}>{t.description}</div>
-            <div style={{ fontSize:11, color:hovered===t.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop:4 }}>
-              {t._isChain ? `${chainTypes.length} subcategories · ${totalChainProducts} products` : t._externalRoute ? "Open Catalog →" : counts[t.key] ? `${counts[t.key]} products` : "View →"}
+        <div key={t.key} onClick={() => onSelect(t.key)} onMouseEnter={() => setHovered(t.key)} onMouseLeave={() => setHovered(null)}
+        style={{ background: hovered === t.key ? C.navyMid : C.card, border: "1px solid " + (hovered === t.key ? C.navyMid : C.border), borderRadius: 8, padding: "18px 20px", cursor: "pointer", transition: "all 0.15s", display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: hovered === t.key ? "#fff" : C.text }}>{t.label}</div>
+            <div style={{ fontSize: 12, color: hovered === t.key ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.5 }}>{t.description}</div>
+            <div style={{ fontSize: 11, color: hovered === t.key ? "rgba(255,255,255,0.45)" : C.muted, marginTop: 4 }}>
+              {t._isChain ?
+            `${chainTypes.length} subcategories · ${totalChainProducts} products` :
+            counts[t.key] ? `${counts[t.key]} products` : "View →"}
             </div>
           </div>
         )}
@@ -2009,16 +2011,16 @@ function Breadcrumb({ items, onNav }) {
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// ── ELEVATOR BUCKETS VIEW ──────────────────────────────────────────────────────
-// ═══════════════════════════════════════════════════════════════════════════════
+import ElevBucketsView from "@/components/elevatorBuckets/ElevBucketsView";
+import TableTopChainCatalog from "@/components/tableTopChain/TableTopChainCatalog";
+// ── elevator bucket constants (still used by GenericModal etc below) ──
 const NAVY = "#1a3a5c";
 const AMBER = "#b45309";
 const BASE = "https://maxilift.com/hs-fs/hubfs/";
 
-// ── Material color system ────────────────────────────────────────────────────
-const MAT_DEF = {
-  "Poly": { color: "#c2410c", bg: "#fff7ed", border: "#fed7aa", dot: "#f97316", label: "Poly (HDPE)", temp: "-60°F to +180°F", fda: true, use: "Grain & food products" },
+// ── Stub: full ElevBucketsView is in components/elevatorBuckets/ElevBucketsView.jsx ──
+const MAT_DEF_STUB = {}; // placeholder — remove when all references moved
+const _STUB_MAT = {
   "Polyethylene": { color: "#c2410c", bg: "#fff7ed", border: "#fed7aa", dot: "#f97316", label: "Poly (HDPE)", temp: "-60°F to +180°F", fda: true, use: "Grain & food products" },
   "HDPE": { color: "#c2410c", bg: "#fff7ed", border: "#fed7aa", dot: "#f97316", label: "Poly (HDPE)", temp: "-60°F to +180°F", fda: true, use: "Grain & food products" },
   "Nylon": { color: "#92400e", bg: "#fef9c3", border: "#fde68a", dot: "#d97706", label: "Nylon", temp: "-60°F to +300°F", fda: false, use: "Hot, impact & abrasive" },
@@ -2033,7 +2035,7 @@ const MAT_DEF = {
 function getMat(str) {
   if (!str) return { key: str || "", color: NAVY, bg: "#f3f4f6", border: "#e5e7eb", dot: "#9ca3af", label: str || "", temp: "—", fda: false, use: "—" };
   const s = str.trim();
-  for (const [k, v] of Object.entries(MAT_DEF)) {
+  for (const [k, v] of Object.entries(MAT_DEF_STUB)) {
     if (s.toLowerCase().includes(k.toLowerCase())) return { key: s, ...v };
   }
   return { key: s, color: NAVY, bg: "#f3f4f6", border: "#e5e7eb", dot: "#9ca3af", label: s, temp: "—", fda: false, use: "—" };
@@ -2869,232 +2871,6 @@ function GenericModal({ rec, type, onClose }) {
     </div>);
 
 }
-
-// ── MAIN ──────────────────────────────────────────────────────────────────────
-function ElevBucketsView({ onBack, onGoRFQ }) {
-  const [allProducts, setAllProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("Elevator Bucket");
-  const [appFilter, setAppFilter] = useState("All");
-  const [seriesFilter, setSeriesFilter] = useState("All");
-  const [hingeFilter, setHingeFilter] = useState("All");
-  const [pitchFilter, setPitchFilter] = useState("All");
-  const [selected, setSelected] = useState(null);
-  const [selectedType, setSelectedType] = useState(null);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        async function fetchAll(entity) {
-          let all = [],skip = 0,hasMore = true;
-          while (hasMore) {
-            const batch = await entity.list({ limit: 500, skip });
-            all = [...all, ...batch];
-            hasMore = batch.length === 500;
-            skip += batch.length;
-          }
-          return all;
-        }
-        const [intralox, unicatalog, buckets, macChains] = await Promise.all([
-        fetchAll(CatalogProduct),
-        fetchAll(UniCatalog),
-        fetchAll(ElevatorBucket),
-        fetchAll(MacChainProduct)]
-        );
-
-        setAllProducts([
-        ...intralox.map((r) => ({ ...r, _src: "intralox", _type: r.category || "Modular Plastic Belt" })),
-        ...unicatalog.map((r) => ({ ...r, _src: "uni", _type: r.product_type })),
-        ...buckets.map((r) => ({ ...r, _src: "bucket", _type: "Elevator Bucket" })),
-        ...macChains.map((r) => ({
-          ...r, _src: "mac",
-          _type: r.product_type === "ANSI Roller Chain" ? "ANSI Roller Chain" :
-          r.product_type === "ANSI Roller Chain Attachments" ? "ANSI Roller Chain Attachments" : "Engineered Chain",
-          vendor: "", series: r.part_number || r.series,
-          style: r.subcategory || r.category,
-          image_url: r.product_image || r.image_url
-        }))]
-        );
-      } catch (e) {console.error(e);} finally
-      {setLoading(false);}
-    }
-    load();
-  }, []);
-
-  const types = useMemo(() =>
-  ["All", ...new Set(allProducts.map((p) => p._type).filter(Boolean))].sort((a, b) => a === "All" ? -1 : a.localeCompare(b)),
-  [allProducts]);
-
-  const isBucketView = typeFilter === "Elevator Bucket";
-
-  const filtered = useMemo(() => {
-    let list = allProducts;
-    if (typeFilter !== "All") list = list.filter((p) => p._type === typeFilter);
-    if (isBucketView && appFilter !== "All")
-    list = list.filter((p) => (p.application || "").toLowerCase().includes(appFilter.toLowerCase()));
-    if (seriesFilter !== "All") list = list.filter((p) => p.series === seriesFilter);
-    if (hingeFilter !== "All") list = list.filter((p) => p.hinge_style === hingeFilter);
-    if (pitchFilter !== "All") list = list.filter((p) => `${p.pitch_in}"` === pitchFilter);
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      list = list.filter((p) => [p.series, p.style, p.category, p.notes, p.materials,
-      p.material, p.search_tags, p.application, p.part_number, p.description].
-      some((f) => f && f.toLowerCase().includes(q)));
-    }
-    return list.sort((a, b) => {
-      const pn = (s) => {const m = (s || "").trim().match(/^(\d+(?:\.\d+)?)(.*)/);if (!m) return [0, 0, s || ""];const st = (m[2] || "").match(/-(\d+)$/);return [parseFloat(m[1]), st ? parseInt(st[1]) : 1, m[2] || ""];};
-      const [an, as2, ar] = pn(a.series),[bn, bs2, br] = pn(b.series);
-      return an !== bn ? an - bn : as2 !== bs2 ? as2 - bs2 : ar.localeCompare(br);
-    });
-  }, [allProducts, typeFilter, appFilter, isBucketView, seriesFilter, hingeFilter, pitchFilter, search]);
-
-  const seriesOptions = useMemo(() => {
-    const base = typeFilter === "All" ? allProducts : allProducts.filter((p) => p._type === typeFilter);
-    return ["All", ...new Set(base.map((p) => p.series).filter(Boolean))].sort((a, b) => a === "All" ? -1 : a.localeCompare(b));
-  }, [allProducts, typeFilter]);
-
-  const hingeOptions = useMemo(() =>
-  ["All", ...new Set(allProducts.filter((p) => p.hinge_style).map((p) => p.hinge_style))].sort(),
-  [allProducts]);
-
-  const pitchOptions = useMemo(() =>
-  ["All", ...new Set(allProducts.filter((p) => p.pitch_in).map((p) => `${p.pitch_in}"`))].
-  sort((a, b) => a === "All" ? -1 : parseFloat(a) - parseFloat(b)),
-  [allProducts]);
-
-  const bucketAg = filtered.filter((p) => p._src === "bucket" && (p.application || "").toLowerCase().includes("ag"));
-  const bucketInd = filtered.filter((p) => p._src === "bucket" && (p.application || "").toLowerCase().includes("ind"));
-  const bucketOther = filtered.filter((p) => p._src === "bucket" && !bucketAg.includes(p) && !bucketInd.includes(p));
-  const nonBuckets = filtered.filter((p) => p._src !== "bucket");
-
-  const anyFilter = typeFilter !== "All" || appFilter !== "All" || seriesFilter !== "All" ||
-  hingeFilter !== "All" || pitchFilter !== "All" || search;
-
-  const Sel = ({ value, onChange, options, label }) =>
-  <select value={value} onChange={(e) => onChange(e.target.value)}
-  style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #d1d5db", fontSize: 13,
-    color: NAVY, background: "#fff", cursor: "pointer", fontWeight: value !== "All" ? 700 : 400 }}>
-      <option value="All">{label}</option>
-      {options.filter((o) => o !== "All").map((o) => <option key={o} value={o}>{o}</option>)}
-    </select>;
-
-
-  // Render bucket sections
-  function BucketSection({ title, items, accentColor }) {
-    if (!items.length) return null;
-    return (
-      <div style={{ marginBottom: 40 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
-          <div style={{ height: 3, width: 32, background: accentColor, borderRadius: 99 }} />
-          <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, color: NAVY }}>{title}</h2>
-          <span style={{ fontSize: 12, color: "#9ca3af" }}>{items.length} series</span>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(220px,1fr))", gap: 16 }}>
-          {items.map((rec) =>
-          <BucketCard key={rec.id} rec={rec}
-          onClick={() => {setSelected(rec);setSelectedType("bucket");}} />
-          )}
-        </div>
-      </div>);
-
-  }
-
-  return (
-    <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
-      {/* Top Bar */}
-      <div style={{ background: NAVY, padding: "0 24px", display: "flex", alignItems: "center",
-        justifyContent: "space-between", height: 56, boxShadow: "0 2px 8px rgba(0,0,0,.18)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <a href="#" onClick={(e) => {e.preventDefault();onBack();}} style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 14px", borderRadius: 8, background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", fontWeight: 700, fontSize: 13, textDecoration: "none" }}>← Home</a>
-          <span style={{ color: "rgba(255,255,255,.3)", fontSize: 12 }}>/</span>
-          <span style={{ color: "#fff", fontSize: 13, fontWeight: 700 }}>Elevator Buckets</span>
-        </div>
-        <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
-          <span style={{ fontSize: 11, color: "rgba(255,255,255,.4)" }}>
-            {loading ? "Loading..." : `${filtered.length} products`}
-          </span>
-          <a href="#" onClick={(e) => {e.preventDefault();onGoRFQ();}} style={{ padding: "6px 14px", borderRadius: 8,
-            background: "rgba(255,255,255,.12)", border: "1px solid rgba(255,255,255,.2)",
-            color: "#fff", fontSize: 12, fontWeight: 700, textDecoration: "none" }}>RFQ Cart</a>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "14px 24px" }}>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", maxWidth: 1200, margin: "0 auto" }}>
-          <input value={search} onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search series, style, application, material..."
-          style={{ flex: 1, minWidth: 240, padding: "8px 14px", borderRadius: 8,
-            border: "1px solid #d1d5db", fontSize: 13, outline: "none" }} />
-          <Sel value={typeFilter} onChange={(v) => {setTypeFilter(v);setSeriesFilter("All");setAppFilter("All");}} options={types} label="All Types" />
-          {isBucketView && <Sel value={appFilter} onChange={setAppFilter} options={["All", "Agricultural", "Industrial"]} label="All Applications" />}
-          {seriesOptions.length > 2 && <Sel value={seriesFilter} onChange={setSeriesFilter} options={seriesOptions} label="All Series" />}
-          {!isBucketView && hingeOptions.length > 2 && <Sel value={hingeFilter} onChange={setHingeFilter} options={hingeOptions} label="Hinge Style" />}
-          {!isBucketView && pitchOptions.length > 2 && <Sel value={pitchFilter} onChange={setPitchFilter} options={pitchOptions} label="Pitch" />}
-          {anyFilter &&
-          <button onClick={() => {setTypeFilter("All");setSeriesFilter("All");setHingeFilter("All");setPitchFilter("All");setAppFilter("All");setSearch("");}}
-          style={{ padding: "8px 14px", borderRadius: 8, border: "1px solid #d1d5db", background: "#f9fafb", cursor: "pointer", fontSize: 13, color: "#6b7280" }}>
-              Clear
-            </button>
-          }
-        </div>
-      </div>
-
-      {/* Content */}
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: 24 }}>
-        {loading ?
-        <div style={{ textAlign: "center", padding: 80, color: "#9ca3af", fontSize: 14 }}>Loading catalog...</div> :
-        filtered.length === 0 ?
-        <div style={{ textAlign: "center", padding: 80, color: "#9ca3af", fontSize: 14 }}>No products match your search.</div> :
-
-        <>
-            {/* Buckets always render as BucketCards */}
-            {(typeFilter === "All" || isBucketView) && (bucketAg.length > 0 || bucketInd.length > 0 || bucketOther.length > 0) &&
-          <div>
-                {typeFilter === "All" &&
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
-                    <div style={{ height: 3, width: 32, background: AMBER, borderRadius: 99 }} />
-                    <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, color: NAVY }}>Elevator Buckets</h2>
-                  </div>
-            }
-                <BucketSection title={isBucketView && appFilter !== "All" ? "" : "Agricultural Buckets"} items={bucketAg} accentColor="#065f46" />
-                <BucketSection title={isBucketView && appFilter !== "All" ? "" : "Industrial Buckets"} items={bucketInd} accentColor="#1d4ed8" />
-                <BucketSection title="Steel / Other Buckets" items={bucketOther} accentColor="#374151" />
-              </div>
-          }
-
-            {/* All other product types */}
-            {(typeFilter === "All" || !isBucketView) && nonBuckets.length > 0 &&
-          <>
-                {typeFilter === "All" && (bucketAg.length > 0 || bucketInd.length > 0) &&
-            <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "32px 0 18px" }}>
-                    <div style={{ height: 3, width: 32, background: NAVY, borderRadius: 99 }} />
-                    <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, color: NAVY }}>Conveyor Components</h2>
-                  </div>
-            }
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(240px,1fr))", gap: 16 }}>
-                  {nonBuckets.map((rec) =>
-              <GenericCard key={rec.id} rec={rec} type={rec._type}
-              onClick={() => {setSelected(rec);setSelectedType(rec._type);}} />
-              )}
-                </div>
-              </>
-          }
-          </>
-        }
-      </div>
-
-      {selected && selectedType === "bucket" &&
-      <BucketStyleModal rec={selected} onClose={() => {setSelected(null);setSelectedType(null);}} />
-      }
-      {selected && selectedType !== "bucket" &&
-      <GenericModal rec={selected} type={selectedType} onClose={() => {setSelected(null);setSelectedType(null);}} />
-      }
-    </div>);
-
-}
-
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // ── FORGED CHAIN VIEW ─────────────────────────────────────────────────────────
@@ -5749,7 +5525,7 @@ export default function Home() {
     if (typeKey === "Elevator Bucket") {setCurrentPage("elevatorBuckets");window.scrollTo(0, 0);return;}
     if (typeKey==="Conveyor Rollers") {setCurrentPage("rollerConfig");window.scrollTo(0,0);return;}
     if (typeKey==="Wire Mesh Belt") {setCurrentPage("wireMesh");window.scrollTo(0,0);return;}
-    if (typeKey==="Modular Belt") {setCurrentPage("intraloxCatalog");window.scrollTo(0,0);return;} if (typeKey==="Forged Chain") {setCurrentPage("forgedChain");window.scrollTo(0,0);return;}
+    if (typeKey==="Table Top Chain") {setCurrentPage("tableTopChain");window.scrollTo(0,0);return;}    if (typeKey==="Modular Belt") {setCurrentPage("intraloxCatalog");window.scrollTo(0,0);return;} if (typeKey==="Forged Chain") {setCurrentPage("forgedChain");window.scrollTo(0,0);return;}
     if (typeKey==="Engineered Chain") {setSelectedType("Engineered Chain");setSelectedEngineeredSub(null);setSelectedAnsiSub(null);setView("engineered_subs");return;}
     if (typeKey==="ANSI/BS Chain") {setSelectedType("ANSI/BS Chain");setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setSelectedWeldedSub(null);setView("ansi_subs");return;}
     if (typeKey==="Welded Steel Chain") {setSelectedType("Welded Steel Chain");setSelectedWeldedSub(null);setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setView("welded_products");return;}
@@ -5789,7 +5565,7 @@ export default function Home() {
   if (currentPage==="rollerConfig") return <RollerConfigView onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="wireMesh") return <WireMeshConfigurator onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="intraloxCatalog") return <IntraloxCatalog onBack={goBack} onGoRFQ={goRFQ}/>;
-  if (currentPage==="rfqCart") return <RFQCartView onBack={goBack}/>;return (
+  if (currentPage==="tableTopChain") return <div style={{minHeight:"100vh",background:"#f8fafc"}}><TableTopChainCatalog onBack={goBack}/></div>;  if (currentPage==="rfqCart") return <RFQCartView onBack={goBack}/>;return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column", overscrollBehavior: "contain" }}>
       <TopBar onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0, 0);}} />
       <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "24px clamp(12px,4vw,40px)", boxSizing: "border-box" }}>

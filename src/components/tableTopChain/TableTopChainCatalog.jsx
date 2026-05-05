@@ -1,0 +1,309 @@
+/**
+ * TableTopChainCatalog — Main procurement catalog for Table Top Chains
+ * Product-first, brand-neutral. Two top-level categories: Plastic & Steel.
+ */
+import { useState } from "react";
+import { CHAIN_PRODUCTS, CHAIN_CATEGORIES, CHAIN_TYPES, getProductsByCategory } from "@/lib/tableTopChainData";
+import TTCProductCard from "./TTCProductCard";
+import TTCProductDetail from "./TTCProductDetail";
+
+const C = {
+  navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
+  border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  plastic: "#0057A8", steel: "#374151",
+};
+
+const TYPE_LABELS = {
+  STRAIGHT: "Straight Running",
+  SIDEFLEX: "Sideflexing",
+  HEAVY: "Heavy Duty",
+  LBP: "Low Back Pressure",
+  HIGH_FRICTION: "High Friction",
+  CASE: "Case Conveyor",
+  MICRO: "Micro Pitch",
+  FLUSH_GRID: "Flush Grid / Open",
+};
+
+const TYPE_ORDER = ["STRAIGHT", "SIDEFLEX", "HEAVY", "LBP", "HIGH_FRICTION", "CASE", "FLUSH_GRID", "MICRO"];
+
+function CategoryTab({ label, active, color, count, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        flex: 1,
+        padding: "14px 20px",
+        background: active ? color : "#fff",
+        color: active ? "#fff" : color,
+        border: `2px solid ${color}`,
+        borderRadius: 10,
+        cursor: "pointer",
+        fontWeight: 800,
+        fontSize: 14,
+        transition: "all 0.18s ease",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 10,
+      }}
+    >
+      <span>{active ? "●" : "○"}</span>
+      {label}
+      <span style={{
+        background: active ? "rgba(255,255,255,0.2)" : `${color}15`,
+        color: active ? "#fff" : color,
+        fontSize: 11, fontWeight: 800,
+        padding: "2px 8px", borderRadius: 8,
+      }}>{count}</span>
+    </button>
+  );
+}
+
+function QuickRFQToast({ item, onDismiss }) {
+  return (
+    <div style={{
+      position: "fixed", bottom: 24, right: 24, zIndex: 9999,
+      background: "#fff", borderRadius: 12, padding: "14px 18px",
+      boxShadow: "0 8px 40px rgba(0,0,0,0.18)", border: "1.5px solid #86efac",
+      maxWidth: 340, display: "flex", gap: 12, alignItems: "flex-start",
+    }}>
+      <span style={{ fontSize: 22, flexShrink: 0 }}>✅</span>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#166534", marginBottom: 2 }}>Added to RFQ</div>
+        <div style={{ fontSize: 11, color: "#4b7a5c", lineHeight: 1.5 }}>{item?.name}</div>
+      </div>
+      <button onClick={onDismiss} style={{ background: "none", border: "none", cursor: "pointer", color: C.muted, fontSize: 16, padding: 0, flexShrink: 0 }}>✕</button>
+    </div>
+  );
+}
+
+export default function TableTopChainCatalog({ onBack }) {
+  const [activeCategory, setActiveCategory] = useState("PLASTIC");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [typeFilter, setTypeFilter] = useState("ALL");
+  const [search, setSearch] = useState("");
+  const [toast, setToast] = useState(null);
+
+  const accentColor = activeCategory === "STEEL" ? C.steel : C.plastic;
+  const allProducts = getProductsByCategory(activeCategory);
+
+  // Get available types for this category
+  const availableTypes = [...new Set(allProducts.map(p => p.type))];
+  const orderedTypes = TYPE_ORDER.filter(t => availableTypes.includes(t));
+
+  // Filter
+  const filtered = allProducts.filter(p => {
+    const matchType = typeFilter === "ALL" || p.type === typeFilter;
+    const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.description.toLowerCase().includes(search.toLowerCase()) ||
+      p.applications.some(a => a.toLowerCase().includes(search.toLowerCase()));
+    return matchType && matchSearch;
+  });
+
+  // Group by type
+  const grouped = {};
+  orderedTypes.forEach(t => {
+    const items = filtered.filter(p => p.type === t);
+    if (items.length > 0) grouped[t] = items;
+  });
+
+  const plasticCount = getProductsByCategory("PLASTIC").length;
+  const steelCount = getProductsByCategory("STEEL").length;
+
+  function handleAddRFQ(product, material) {
+    if (!material) {
+      // Quick add without material — open detail
+      setSelectedProduct(product);
+      return;
+    }
+    // Toast feedback
+    setToast({ name: `${product.name} — ${material.name}` });
+    setTimeout(() => setToast(null), 4000);
+  }
+
+  // ── Detail view ───────────────────────────────────────────────────────────
+  if (selectedProduct) {
+    return (
+      <div>
+        <TTCProductDetail
+          product={selectedProduct}
+          onBack={() => setSelectedProduct(null)}
+          onAddRFQ={(item) => {
+            setToast({ name: item.name });
+            setTimeout(() => setToast(null), 4000);
+          }}
+        />
+        {toast && <QuickRFQToast item={toast} onDismiss={() => setToast(null)} />}
+      </div>
+    );
+  }
+
+  // ── Catalog grid ──────────────────────────────────────────────────────────
+  return (
+    <div>
+      {/* Header */}
+      <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, ${C.navyMid} 100%)`, padding: "24px 28px" }}>
+        {onBack && (
+          <button onClick={onBack} style={{
+            background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
+            color: "#fff", borderRadius: 7, padding: "5px 12px", cursor: "pointer", fontSize: 12, marginBottom: 16,
+          }}>
+            ← Back
+          </button>
+        )}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
+          <div>
+            <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 10, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 6 }}>
+              Procurement Catalog
+            </div>
+            <h1 style={{ color: "#fff", fontSize: 28, fontWeight: 900, margin: "0 0 8px" }}>Table Top Chains</h1>
+            <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 13, maxWidth: 560, lineHeight: 1.6, margin: 0 }}>
+              Unified product-first catalog. Select the right chain and material — regardless of brand.
+              Source: Movex Imperial Catalog (p. 7–108) + System Plast Smart Guide.
+            </p>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-end" }}>
+            <a href="https://wpbackend.movexii.com/wp-content/uploads/2024/11/Movex_Conveyor_modular_belts_and_chains_Catalog_Digital_Imperial.pdf"
+              target="_blank" rel="noreferrer"
+              style={{ color: C.gold, fontSize: 11, fontWeight: 700, textDecoration: "none" }}>
+              📄 Movex Imperial Catalog ↗
+            </a>
+            <a href="https://www.systemplastsmartguide.com/INT/Smart-Guide/"
+              target="_blank" rel="noreferrer"
+              style={{ color: C.gold, fontSize: 11, fontWeight: 700, textDecoration: "none" }}>
+              📄 System Plast Smart Guide ↗
+            </a>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div style={{ display: "flex", gap: 14, marginTop: 20, flexWrap: "wrap" }}>
+          {[
+            ["Plastic Chains", plasticCount],
+            ["Steel Chains", steelCount],
+            ["Normalized Materials", "10"],
+            ["Pitch Range", '0.43" – 1.5"'],
+          ].map(([k, v]) => (
+            <div key={k} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 8, padding: "8px 16px", minWidth: 110, textAlign: "center" }}>
+              <div style={{ fontSize: 18, fontWeight: 900, color: C.gold }}>{v}</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", marginTop: 2 }}>{k}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Category Selector */}
+      <div style={{ background: "#fff", borderBottom: `1px solid ${C.border}`, padding: "16px 28px" }}>
+        <div style={{ display: "flex", gap: 12, maxWidth: 600 }}>
+          <CategoryTab
+            label="Plastic Table Top Chains"
+            active={activeCategory === "PLASTIC"}
+            color={C.plastic}
+            count={plasticCount}
+            onClick={() => { setActiveCategory("PLASTIC"); setTypeFilter("ALL"); }}
+          />
+          <CategoryTab
+            label="Steel Table Top Chains"
+            active={activeCategory === "STEEL"}
+            color={C.steel}
+            count={steelCount}
+            onClick={() => { setActiveCategory("STEEL"); setTypeFilter("ALL"); }}
+          />
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div style={{ background: "#fff", borderBottom: `1px solid ${C.border}`, padding: "10px 28px", display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+        {/* Search */}
+        <input
+          type="text"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search by name, application…"
+          style={{
+            padding: "7px 12px", border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12,
+            outline: "none", minWidth: 200, color: C.text,
+          }}
+        />
+
+        {/* Type filters */}
+        <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+          <button
+            onClick={() => setTypeFilter("ALL")}
+            style={{
+              padding: "5px 12px", borderRadius: 20,
+              border: `1px solid ${typeFilter === "ALL" ? accentColor : C.border}`,
+              background: typeFilter === "ALL" ? accentColor : "#fff",
+              color: typeFilter === "ALL" ? "#fff" : C.muted,
+              cursor: "pointer", fontSize: 11, fontWeight: typeFilter === "ALL" ? 700 : 400,
+            }}
+          >All Types</button>
+          {orderedTypes.map(t => (
+            <button key={t} onClick={() => setTypeFilter(t)}
+              style={{
+                padding: "5px 12px", borderRadius: 20,
+                border: `1px solid ${typeFilter === t ? accentColor : C.border}`,
+                background: typeFilter === t ? accentColor : "#fff",
+                color: typeFilter === t ? "#fff" : C.muted,
+                cursor: "pointer", fontSize: 11, fontWeight: typeFilter === t ? 700 : 400,
+              }}
+            >{TYPE_LABELS[t]}</button>
+          ))}
+        </div>
+        <div style={{ marginLeft: "auto", fontSize: 11, color: C.muted }}>{filtered.length} products</div>
+      </div>
+
+      {/* Product Grid — grouped by type */}
+      <div style={{ padding: "24px 28px", background: C.bg }}>
+        {Object.keys(grouped).map(typeKey => (
+          <div key={typeKey} style={{ marginBottom: 32 }}>
+            {/* Section header */}
+            <div style={{
+              display: "flex", alignItems: "center", gap: 12, marginBottom: 16,
+            }}>
+              <div style={{
+                background: accentColor, color: "#fff", fontSize: 10, fontWeight: 800,
+                padding: "4px 12px", borderRadius: 6, textTransform: "uppercase", letterSpacing: "0.5px",
+                whiteSpace: "nowrap",
+              }}>
+                {TYPE_LABELS[typeKey]}
+              </div>
+              <div style={{ flex: 1, height: 1, background: C.border }} />
+              <span style={{ fontSize: 11, color: C.muted, whiteSpace: "nowrap" }}>{grouped[typeKey].length} series</span>
+            </div>
+
+            {/* Cards */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 16 }}>
+              {grouped[typeKey].map(product => (
+                <TTCProductCard
+                  key={product.id}
+                  product={product}
+                  onViewDetails={setSelectedProduct}
+                  onAddRFQ={handleAddRFQ}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+
+        {filtered.length === 0 && (
+          <div style={{ textAlign: "center", padding: "48px 20px", color: C.muted }}>
+            <div style={{ fontSize: 40, marginBottom: 10 }}>🔍</div>
+            <div style={{ fontSize: 14, fontWeight: 700 }}>No products match your filters</div>
+            <div style={{ fontSize: 12, marginTop: 4 }}>Try clearing search or selecting a different type</div>
+          </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div style={{ background: "#fff", borderTop: `1px solid ${C.border}`, padding: "14px 28px" }}>
+        <div style={{ fontSize: 11, color: C.muted, maxWidth: 800 }}>
+          <strong>Sources:</strong> Movex Conveyor Modular Belts and Chains Catalog — Imperial Version (pages 7–108, 2024) and System Plast Smart Guide Rev.005.
+          All specifications are sourced directly from official catalogs. Final selection and specifications must be confirmed by Uniking before production.
+        </div>
+      </div>
+
+      {toast && <QuickRFQToast item={toast} onDismiss={() => setToast(null)} />}
+    </div>
+  );
+}
