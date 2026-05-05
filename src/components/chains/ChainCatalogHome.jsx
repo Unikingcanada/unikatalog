@@ -121,6 +121,22 @@ export default function ChainCatalogHome({ onSelectCategory, onSelectProduct, on
       {/* Category Grid */}
       {!searchResults && (
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px clamp(12px,4vw,40px) 80px" }}>
+
+          {/* Platform CTA */}
+          <div style={{ background: "linear-gradient(135deg, #0C2340 0%, #1A3A5C 100%)", borderRadius: 12, padding: "20px 24px", marginBottom: 28, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+            <div>
+              <div style={{ color: "#C9A84C", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 4 }}>New</div>
+              <div style={{ color: "#fff", fontSize: 16, fontWeight: 800, marginBottom: 4 }}>Normalized Chain Procurement Platform</div>
+              <div style={{ color: "rgba(255,255,255,0.65)", fontSize: 12, lineHeight: 1.5 }}>
+                18 chain families · Brand-neutral · Configurator · Specs + Attachments + Sprockets
+              </div>
+            </div>
+            <button onClick={() => onSelectCategory({ key: "__platform__" })}
+              style={{ padding: "10px 22px", background: "#C9A84C", color: "#0C2340", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 800, fontSize: 13, whiteSpace: "nowrap" }}>
+              Open Chain Platform →
+            </button>
+          </div>
+
           <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 18 }}>Browse by Chain Type</div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 280px), 1fr))", gap: 16 }}>
             {CHAIN_CATEGORIES.map(cat => (

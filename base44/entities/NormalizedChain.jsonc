@@ -1,0 +1,281 @@
+{
+  "name": "NormalizedChain",
+  "type": "object",
+  "properties": {
+    "chain_id": {
+      "type": "string",
+      "description": "Normalized chain identifier \u2014 e.g. ANSI-40, WH78, 667-PINTLE"
+    },
+    "chain_family": {
+      "type": "string",
+      "enum": [
+        "Performance Roller Chains",
+        "Conveyor Roller Chains",
+        "Attachment Roller Chains",
+        "Hollow Pin Chains",
+        "Double Pitch Conveyor Chains",
+        "Engineered Class Chains",
+        "Welded Steel Chains",
+        "Steel Pintle Chains",
+        "Steel Bushed Chains",
+        "Agricultural Conveyor Chains",
+        "SharpTop Chains",
+        "Forged Chains",
+        "Drop Forged Rivetless Chains",
+        "Overhead Conveyor Chains",
+        "Drag / Scraper Chains",
+        "Bucket Elevator Chains",
+        "Leaf Chains",
+        "Specialty / Custom Chains"
+      ],
+      "description": "Primary chain family for browsing"
+    },
+    "chain_number": {
+      "type": "string",
+      "description": "Standard chain number \u2014 e.g. 40, 80H, C2060H, WH78, 667"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Full normalized display name \u2014 e.g. ANSI 40 Roller Chain"
+    },
+    "standard": {
+      "type": "string",
+      "description": "Applicable standard \u2014 e.g. ANSI B29.1, ISO 606, DIN 8188"
+    },
+    "pitch_in": {
+      "type": "string",
+      "description": "Chain pitch in inches"
+    },
+    "pitch_mm": {
+      "type": "string",
+      "description": "Chain pitch in mm"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short normalized description"
+    },
+    "application_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Industry/application tags"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Primary chain image URL"
+    },
+    "drawing_url": {
+      "type": "string",
+      "description": "Dimensional drawing image URL"
+    },
+    "specs": {
+      "type": "object",
+      "description": "Normalized dimensional specs \u2014 JSON object",
+      "additionalProperties": true
+    },
+    "performance_tiers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tier": {
+            "type": "string",
+            "description": "Standard Duty / Performance Duty / Premium Duty"
+          },
+          "tensile_strength_lbs": {
+            "type": "string"
+          },
+          "working_load_lbs": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Performance tier data \u2014 stored per-source to avoid overwriting"
+    },
+    "materials_available": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Confirmed available materials/coatings from source catalogs"
+    },
+    "attachments_available": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "side": {
+            "type": "string"
+          },
+          "spacing_note": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "source_confirmed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "description": "Source-confirmed attachments only"
+    },
+    "pins_links_available": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Connecting Link",
+              "Offset Link",
+              "Cotter Pin",
+              "Rivet",
+              "Hardened Pin",
+              "Replacement Pin",
+              "Master Link"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sprockets_available": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "teeth": {
+            "type": "string"
+          },
+          "bore_info": {
+            "type": "string"
+          },
+          "material": {
+            "type": "string"
+          },
+          "style": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "source_data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "brand": {
+            "type": "string"
+          },
+          "product_code": {
+            "type": "string"
+          },
+          "catalog_url": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "drawing_url": {
+            "type": "string"
+          },
+          "specs": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "Confirmed",
+              "Needs Review",
+              "Missing Data \u2013 Needs Mapping"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Source brand references \u2014 merged, not duplicated"
+    },
+    "downloads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "options_upgrades": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Available options and upgrade variants"
+    },
+    "uniking_notes": {
+      "type": "string",
+      "description": "Internal Uniking review notes / flags"
+    },
+    "needs_review": {
+      "type": "boolean",
+      "description": "Flag for Uniking engineering review",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Pending Review",
+        "Discontinued",
+        "On Request"
+      ],
+      "default": "Active"
+    }
+  },
+  "required": [
+    "chain_family",
+    "chain_number"
+  ]
+}

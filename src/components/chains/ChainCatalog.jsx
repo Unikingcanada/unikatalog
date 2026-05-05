@@ -7,6 +7,7 @@ import ChainCatalogHome from "./ChainCatalogHome";
 import ChainCategoryView from "./ChainCategoryView";
 import ChainProductDetail from "./ChainProductDetail";
 import SharpTopCatalog from "@/components/sharpTop/SharpTopCatalog";
+import ChainPlatformView from "./platform/ChainPlatformView";
 import { CHAIN_CATEGORIES } from "@/lib/chainCatalogData";
 
 const CATEGORY_COLORS = Object.fromEntries(
@@ -14,13 +15,18 @@ const CATEGORY_COLORS = Object.fromEntries(
 );
 
 export default function ChainCatalog({ onBack, onGoRFQ }) {
-  const [view, setView] = useState("home"); // home | category | detail | sharptop
+  const [view, setView] = useState("home"); // home | category | detail | sharptop | platform
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   function handleSelectCategory(category) {
     if (category.key === "sharptop") {
       setView("sharptop");
+      window.scrollTo(0, 0);
+      return;
+    }
+    if (category.key === "__platform__") {
+      setView("platform");
       window.scrollTo(0, 0);
       return;
     }
@@ -50,6 +56,10 @@ export default function ChainCatalog({ onBack, onGoRFQ }) {
 
   if (view === "sharptop") {
     return <SharpTopCatalog onBack={() => { setView("home"); window.scrollTo(0,0); }} onGoRFQ={onGoRFQ} />;
+  }
+
+  if (view === "platform") {
+    return <ChainPlatformView onBack={() => { setView("home"); window.scrollTo(0,0); }} onGoRFQ={onGoRFQ} />;
   }
 
   if (view === "detail" && selectedProduct) {
