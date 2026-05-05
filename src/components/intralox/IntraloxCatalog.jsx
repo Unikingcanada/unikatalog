@@ -5,6 +5,7 @@ import IntraloxSeriesDetail from "./IntraloxSeriesDetail";
 import IntraloxConfigurator from "./IntraloxConfigurator";
 import ModularBrandSelector from "./ModularBrandSelector";
 import MovexCatalog from "@/components/movex/MovexCatalog";
+import SystemPlastCatalog from "@/components/systemPlast/SystemPlastCatalog";
 
 const C = {
   navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
@@ -121,6 +122,11 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
   // Movex catalog
   if (brand === "movex") {
     return <MovexCatalog onBack={() => setBrand(null)} />;
+  }
+
+  // System Plast catalog
+  if (brand === "systemplast") {
+    return <SystemPlastCatalog onBack={() => setBrand(null)} onGoRFQ={onGoRFQ} />;
   }
 
   const tabSeries = { straight: STRAIGHT_SERIES, radius: RADIUS_SERIES, spiral: SPIRAL_SERIES, tools: [] }[activeTab] || [];

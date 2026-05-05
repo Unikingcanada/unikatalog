@@ -21,6 +21,17 @@ const BRANDS = [
     features: ["Straight-Running", "Radius", "Spiral", "Belt Support Tools", "24 Straight + 6 Radius + 2 Spiral Series"],
   },
   {
+    key: "systemplast",
+    name: "System Plast",
+    tagline: "Modular Belts & Sprockets — Regal Rexnord",
+    description: "System Plast (Regal Rexnord) offers a comprehensive range of modular plastic belts and sprockets. 8 mm to 63.5 mm pitch. NGevo material for longer wear life. Straight-running, sideflexing, raised rib, anti-slip, and magnetic chainbelt series.",
+    logo: null,
+    accentColor: "#0057A8",
+    logoText: "SP",
+    available: true,
+    features: ["8 mm to 63.5 mm Pitch", "NGevo Material", "Raised Rib (2500RR)", "Anti-Slip (2508/2630)", "Magnetic Chainbelt", "Smart Guide Rev.005"],
+  },
+  {
     key: "rexnord",
     name: "Rexnord",
     tagline: "Modular Conveyor Belts & Components",
@@ -120,9 +131,9 @@ export default function ModularBrandSelector({ onSelectBrand, onBack }) {
       {/* Brand grid */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px clamp(16px,4vw,32px) 80px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20 }}>
-          {BRANDS.map(brand => (
+          {BRANDS.map((brand, idx) => (
             <div
-              key={brand.key}
+              key={brand.key + idx}
               onMouseEnter={() => setHovered(brand.key)}
               onMouseLeave={() => setHovered(null)}
               onClick={() => brand.available && onSelectBrand(brand.key)}
