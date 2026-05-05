@@ -6,6 +6,7 @@ import { useState } from "react";
 import ChainCatalogHome from "./ChainCatalogHome";
 import ChainCategoryView from "./ChainCategoryView";
 import ChainProductDetail from "./ChainProductDetail";
+import SharpTopCatalog from "@/components/sharpTop/SharpTopCatalog";
 import { CHAIN_CATEGORIES } from "@/lib/chainCatalogData";
 
 const CATEGORY_COLORS = Object.fromEntries(
@@ -13,11 +14,16 @@ const CATEGORY_COLORS = Object.fromEntries(
 );
 
 export default function ChainCatalog({ onBack, onGoRFQ }) {
-  const [view, setView] = useState("home"); // home | category | detail
+  const [view, setView] = useState("home"); // home | category | detail | sharptop
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   function handleSelectCategory(category) {
+    if (category.key === "sharptop") {
+      setView("sharptop");
+      window.scrollTo(0, 0);
+      return;
+    }
     setSelectedCategory(category);
     setView("category");
     window.scrollTo(0, 0);
@@ -41,6 +47,10 @@ export default function ChainCatalog({ onBack, onGoRFQ }) {
   }
 
   const accentColor = selectedCategory ? selectedCategory.color : "#0C2340";
+
+  if (view === "sharptop") {
+    return <SharpTopCatalog onBack={() => { setView("home"); window.scrollTo(0,0); }} onGoRFQ={onGoRFQ} />;
+  }
 
   if (view === "detail" && selectedProduct) {
     return (

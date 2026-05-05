@@ -128,6 +128,21 @@ export const CHAIN_CATEGORIES = [
     ],
   },
   {
+    key: "sharptop",
+    label: "SharpTop / Sawmill Chains",
+    icon: "🪚",
+    description: "Sharp-top and spike-top conveyor chains for sawmill, forestry, and log handling applications. Standard pitch, heavy-duty, waferizer, and specialty configurations.",
+    color: "#b45309",
+    image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&q=80&auto=format&fit=crop",
+    subcategories: [
+      { key: "standard_pitch", label: "Standard Pitch (60/80 series)" },
+      { key: "heavy_duty",     label: "Heavy Duty (80H / 100 / 120)" },
+      { key: "large_pitch",    label: "Large Pitch (3\" / 4\" / 6\")" },
+      { key: "waferizer",      label: "Waferizer (W2P / W4P)" },
+      { key: "specialty",      label: "Specialty / Slasher LP / BS" },
+    ],
+  },
+  {
     key: "sprockets",
     label: "Sprockets",
     icon: "⚙️",
