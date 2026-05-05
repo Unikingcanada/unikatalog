@@ -632,7 +632,7 @@ export const SP_SERIES = [
     thickness_mm: 16,
     thickness_in: 0.63,
     catalogPage: "30610a",
-    image: null,
+    image: ERIKS + "01463tp.jpg",
     description: "Series 2500RR — 2-inch pitch, 16 mm height RAISED RIB modular belt. Polypropylene standard material (dark grey). Backflex radius 75 mm. 27% open area. High load capacity 30,000 N/m (2,000 lbs/ft). Width increment 3 inches (76.2 mm).",
     applications: ["Bottling / beverage lines", "Container handling", "Product stability applications", "Wide conveying systems"],
     advantages: ["High load capacity: 30,000 N/m (2,000 lbs/ft)", "27% open area raised rib surface", "2-inch pitch heavy duty", "Positioner version available", "Patented design"],
@@ -648,7 +648,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "raised_rib", label: "2500 Raised Rib (RR)", openArea: "27%", surface: "Raised Rib / Open",
-        image: null,
+        image: ERIKS + "01463tp.jpg",
         description: "2-inch pitch raised rib belt. 16 mm height. 27% open area. PPG (dark grey polypropylene). Patented design. Width in 3-inch increments.",
         applications: ["Bottling lines", "Container handling", "Product stability", "Wide conveyors"],
         beltData: [
@@ -670,7 +670,7 @@ export const SP_SERIES = [
     thickness_mm: 22,
     thickness_in: 0.87,
     catalogPage: "30620a",
-    image: null,
+    image: ERIKS + "01464tp.jpg",
     description: "Series 2508 — 2-inch pitch, 22 mm height, FLAT TOP WITH ANTI-SLIP SURFACE. LFG standard material. Multiple materials available: LFG, PPLG, POM-AS, PP-FR-EC. Very high load capacity 80 kN/m (5,440 lbs). Width increment 100 mm. Patented design.",
     applications: ["Automotive industry", "Heavy industrial conveying", "Airport baggage handling", "Anti-slip product handling", "ESD-sensitive environments (POM-AS)", "Flame retardant environments (PP-FR-EC)"],
     advantages: ["Very high load: 80 kN/m (5,440 lbs/ft)", "Anti-slip textured surface (patented)", "Multiple material options for special environments", "Large width range up to 5,000 mm", "Optional steel pins"],
@@ -686,7 +686,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flat_top_anti_slip", label: "2508 Flat Top Anti-Slip Surface (FTS)", openArea: "0%", surface: "Closed / Anti-Slip (Patented)",
-        image: null,
+        image: ERIKS + "01464tp.jpg",
         description: "2-inch pitch, 22 mm height flat top with patented anti-slip surface texture. LFG standard, also PPLG, POM-AS, PP-FR-EC. Width increment 100 mm.",
         applications: ["Automotive conveying", "Heavy industrial", "Airport baggage handling", "Anti-slip requirements"],
         beltData: [
@@ -711,7 +711,7 @@ export const SP_SERIES = [
     thickness_mm: 30,
     thickness_in: 1.18,
     catalogPage: "30645a",
-    image: null,
+    image: ERIKS + "01464tp.jpg",
     description: "Series 2630 — 2.5-inch (63.5 mm) pitch, 30 mm height, FLAT TOP WITH ANTI-SLIP SURFACE. LFG standard. Very high load capacity 115 kN/m (7,800 lbs). Width increment 100 mm. Patented design. Largest belt in System Plast range.",
     applications: ["Very heavy industrial conveying", "Pallet conveying", "Heavy automotive parts", "Large-format product handling"],
     advantages: ["Highest load capacity: 115 kN/m (7,800 lbs/ft)", "2.5-inch pitch for heavy loads", "30 mm thick — maximum wear life", "Anti-slip surface (patented)", "Width up to 5,000 mm"],
@@ -727,7 +727,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flat_top_anti_slip", label: "2630 Flat Top Anti-Slip Surface (FTS)", openArea: "0%", surface: "Closed / Anti-Slip (Patented)",
-        image: null,
+        image: ERIKS + "01464tp.jpg",
         description: "2.5-inch pitch, 30 mm height flat top with patented anti-slip surface. LFG standard material. Also PPLG, POM-AS, PP-FR-EC available.",
         applications: ["Very heavy industrial", "Pallet conveying", "Automotive"],
         beltData: [
@@ -752,7 +752,7 @@ export const SP_SERIES = [
     thickness_mm: 8.7,
     thickness_in: 0.34,
     catalogPage: "30720a",
-    image: null,
+    image: ERIKS + "00195tp.jpg",
     description: "Series 2120 Sideflexing — 1/2-inch pitch side-flexing modular belt for horizontal curves. Based on 2120 series platform. See Smart Guide 30720a.",
     applications: ["Horizontal curves", "Multi-directional conveying", "Curved food processing lines"],
     advantages: ["1/2-inch pitch sideflexing", "Based on proven 2120 platform", "Flat top and flush grid variants"],
@@ -766,7 +766,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flat_top_sf", label: "2120 Sideflexing Flat Top", openArea: "0%", surface: "Closed / Sideflexing",
-        image: null,
+        image: ERIKS + "00195tp.jpg",
         description: "1/2-inch pitch sideflexing flat top for horizontal curves. Smart Guide 30720a.",
         applications: ["Horizontal curves", "Curved food processing"],
         beltData: "Missing Data – Needs Mapping",
@@ -786,7 +786,7 @@ export const SP_SERIES = [
     thickness_mm: 8.7,
     thickness_in: 0.34,
     catalogPage: "30728a",
-    image: null,
+    image: ERIKS + "00214tp_ngevo.jpg",
     description: "Series 2256 — 1-inch pitch sideflexing modular belt. See Smart Guide 30728a for full details.",
     applications: ["Horizontal curves", "Multi-directional food processing", "Complex conveyor layouts"],
     advantages: ["1-inch pitch sideflexing", "TAB chainbelt option available", "Magnetic chainbelt option (2260M)"],
@@ -798,7 +798,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "sideflexing_ft", label: "2256 Sideflexing Flat Top", openArea: "0%", surface: "Closed / Sideflexing",
-        image: null,
+        image: ERIKS + "00214tp_ngevo.jpg",
         description: "1-inch pitch sideflexing flat top. Smart Guide 30728a.",
         applications: ["Horizontal curves", "Food processing curves"],
         beltData: "Missing Data – Needs Mapping",
@@ -818,7 +818,7 @@ export const SP_SERIES = [
     thickness_mm: 8.7,
     thickness_in: 0.34,
     catalogPage: "30700a",
-    image: null,
+    image: ERIKS + "01461tp.jpg",
     description: "Series 2260 / 2251M — 1-inch pitch magnetic chainbelt for use with magnetic curves. 2260M: Flat Top and Flush Grid. 2251M: Flat Top. Min. curve radius 500 mm. LFG and NGE materials. Martensitic stainless steel pin. For glass and PET container conveying.",
     applications: ["Magnetic curve systems", "Glass container conveying", "PET bottle conveying", "Curved beverage lines"],
     advantages: ["Magnetic system compatible", "Closed top (2260M FT) for PET/glass bottles with petaloid base", "Flush grid (2260M FG) for can conveying", "Min. curve radius 500 mm", "Martensitic SS pin"],
@@ -833,7 +833,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "ft_2260m", label: "2260M Flat Top (FT)", openArea: "0%", surface: "Closed / Magnetic",
-        image: null,
+        image: ERIKS + "01461tp.jpg",
         description: "2260M flat top for PET/glass containers on magnetic curve systems. Max load (LFG-FT): 2,000 N (450 lbs). Min. curve radius 500 mm.",
         applications: ["PET bottle conveying", "Glass container handling", "Magnetic curves"],
         beltData: [
@@ -845,7 +845,7 @@ export const SP_SERIES = [
       },
       {
         key: "fg_2260m", label: "2260M Flush Grid (FG)", openArea: "~20%", surface: "Open Grid / Magnetic",
-        image: null,
+        image: ERIKS + "00196tp.jpg",
         description: "2260M flush grid for can conveying on magnetic curves. 20% open area. Max load (LFG-FG): 1,900 N (425 lbs).",
         applications: ["Can conveying", "Magnetic curves", "Drainage on curves"],
         beltData: [
@@ -857,7 +857,7 @@ export const SP_SERIES = [
       },
       {
         key: "ft_2251m", label: "2251M Flat Top (FT)", openArea: "0%", surface: "Closed / Magnetic",
-        image: null,
+        image: ERIKS + "01461tp.jpg",
         description: "2251M flat top for magnetic curves. 12.7 mm thick. Min. curve radius 500 mm.",
         applications: ["PET bottle conveying", "Glass containers", "Magnetic curves — thicker belt"],
         beltData: [
