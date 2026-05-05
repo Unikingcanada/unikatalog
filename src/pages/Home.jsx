@@ -5430,12 +5430,11 @@ export default function Home() {
       return all;
     }
     async function load() {
-      try {
-        const [cat, elev, uni, allied, donghua] = await Promise.all([fetchAll(CatalogProduct), fetchAll(ElevatorBucket), fetchAll(UniCatalog), fetchAll(MacChainProduct), fetchAll(DonghuaChain)]);
-        setRawMacRecords(allied || []);
-        setAllData([...(cat||[]).map(normalizeCatalogProduct),...(elev||[]).map(normalizeElevatorBucket),...(uni||[]).map(normalizeUniCatalog),...(allied||[]).map(normalizeAllied),...(donghua||[]).map(normalizeDonghuaChain),...FOURB_PRODUCTS.map(normalizeFourBProduct)]);
-      } catch (e) {console.error("Catalog load error:", e);} finally
-      {setLoading(false);}
+      const s=(p)=>p.catch(()=>[]);
+      const [cat,elev,uni,allied,donghua]=await Promise.all([s(fetchAll(CatalogProduct)),s(fetchAll(ElevatorBucket)),s(fetchAll(UniCatalog)),s(fetchAll(MacChainProduct)),s(fetchAll(DonghuaChain))]);
+      setRawMacRecords(allied||[]);
+      setAllData([...(cat||[]).map(normalizeCatalogProduct),...(elev||[]).map(normalizeElevatorBucket),...(uni||[]).map(normalizeUniCatalog),...(allied||[]).map(normalizeAllied),...(donghua||[]).map(normalizeDonghuaChain),...FOURB_PRODUCTS.map(normalizeFourBProduct)]);
+      setLoading(false);
     }
     load();
   }, []);
