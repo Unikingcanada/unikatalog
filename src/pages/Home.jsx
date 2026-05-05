@@ -1967,7 +1967,7 @@ function Breadcrumb({ items, onNav }) {
 
 import ElevBucketsView from "@/components/elevatorBuckets/ElevBucketsView";
 import TableTopChainCatalog from "@/components/tableTopChain/TableTopChainCatalog";
-import ChainCatalog from "@/components/chains/ChainCatalog";
+import ChainCatalog from "@/components/chains/ChainCatalog";import SharpTopCatalog from "@/components/sharpTop/SharpTopCatalog";
 // ── elevator bucket constants (still used by GenericModal etc below) ──
 const NAVY = "#1a3a5c"; const AMBER = "#b45309";
 const BASE = "https://maxilift.com/hs-fs/hubfs/";
@@ -5461,7 +5461,7 @@ export default function Home() {
     if (typeKey === "Elevator Bucket") {setCurrentPage("elevatorBuckets");window.scrollTo(0, 0);return;}
     if (typeKey==="Conveyor Rollers") {setCurrentPage("rollerConfig");window.scrollTo(0,0);return;}
     if (typeKey==="Wire Mesh Belt") {setCurrentPage("wireMesh");window.scrollTo(0,0);return;}if(typeKey==="Monitoring System"){setCurrentPage("fourBCatalog");window.scrollTo(0,0);return;}
-    if(["Table Top Chain","__tabletop__","Plastic Chain","Metal Chain"].includes(typeKey)){setCurrentPage("tableTopChains");window.scrollTo(0,0);return;}if(typeKey==="Modular Belt"){setCurrentPage("intraloxCatalog");window.scrollTo(0,0);return;}if(typeKey==="Forged Chain"){setCurrentPage("forgedChain");window.scrollTo(0,0);return;}
+    if(["Table Top Chain","__tabletop__","Plastic Chain","Metal Chain"].includes(typeKey)){setCurrentPage("tableTopChains");window.scrollTo(0,0);return;}if(typeKey==="Modular Belt"){setCurrentPage("intraloxCatalog");window.scrollTo(0,0);return;}if(typeKey==="Forged Chain"||typeKey==="Sharptop Chain"){setCurrentPage(typeKey==="Forged Chain"?"forgedChain":"sharpTopCatalog");window.scrollTo(0,0);return;}
     if (typeKey==="Engineered Chain") {setSelectedType("Engineered Chain");setSelectedEngineeredSub(null);setSelectedAnsiSub(null);setView("engineered_subs");return;}
     if (typeKey==="ANSI/BS Chain") {setSelectedType("ANSI/BS Chain");setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setSelectedWeldedSub(null);setView("ansi_subs");return;}
     if (typeKey==="Welded Steel Chain") {setSelectedType("Welded Steel Chain");setSelectedWeldedSub(null);setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setView("welded_products");return;}
@@ -5496,7 +5496,7 @@ export default function Home() {
   function goBack() {setCurrentPage(null);window.scrollTo(0, 0);}
   function goRFQ() {setCurrentPage("rfqCart");window.scrollTo(0, 0);}
 
-  if (currentPage==="elevatorBuckets") return <ElevBucketsView onBack={goBack} onGoRFQ={goRFQ}/>;
+  if (currentPage==="sharpTopCatalog") return <SharpTopCatalog onBack={goBack} onGoRFQ={goRFQ}/>;if (currentPage==="elevatorBuckets") return <ElevBucketsView onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="forgedChain") return <ForgedChainView onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="rollerConfig") return <RollerConfigView onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="wireMesh") return <WireMeshConfigurator onBack={goBack} onGoRFQ={goRFQ}/>;if(currentPage==="fourBCatalog")return<FourBCatalog onBack={goBack} onGoRFQ={goRFQ}/>;
