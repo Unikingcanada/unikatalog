@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const C = {
-  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
+  navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
   card: "#ffffff", border: "#e2e8f0", text: "#0f172a", muted: "#64748b",
 };
 
@@ -56,7 +56,7 @@ export default function TypeGrid({ types, counts, onSelect }) {
         <div style={{ fontSize: 22, fontWeight: 800, color: C.text, marginBottom: 4 }}>Product Catalog</div>
         <div style={{ fontSize: 14, color: C.muted }}>Select a product category to browse specifications</div>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))", gap: 14 }}>
         {displayItems.map((t) => {
           const isHov = hovered === t.key;
           const img = CATEGORY_IMAGES[t.key];
@@ -66,16 +66,17 @@ export default function TypeGrid({ types, counts, onSelect }) {
               onMouseEnter={() => setHovered(t.key)}
               onMouseLeave={() => setHovered(null)}
               style={{
-                background: C.card,
-                border: "1px solid " + (isHov ? C.navyMid : C.border),
-                borderRadius: 10,
-                cursor: "pointer",
-                transition: "all 0.18s",
-                display: "flex",
-                flexDirection: "column",
-                overflow: "hidden",
-                boxShadow: isHov ? "0 6px 24px rgba(15,35,64,0.14)" : "0 1px 4px rgba(15,35,64,0.05)",
-              }}>
+                 background: C.card,
+                 border: "1px solid " + (isHov ? C.navyMid : C.border),
+                 borderRadius: 10,
+                 cursor: "pointer",
+                 transition: "all 0.18s",
+                 display: "flex",
+                 flexDirection: "column",
+                 overflow: "hidden",
+                 boxShadow: isHov ? "0 6px 24px rgba(0,60,91,0.15)" : "0 1px 4px rgba(0,60,91,0.05)",
+                 transform: isHov ? "translateY(-2px)" : "none",
+               }}>
               {/* Image */}
               {img && (
                 <div style={{ height: 140, overflow: "hidden", position: "relative", background: "#e2e8f0", flexShrink: 0 }}>

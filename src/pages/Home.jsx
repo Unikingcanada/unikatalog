@@ -57,7 +57,7 @@ const FILTER_LABELS = {
 };
 
 const C = {
-  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
+  navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
   gold: "#C9A84C", goldLight: "#e8c96d",
   green: "#16a34a", greenBg: "#dcfce7",
   red: "#dc2626", redBg: "#fee2e2",
@@ -103,7 +103,7 @@ function FloatingRFQButton({ onGoRFQ }) {
   if (count === 0) return null;
   return (
     <a href="#" onClick={(e) => {e.preventDefault();onGoRFQ && onGoRFQ();}} style={{ textDecoration: "none" }}>
-      <div style={{ position: "fixed", bottom: 28, right: 28, zIndex: 9999, background: "#0f2340", color: "#fff", borderRadius: 50, width: 60, height: 60, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(15,35,64,0.35)", cursor: "pointer", transform: pulse ? "scale(1.15)" : "scale(1)", transition: "transform 0.2s", border: "2px solid #2563eb" }}>
+      <div style={{ position: "fixed", bottom: 28, right: 28, zIndex: 9999, background: "#003c5b", color: "#fff", borderRadius: 50, width: 60, height: 60, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(0,60,91,0.45)", cursor: "pointer", transform: pulse ? "scale(1.15)" : "scale(1)", transition: "transform 0.2s", border: "2px solid #C9A84C" }}>
         <span style={{ fontSize: 22 }}>📋</span>
         <div style={{ position: "absolute", top: -6, right: -6, background: "#2563eb", color: "#fff", borderRadius: "50%", width: 22, height: 22, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, border: "2px solid #fff" }}>{count}</div>
       </div>
@@ -1931,7 +1931,7 @@ function TopBar({ onGoRFQ }) {
     return () => window.removeEventListener("rfq_cart_updated", update);
   }, []);
   return (
-    <div style={{ background: C.navy, height: 56, display: "flex", alignItems: "center", padding: "0 40px", justifyContent: "space-between", flexShrink: 0 }}>
+    <div style={{ background: C.navy, height: 56, display: "flex", alignItems: "center", padding: "0 clamp(16px,4vw,40px)", justifyContent: "space-between", flexShrink: 0, boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style={{ maxHeight: 28, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.9 }} alt="Uniking Canada" />
         
@@ -1949,13 +1949,13 @@ function TopBar({ onGoRFQ }) {
 
 function Breadcrumb({ items, onNav }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, marginBottom: 24, flexWrap: "wrap" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, marginBottom: 20, flexWrap: "wrap", padding: "8px 12px", background: "#fff", borderRadius: 8, border: "1px solid " + C.border, width: "fit-content" }}>
       {items.map((item, i) =>
-      <span key={i} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          {i > 0 && <span style={{ color: C.border, fontSize: 14 }}>›</span>}
+      <span key={i} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          {i > 0 && <span style={{ color: C.border, fontSize: 13 }}>›</span>}
           {i < items.length - 1 ?
-        <span onClick={() => onNav(i)} style={{ color: C.navyMid, cursor: "pointer", fontWeight: 600 }}>{item}</span> :
-        <span style={{ color: C.muted }}>{item}</span>}
+        <span onClick={() => onNav(i)} style={{ color: C.navyMid, cursor: "pointer", fontWeight: 600, transition: "color 0.12s" }} onMouseEnter={e=>e.target.style.color="#C9A84C"} onMouseLeave={e=>e.target.style.color=C.navyMid}>{item}</span> :
+        <span style={{ color: C.muted, fontWeight: 500 }}>{item}</span>}
         </span>
       )}
     </div>);
@@ -5504,7 +5504,7 @@ export default function Home() {
   if (["tableTopChain","tableTopChains"].includes(currentPage)) return <div style={{minHeight:"100vh",background:"#f8fafc"}}><TableTopChainCatalog onBack={goBack}/></div>;if(currentPage==="rfqCart")return<RFQCartView onBack={goBack}/>;return(
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column", overscrollBehavior: "contain" }}>
       <TopBar onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0, 0);}} />
-      <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "24px clamp(12px,4vw,40px)", boxSizing: "border-box" }}>
+      <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "20px clamp(12px,4vw,36px)", boxSizing: "border-box" }}>
         {view !== "home" ? <Breadcrumb items={breadcrumbs} onNav={navTo} /> : null}
         {loading ?
         <div style={{ textAlign: "center", padding: 80, color: C.muted, fontSize: 14 }}>Loading catalog...</div> :
@@ -5542,6 +5542,6 @@ export default function Home() {
         <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} rawMacRecords={rawMacRecords} />
         }
       </div>
-      <div style={{ borderTop: "1px solid " + C.border, padding: "14px 40px", textAlign: "center", fontSize: 11, color: "#cbd5e1" }}>Uniking Canada · <span onClick={() => setCurrentPage("rfqCart")} style={{ color: "#93c5fd", fontWeight: 600, cursor: "pointer" }}>Submit an RFQ →</span></div>
+      <div style={{ borderTop: "1px solid " + C.border, padding: "12px clamp(16px,4vw,40px)", textAlign: "center", fontSize: 11, color: "#94a3b8", background: "#fff" }}>Uniking Canada · Final specifications must be confirmed before supply · <span onClick={() => setCurrentPage("rfqCart")} style={{ color: C.navyMid, fontWeight: 700, cursor: "pointer" }}>Submit an RFQ →</span></div>
       <FloatingRFQButton onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0,0);}} />
     </div>);}

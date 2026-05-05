@@ -12,7 +12,7 @@
     --card-foreground: 224 30% 12%;
     --popover: 0 0% 100%;
     --popover-foreground: 224 30% 12%;
-    --primary: 200 100% 18%;
+    --primary: 200 100% 18%; /* Uniking navy #003c5b */
     --primary-foreground: 0 0% 100%;
     --secondary: 220 15% 94%;
     --secondary-foreground: 224 30% 20%;
@@ -88,5 +88,163 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* ── Uniking Global Utilities ──────────────────────────────────────────── */
+
+/* Smooth image loading */
+img {
+  image-rendering: auto;
+  transition: opacity 0.2s ease;
+}
+
+/* Responsive table wrapper — used by all catalog spec tables */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+}
+
+/* Mobile-safe card grid */
+.uk-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: 14px;
+}
+
+/* Standardized card */
+.uk-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  transition: box-shadow 0.18s, border-color 0.18s, transform 0.18s;
+}
+.uk-card:hover {
+  box-shadow: 0 6px 24px rgba(0, 60, 91, 0.12);
+  border-color: #2A5080;
+  transform: translateY(-2px);
+}
+
+/* Standardized tab bar — horizontally scrollable on mobile */
+.uk-tab-bar {
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  border-bottom: 2px solid #e2e8f0;
+  gap: 0;
+}
+.uk-tab-bar::-webkit-scrollbar { display: none; }
+
+.uk-tab-btn {
+  padding: 9px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #64748b;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.uk-tab-btn.active {
+  color: #003c5b;
+  border-bottom-color: #003c5b;
+}
+.uk-tab-btn:hover:not(.active) {
+  color: #1A3A5C;
+}
+
+/* Standardized RFQ button */
+.uk-btn-rfq {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid #2563eb;
+  background: #eff6ff;
+  color: #2563eb;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.uk-btn-rfq.added {
+  border-color: #16a34a;
+  background: #f0fdf4;
+  color: #16a34a;
+}
+.uk-btn-rfq:hover:not(.added) {
+  background: #2563eb;
+  color: #fff;
+}
+
+/* Standardized primary button */
+.uk-btn-primary {
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  background: #003c5b;
+  color: #fff;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.uk-btn-primary:hover {
+  background: #1A3A5C;
+}
+
+/* Standardized back button */
+.uk-btn-back {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  border-radius: 7px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.13s;
+}
+.uk-btn-back:hover {
+  background: #e2e8f0;
+}
+
+/* Missing data placeholder */
+.uk-missing {
+  font-size: 12px;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Floating RFQ cart pulse animation */
+@keyframes rfq-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+.rfq-pulse {
+  animation: rfq-pulse 0.4s ease;
+}
+
+/* Mobile overrides */
+@media (max-width: 640px) {
+  .uk-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .uk-tab-bar {
+    gap: 0;
+    padding-bottom: 0;
+  }
+
+  .uk-modal-body {
+    padding: 14px !important;
   }
 }

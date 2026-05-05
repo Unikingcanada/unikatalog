@@ -4,9 +4,10 @@
  */
 import { useState } from "react";
 import { CHAIN_CATEGORIES, CHAIN_PRODUCTS, searchChainProducts } from "@/lib/chainCatalogData";
+import PageHeader from "@/components/ui/PageHeader";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
+  navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
   gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
 };
 
@@ -51,57 +52,47 @@ export default function ChainCatalogHome({ onSelectCategory, onSelectProduct, on
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif" }}>
 
-      {/* Hero */}
-      <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, ${C.navyLight} 100%)`, padding: "28px clamp(16px,4vw,40px) 24px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          {onBack && (
-            <button onClick={onBack}
-              style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", borderRadius: 7, padding: "5px 12px", cursor: "pointer", fontSize: 12, marginBottom: 16 }}>
-              ← Back
-            </button>
-          )}
-          <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 10, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 6 }}>
-            Procurement Catalog
+      {/* Header */}
+      <PageHeader
+        title="Industrial Chain Catalog"
+        subtitle="Unified, brand-neutral catalog. Browse by chain type and standard number. Sources: MAC Chain + Allied-Locke Industries."
+        onBack={onBack || undefined}
+        below={
+          <div>
+            {/* Search */}
+            <div style={{ maxWidth: 520, position: "relative", marginBottom: 16 }}>
+              <input
+                type="text"
+                value={search}
+                onChange={handleSearch}
+                placeholder='Search by chain number, type, or industry (e.g. "40", "roller", "mining")'
+                style={{
+                  width: "100%", boxSizing: "border-box",
+                  padding: "11px 16px 11px 40px",
+                  borderRadius: 10, border: "none",
+                  fontSize: 13, outline: "none",
+                  boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+                }}
+              />
+              <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 14, color: C.muted }}>🔍</span>
+            </div>
+            {/* Stats */}
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              {[
+                ["Chain Types", CHAIN_CATEGORIES.length],
+                ["Products in Catalog", totalProducts + "+"],
+                ["Sources", "MAC Chain + Allied-Locke"],
+                ["Standard", "ANSI / ISO / BS"],
+              ].map(([k, v]) => (
+                <div key={k} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 8, padding: "7px 14px", textAlign: "center" }}>
+                  <div style={{ fontSize: 15, fontWeight: 900, color: C.gold }}>{v}</div>
+                  <div style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", marginTop: 2 }}>{k}</div>
+                </div>
+              ))}
+            </div>
           </div>
-          <h1 style={{ color: "#fff", fontSize: 28, fontWeight: 900, margin: "0 0 8px" }}>Industrial Chain Catalog</h1>
-          <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 13, maxWidth: 600, lineHeight: 1.7, margin: "0 0 20px" }}>
-            Unified, brand-neutral catalog. Browse by chain type and standard number. Sources: MAC Chain + Allied-Locke Industries.
-          </p>
-
-          {/* Search */}
-          <div style={{ maxWidth: 500, position: "relative" }}>
-            <input
-              type="text"
-              value={search}
-              onChange={handleSearch}
-              placeholder='Search by chain number, type, or industry (e.g. "40", "roller", "mining")'
-              style={{
-                width: "100%", boxSizing: "border-box",
-                padding: "12px 16px 12px 40px",
-                borderRadius: 10, border: "none",
-                fontSize: 13, outline: "none",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-              }}
-            />
-            <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: 14, color: C.muted }}>🔍</span>
-          </div>
-
-          {/* Stats */}
-          <div style={{ display: "flex", gap: 16, marginTop: 20, flexWrap: "wrap" }}>
-            {[
-              ["Chain Types", CHAIN_CATEGORIES.length],
-              ["Products in Catalog", totalProducts + "+"],
-              ["Sources", "MAC Chain + Allied-Locke"],
-              ["Standard", "ANSI / ISO / BS"],
-            ].map(([k, v]) => (
-              <div key={k} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 8, padding: "8px 16px", textAlign: "center" }}>
-                <div style={{ fontSize: 16, fontWeight: 900, color: C.gold }}>{v}</div>
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", marginTop: 2 }}>{k}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+        }
+      />
 
       {/* Search Results */}
       {searchResults && (
@@ -129,9 +120,9 @@ export default function ChainCatalogHome({ onSelectCategory, onSelectProduct, on
 
       {/* Category Grid */}
       {!searchResults && (
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "28px clamp(16px,4vw,40px) 80px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px clamp(12px,4vw,40px) 80px" }}>
           <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 18 }}>Browse by Chain Type</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(310px, 1fr))", gap: 18 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 280px), 1fr))", gap: 16 }}>
             {CHAIN_CATEGORIES.map(cat => (
               <CategoryCard key={cat.key} category={cat} onClick={() => onSelectCategory(cat)} />
             ))}
@@ -169,12 +160,12 @@ function CategoryCard({ category, onClick }) {
       onClick={onClick}
       style={{
         background: "#fff",
-        borderRadius: 14,
+        borderRadius: 12,
         border: `2px solid ${hov ? category.color : C.border}`,
         overflow: "hidden",
         cursor: "pointer",
         transition: "all 0.18s",
-        boxShadow: hov ? "0 8px 28px rgba(15,35,64,0.12)" : "0 1px 4px rgba(0,0,0,0.04)",
+        boxShadow: hov ? "0 6px 22px rgba(0,60,91,0.13)" : "0 1px 4px rgba(0,0,0,0.04)",
         transform: hov ? "translateY(-2px)" : "none",
         display: "flex",
         flexDirection: "column",
