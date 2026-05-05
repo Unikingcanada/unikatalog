@@ -2012,9 +2012,9 @@ function Breadcrumb({ items, onNav }) {
 
 import ElevBucketsView from "@/components/elevatorBuckets/ElevBucketsView";
 import TableTopChainCatalog from "@/components/tableTopChain/TableTopChainCatalog";
+import ChainCatalog from "@/components/chains/ChainCatalog";
 // ── elevator bucket constants (still used by GenericModal etc below) ──
-const NAVY = "#1a3a5c";
-const AMBER = "#b45309";
+const NAVY = "#1a3a5c"; const AMBER = "#b45309";
 const BASE = "https://maxilift.com/hs-fs/hubfs/";
 
 // ── ElevBucketsView is in components/elevatorBuckets/ElevBucketsView.jsx ──
@@ -5509,7 +5509,7 @@ export default function Home() {
   const showBrand = selectedType && SHOW_BRAND.has(selectedType) && !selectedBrand;
 
   function selectType(typeKey) {
-    if (typeKey === "__chain__") {setInChainMenu(true);setView("chains");return;}
+    if (typeKey === "__chain__") {setCurrentPage("chainCatalog");window.scrollTo(0,0);return;}
     if (typeKey === "Elevator Bucket") {setCurrentPage("elevatorBuckets");window.scrollTo(0, 0);return;}
     if (typeKey==="Conveyor Rollers") {setCurrentPage("rollerConfig");window.scrollTo(0,0);return;}
     if (typeKey==="Wire Mesh Belt") {setCurrentPage("wireMesh");window.scrollTo(0,0);return;}
@@ -5552,7 +5552,7 @@ export default function Home() {
   if (currentPage==="forgedChain") return <ForgedChainView onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="rollerConfig") return <RollerConfigView onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="wireMesh") return <WireMeshConfigurator onBack={goBack} onGoRFQ={goRFQ}/>;
-  if (currentPage==="intraloxCatalog") return <IntraloxCatalog onBack={goBack} onGoRFQ={goRFQ}/>;
+  if (currentPage==="intraloxCatalog") return <IntraloxCatalog onBack={goBack} onGoRFQ={goRFQ}/>;  if (currentPage==="chainCatalog") return <ChainCatalog onBack={goBack} onGoRFQ={goRFQ}/>;
   if (["tableTopChain","tableTopChains"].includes(currentPage)) return <div style={{minHeight:"100vh",background:"#f8fafc"}}><TableTopChainCatalog onBack={goBack}/></div>;if(currentPage==="rfqCart")return<RFQCartView onBack={goBack}/>;return(
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column", overscrollBehavior: "contain" }}>
       <TopBar onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0, 0);}} />
