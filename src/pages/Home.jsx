@@ -26,8 +26,7 @@ const CHAIN_SUBTYPE_KEYS = new Set([
 const PRODUCT_TYPES = [
 { key: "Modular Belt", label: "Modular Plastic Belting", description: "Straight-running, radius, spiral and side-flexing modular plastic belt systems", filters: ["category", "style", "pitch_in", "hinge_style", "materials"] },
 { key: "Elevator Bucket", label: "Elevator Buckets & Hardware", description: "Agricultural and industrial elevator buckets, belting, splices and hardware", filters: ["application", "discharge_type", "duty", "material", "profile"] },
-{ key: "Plastic Chain", label: "Plastic Chains", description: "Straight-running and side-flexing plastic conveyor chains", filters: ["style", "materials", "duty"] },
-{ key: "Metal Chain", label: "Metal Chains", description: "Stainless steel and carbon steel slat-top and side-flexing conveyor chains", filters: ["style", "materials", "duty"] },
+{ key: "__tabletop__", label: "Table Top Chains", description: "Plastic and steel table top chains — straight-running, sideflexing, heavy duty and more. Movex & System Plast catalog.", filters: [] },
 { key: "Wire Mesh Belt", label: "Wire Mesh Belt", description: "Stainless and carbon steel wire mesh conveyor belts for food and industrial processing", filters: ["style", "materials", "duty"] },
 { key: "Steel Hinged Belt", label: "Steel Hinged Belt", description: "Steel hinged slat and plate conveyor belts for chip and scrap handling", filters: ["style", "materials"] },
 { key: "ANSI/BS Chain", label: "Performance Roller Chain", description: "Precision roller chains to ANSI and BS specifications — standard, specialty and high-performance series", filters: ["style", "category", "materials", "duty"] },
@@ -2018,19 +2017,8 @@ const NAVY = "#1a3a5c";
 const AMBER = "#b45309";
 const BASE = "https://maxilift.com/hs-fs/hubfs/";
 
-// ── Stub: full ElevBucketsView is in components/elevatorBuckets/ElevBucketsView.jsx ──
-const MAT_DEF_STUB = {}; // placeholder — remove when all references moved
-const _STUB_MAT = {
-  "Polyethylene": { color: "#c2410c", bg: "#fff7ed", border: "#fed7aa", dot: "#f97316", label: "Poly (HDPE)", temp: "-60°F to +180°F", fda: true, use: "Grain & food products" },
-  "HDPE": { color: "#c2410c", bg: "#fff7ed", border: "#fed7aa", dot: "#f97316", label: "Poly (HDPE)", temp: "-60°F to +180°F", fda: true, use: "Grain & food products" },
-  "Nylon": { color: "#92400e", bg: "#fef9c3", border: "#fde68a", dot: "#d97706", label: "Nylon", temp: "-60°F to +300°F", fda: false, use: "Hot, impact & abrasive" },
-  "Urethane": { color: "#065f46", bg: "#d1fae5", border: "#6ee7b7", dot: "#10b981", label: "Urethane", temp: "-60°F to +180°F", fda: true, use: "Heavy abrasion, sticky" },
-  "FDA Nylon": { color: "#4338ca", bg: "#e0e7ff", border: "#a5b4fc", dot: "#6366f1", label: "FDA Nylon", temp: "-60°F to +300°F", fda: true, use: "Hot food-grade" },
-  "Ductile Iron": { color: "#374151", bg: "#f3f4f6", border: "#d1d5db", dot: "#6b7280", label: "Ductile Iron", temp: "Up to 600°F", fda: false, use: "Sand, glass, shot blast" },
-  "Mild Steel": { color: "#374151", bg: "#f1f5f9", border: "#cbd5e1", dot: "#64748b", label: "Mild Steel", temp: "High temp", fda: false, use: "Packed bulk materials" },
-  "Welded Steel": { color: "#1e3a5f", bg: "#e0e7ff", border: "#93c5fd", dot: "#3b82f6", label: "Welded Steel", temp: "High temp", fda: false, use: "Industrial bulk, ore" },
-  "Carbon Steel": { color: "#374151", bg: "#f1f5f9", border: "#cbd5e1", dot: "#64748b", label: "Carbon Steel", temp: "High temp", fda: false, use: "Heavy industrial" }
-};
+// ── ElevBucketsView is in components/elevatorBuckets/ElevBucketsView.jsx ──
+const MAT_DEF_STUB = {};
 
 function getMat(str) {
   if (!str) return { key: str || "", color: NAVY, bg: "#f3f4f6", border: "#e5e7eb", dot: "#9ca3af", label: str || "", temp: "—", fda: false, use: "—" };
@@ -5525,7 +5513,7 @@ export default function Home() {
     if (typeKey === "Elevator Bucket") {setCurrentPage("elevatorBuckets");window.scrollTo(0, 0);return;}
     if (typeKey==="Conveyor Rollers") {setCurrentPage("rollerConfig");window.scrollTo(0,0);return;}
     if (typeKey==="Wire Mesh Belt") {setCurrentPage("wireMesh");window.scrollTo(0,0);return;}
-    if (typeKey==="Table Top Chain") {setCurrentPage("tableTopChain");window.scrollTo(0,0);return;}    if (typeKey==="Modular Belt") {setCurrentPage("intraloxCatalog");window.scrollTo(0,0);return;} if (typeKey==="Forged Chain") {setCurrentPage("forgedChain");window.scrollTo(0,0);return;}
+    if(["Table Top Chain","__tabletop__","Plastic Chain","Metal Chain"].includes(typeKey)){setCurrentPage("tableTopChains");window.scrollTo(0,0);return;}if(typeKey==="Modular Belt"){setCurrentPage("intraloxCatalog");window.scrollTo(0,0);return;}if(typeKey==="Forged Chain"){setCurrentPage("forgedChain");window.scrollTo(0,0);return;}
     if (typeKey==="Engineered Chain") {setSelectedType("Engineered Chain");setSelectedEngineeredSub(null);setSelectedAnsiSub(null);setView("engineered_subs");return;}
     if (typeKey==="ANSI/BS Chain") {setSelectedType("ANSI/BS Chain");setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setSelectedWeldedSub(null);setView("ansi_subs");return;}
     if (typeKey==="Welded Steel Chain") {setSelectedType("Welded Steel Chain");setSelectedWeldedSub(null);setSelectedAnsiSub(null);setSelectedEngineeredSub(null);setView("welded_products");return;}
@@ -5565,7 +5553,7 @@ export default function Home() {
   if (currentPage==="rollerConfig") return <RollerConfigView onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="wireMesh") return <WireMeshConfigurator onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="intraloxCatalog") return <IntraloxCatalog onBack={goBack} onGoRFQ={goRFQ}/>;
-  if (currentPage==="tableTopChain") return <div style={{minHeight:"100vh",background:"#f8fafc"}}><TableTopChainCatalog onBack={goBack}/></div>;  if (currentPage==="rfqCart") return <RFQCartView onBack={goBack}/>;return (
+  if (["tableTopChain","tableTopChains"].includes(currentPage)) return <div style={{minHeight:"100vh",background:"#f8fafc"}}><TableTopChainCatalog onBack={goBack}/></div>;if(currentPage==="rfqCart")return<RFQCartView onBack={goBack}/>;return(
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column", overscrollBehavior: "contain" }}>
       <TopBar onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0, 0);}} />
       <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "24px clamp(12px,4vw,40px)", boxSizing: "border-box" }}>
