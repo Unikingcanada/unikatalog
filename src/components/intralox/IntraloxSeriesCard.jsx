@@ -6,6 +6,7 @@ const C = {
   gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
 };
 const INTRALOX_RED = "#E31837";
+const INTRALOX_LOGO = "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/64536dc1d_intralox-logo-box-194a1e40631d2cf9cd7d463fa5afc04b.svg";
 
 const BELT_TYPE_COLORS = {
   "Straight-Running": { bg: "#e0f2fe", color: "#0369a1" },
@@ -79,9 +80,7 @@ export default function IntraloxSeriesCard({ series, onViewSeries }) {
               <div style={{ color: "rgba(255,255,255,0.85)", fontSize: 10, fontWeight: 600, marginTop: 2 }}>{styleCount} Style{styleCount !== 1 ? "s" : ""}</div>
             )}
           </div>
-          <div style={{ background: INTRALOX_RED, borderRadius: 4, padding: "2px 6px", flexShrink: 0 }}>
-            <span style={{ fontSize: 8, fontWeight: 800, color: "#fff", letterSpacing: "0.5px" }}>INTRALOX</span>
-          </div>
+          <img src={INTRALOX_LOGO} alt="Intralox" style={{ height: 18, width: "auto", flexShrink: 0, filter: "brightness(0) invert(1)", opacity: 0.9 }} />
         </div>
       </div>
 

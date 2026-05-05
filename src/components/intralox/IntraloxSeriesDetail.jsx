@@ -7,6 +7,7 @@ const C = {
   bg: "#f8fafc", green: "#16a34a", text: "#0f172a"
 };
 const INTRALOX_RED = "#E31837";
+const INTRALOX_LOGO = "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/64536dc1d_intralox-logo-box-194a1e40631d2cf9cd7d463fa5afc04b.svg";
 
 function TabButton({ label, active, onClick }) {
   return (
@@ -172,9 +173,7 @@ function SpecsModal({ series, style, onConfigure, onClose }) {
         <div style={{ background: C.navyMid, borderRadius: "16px 16px 0 0", padding: "18px 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-              <div style={{ background: INTRALOX_RED, borderRadius: 4, padding: "2px 7px" }}>
-                <span style={{ fontSize: 9, fontWeight: 800, color: "#fff", letterSpacing: "0.5px" }}>INTRALOX</span>
-              </div>
+              <img src={INTRALOX_LOGO} alt="Intralox" style={{ height: 18, width: "auto" }} />
               <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 11 }}>{series.name}</span>
             </div>
             <div style={{ color: "#fff", fontSize: 18, fontWeight: 900 }}>{style.label}</div>
@@ -351,9 +350,7 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
       <div style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.navyMid})`, padding: "20px 24px" }}>
         <button onClick={onBack} style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", borderRadius: 7, padding: "5px 12px", cursor: "pointer", fontSize: 12, marginBottom: 12 }}>← Back</button>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
-          <div style={{ background: INTRALOX_RED, borderRadius: 5, padding: "3px 8px" }}>
-            <span style={{ fontSize: 10, fontWeight: 800, color: "#fff", letterSpacing: "0.5px" }}>INTRALOX</span>
-          </div>
+          <img src={INTRALOX_LOGO} alt="Intralox" style={{ height: 20, width: "auto" }} />
           <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 12 }}>Modular Plastic Belting</span>
         </div>
         <h1 style={{ color: "#fff", fontSize: 22, fontWeight: 900, margin: "0 0 4px" }}>{series.name}</h1>

@@ -9,6 +9,7 @@ const C = {
   green: "#16a34a", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a"
 };
 const INTRALOX_RED = "#E31837";
+const INTRALOX_LOGO = "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/64536dc1d_intralox-logo-box-194a1e40631d2cf9cd7d463fa5afc04b.svg";
 const LOGO = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png";
 
 // Catalog-confirmed materials from 2026 Intralox MPB Engineering Manual
@@ -54,9 +55,7 @@ function Header({ step, onClose }) {
     <div style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.navyMid})`, padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
       <div>
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
-          <div style={{ background: INTRALOX_RED, borderRadius: 4, padding: "2px 6px" }}>
-            <span style={{ fontSize: 8, fontWeight: 800, color: "#fff" }}>INTRALOX</span>
-          </div>
+          <img src={INTRALOX_LOGO} alt="Intralox" style={{ height: 16, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.9 }} />
           <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 11 }}>Belt Configurator — Step {step + 1}/{STEPS.length}</span>
         </div>
         <div style={{ color: "#fff", fontSize: 14, fontWeight: 700 }}>{STEPS[step]}</div>
