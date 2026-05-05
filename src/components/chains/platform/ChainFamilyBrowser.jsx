@@ -6,6 +6,7 @@
 import { useState, useMemo } from "react";
 import { CHAIN_FAMILIES } from "@/lib/chainFamilyData";
 import { CHAIN_PRODUCTS } from "@/lib/chainCatalogData";
+import { NORMALIZED_CHAINS } from "@/lib/chainNormalizedDictionary";
 
 const C = {
   navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
@@ -54,11 +55,17 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator 
   const familyCounts = useMemo(() => {
     const counts = {};
     CHAIN_FAMILIES.forEach(fam => {
-      counts[fam.key] = CHAIN_PRODUCTS.filter(p => {
-        if (p.category !== fam.catalog_key) return false;
-        if (fam.subcategory_filter?.length && !fam.subcategory_filter.includes(p.subcategory)) return false;
-        return true;
-      }).length;
+      // Count normalized chains first, fall back to legacy
+      const normalized = NORMALIZED_CHAINS.filter(c => c.chain_family === fam.key).length;
+      if (normalized > 0) {
+        counts[fam.key] = normalized;
+      } else {
+        counts[fam.key] = CHAIN_PRODUCTS.filter(p => {
+          if (p.category !== fam.catalog_key) return false;
+          if (fam.subcategory_filter?.length && !fam.subcategory_filter.includes(p.subcategory)) return false;
+          return true;
+        }).length;
+      }
     });
     return counts;
   }, []);

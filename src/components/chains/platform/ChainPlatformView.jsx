@@ -7,6 +7,7 @@
 import { useState, useMemo } from "react";
 import { CHAIN_FAMILIES } from "@/lib/chainFamilyData";
 import { CHAIN_PRODUCTS } from "@/lib/chainCatalogData";
+import { NORMALIZED_CHAINS, getChainsByFamily } from "@/lib/chainNormalizedDictionary";
 import ChainFamilyBrowser from "./ChainFamilyBrowser";
 import NormalizedChainCard from "./NormalizedChainCard";
 import ChainDetailView from "./ChainDetailView";
@@ -159,6 +160,10 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
 
   const familyProducts = useMemo(() => {
     if (!selectedFamily) return [];
+    // First try normalized dictionary (new data)
+    const normalized = getChainsByFamily(selectedFamily);
+    if (normalized.length > 0) return normalized;
+    // Fall back to legacy CHAIN_PRODUCTS (existing catalog data)
     const fam = CHAIN_FAMILIES.find(f => f.key === selectedFamily);
     if (!fam) return [];
     return CHAIN_PRODUCTS.filter(p => {

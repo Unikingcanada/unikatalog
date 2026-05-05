@@ -6,6 +6,10 @@
 import { useState } from "react";
 import { CHAIN_FAMILIES, MATERIAL_OPTIONS, LENGTH_UNITS, ATTACHMENT_SPACINGS, PERFORMANCE_TIERS } from "@/lib/chainFamilyData";
 import { CHAIN_PRODUCTS } from "@/lib/chainCatalogData";
+import { NORMALIZED_CHAINS, getChainsByFamily } from "@/lib/chainNormalizedDictionary";
+import { resolveAttachmentCodes } from "@/lib/chainAttachmentLibrary";
+import { getSprocketSeriesForChain, getToothOptions } from "@/lib/chainSprocketCompatibility";
+import { addChainRFQItem, formatRFQLineSummary } from "@/lib/chainRFQStructure";
 
 const C = {
   navy: "#003c5b", navyMid: "#1A3A5C",
@@ -83,6 +87,21 @@ function addToRFQCart(item) {
   } catch (e) {}
 }
 
+// Build chain RFQ line summary string
+function buildNormalizedSummary(state) {
+  const parts = [
+    state.chainObj?.display_name || state.chain_number || "Chain",
+    state.familyObj?.label,
+    state.material ? (MATERIAL_OPTIONS.find(m => m.key === state.material)?.label) : null,
+    state.performance_tier !== "standard" ? (PERFORMANCE_TIERS.find(t => t.key === state.performance_tier)?.label) : null,
+    state.selected_attachments.length ? state.selected_attachments.map(a => a.code || a).join(", ") + " Attachments" : null,
+    state.attachment_spacing ? "@ " + state.attachment_spacing : null,
+    state.length ? state.length + " " + state.length_unit : null,
+    "Qty " + state.quantity,
+  ].filter(Boolean);
+  return parts.join(" – ");
+}
+
 export default function ChainConfigurator({ onClose, initialFamily, initialChain }) {
   const [state, setState] = useState({
     ...INITIAL_STATE,
@@ -101,15 +120,19 @@ export default function ChainConfigurator({ onClose, initialFamily, initialChain
   function next() { setState(prev => ({ ...prev, step: prev.step + 1 })); }
   function back() { setState(prev => ({ ...prev, step: Math.max(1, prev.step - 1) })); }
 
-  // Chain numbers for selected family
+  // Chain numbers for selected family — prefer normalized dictionary, fall back to legacy
   const familyChains = state.family
-    ? CHAIN_PRODUCTS.filter(p => {
+    ? (() => {
+        const normalized = getChainsByFamily(state.family);
+        if (normalized.length > 0) return normalized;
         const fam = CHAIN_FAMILIES.find(f => f.key === state.family);
-        if (!fam) return false;
-        if (p.category !== fam.catalog_key) return false;
-        if (fam.subcategory_filter?.length && !fam.subcategory_filter.includes(p.subcategory)) return false;
-        return true;
-      })
+        if (!fam) return [];
+        return CHAIN_PRODUCTS.filter(p => {
+          if (p.category !== fam.catalog_key) return false;
+          if (fam.subcategory_filter?.length && !fam.subcategory_filter.includes(p.subcategory)) return false;
+          return true;
+        });
+      })()
     : [];
 
   const chainAttachments = state.chainObj?.related_attachments || [];
@@ -117,43 +140,77 @@ export default function ChainConfigurator({ onClose, initialFamily, initialChain
   const chainSprockets = state.chainObj?.related_sprockets || [];
 
   function buildRFQLine() {
-    const parts = [
-      state.chainObj?.display_name || state.chain_number || "Chain",
-      state.familyObj?.label,
-      state.material ? (MATERIAL_OPTIONS.find(m => m.key === state.material)?.label) : null,
-      state.selected_attachments.length ? state.selected_attachments.map(a => a.code || a).join(", ") + " Attachments" : null,
-      state.attachment_spacing ? "@ " + state.attachment_spacing : null,
-      state.length ? state.length + " " + state.length_unit : null,
-      "Qty " + state.quantity,
-    ].filter(Boolean);
-    return parts.join(" – ");
+    return buildNormalizedSummary(state);
   }
 
   function handleSubmit() {
-    const rfqLine = buildRFQLine();
-    addToRFQCart({
-      id: "cfg_" + (state.chain_number || "chain") + "_" + Date.now(),
-      _source: "configurator",
-      series: rfqLine,
-      type: state.familyObj?.label || "Chain",
-      style: state.chain_number || "",
-      category: state.family || "",
-      image_url: state.chainObj?.image || "",
-      materials: state.material || "",
+    const chainObj = state.chainObj;
+    const rfqConfig = {
+      _source: "chain_configurator",
+      chain_id: chainObj?.chain_id || null,
+      chain_number: state.chain_number || chainObj?.chain_number || chainObj?.part_number || "",
+      display_name: chainObj?.display_name || state.chain_number || "",
+      chain_family: state.family || "",
+      standard: chainObj?.standard || "",
+      pitch_in: chainObj?.pitch_in || chainObj?.specs?.pitch_in || "",
+      material: state.material || "carbon_steel",
+      performance_tier: state.performance_tier || "standard",
+      length: state.length || "",
+      length_unit: state.length_unit || "ft",
+      quantity: state.quantity || 1,
+      strands: 1,
+      attachments: state.selected_attachments.map(a => ({
+        code: a.code || a,
+        spacing: state.attachment_spacing || null,
+        side: a.side || null,
+        qty_per_link: 1,
+      })),
+      connecting_links: { required: state.need_pins, qty: 0, type: "cotter" },
+      offset_links: { required: null, qty: 0 },
+      sprocket_req: state.selected_sprockets.map(s => ({ teeth: s.teeth || s, notes: s.code || s })),
+      preferred_brand: state.preferred_brand || "",
+      open_to_equiv: state.open_to_equivalent !== false,
       application: state.application || "",
-      quantity: state.quantity,
-      unit: state.length_unit,
       notes: [
         state.notes,
-        state.performance_tier !== "standard" ? "Performance tier: " + PERFORMANCE_TIERS.find(t => t.key === state.performance_tier)?.label : null,
-        state.preferred_brand ? "Preferred brand: " + state.preferred_brand : null,
-        state.open_to_equivalent ? "Open to equivalent" : "Specified brand only",
-        state.selected_pins.length ? "Pins/Links: " + state.selected_pins.map(p => p.code || p).join(", ") : null,
-        state.selected_sprockets.length ? "Sprockets: " + state.selected_sprockets.map(s => s.code || s).join(", ") : null,
         state.need_attachments === false ? "No attachments required" : null,
-        state.need_pins === false ? "No pins/links required" : null,
+        state.need_pins === false ? "No connecting links required" : null,
         state.need_sprockets === false ? "No sprockets required" : null,
+        state.selected_pins?.length ? "Pins: " + state.selected_pins.map(p => p.code || p).join(", ") : null,
       ].filter(Boolean).join(" | "),
+      image_url: chainObj?.image || chainObj?.image_url || "",
+    };
+    addToRFQCart({
+      id: "cfg_" + (rfqConfig.chain_id || rfqConfig.chain_number || "chain") + "_" + Date.now(),
+      cartId: "cfg_" + Date.now(),
+      _source: "chain_configurator",
+      series: buildNormalizedSummary(state),
+      type: state.familyObj?.label || "Chain",
+      style: rfqConfig.chain_number || "",
+      category: rfqConfig.chain_family || "",
+      image_url: rfqConfig.image_url || "",
+      materials: rfqConfig.material || "",
+      application: rfqConfig.application || "",
+      quantity: rfqConfig.quantity,
+      unit: rfqConfig.length_unit,
+      notes: rfqConfig.notes,
+      // Normalized chain data
+      chain_id: rfqConfig.chain_id,
+      chain_number: rfqConfig.chain_number,
+      display_name: rfqConfig.display_name,
+      chain_family: rfqConfig.chain_family,
+      standard: rfqConfig.standard,
+      pitch_in: rfqConfig.pitch_in,
+      material: rfqConfig.material,
+      performance_tier: rfqConfig.performance_tier,
+      length: rfqConfig.length,
+      length_unit: rfqConfig.length_unit,
+      strands: rfqConfig.strands,
+      attachments: rfqConfig.attachments,
+      connecting_links: rfqConfig.connecting_links,
+      sprocket_req: rfqConfig.sprocket_req,
+      preferred_brand: rfqConfig.preferred_brand,
+      open_to_equiv: rfqConfig.open_to_equiv,
     });
     setSubmitted(true);
   }

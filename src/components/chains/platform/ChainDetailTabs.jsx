@@ -4,6 +4,7 @@
  * Shows only tabs with content.
  */
 import { useState } from "react";
+import ChainEquivalencyPanel from "./ChainEquivalencyPanel";
 
 const C = {
   navy: "#003c5b", navyMid: "#1A3A5C",
@@ -207,13 +208,24 @@ function OptionsTab({ product }) {
 }
 
 function SourceDataTab({ product }) {
+  // Normalized chains use chain_id + source_refs; legacy chains use source_data / source fields
+  const hasNormalizedRefs = !!product.chain_id;
   const sources = product.source_data || [];
   const singleSource = product.source;
   const sourceUrl = product.source_url;
 
   return (
     <div>
-      {sources.length > 0 ? (
+      {/* Normalized equivalency panel (new architecture) */}
+      {hasNormalizedRefs && (
+        <div style={{ marginBottom: 20 }}>
+          <SectionTitle>Manufacturer Equivalencies</SectionTitle>
+          <ChainEquivalencyPanel chain_id={product.chain_id} />
+        </div>
+      )}
+
+      {/* Legacy source_data (existing catalog products) */}
+      {!hasNormalizedRefs && sources.length > 0 && (
         <div>
           <SectionTitle>Source References</SectionTitle>
           {sources.map((s, i) => (
@@ -239,7 +251,9 @@ function SourceDataTab({ product }) {
             </div>
           ))}
         </div>
-      ) : singleSource ? (
+      )}
+
+      {!hasNormalizedRefs && !sources.length && singleSource && (
         <div style={{ border: "1px solid " + C.border, borderRadius: 8, padding: 14, background: C.bg }}>
           <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 4 }}>{singleSource}</div>
           <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: C.greenBg, color: C.green, border: "1px solid #86efac" }}>Confirmed</span>
@@ -249,11 +263,14 @@ function SourceDataTab({ product }) {
             </a>
           )}
         </div>
-      ) : (
+      )}
+
+      {!hasNormalizedRefs && !sources.length && !singleSource && (
         <div style={{ color: C.muted, fontSize: 13, padding: "24px 0" }}>No source data on file. Contact Uniking.</div>
       )}
+
       <div style={{ marginTop: 16, padding: "10px 14px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 6, fontSize: 12, color: "#0369a1" }}>
-        ℹ This platform merges data from multiple suppliers. Brand/source information is provided for reference and engineering review. Final specifications must be confirmed by Uniking before supply.
+        ℹ This platform merges data from multiple suppliers. All specifications must be confirmed by Uniking before supply.
       </div>
     </div>
   );
@@ -291,7 +308,7 @@ export default function ChainDetailTabs({ product, onAddRFQ }) {
   const hasSprockets = (product.related_sprockets?.length || product.sprockets_available?.length) > 0;
   const hasMaterials = (product.materials_available?.length || product.options?.length) > 0;
   const hasOptions = (product.options?.length || product.options_upgrades?.length) > 0;
-  const hasSource = product.source || (product.source_data?.length > 0);
+  const hasSource = product.source || (product.source_data?.length > 0) || !!product.chain_id;
   const hasDownloads = (product.downloads?.length > 0) || product.diagram_image || product.drawing_url;
 
   const tabs = [
