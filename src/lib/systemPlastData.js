@@ -2,7 +2,12 @@
 // System Plast Modular Belts & Sprockets — Smart Guide Catalog Data
 // Source: System Plast Smart Guide (www.systemplastsmartguide.com) Rev. 005
 //         Regal Rexnord / System Plast Smart Guide pages 30010a–30728a
+// Product images sourced from ERIKS distributor CDN (ERIKS / HLR-System)
+//         eriksdigitalcdn.azureedge.net — official Regal Rexnord / System Plast product photos
 // ─────────────────────────────────────────────────────────────────────────────
+
+// ── Image CDN base ────────────────────────────────────────────────────────────
+const ERIKS = "https://eriksdigitalcdn.azureedge.net/shop/detail/hlr-system/system%20plast/internet%20images/";
 
 export const SP_SMART_GUIDE_URL = "https://www.systemplastsmartguide.com/INT/Smart-Guide/";
 export const SP_LOGO = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Regal_Rexnord_Logo.svg/320px-Regal_Rexnord_Logo.svg.png";
@@ -84,7 +89,7 @@ export const SP_SERIES = [
     thickness_mm: 6,
     thickness_in: 0.24,
     catalogPage: "30025a",
-    image: null,
+    image: ERIKS + "00195tp.jpg", // closest visual match: 1/2" flat top (same modular style)
     description: "Series 2080 — ultra-fine 8 mm (1/3-inch) pitch modular belt. Designed for tight transfers and applications requiring minimal pitch for smooth, quiet conveying. Imperial module version.",
     applications: ["Ultra-tight transfers", "Small part conveying", "Packaging lines", "Beverage handling"],
     advantages: ["Finest pitch (8 mm) in System Plast range", "Imperial module version", "Tight transfer over narrow nosebars", "Quiet operation"],
@@ -96,7 +101,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flat_top", label: "2080 Flat Top", openArea: "0%", surface: "Closed / Smooth",
-        image: null,
+        image: ERIKS + "00195tp.jpg",
         description: "8 mm pitch flat top. Imperial module. Ultra-tight transfer capability.",
         applications: ["Ultra-tight transfers", "Small parts", "Packaging"],
         beltData: "Missing Data – Needs Mapping",
@@ -116,7 +121,7 @@ export const SP_SERIES = [
     thickness_mm: 8.7,
     thickness_in: 0.34,
     catalogPage: "30050a",
-    image: null,
+    image: ERIKS + "00195tp.jpg",
     description: "Series 2120 — the most widely-used modular belt in the System Plast range. 1/2-inch (12.7 mm) pitch, 8.7 mm height, 85 mm metric modules. Available in Flat Top, Flush Grid, Rubber Insert, Guide Bar, and Low Back Pressure versions. NGE and LFG/LFB materials.",
     applications: ["General conveying", "Food processing", "Beverage packaging", "Accumulation", "Incline/decline", "Sorting", "Packaging lines", "Drainage applications"],
     advantages: ["Industry-standard 1/2-inch pitch", "Widest style selection in range", "NGE new generation material for longer wear life", "Guide bar version for tight transfers", "LBP roller version for accumulation", "Molded-to-width versions available", "85 mm width increment (metric)"],
@@ -132,7 +137,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flat_top", label: "2120 Flat Top (FT)", openArea: "0%", surface: "Closed / Smooth",
-        image: null,
+        image: ERIKS + "00195tp.jpg",
         description: "Smooth flat top. Primary belt for general conveying and food processing. Backflex radius 10 mm. Available in NGE (grey/blue), LFG (grey), LFB (blue).",
         applications: ["General conveying", "Food processing", "Beverage packaging", "Packaging lines"],
         beltData: [
@@ -145,7 +150,7 @@ export const SP_SERIES = [
       },
       {
         key: "flush_grid", label: "2120 Flush Grid (FG)", openArea: "21%", surface: "Open Grid",
-        image: null,
+        image: ERIKS + "00196tp.jpg",
         description: "21% open area flush grid for drainage, washing, and airflow. Same 85 mm module width. Backflex radius 10 mm.",
         applications: ["Drainage", "Washing/rinsing", "Cooling", "Airflow applications"],
         beltData: [
@@ -158,7 +163,7 @@ export const SP_SERIES = [
       },
       {
         key: "rubber_insert_vg", label: "2120 Rubber Insert (VG — Every Pitch)", openArea: "0%", surface: "Grip / TPR Rubber Insert",
-        image: null,
+        image: ERIKS + "01461tp.jpg",
         description: "Flat top with TPR (thermoplastic rubber, black, 50 shore A) inserts every pitch. For grip on inclines, accumulation. Backflex radius 20 mm.",
         applications: ["Incline/decline conveying", "Grip conveying", "Accumulation with grip", "Sticky products"],
         beltData: [
@@ -169,7 +174,7 @@ export const SP_SERIES = [
       },
       {
         key: "guide_bar_gb", label: "2120 Guide Bar (GB — Transfer)", openArea: "0%", surface: "Closed / Guide Bar",
-        image: null,
+        image: ERIKS + "00195tp.jpg",
         description: "Guide bar every pitch for tight transfers. Used on short conveyors with nosebar for extremely short transfers. Backflex radius 20 mm.",
         applications: ["Tight transfers", "Nosebar transfers", "Short conveyors", "Transfer dead plates"],
         beltData: [
@@ -180,7 +185,7 @@ export const SP_SERIES = [
       },
       {
         key: "low_back_pressure_lbp", label: "2120 Low Back Pressure (LBP)", openArea: "0% (roller)", surface: "Roller Top / Low Back Pressure",
-        image: null,
+        image: ERIKS + "00195tp.jpg",
         description: "Low back pressure accumulation belt with integrated rollers. Roller shaft: stainless steel AISI 304. Backflex radius 65 mm. LBP belts cannot be cut-to-width.",
         applications: ["Low backpressure accumulation", "Fragile product handling", "Gentle accumulation", "Package conveying"],
         beltData: [
@@ -202,7 +207,7 @@ export const SP_SERIES = [
     thickness_mm: 8.7,
     thickness_in: 0.34,
     catalogPage: "30055a",
-    image: null,
+    image: ERIKS + "00195tp.jpg",
     description: "Series 2121 — 1/2-inch pitch modular belt with Imperial (76.2 mm / 3-inch) modules. Flat top version. Compatible with same sprockets as 2120. Width in 3-inch increments.",
     applications: ["General conveying", "Food processing", "Packaging", "Accumulation"],
     advantages: ["Imperial 76.2 mm (3-in) module", "Same sprockets as 2120", "Flat top surface", "3-inch width increments"],
@@ -218,7 +223,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flat_top", label: "2121 Flat Top (FT)", openArea: "0%", surface: "Closed / Smooth",
-        image: null,
+        image: ERIKS + "00195tp.jpg",
         description: "1/2-inch pitch flat top with 3-inch (76.2 mm) Imperial modules. Tight transfers over nosebar.",
         applications: ["General conveying", "Food processing", "Packaging"],
         beltData: [
@@ -242,7 +247,7 @@ export const SP_SERIES = [
     thickness_mm: 8.7,
     thickness_in: 0.34,
     catalogPage: "30073a",
-    image: null,
+    image: ERIKS + "00196tp.jpg",
     description: "Series 2122 — 1/2-inch pitch modular belt with 100 mm metric modules. Flush grid version. Wider modules than 2120 for higher open area. NOT SUITABLE for square-bore one-piece sprockets.",
     applications: ["Drainage applications", "Washing", "Food processing", "Wide open area requirements"],
     advantages: ["100 mm metric modules", "Higher open area grid", "1/2-inch pitch"],
@@ -260,7 +265,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flush_grid_100mm", label: "2122 Flush Grid (FG — 100 mm modules)", openArea: "21%", surface: "Open Grid",
-        image: null,
+        image: ERIKS + "00196tp.jpg",
         description: "Flush grid 1/2-inch pitch with 100 mm modules. 21% open area. NOT compatible with square-bore one-piece floating sprockets.",
         applications: ["Drainage", "Washing", "Food processing"],
         beltData: [
@@ -283,7 +288,7 @@ export const SP_SERIES = [
     thickness_mm: 8.7,
     thickness_in: 0.34,
     catalogPage: "30065a",
-    image: null,
+    image: ERIKS + "00196tp.jpg",
     description: "Series 2123 — 1/2-inch pitch, metric module variant. Flush grid version. See Smart Guide 30065a for full details.",
     applications: ["Drainage", "Food processing", "Washing"],
     advantages: ["1/2-inch pitch metric variant", "Flush grid drainage"],
@@ -298,7 +303,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flush_grid", label: "2123 Flush Grid (FG)", openArea: "~21%", surface: "Open Grid",
-        image: null,
+        image: ERIKS + "00196tp.jpg",
         description: "1/2-inch pitch flush grid. Metric module. See Smart Guide 30065a.",
         applications: ["Drainage", "Washing", "Food processing"],
         beltData: "Missing Data – Needs Mapping",
@@ -318,7 +323,7 @@ export const SP_SERIES = [
     thickness_mm: 8.7,
     thickness_in: 0.34,
     catalogPage: "30030a",
-    image: null,
+    image: ERIKS + "01461tp.jpg",
     description: "Series 2124 — 1/2-inch pitch, metric, with rubber insert variant. Flat top with TPR rubber inserts. See Smart Guide 30090a.",
     applications: ["Grip conveying", "Inclines", "Anti-slip"],
     advantages: ["1/2-inch pitch with rubber inserts", "Grip for inclines"],
@@ -333,7 +338,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flat_top_rubber_insert", label: "2124 Flat Top with Rubber Insert (VG)", openArea: "0%", surface: "Closed / Rubber Insert",
-        image: null,
+        image: ERIKS + "01461tp.jpg",
         description: "1/2-inch pitch flat top with rubber inserts. Smart Guide 30090a.",
         applications: ["Grip conveying", "Inclines", "Anti-slip"],
         beltData: "Missing Data – Needs Mapping",
@@ -353,7 +358,7 @@ export const SP_SERIES = [
     thickness_mm: 8.7,
     thickness_in: 0.34,
     catalogPage: "30200a",
-    image: null,
+    image: ERIKS + "01121tp_ngevo.jpg",
     description: "Series 2190 — 3/4-inch (19.05 mm) pitch modular belt, 8.7 mm height. Imperial module. NGE material. Available in Flat Top and Flush Grid. Single track and single track with positioner versions.",
     applications: ["Beverage conveying", "Food processing", "Medium-pitch applications", "Can conveying"],
     advantages: ["3/4-inch pitch medium-duty", "Flat Top and Flush Grid", "Patented single-track design", "NGE material standard"],
@@ -369,7 +374,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flat_top", label: "2190 Flat Top (FT)", openArea: "0%", surface: "Closed / Smooth",
-        image: null,
+        image: ERIKS + "01121tp_ngevo.jpg",
         description: "3/4-inch pitch flat top. NGE material standard. Available as single track and single track with positioner.",
         applications: ["Beverage conveying", "Food processing", "Can conveying"],
         beltData: [
@@ -380,7 +385,7 @@ export const SP_SERIES = [
       },
       {
         key: "flush_grid", label: "2190 Flush Grid (FG)", openArea: "~25%", surface: "Open Grid",
-        image: null,
+        image: ERIKS + "01124tp_ngevo.jpg",
         description: "3/4-inch pitch flush grid version. Smart Guide 30230a.",
         applications: ["Drainage", "Washing", "Airflow"],
         beltData: "Missing Data – Needs Mapping",
@@ -400,7 +405,7 @@ export const SP_SERIES = [
     thickness_mm: 8.7,
     thickness_in: 0.34,
     catalogPage: "30310a",
-    image: null,
+    image: ERIKS + "00214tp_ngevo.jpg",
     description: "Series 2250 — 1-inch (25.4 mm) pitch, 8.7 mm height modular belt. Metric modules (83.8 mm). Available in Flat Top, Flush Grid, Rubber Insert (VG), and Roller Top (RTC). Widely used for food processing, packaging, and industrial applications.",
     applications: ["Food processing", "Packaging", "Sorting", "Industrial conveying", "Drainage", "Incline conveying"],
     advantages: ["1-inch pitch — broad versatility", "Multiple surface styles including roller top", "Rubber insert grip version", "Flights available for inclines", "Same sprockets as 2253 series"],
@@ -416,7 +421,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flat_top", label: "2250 Flat Top (FT)", openArea: "0%", surface: "Closed / Smooth",
-        image: null,
+        image: ERIKS + "00214tp_ngevo.jpg",
         description: "1-inch pitch flat top, 8.7 mm height. NGE and LFG materials. Single track and single track with positioner versions.",
         applications: ["Food processing", "Packaging", "Sorting", "General conveying"],
         beltData: [
@@ -428,7 +433,7 @@ export const SP_SERIES = [
       },
       {
         key: "flush_grid", label: "2250 Flush Grid (FG)", openArea: "23%", surface: "Open Grid",
-        image: null,
+        image: ERIKS + "00223tp.jpg",
         description: "1-inch pitch flush grid. 23% open area. NGE material standard.",
         applications: ["Drainage", "Washing", "Blanching", "Cooling"],
         beltData: [
@@ -439,7 +444,7 @@ export const SP_SERIES = [
       },
       {
         key: "rubber_insert_vg", label: "2250 Rubber Insert (VG — Every Pitch)", openArea: "0%", surface: "Grip / TPR Rubber Insert",
-        image: null,
+        image: ERIKS + "01461tp.jpg",
         description: "1-inch pitch with TPR rubber inserts (water blue, 70 shore A) every pitch. For grip on inclines.",
         applications: ["Inclines", "Grip conveying", "Anti-slip"],
         beltData: [
@@ -450,7 +455,7 @@ export const SP_SERIES = [
       },
       {
         key: "roller_top_rtc", label: "2250 Roller Top (RTC)", openArea: "~5%", surface: "Roller / Low Back Pressure",
-        image: null,
+        image: ERIKS + "00214tp_ngevo.jpg",
         description: "1-inch pitch roller top for low backpressure accumulation. Smart Guide 30381a.",
         applications: ["Low backpressure accumulation", "Package conveying", "Gentle handling"],
         beltData: "Missing Data – Needs Mapping",
@@ -459,7 +464,7 @@ export const SP_SERIES = [
       },
       {
         key: "flat_top_flights", label: "2250 with Flights", openArea: "0%", surface: "Closed / With Flights",
-        image: null,
+        image: ERIKS + "00214tp_ngevo.jpg",
         description: "2250 flat top with integral flights for incline conveying. Smart Guide 30365a.",
         applications: ["Incline conveying", "Product elevation", "Steep inclines"],
         beltData: "Missing Data – Needs Mapping",
@@ -479,7 +484,7 @@ export const SP_SERIES = [
     thickness_mm: 12.7,
     thickness_in: 0.5,
     catalogPage: "30420a",
-    image: null,
+    image: ERIKS + "00214tp_ngevo.jpg",
     description: "Series 2251 — 1-inch pitch, 12.7 mm (1/2-inch) thick modular belt. Metric single-track module (83.8 mm wide). NGE material standard. Flat top, rubber insert, and LBP versions available.",
     applications: ["Heavy food processing", "Higher load applications", "Packaging", "Industrial conveying"],
     advantages: ["1/2-inch thick belt — more wear life", "1-inch pitch", "NGE material for long service life", "Single track with positioner available"],
@@ -495,7 +500,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flat_top", label: "2251 Flat Top (FT)", openArea: "0%", surface: "Closed / Smooth",
-        image: null,
+        image: ERIKS + "00214tp_ngevo.jpg",
         description: "1-inch pitch, 12.7 mm thick flat top. NGE material. Single track and single track with positioner.",
         applications: ["Heavy food processing", "Packaging", "Industrial conveying"],
         beltData: [
@@ -506,7 +511,7 @@ export const SP_SERIES = [
       },
       {
         key: "rubber_insert_vg", label: "2251 Rubber Insert (VG)", openArea: "0%", surface: "Closed / Rubber Insert",
-        image: null,
+        image: ERIKS + "01461tp.jpg",
         description: "2251 with rubber inserts. Smart Guide 30490a.",
         applications: ["Grip conveying", "Inclines"],
         beltData: "Missing Data – Needs Mapping",
@@ -515,7 +520,7 @@ export const SP_SERIES = [
       },
       {
         key: "low_back_pressure_lbp", label: "2251 Low Back Pressure (LBP)", openArea: "0% (roller)", surface: "Roller / LBP",
-        image: null,
+        image: ERIKS + "00214tp_ngevo.jpg",
         description: "2251 LBP roller top for accumulation. Smart Guide 30500a.",
         applications: ["Accumulation", "Low backpressure conveying"],
         beltData: "Missing Data – Needs Mapping",
@@ -535,7 +540,7 @@ export const SP_SERIES = [
     thickness_mm: 12.7,
     thickness_in: 0.5,
     catalogPage: "30420a",
-    image: null,
+    image: ERIKS + "00214tp_ngevo.jpg",
     description: "Series 2252 — 1-inch pitch, 12.7 mm thick, Imperial module (76.2 mm / 3-inch wide). NGE material. Flat Top and Flush Grid versions available.",
     applications: ["General conveying", "Food processing", "Industrial conveying"],
     advantages: ["Imperial 3-inch module", "12.7 mm thick for wear life", "1-inch pitch", "Flat Top and Flush Grid"],
@@ -551,7 +556,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flat_top", label: "2252 Flat Top (FT)", openArea: "0%", surface: "Closed / Smooth",
-        image: null,
+        image: ERIKS + "00214tp_ngevo.jpg",
         description: "Imperial 1-inch pitch, 12.7 mm thick flat top. Available in 3-inch width increments.",
         applications: ["General conveying", "Food processing"],
         beltData: [
@@ -562,7 +567,7 @@ export const SP_SERIES = [
       },
       {
         key: "flush_grid", label: "2252 Flush Grid (FG)", openArea: "~25%", surface: "Open Grid",
-        image: null,
+        image: ERIKS + "00223tp.jpg",
         description: "Imperial 1-inch pitch flush grid, 12.7 mm thick. Smart Guide 30481a.",
         applications: ["Drainage", "Washing"],
         beltData: "Missing Data – Needs Mapping",
@@ -582,7 +587,7 @@ export const SP_SERIES = [
     thickness_mm: 8.7,
     thickness_in: 0.34,
     catalogPage: "30330a",
-    image: null,
+    image: ERIKS + "00214tp_ngevo.jpg",
     description: "Series 2253 — 1-inch pitch, 8.7 mm height, Imperial module. Two key versions: 2253FT (Flat Top) and 2253RTC (Roller Top Conveyor for low backpressure). The 2253-series sprockets are the optimum choice; 2250 sprockets can also be used.",
     applications: ["General conveying", "Low backpressure accumulation (RTC)", "Packaging lines", "Food processing"],
     advantages: ["Imperial module 1-inch pitch", "Roller top (RTC) for accumulation", "Specific high-performance sprockets available", "Same pitch family as 2250"],
@@ -598,7 +603,7 @@ export const SP_SERIES = [
     styles: [
       {
         key: "flat_top_ft", label: "2253 Flat Top (FT)", openArea: "0%", surface: "Closed / Smooth",
-        image: null,
+        image: ERIKS + "00214tp_ngevo.jpg",
         description: "2253FT — 1-inch pitch Imperial flat top. Smart Guide 30330a.",
         applications: ["General conveying", "Food processing", "Packaging"],
         beltData: "Missing Data – Needs Mapping",
@@ -607,7 +612,7 @@ export const SP_SERIES = [
       },
       {
         key: "roller_top_rtc", label: "2253 Roller Top Conveyor (RTC)", openArea: "~5%", surface: "Roller / Low Back Pressure",
-        image: null,
+        image: ERIKS + "00214tp_ngevo.jpg",
         description: "2253RTC — Roller Top Conveyor for low backpressure accumulation. Smart Guide 30397a.",
         applications: ["Low backpressure accumulation", "Gentle product handling", "Package conveying"],
         beltData: "Missing Data – Needs Mapping",
