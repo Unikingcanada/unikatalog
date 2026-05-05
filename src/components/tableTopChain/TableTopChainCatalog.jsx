@@ -142,7 +142,7 @@ export default function TableTopChainCatalog({ onBack }) {
   return (
     <div>
       {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, ${C.navyMid} 100%)`, padding: "24px 28px" }}>
+      <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, ${C.navyMid} 100%)`, padding: "24px clamp(14px,4vw,28px)" }}>
         {onBack && (
           <button onClick={onBack} style={{
             background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
@@ -193,7 +193,7 @@ export default function TableTopChainCatalog({ onBack }) {
       </div>
 
       {/* Category Selector */}
-      <div style={{ background: "#fff", borderBottom: `1px solid ${C.border}`, padding: "16px 28px" }}>
+      <div style={{ background: "#fff", borderBottom: `1px solid ${C.border}`, padding: "16px clamp(14px,4vw,28px)" }}>
         <div style={{ display: "flex", gap: 12, maxWidth: 600 }}>
           <CategoryTab
             label="Plastic Table Top Chains"
@@ -213,7 +213,7 @@ export default function TableTopChainCatalog({ onBack }) {
       </div>
 
       {/* Filters */}
-      <div style={{ background: "#fff", borderBottom: `1px solid ${C.border}`, padding: "10px 28px", display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+      <div style={{ background: "#fff", borderBottom: `1px solid ${C.border}`, padding: "10px clamp(14px,4vw,28px)", display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
         {/* Search */}
         <input
           type="text"
@@ -254,7 +254,7 @@ export default function TableTopChainCatalog({ onBack }) {
       </div>
 
       {/* Product Grid — grouped by type */}
-      <div style={{ padding: "24px 28px", background: C.bg }}>
+      <div style={{ padding: "24px clamp(14px,4vw,28px)", background: C.bg }}>
         {Object.keys(grouped).map(typeKey => (
           <div key={typeKey} style={{ marginBottom: 32 }}>
             {/* Section header */}
@@ -296,7 +296,7 @@ export default function TableTopChainCatalog({ onBack }) {
       </div>
 
       {/* Footer */}
-      <div style={{ background: "#fff", borderTop: `1px solid ${C.border}`, padding: "14px 28px" }}>
+      <div style={{ background: "#fff", borderTop: `1px solid ${C.border}`, padding: "14px clamp(14px,4vw,28px)" }}>
         <div style={{ fontSize: 11, color: C.muted, maxWidth: 800 }}>
           <strong>Sources:</strong> Movex Conveyor Modular Belts and Chains Catalog — Imperial Version (pages 7–108, 2024) and System Plast Smart Guide Rev.005.
           All specifications are sourced directly from official catalogs. Final selection and specifications must be confirmed by Uniking before production.

@@ -117,7 +117,7 @@ function SizeDetailModal({rec,size,material,onClose,onBack}) {
             <div style={{fontSize:13,color:"rgba(255,255,255,.5)"}}>{rec.series}</div>
           </div>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:0,flex:1}}>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(260px, 1fr))",gap:0,flex:1}}>
           <div style={{padding:"20px 16px",borderRight:"1px solid #f1f5f9",display:"flex",flexDirection:"column",gap:14,alignItems:"center"}}>
             <BucketDiagram size={size}/>
             <div style={{width:"100%",padding:"12px",background:md.bg,borderRadius:10,border:`1px solid ${md.border}`,textAlign:"center"}}>
@@ -176,8 +176,8 @@ function BucketStyleModal({rec,onClose}) {
   return (
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.65)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:12}} onClick={onClose}>
       <div style={{background:"#fff",borderRadius:16,width:"100%",maxWidth:860,maxHeight:"96vh",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
-        <div style={{display:"flex",borderRadius:"16px 16px 0 0",overflow:"hidden",minHeight:240}}>
-          <div style={{width:220,flexShrink:0,background:`linear-gradient(160deg,${NAVY},#1e4976)`,display:"flex",alignItems:"center",justifyContent:"center",padding:16,position:"relative"}}>
+        <div style={{display:"flex",flexWrap:"wrap",borderRadius:"16px 16px 0 0",overflow:"hidden",minHeight:180}}>
+          <div style={{width:"clamp(140px, 30%, 220px)",flexShrink:0,background:`linear-gradient(160deg,${NAVY},#1e4976)`,display:"flex",alignItems:"center",justifyContent:"center",padding:16,position:"relative"}}>
             {matImg?<img key={matImg} src={matImg} alt={`${rec.series} ${activeMat}`} style={{maxWidth:190,maxHeight:190,objectFit:"contain",transition:"opacity .2s",background:"transparent"}} onError={e=>{e.target.style.display="none";}}/>:
             <div style={{color:"rgba(255,255,255,.15)",fontSize:56}}>🪣</div>}
             <div style={{position:"absolute",bottom:10,left:0,right:0,textAlign:"center"}}>
