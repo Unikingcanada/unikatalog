@@ -16,6 +16,9 @@ import FourBCatalog from "@/components/fourB/FourBCatalog";
 import { PRODUCTS as FOURB_PRODUCTS } from "@/lib/fourBData";
 import TypeGrid from "@/components/catalog/TypeGrid";
 import WeldedSeriesView from "@/components/chains/WeldedSeriesView";
+import AppLayout from "@/components/layout/AppLayout";
+import FloatingRFQButton from "@/components/shared/FloatingRFQButton";
+import { COLORS, TYPOGRAPHY } from "@/lib/designSystem";
 function stripVendor(text) {
   if (!text) return text;
   return text.
@@ -70,17 +73,7 @@ const FILTER_LABELS = {
   duty: "Duty Rating", discharge_type: "Discharge Type", application: "Application", profile: "Profile"
 };
 
-const C = {
-  navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  gold: "#C9A84C", goldLight: "#e8c96d",
-  green: "#16a34a", greenBg: "#dcfce7",
-  red: "#dc2626", redBg: "#fee2e2",
-  orange: "#c2410c", orangeBg: "#ffedd5",
-  accent: "#2563eb",
-  bg: "#f8fafc", bgCard: "#ffffff",
-  border: "#e2e8f0", text: "#0f172a", textMid: "#1e293b",
-  slate: "#334155", muted: "#64748b"
-};
+const C = COLORS;
 // ─── RFQ Cart Helpers ─────────────────────────────────────────────────────────
 function getRFQCart() {
   try {return JSON.parse(localStorage.getItem("uniking_rfq_cart") || "[]");} catch {return [];}
@@ -106,24 +99,7 @@ function addToRFQCart(product) {
   return true;
 }
 
-function FloatingRFQButton({ onGoRFQ }) {
-   const [count, setCount] = useState(() => getRFQCart().length);
-   const [pulse, setPulse] = useState(false);
-   useEffect(() => {
-     const update = () => {const n = getRFQCart().length;if (n > count) setPulse(true);setCount(n);setTimeout(() => setPulse(false), 600);};
-     window.addEventListener("rfq_cart_updated", update);
-     return () => window.removeEventListener("rfq_cart_updated", update);
-   }, [count]);
-   if (count === 0) return null;
-   return (
-     <a href="#" onClick={(e) => {e.preventDefault();onGoRFQ && onGoRFQ();}} style={{ textDecoration: "none" }}>
-       <div style={{ position: "fixed", bottom: 28, right: 28, zIndex: 9999, background: "#003c5b", color: "#fff", borderRadius: 50, width: 60, height: 60, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(0,60,91,0.45)", cursor: "pointer", transform: pulse ? "scale(1.15)" : "scale(1)", transition: "transform 0.2s", border: "2px solid #C9A84C" }}>
-         <svg style={{ width: 24, height: 24, fill: "currentColor" }} viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-         <div style={{ position: "absolute", top: -6, right: -6, background: "#2563eb", color: "#fff", borderRadius: "50%", width: 22, height: 22, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, border: "2px solid #fff" }}>{count}</div>
-       </div>
-     </a>);
 
-}
 
 
 
@@ -1686,29 +1662,7 @@ function BrandGrid({ products, typeDef, onSelect }) {
 
 // ─── Top Bar ──────────────────────────────────────────────────────────────────
 
-function TopBar({ onGoRFQ }) {
-  const [cartCount, setCartCount] = useState(() => getRFQCart().length);
-  useEffect(() => {
-    const update = () => setCartCount(getRFQCart().length);
-    window.addEventListener("rfq_cart_updated", update);
-    return () => window.removeEventListener("rfq_cart_updated", update);
-  }, []);
-  return (
-    <div style={{ background: C.navy, height: 56, display: "flex", alignItems: "center", padding: "0 clamp(16px,4vw,40px)", justifyContent: "space-between", flexShrink: 0, boxShadow: "0 2px 8px rgba(0,0,0,0.2)" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style={{ maxHeight: 28, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.9 }} alt="Uniking Canada" />
-        
-        
-      </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        
 
-
-        
-      </div>
-    </div>);
-
-}
 
 function Breadcrumb({ items, onNav }) {
   return (
@@ -1962,7 +1916,6 @@ export default function Home() {
         <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} /> :
         <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} rawMacRecords={rawMacRecords} />
         }
-      </div>
-      <div style={{ borderTop: "1px solid " + C.border, padding: "12px clamp(16px,4vw,40px)", textAlign: "center", fontSize: 11, color: "#94a3b8", background: "#fff" }}>Uniking Canada · Final specifications must be confirmed before supply · <span onClick={() => setCurrentPage("rfqCart")} style={{ color: C.navyMid, fontWeight: 700, cursor: "pointer" }}>Submit an RFQ →</span></div>
       <FloatingRFQButton onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0,0);}} />
-    </div>);}
+      </div>
+    </AppLayout>);}

@@ -6,11 +6,11 @@ import IntraloxConfigurator from "./IntraloxConfigurator";
 import ModularBrandSelector from "./ModularBrandSelector";
 import MovexCatalog from "@/components/movex/MovexCatalog";
 import SystemPlastCatalog from "@/components/systemPlast/SystemPlastCatalog";
+import AppLayout from "@/components/layout/AppLayout";
+import BackButton from "@/components/shared/BackButton";
+import { COLORS, TYPOGRAPHY } from "@/lib/designSystem";
 
-const C = {
-  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
-};
+const C = COLORS;
 const INTRALOX_RED = "#E31837";
 const INTRALOX_LOGO = "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/64536dc1d_intralox-logo-box-194a1e40631d2cf9cd7d463fa5afc04b.svg";
 const MPB_MANUAL_URL = "https://assets-us-01.kc-usercontent.com/19eb64b5-1815-003a-d268-e7109927ccad/b2679b1e-559b-4919-b559-6992adc8b1f3/5012156.4%202026%20MPB%20Engineering%20Manual.pdf";
@@ -133,33 +133,23 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
   const tabSeries = { straight: STRAIGHT_SERIES, radius: RADIUS_SERIES, spiral: SPIRAL_SERIES, tools: [] }[activeTab] || [];
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif" }}>
+    <AppLayout hideHeader={false}>
+      <div style={{ minHeight: "auto", background: C.bg }}>
 
-      {/* Top nav */}
-      <div style={{ background: C.navy, borderBottom: `3px solid ${INTRALOX_RED}`, position: "sticky", top: 0, zIndex: 200 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(12px,4vw,20px)", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <a href="#" onClick={e => { e.preventDefault(); handleNavBack(); }}
-              style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 28, height: 28, background: C.gold, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ color: C.navy, fontWeight: 900, fontSize: 13 }}>U</span>
-              </div>
-              <span style={{ color: "#fff", fontWeight: 700, fontSize: 15 }}>UniKonnect</span>
-            </a>
-            <div style={{ width: 1, height: 22, background: "rgba(255,255,255,0.15)" }} />
+      {/* Category nav bar - beneath app header */}
+      <div style={{ background: "#fff", borderBottom: `1px solid ${C.border}`, position: "sticky", top: 56, zIndex: 100, padding: "12px clamp(12px,4vw,20px)" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <BackButton onClick={handleNavBack} label="← Back" />
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <img src={INTRALOX_LOGO} alt="Intralox" style={{ height: 22, width: "auto" }} />
-              <span style={{ color: C.gold, fontSize: 13, fontWeight: 600 }}>Modular Plastic Belting</span>
+              <img src={INTRALOX_LOGO} alt="Intralox" style={{ height: 20, width: "auto" }} />
+              <span style={{ ...TYPOGRAPHY.label, color: C.muted }}>Modular Plastic Belting</span>
             </div>
           </div>
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
             {rfqAdded && (
-              <span style={{ background: "#16a34a", color: "#fff", padding: "5px 12px", borderRadius: 8, fontSize: 12, fontWeight: 700 }}>✓ Added to RFQ</span>
+              <span style={{ background: C.green, color: "#fff", padding: "4px 10px", borderRadius: 6, fontSize: 11, fontWeight: 700 }}>✓ Added to RFQ</span>
             )}
-            <a href="#" onClick={e => { e.preventDefault(); onGoRFQ(); }}
-              style={{ background: C.gold, color: C.navy, padding: "7px 16px", borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
-              RFQ Cart
-            </a>
           </div>
         </div>
       </div>
@@ -306,6 +296,7 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
           </div>
         </>
       )}
-    </div>
+      </div>
+    </AppLayout>
   );
 }
