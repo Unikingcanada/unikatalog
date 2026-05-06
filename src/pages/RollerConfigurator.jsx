@@ -73,7 +73,7 @@ function getShaftExtMm(shaftObj) {
 }
 
 // ─── Roller Schematic ─────────────────────────────────────────────────────────
-function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groovesQty, driveHead }) {
+function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groovesQty, driveHead, varRHmm, varLHmm }) {
   const tube = series.tubes[tubeIdx] || series.tubes[0];
   const tubeMm = tube?.tube_mm || 50;
   const wallMm = tube?.wall_mm || 1.5;
@@ -131,10 +131,15 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
   if (/pvc/i.test(sleeve || "")) sleeveColor = "#60a5fa";
   if (/lagging/i.test(sleeve || "")) sleeveColor = "#6b7280";
 
+  // Variable shaft support
+  const isVariable = varRHmm != null && varLHmm != null;
+  const leftExtMm = isVariable ? varLHmm : shaftExtMm;
+  const rightExtMm = isVariable ? varRHmm : shaftExtMm;
+
   // Dimension labels
   const fmtMm = v => imperial ? `${(v / 25.4).toFixed(2)}"` : `${v} mm`;
   const rlLabel = `RL = ${fmtMm(rlVal)}`;
-  const elMm = rlVal + shaftExtMm * 2;
+  const elMm = rlVal + leftExtMm + rightExtMm;
   const elLabel = `EL = ${fmtMm(elMm)}`;
 
   // For tapered: top of schematic is the larger end
@@ -179,9 +184,9 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
           </marker>
         </defs>
 
-        {/* Shaft arms */}
-        <line x1={0} y1={cy} x2={cx} y2={cy} stroke="#64748b" strokeWidth={5} strokeLinecap="round" />
-        <line x1={cx + drawRL} y1={cy} x2={VW} y2={cy} stroke="#64748b" strokeWidth={5} strokeLinecap="round" />
+        {/* Shaft arms — thicker when variable to visually distinguish */}
+        <line x1={0} y1={cy} x2={cx} y2={cy} stroke={isVariable ? "#b45309" : "#64748b"} strokeWidth={isVariable ? 6 : 5} strokeLinecap="round" />
+        <line x1={cx + drawRL} y1={cy} x2={VW} y2={cy} stroke={isVariable ? "#b45309" : "#64748b"} strokeWidth={isVariable ? 6 : 5} strokeLinecap="round" />
 
         {isTapered ? (
           <>
@@ -312,20 +317,20 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
           {elLabel}
         </text>
 
-        {/* ── B dimension (left shaft extension) ── */}
+        {/* ── B / LH dimension (left shaft extension) ── */}
         <line x1={0} y1={shaftDimY} x2={cx} y2={shaftDimY}
-          stroke="#2563eb" strokeWidth={1} markerEnd="url(#arrB)" markerStart="url(#arrBL)" />
+          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={1} markerEnd="url(#arrB)" markerStart="url(#arrBL)" />
         <text x={cx / 2} y={shaftDimY - 3}
-          textAnchor="middle" fontSize={9} fill="#2563eb" fontFamily="Arial,sans-serif" fontWeight="700">
-          B={fmtMm(shaftExtMm)}
+          textAnchor="middle" fontSize={9} fill={isVariable ? "#b45309" : "#2563eb"} fontFamily="Arial,sans-serif" fontWeight="700">
+          {isVariable ? `LH=${fmtMm(leftExtMm)}` : `B=${fmtMm(shaftExtMm)}`}
         </text>
 
-        {/* ── B dimension (right shaft extension) ── */}
+        {/* ── B / RH dimension (right shaft extension) ── */}
         <line x1={cx + drawRL} y1={shaftDimY} x2={VW} y2={shaftDimY}
-          stroke="#2563eb" strokeWidth={1} markerEnd="url(#arrB)" markerStart="url(#arrBL)" />
+          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={1} markerEnd="url(#arrB)" markerStart="url(#arrBL)" />
         <text x={cx + drawRL + shaftVisLen / 2} y={shaftDimY - 3}
-          textAnchor="middle" fontSize={9} fill="#2563eb" fontFamily="Arial,sans-serif" fontWeight="700">
-          B={fmtMm(shaftExtMm)}
+          textAnchor="middle" fontSize={9} fill={isVariable ? "#b45309" : "#2563eb"} fontFamily="Arial,sans-serif" fontWeight="700">
+          {isVariable ? `RH=${fmtMm(rightExtMm)}` : `B=${fmtMm(shaftExtMm)}`}
         </text>
       </svg>
 
@@ -363,10 +368,17 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
           <div style={{ width: 16, height: 2, background: "#374151", borderTop: "2px dashed #374151" }} />
           <span>EL = end-to-end</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#2563eb" }}>
-          <div style={{ width: 16, height: 2, background: "#2563eb" }} />
-          <span>B = shaft extension</span>
-        </div>
+        {isVariable ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#b45309" }}>
+            <div style={{ width: 16, height: 2, background: "#b45309" }} />
+            <span>LH / RH = variable shaft extensions</span>
+          </div>
+        ) : (
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#2563eb" }}>
+            <div style={{ width: 16, height: 2, background: "#2563eb" }} />
+            <span>B = shaft extension</span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -858,6 +870,8 @@ function Configurator({ series, onBack, onGoRFQ }) {
   const [rfqAdded, setRfqAdded] = useState(false);
   const [imperial, setImperial] = useState(false);
   const [sprocketIdx, setSprocketIdx] = useState(0);
+  const [varShaftRH, setVarShaftRH] = useState("50");
+  const [varShaftLH, setVarShaftLH] = useState("50");
 
   const tube = series.tubes[tubeIdx];
   const shaft = series.shafts[shaftIdx];
@@ -867,6 +881,9 @@ function Configurator({ series, onBack, onGoRFQ }) {
   const hasGrooves = series.grooves === true || (typeof series.grooves === "object" && series.grooves);
   const driveHeads = series.sprockets?.drives || null;
   const driveHead = driveHeads ? driveHeads[sprocketIdx] : null;
+  const isVariable = /variable/i.test(shaft?.code || "");
+  const varRHmm = imperial ? Math.round(parseFloat(varShaftRH) * 25.4) : (parseInt(varShaftRH) || 50);
+  const varLHmm = imperial ? Math.round(parseFloat(varShaftLH) * 25.4) : (parseInt(varShaftLH) || 50);
 
   const config = {
     tubeObj: tube,
@@ -890,7 +907,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
       materials: tube?.materials?.join(", ") || "",
       application: series.applications?.[0] || "",
       quantity: 1, unit: "Each",
-      notes: `RL=${rl}mm | Bearing: ${bearing?.label || "std"} | Shaft: ${shaft?.label || ""} | Sleeve: ${sleeve || "None"}${driveHead ? " | Drive: " + driveHead.label : ""}${groovesQty > 0 ? " | Grooves: " + groovesQty : ""}`
+      notes: `RL=${rl}mm | Bearing: ${bearing?.label || "std"} | Shaft: ${shaft?.label || ""}${isVariable ? ` | LH=${varLHmm}mm RH=${varRHmm}mm` : ""} | Sleeve: ${sleeve || "None"}${driveHead ? " | Drive: " + driveHead.label : ""}${groovesQty > 0 ? " | Grooves: " + groovesQty : ""}`
     });
     saveRFQCart(cart);
     setRfqAdded(true);
@@ -933,7 +950,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
             ))}
           </div>
         </div>
-        <RollerSchematic series={series} rl={rl} tubeIdx={tubeIdx} sleeve={sleeve} shaftObj={shaft} imperial={imperial} groovesQty={groovesQty} driveHead={driveHead} />
+        <RollerSchematic series={series} rl={rl} tubeIdx={tubeIdx} sleeve={sleeve} shaftObj={shaft} imperial={imperial} groovesQty={groovesQty} driveHead={driveHead} varRHmm={isVariable ? varRHmm : null} varLHmm={isVariable ? varLHmm : null} />
         {/* Live Part Number — updates as options change */}
         <div style={{ marginTop: 10, background: NAVY, borderRadius: 8, padding: "10px 16px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
           <div>
@@ -997,6 +1014,42 @@ function Configurator({ series, onBack, onGoRFQ }) {
               })}
             </select>
           </div>
+          {isVariable && (
+            <div style={{ gridColumn: "1 / -1", background: "#fef3c7", border: "1px solid #fde68a", borderRadius: 8, padding: "14px 16px" }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: "#b45309", marginBottom: 10, textTransform: "uppercase", letterSpacing: 1 }}>Variable Length Shaft Extensions</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: "#92400e", display: "block", marginBottom: 5 }}>
+                    LH Extension (Left) — {imperial ? "inches" : "mm"}
+                  </label>
+                  <input type="number"
+                    value={varShaftLH} min={imperial ? "0.5" : "10"} max={imperial ? "20" : "500"} step={imperial ? "0.125" : "5"}
+                    onChange={e => setVarShaftLH(e.target.value)}
+                    style={{ width: "100%", padding: "9px 10px", border: "1px solid #fde68a", borderRadius: 7, fontSize: 13, fontWeight: 700, outline: "none", background: "#fff", color: "#92400e" }} />
+                  <div style={{ fontSize: 10, color: "#b45309", marginTop: 3 }}>
+                    = {imperial ? `${Math.round(parseFloat(varShaftLH||0)*25.4)} mm` : `${((parseInt(varShaftLH)||0)/25.4).toFixed(3)}"`}
+                  </div>
+                </div>
+                <div>
+                  <label style={{ fontSize: 11, fontWeight: 700, color: "#92400e", display: "block", marginBottom: 5 }}>
+                    RH Extension (Right) — {imperial ? "inches" : "mm"}
+                  </label>
+                  <input type="number"
+                    value={varShaftRH} min={imperial ? "0.5" : "10"} max={imperial ? "20" : "500"} step={imperial ? "0.125" : "5"}
+                    onChange={e => setVarShaftRH(e.target.value)}
+                    style={{ width: "100%", padding: "9px 10px", border: "1px solid #fde68a", borderRadius: 7, fontSize: 13, fontWeight: 700, outline: "none", background: "#fff", color: "#92400e" }} />
+                  <div style={{ fontSize: 10, color: "#b45309", marginTop: 3 }}>
+                    = {imperial ? `${Math.round(parseFloat(varShaftRH||0)*25.4)} mm` : `${((parseInt(varShaftRH)||0)/25.4).toFixed(3)}"`}
+                  </div>
+                </div>
+              </div>
+              <div style={{ marginTop: 10, fontSize: 11, color: "#92400e", background: "#fff", border: "1px solid #fde68a", borderRadius: 6, padding: "7px 10px" }}>
+                EL = RL + LH + RH = {imperial
+                  ? `${((parseInt(rl)||600)/25.4).toFixed(3)}" + ${parseFloat(varShaftLH||0).toFixed(3)}" + ${parseFloat(varShaftRH||0).toFixed(3)}" = ${(((parseInt(rl)||600) + varLHmm + varRHmm)/25.4).toFixed(3)}"`
+                  : `${parseInt(rl)||600} mm + ${varLHmm} mm + ${varRHmm} mm = ${(parseInt(rl)||600) + varLHmm + varRHmm} mm`}
+              </div>
+            </div>
+          )}
           <div>
             <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>
               Body Length (RL) — {imperial ? 'inches' : 'mm'}
@@ -1100,9 +1153,11 @@ function Configurator({ series, onBack, onGoRFQ }) {
                 ["Shaft", imperial && getShaftExtMm(shaft)
                   ? `${shaft?.label || "—"} — B=${(getShaftExtMm(shaft)/25.4).toFixed(3)}"`
                   : (shaft?.label || "—")],
+                isVariable ? ["Shaft LH Extension (Left)", imperial ? `${parseFloat(varShaftLH||0).toFixed(3)}"` : `${varLHmm} mm`] : null,
+                isVariable ? ["Shaft RH Extension (Right)", imperial ? `${parseFloat(varShaftRH||0).toFixed(3)}"` : `${varRHmm} mm`] : null,
                 ["Body Length (RL)", fmtMm(rlVal)],
-                ["Shaft Extension (B each side)", fmtMm(bMm)],
-                ["Overall End Length (EL)", fmtMm(elMm)],
+                isVariable ? ["Overall End Length (EL = RL+LH+RH)", fmtMm(rlVal + varLHmm + varRHmm)] : ["Shaft Extension (B each side)", fmtMm(bMm)],
+                isVariable ? null : ["Overall End Length (EL)", fmtMm(elMm)],
                 driveHead ? ["Drive Head / Sprocket", `${driveHead.label}${driveHead.OD_mm ? " — OD " + (imperial ? (driveHead.OD_mm/25.4).toFixed(3)+'"' : driveHead.OD_mm+" mm") : ""}`] : null,
                 ["Sleeve / Surface", sleeve || "None"],
                 ["Grooves", groovesQty > 0 ? `${groovesQty} groove(s) — spacing ${imperial ? ((parseInt(rl)||600)/25.4/(groovesQty+1)).toFixed(3)+'"' : Math.round((parseInt(rl)||600)/(groovesQty+1))+" mm"} apart` : "None"],
