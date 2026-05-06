@@ -92,8 +92,8 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
   }
   const isTapered = !!taperedRow;
 
-  // Fixed SVG canvas
-  const VW = 560, VH = isTapered ? 230 : 200;
+  // Fixed SVG canvas — extra height when sprocket present for tooth tips
+  const VW = 560, VH = isTapered ? 230 : (driveHead ? 220 : 200);
   const shaftVisLen = 40;
   const cx = shaftVisLen + 4;
   const drawRL = VW - shaftVisLen * 2 - 8;
@@ -260,36 +260,70 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
                 );
               });
             })()}
-            {/* ── Drive-head / sprocket on right end ── */}
+            {/* ── Drive-head / sprocket — SIDE PROFILE VIEW ── */}
             {driveHead && (() => {
               const spOD = driveHead.OD_mm || 57;
-              const spVisR = Math.min(48, Math.max(20, (spOD / 80) * 44));
-              const toothH = Math.max(4, spVisR * 0.15);
-              const toothW = Math.max(3, spVisR * 0.2);
+              // Hub visual dimensions (side view)
+              const spVisH = Math.max(20, Math.min(48, (spOD / 80) * 44)); // half-height = radius in side view
+              const hubW = Math.max(14, spVisH * 0.55);   // axial width of hub body
+              const toothH = Math.max(5, spVisH * 0.18);  // tooth tip projection
+              const toothW = Math.max(5, hubW * 0.28);    // tooth width
               const numTeeth = driveHead.teeth || 12;
-              const sx = cx + drawRL + 2; // sprocket center-x at right end of tube
-              const sy = cy;
-              const teeth = Array.from({ length: numTeeth }, (_, ti) => {
-                const angle = (ti / numTeeth) * Math.PI * 2;
-                const innerR = spVisR;
-                const outerR = spVisR + toothH;
-                const half = toothW / (2 * outerR);
-                const ax = sx + Math.cos(angle - half) * outerR;
-                const ay = sy + Math.sin(angle - half) * outerR;
-                const bx = sx + Math.cos(angle + half) * outerR;
-                const by = sy + Math.sin(angle + half) * outerR;
-                const cx2 = sx + Math.cos(angle) * innerR;
-                const cy2 = sy + Math.sin(angle) * innerR;
-                return `M${cx2},${cy2} L${ax},${ay} L${bx},${by} Z`;
+              // Position: sprocket hub sits flush against right end of tube
+              const sx = cx + drawRL;  // left face of hub
+              const sy = cy;           // centerline
+
+              // Hub body (cylindrical side view = rectangle)
+              const hubTop = sy - spVisH;
+              const hubBot = sy + spVisH;
+
+              // Chain teeth — evenly spaced along both top and bottom edges, pointing outward
+              const teethPerSide = Math.max(3, Math.min(numTeeth, 8));
+              const toothSpacing = hubW / (teethPerSide + 1);
+
+              const topTeeth = Array.from({ length: teethPerSide }, (_, ti) => {
+                const tx = sx + toothSpacing * (ti + 1);
+                const tw = toothW * 0.5;
+                return `M${tx - tw},${hubTop} L${tx},${hubTop - toothH} L${tx + tw},${hubTop} Z`;
               }).join(" ");
+
+              const botTeeth = Array.from({ length: teethPerSide }, (_, ti) => {
+                const tx = sx + toothSpacing * (ti + 1);
+                const tw = toothW * 0.5;
+                return `M${tx - tw},${hubBot} L${tx},${hubBot + toothH} L${tx + tw},${hubBot} Z`;
+              }).join(" ");
+
+              // Bearing bore lines (internal detail lines across hub)
+              const boreR = spVisH * 0.3;
+
               return (
                 <g>
-                  <circle cx={sx} cy={sy} r={spVisR} fill="#f59e0b" fillOpacity={0.25} stroke="#f59e0b" strokeWidth={2} />
-                  <path d={teeth} fill="#f59e0b" fillOpacity={0.8} stroke="#d97706" strokeWidth={0.5} />
-                  <circle cx={sx} cy={sy} r={spVisR * 0.28} fill="#fff" stroke="#f59e0b" strokeWidth={1.2} />
-                  <text x={sx} y={sy + spVisR + toothH + 11} textAnchor="middle" fontSize={8} fill="#d97706" fontWeight="700" fontFamily="Arial,sans-serif">
-                    {driveHead.pitch} {driveHead.teeth ? `T${driveHead.teeth}` : ""} Ø{spOD}mm
+                  {/* Hub body */}
+                  <rect x={sx} y={hubTop} width={hubW} height={spVisH * 2}
+                    fill="#fef3c7" fillOpacity={0.85} stroke="#d97706" strokeWidth={1.5} rx={2} />
+                  {/* Inner bore circle (side view shows as ellipse-like rect) */}
+                  <rect x={sx + hubW * 0.1} y={sy - boreR} width={hubW * 0.8} height={boreR * 2}
+                    fill="#fff" fillOpacity={0.7} stroke="#d97706" strokeWidth={0.8} strokeDasharray="3 2" rx={boreR * 0.4} />
+                  {/* Shaft passing through center */}
+                  <line x1={sx} y1={sy} x2={sx + hubW} y2={sy}
+                    stroke="#92400e" strokeWidth={1} strokeDasharray="4 2" />
+                  {/* Chain teeth top */}
+                  <path d={topTeeth} fill="#f59e0b" fillOpacity={0.9} stroke="#d97706" strokeWidth={0.8} />
+                  {/* Chain teeth bottom */}
+                  <path d={botTeeth} fill="#f59e0b" fillOpacity={0.9} stroke="#d97706" strokeWidth={0.8} />
+                  {/* Hub face lines (depth cues) */}
+                  <line x1={sx} y1={hubTop} x2={sx} y2={hubBot} stroke="#d97706" strokeWidth={2} />
+                  <line x1={sx + hubW} y1={hubTop} x2={sx + hubW} y2={hubBot} stroke="#d97706" strokeWidth={1.5} />
+                  {/* Label */}
+                  <text x={sx + hubW / 2} y={hubBot + toothH + 12}
+                    textAnchor="middle" fontSize={8} fill="#92400e" fontWeight="700" fontFamily="Arial,sans-serif">
+                    {driveHead.pitch}{driveHead.teeth ? ` T${driveHead.teeth}` : ""} Ø{spOD}mm
                   </text>
+                  {/* W dimension arrow (hub width) */}
+                  <line x1={sx} y1={hubTop - 8} x2={sx + hubW} y2={hubTop - 8}
+                    stroke="#d97706" strokeWidth={0.8} markerEnd="url(#arr)" markerStart="url(#arrL)" />
+                  <text x={sx + hubW / 2} y={hubTop - 10}
+                    textAnchor="middle" fontSize={7} fill="#d97706" fontFamily="Arial,sans-serif">W</text>
                 </g>
               );
             })()}
@@ -356,7 +390,7 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
         )}
         {driveHead && (
           <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#d97706" }}>
-            <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#f59e0b", opacity: 0.7 }} />
+            <div style={{ width: 18, height: 10, background: "#fef3c7", border: "1px solid #d97706", borderRadius: 2 }} />
             <span style={{ fontWeight: 600 }}>{driveHead.label}</span>
           </div>
         )}
