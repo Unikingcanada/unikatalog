@@ -96,54 +96,124 @@ function RollerSchematic({ series, rl, tubeIdx }) {
   );
 }
 
+// ─── Part Number Builder ──────────────────────────────────────────────────────
+function buildPartNumber(series, tubeObj, shaftObj, rl, sleeve, groovesQty) {
+  const dia = tubeObj?.tube_mm || "?";
+  const wall = tubeObj?.wall_mm ? String(tubeObj.wall_mm).replace(".", "") : "?";
+  const shaftCode = (shaftObj?.code || "?").toUpperCase();
+  const rlPad = String(parseInt(rl) || 0).padStart(4, "0");
+  const slv = sleeve && sleeve !== "None" ? "-" + sleeve.replace(/\s+(sleeve|Lagging)/i, "").trim().toUpperCase().replace(/\s+/g, "") : "";
+  const grv = groovesQty > 0 ? "-G" + groovesQty : "";
+  return `${series.platform}-${dia}-${wall}-${shaftCode}-${rlPad}${slv}${grv}`;
+}
+
 // ─── Tear Sheet ───────────────────────────────────────────────────────────────
 function buildTearSheetHTML(series, config) {
-  const { tube, shaft, rl, sleeve, grooves } = config;
-  const html = `<!DOCTYPE html><html><head><title>Roller Tear Sheet — ${series.name}</title>
-<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Segoe UI',Arial,sans-serif;color:#111;}
-.hdr{background:#0f2340;color:#fff;padding:20px 32px;display:flex;justify-content:space-between;align-items:center;}
-.bar{height:4px;background:linear-gradient(90deg,#2d8a4e,#1a3a5c);}
-.body{padding:24px 32px;}h2{font-size:22px;font-weight:900;color:#0f2340;margin-bottom:4px;}
-.sub{font-size:13px;color:#64748b;margin-bottom:16px;}
-.spec{background:#f8fafc;border:1px solid #e5e7eb;border-radius:6px;padding:12px 16px;margin-bottom:12px;}
-.spec-row{display:flex;gap:10px;margin-bottom:6px;font-size:13px;}.lbl{color:#94a3b8;font-weight:600;width:160px;flex-shrink:0;}
-.val{color:#0f2340;font-weight:700;}
-.notes{background:#fff8ed;border-left:3px solid #f59e0b;padding:10px 14px;font-size:12px;color:#334155;line-height:1.7;margin-top:12px;}
-.no-print{margin:16px 32px;display:flex;gap:10px;}@media print{.no-print{display:none!important;}}
-.btn{padding:8px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;}
-.btn-p{background:#0f2340;color:#fff;}.btn-s{background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;}
-.footer{margin-top:24px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:10px;color:#94a3b8;}
-</style></head><body>
-<div class="no-print"><button class="btn btn-p" onclick="window.print()">Print / Save PDF</button><button class="btn btn-s" onclick="window.close()">Close</button></div>
+  const { tubeObj, shaftObj, rl, sleeve, groovesQty } = config;
+  const partNumber = buildPartNumber(series, tubeObj, shaftObj, rl, sleeve, groovesQty);
+  const rlVal = parseInt(rl) || 600;
+  const tubeMm = tubeObj?.tube_mm || 50;
+  const wallMm = tubeObj?.wall_mm || 1.5;
+  const color = series.color || "#1A3A5C";
+  const scale = Math.min(420, rlVal) / rlVal;
+  const drawRL = rlVal * scale;
+  const cx = 50;
+  const svgH = tubeMm * 2.4 + 50;
+  const cy = svgH / 2;
+  const tubeY1 = cy - tubeMm / 2;
+  const tubeY2 = cy + tubeMm / 2;
+  const innerY1 = cy - (tubeMm / 2 - wallMm);
+  const svgW = drawRL + 100;
+
+  const schematicSVG = `<svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg">
+    <line x1="${cx-30}" y1="${cy}" x2="${cx}" y2="${cy}" stroke="#94a3b8" stroke-width="3"/>
+    <line x1="${cx+drawRL}" y1="${cy}" x2="${cx+drawRL+30}" y2="${cy}" stroke="#94a3b8" stroke-width="3"/>
+    <rect x="${cx}" y="${tubeY1}" width="${drawRL}" height="${tubeMm}" rx="${tubeMm/6}" fill="${color}" fill-opacity="0.18" stroke="${color}" stroke-width="2"/>
+    <rect x="${cx+wallMm*2}" y="${innerY1}" width="${drawRL-wallMm*4}" height="${tubeMm-wallMm*2}" rx="${(tubeMm-wallMm*2)/6}" fill="white" fill-opacity="0.7" stroke="${color}" stroke-width="0.7" stroke-dasharray="4 2"/>
+    <line x1="${cx}" y1="${tubeY2+12}" x2="${cx+drawRL}" y2="${tubeY2+12}" stroke="#64748b" stroke-width="1"/>
+    <text x="${cx+drawRL/2}" y="${tubeY2+26}" text-anchor="middle" font-size="10" fill="#64748b" font-family="Arial,sans-serif">RL = ${rlVal} mm</text>
+    <text x="${cx+drawRL/2}" y="${cy+4}" text-anchor="middle" font-size="11" fill="${color}" font-weight="bold" font-family="Arial,sans-serif">O${tubeMm} x ${wallMm} mm wall</text>
+    <text x="${cx-10}" y="${cy+4}" text-anchor="end" font-size="9" fill="#94a3b8" font-family="Arial,sans-serif">Shaft</text>
+    <text x="${cx+drawRL+10}" y="${cy+4}" text-anchor="start" font-size="9" fill="#94a3b8" font-family="Arial,sans-serif">Shaft</text>
+  </svg>`;
+
+  const date = new Date().toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" });
+
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Roller Tear Sheet - ${series.name}</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Segoe UI',Arial,sans-serif;color:#111;}
+    .hdr{background:#0f2340;color:#fff;padding:20px 32px;display:flex;justify-content:space-between;align-items:center;}
+    .bar{height:4px;background:linear-gradient(90deg,#2d8a4e,#1a3a5c);}
+    .body{padding:24px 32px;}
+    h2{font-size:22px;font-weight:900;color:#0f2340;margin-bottom:4px;}
+    .sub{font-size:13px;color:#64748b;margin-bottom:12px;}
+    .pn{background:#0f2340;color:#fff;display:inline-block;padding:7px 16px;border-radius:6px;font-size:14px;font-weight:800;letter-spacing:1px;margin-bottom:16px;}
+    .pn-lbl{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+    .schematic{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px;margin-bottom:18px;}
+    .schem-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:8px;}
+    .spec{background:#f8fafc;border:1px solid #e5e7eb;border-radius:6px;padding:12px 16px;margin-bottom:12px;}
+    .spec-row{display:flex;gap:10px;margin-bottom:6px;font-size:13px;}
+    .lbl{color:#94a3b8;font-weight:600;width:170px;flex-shrink:0;}
+    .val{color:#0f2340;font-weight:700;}
+    .notes{background:#fff8ed;border-left:3px solid #f59e0b;padding:10px 14px;font-size:12px;color:#334155;line-height:1.7;margin-top:12px;}
+    .no-print{margin:16px 32px;display:flex;gap:10px;}
+    @media print{.no-print{display:none!important;}}
+    .btn{padding:8px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;}
+    .btn-p{background:#0f2340;color:#fff;}
+    .btn-s{background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;}
+    .footer{margin-top:24px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:10px;color:#94a3b8;}
+  </style>
+</head>
+<body>
+<div class="no-print">
+  <button class="btn btn-p" onclick="window.print()">Print / Save PDF</button>
+  <button class="btn btn-s" onclick="window.close()">Close</button>
+</div>
 <div class="hdr">
   <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style="max-height:34px;filter:brightness(0) invert(1);opacity:.9;" />
   <div style="text-align:right;font-size:11px;color:rgba(255,255,255,.5);">
-    <div style="font-size:14px;font-weight:700;color:#fff;">Conveyor Roller — ${series.name}</div>
-    <div>${new Date().toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" })}</div>
+    <div style="font-size:14px;font-weight:700;color:#fff;">Conveyor Roller - ${series.name}</div>
+    <div>${date}</div>
   </div>
 </div>
 <div class="bar"></div>
 <div class="body">
-  ${series.image_url ? `<img src="${series.image_url}" alt="${series.name}" style="max-height:120px;max-width:300px;object-fit:contain;margin-bottom:16px;border:1px solid #e5e7eb;border-radius:6px;padding:8px;background:#f8fafc;" />` : ""}
-  <h2>${series.name}</h2>
-  <div class="sub">${series.subtitle} · Catalog pages ${series.page_range}</div>
+  <div style="display:flex;gap:20px;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;">
+    ${series.image_url ? `<img src="${series.image_url}" alt="${series.name}" style="max-height:100px;max-width:150px;object-fit:contain;border:1px solid #e5e7eb;border-radius:6px;padding:8px;background:#f8fafc;" />` : ""}
+    <div>
+      <h2>${series.name}</h2>
+      <div class="sub">${series.subtitle} - Catalog pages ${series.page_range}</div>
+      <div class="pn-lbl">Interroll Part Number (Reference)</div>
+      <div class="pn">${partNumber}</div>
+    </div>
+  </div>
+  <div class="schematic">
+    <div class="schem-title">Dimensional Schematic - RL = ${rlVal} mm</div>
+    ${schematicSVG}
+  </div>
   <div class="spec">
-    <div class="spec-row"><span class="lbl">Tube</span><span class="val">${tube || "—"}</span></div>
-    <div class="spec-row"><span class="lbl">Shaft Type</span><span class="val">${shaft || "—"}</span></div>
-    <div class="spec-row"><span class="lbl">Body Length (RL)</span><span class="val">${rl ? rl + " mm" : "—"}</span></div>
+    <div class="spec-row"><span class="lbl">Tube</span><span class="val">${tubeObj?.label || "---"}</span></div>
+    <div class="spec-row"><span class="lbl">Shaft Type</span><span class="val">${shaftObj?.label || "---"}</span></div>
+    <div class="spec-row"><span class="lbl">Body Length (RL)</span><span class="val">${rlVal} mm</span></div>
     <div class="spec-row"><span class="lbl">Sleeve / Surface</span><span class="val">${sleeve || "None"}</span></div>
-    <div class="spec-row"><span class="lbl">Grooves</span><span class="val">${grooves || "None"}</span></div>
+    <div class="spec-row"><span class="lbl">Grooves</span><span class="val">${groovesQty > 0 ? groovesQty + " groove(s)" : "None"}</span></div>
     <div class="spec-row"><span class="lbl">Drive Type</span><span class="val">${series.driveType}</span></div>
     <div class="spec-row"><span class="lbl">Max Load</span><span class="val">${series.maxLoad_N.toLocaleString()} N</span></div>
     <div class="spec-row"><span class="lbl">Max Speed</span><span class="val">${series.maxSpeed_ms} m/s</span></div>
-    <div class="spec-row"><span class="lbl">Temperature Range</span><span class="val">${series.temp_min_C}°C to +${series.temp_max_C}°C</span></div>
+    <div class="spec-row"><span class="lbl">Temperature Range</span><span class="val">${series.temp_min_C}&#176;C to +${series.temp_max_C}&#176;C</span></div>
     <div class="spec-row"><span class="lbl">Antistatic</span><span class="val">${series.antistatic}</span></div>
     <div class="spec-row"><span class="lbl">Dimension Formula</span><span class="val">${series.dim_formula}</span></div>
   </div>
   <div class="notes">${series.notes}</div>
-  <div class="footer">Uniking Canada · unikingcanada.com · rfq@unikingcanada.com · Specifications per Interroll catalog. Confirm before supply.</div>
-</div></body></html>`;
-  return html;
+  <div class="footer">Uniking Canada - unikingcanada.com - rfq@unikingcanada.com - Specifications per Interroll catalog. Confirm before supply.</div>
+</div>
+</body>
+</html>`;
 }
 
 // ─── VIEW 1: Series Grid ──────────────────────────────────────────────────────
@@ -392,11 +462,11 @@ function Configurator({ series, onBack, onGoRFQ }) {
   const hasGrooves = series.grooves === true || (typeof series.grooves === "object" && series.grooves);
 
   const config = {
-    tube: tube?.label,
-    shaft: shaft?.label,
+    tubeObj: tube,
+    shaftObj: shaft,
     rl,
     sleeve,
-    grooves: groovesQty > 0 ? `${groovesQty} groove(s)` : "None"
+    groovesQty
   };
 
   function addToRFQ() {
