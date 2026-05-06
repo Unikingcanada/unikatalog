@@ -12,6 +12,7 @@ import ChainFamilyBrowser from "./ChainFamilyBrowser";
 import NormalizedChainCard from "./NormalizedChainCard";
 import ChainDetailView from "./ChainDetailView";
 import ChainConfigurator from "./ChainConfigurator";
+import ChainImportPanel from "./ChainImportPanel";
 
 const C = {
   navy: "#003c5b", navyMid: "#1A3A5C",
@@ -151,7 +152,7 @@ function ProductListView({ family, products, onSelect, onConfigure }) {
 }
 
 export default function ChainPlatformView({ onBack, onGoRFQ }) {
-  const [view, setView] = useState("families"); // families | products | detail
+  const [view, setView] = useState("families"); // families | products | detail | import
   const [selectedFamily, setSelectedFamily] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showConfigurator, setShowConfigurator] = useState(false);
@@ -209,15 +210,22 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
       {onBack && <button onClick={onBack} className="uk-btn-back">← Products</button>}
       {view !== "families" && (
-        <button onClick={view === "detail" ? handleBackFromDetail : handleBackFromProducts} className="uk-btn-back">
-          ← {view === "detail" ? (CHAIN_FAMILIES.find(f => f.key === selectedFamily)?.label || "Chains") : "Chain Families"}
+        <button onClick={() => { setView("families"); setSelectedFamily(null); setSelectedProduct(null); window.scrollTo(0,0); }} className="uk-btn-back">
+          ← {view === "detail" ? (CHAIN_FAMILIES.find(f => f.key === selectedFamily)?.label || "Chains") : view === "import" ? "Chain Families" : "Chain Families"}
         </button>
       )}
       <span style={{ fontSize: 12, color: "#94a3b8" }}>
         {view === "families" && "Chain Platform"}
         {view === "products" && CHAIN_FAMILIES.find(f => f.key === selectedFamily)?.label}
         {view === "detail" && (selectedProduct?.chain_number || selectedProduct?.part_number)}
+        {view === "import" && "Import Engine"}
       </span>
+      {view === "families" && (
+        <button onClick={() => { setView("import"); window.scrollTo(0,0); }}
+          style={{ marginLeft: "auto", padding: "6px 14px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 700, color: "#334155" }}>
+          ⬆ Import Engine
+        </button>
+      )}
     </div>
   );
 
@@ -225,6 +233,10 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif" }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "20px clamp(12px,4vw,36px)", boxSizing: "border-box" }}>
         <TopBar />
+
+        {view === "import" && (
+          <ChainImportPanel onBack={() => { setView("families"); window.scrollTo(0,0); }} />
+        )}
 
         {view === "families" && (
           <ChainFamilyBrowser
