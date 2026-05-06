@@ -61,50 +61,211 @@ function LoadTable({ table }) {
 }
 
 // ─── Roller Schematic ─────────────────────────────────────────────────────────
-function RollerSchematic({ series, rl, tubeIdx }) {
+// Fixed-size frame — roller proportions scale inside, but container stays constant
+function RollerSchematic({ series, rl, tubeIdx, sleeve }) {
   const tube = series.tubes[tubeIdx] || series.tubes[0];
   const tubeMm = tube?.tube_mm || 50;
   const wallMm = tube?.wall_mm || 1.5;
   const rlVal = parseInt(rl) || 600;
-  const scale = Math.min(360, rlVal) / rlVal;
-  const drawRL = rlVal * scale;
-  const svgW = drawRL + 80;
-  const svgH = tubeMm * 2.2 + 40;
-  const cx = 40;
-  const cy = svgH / 2;
-  const tubeY1 = cy - tubeMm / 2;
-  const tubeY2 = cy + tubeMm / 2;
-  const innerY1 = cy - (tubeMm / 2 - wallMm);
+
+  // Fixed SVG canvas — never changes size
+  const VW = 520, VH = 180;
+  const shaftLen = 32;
+  const drawRL = VW - shaftLen * 2 - 20; // constant roller body width
+  const cx = shaftLen + 10; // left tube edge
+
+  // Scale tube diameter to fit within fixed height, max 120px visual height
+  const maxVisualDia = 120;
+  const minVisualDia = 24;
+  // Map tube_mm 16–89 → visual range
+  const visualDia = Math.max(minVisualDia, Math.min(maxVisualDia, (tubeMm / 89) * maxVisualDia));
+  const visualWall = Math.max(2, wallMm * (visualDia / tubeMm));
+
+  const cy = VH / 2;
+  const tubeY1 = cy - visualDia / 2;
+  const tubeY2 = cy + visualDia / 2;
+  const innerY1 = tubeY1 + visualWall;
+  const innerY2 = tubeY2 - visualWall;
   const color = series.color || NAVY;
+
+  // Sleeve thickness (visual)
+  const hasSleeve = sleeve && sleeve !== "None";
+  const sleeveThick = hasSleeve ? Math.max(4, visualDia * 0.09) : 0;
+  let sleeveColor = "#f59e0b";
+  if (/pu/i.test(sleeve || "")) sleeveColor = "#a78bfa";
+  if (/pvc/i.test(sleeve || "")) sleeveColor = "#60a5fa";
+  if (/lagging/i.test(sleeve || "")) sleeveColor = "#6b7280";
+
+  const bfInches = (rlVal / 25.4).toFixed(2);
+
   return (
-    <div style={{ background: "#f1f5f9", borderRadius: 10, padding: "14px 12px", border: "1px solid " + C.border }}>
-      <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 8 }}>Live Schematic — RL = {rlVal} mm</div>
-      <svg width="100%" viewBox={`0 0 ${svgW + 20} ${svgH}`} style={{ maxWidth: 500, display: "block", margin: "0 auto" }}>
-        <line x1={cx - 20} y1={cy} x2={cx} y2={cy} stroke="#94a3b8" strokeWidth={3} />
-        <line x1={cx + drawRL} y1={cy} x2={cx + drawRL + 20} y2={cy} stroke="#94a3b8" strokeWidth={3} />
-        <rect x={cx} y={tubeY1} width={drawRL} height={tubeMm} rx={tubeMm / 6} fill={color} fillOpacity={0.18} stroke={color} strokeWidth={1.5} />
-        <rect x={cx + wallMm * 2} y={innerY1} width={drawRL - wallMm * 4} height={tubeMm - wallMm * 2} rx={(tubeMm - wallMm * 2) / 6} fill="#fff" fillOpacity={0.6} stroke={color} strokeWidth={0.5} strokeDasharray="4 2" />
-        <line x1={cx} y1={tubeY2 + 12} x2={cx + drawRL} y2={tubeY2 + 12} stroke="#64748b" strokeWidth={1} markerEnd="url(#arr)" markerStart="url(#arrR)" />
+    <div style={{ background: "#f1f5f9", borderRadius: 10, padding: "14px 16px", border: "1px solid " + C.border }}>
+      <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 8 }}>
+        Live Schematic — RL = {rlVal} mm ({bfInches}")
+      </div>
+      {/* Fixed-size SVG container */}
+      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" height={VH} style={{ display: "block", maxWidth: 560 }}>
         <defs>
-          <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#64748b" /></marker>
-          <marker id="arrR" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 Z" fill="#64748b" /></marker>
+          <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#64748b" />
+          </marker>
+          <marker id="arrL" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
+            <path d="M6,0 L0,3 L6,6 Z" fill="#64748b" />
+          </marker>
         </defs>
-        <text x={cx + drawRL / 2} y={tubeY2 + 26} textAnchor="middle" fontSize={10} fill="#64748b">RL = {rlVal} mm</text>
-        <text x={cx + drawRL / 2} y={cy + 4} textAnchor="middle" fontSize={11} fill={color} fontWeight="700">Ø{tubeMm} × {wallMm} mm</text>
+
+        {/* Shafts */}
+        <line x1={0} y1={cy} x2={cx} y2={cy} stroke="#94a3b8" strokeWidth={4} strokeLinecap="round" />
+        <line x1={cx + drawRL} y1={cy} x2={VW} y2={cy} stroke="#94a3b8" strokeWidth={4} strokeLinecap="round" />
+
+        {/* Tube body */}
+        <rect x={cx} y={tubeY1} width={drawRL} height={visualDia}
+          rx={visualDia / 8} fill={color} fillOpacity={0.15} stroke={color} strokeWidth={2} />
+
+        {/* Inner bore */}
+        <rect x={cx + visualWall} y={innerY1} width={drawRL - visualWall * 2} height={innerY2 - innerY1}
+          rx={(innerY2 - innerY1) / 8} fill="#fff" fillOpacity={0.55} stroke={color} strokeWidth={0.8} strokeDasharray="5 3" />
+
+        {/* Sleeve / covering overlay */}
+        {hasSleeve && (
+          <>
+            <rect x={cx} y={tubeY1 - sleeveThick} width={drawRL} height={sleeveThick}
+              rx={3} fill={sleeveColor} fillOpacity={0.75} />
+            <rect x={cx} y={tubeY2} width={drawRL} height={sleeveThick}
+              rx={3} fill={sleeveColor} fillOpacity={0.75} />
+            {/* Sleeve label */}
+            <text x={cx + drawRL - 6} y={tubeY1 - sleeveThick / 2 + 4}
+              textAnchor="end" fontSize={9} fill={sleeveColor} fontWeight="700">
+              {sleeve}
+            </text>
+          </>
+        )}
+
+        {/* Tube label */}
+        <text x={cx + drawRL / 2} y={cy + 4}
+          textAnchor="middle" fontSize={12} fill={color} fontWeight="700" fontFamily="Arial,sans-serif">
+          Ø{tubeMm} × {wallMm} mm
+        </text>
+
+        {/* RL dimension line */}
+        <line x1={cx} y1={tubeY2 + 18} x2={cx + drawRL} y2={tubeY2 + 18}
+          stroke="#64748b" strokeWidth={1} markerEnd="url(#arr)" markerStart="url(#arrL)" />
+        <text x={cx + drawRL / 2} y={tubeY2 + 30}
+          textAnchor="middle" fontSize={10} fill="#64748b" fontFamily="Arial,sans-serif">
+          RL = {rlVal} mm
+        </text>
+
+        {/* Shaft labels */}
+        <text x={cx / 2} y={cy - visualDia / 2 - 6}
+          textAnchor="middle" fontSize={9} fill="#94a3b8" fontFamily="Arial,sans-serif">Shaft</text>
+        <text x={cx + drawRL + shaftLen / 2} y={cy - visualDia / 2 - 6}
+          textAnchor="middle" fontSize={9} fill="#94a3b8" fontFamily="Arial,sans-serif">Shaft</text>
       </svg>
+
+      {/* Sleeve legend */}
+      {hasSleeve && (
+        <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: sleeveColor }}>
+          <div style={{ width: 12, height: 12, borderRadius: 2, background: sleeveColor, opacity: 0.8 }} />
+          <span style={{ fontWeight: 600 }}>{sleeve} (shown in color)</span>
+        </div>
+      )}
     </div>
   );
 }
 
-// ─── Part Number Builder ──────────────────────────────────────────────────────
+// ─── Interroll Part Number Builder ───────────────────────────────────────────
+// Format: BearingPartNo.TubePartNo ShaftPartNo-BF"
+// Example: 1.131.G49 C40-14.88"
+// BF (Between Frame) = RL in inches + shaft extension
+// Bearing codes by series platform
+const BEARING_CODES = {
+  "1100": "1.111",
+  "1200": "1.121",
+  "1450": "1.145",
+  "1500": "1.150",
+  "1700": "1.170",
+  "3500": "1.350",
+  "3800": "1.380",
+  "3950": "1.395",
+  "MSC50": "1.MSC",
+};
+
+// Tube part codes: G = galvanized/zinc-plated, S = stainless, A = aluminum, P = PVC
+// Format: [Material prefix][tube OD in mm]
+function getTubeCode(tubeObj) {
+  if (!tubeObj) return "???";
+  const dia = tubeObj.tube_mm;
+  const mats = (tubeObj.materials || []).join(",").toLowerCase();
+  let prefix = "G"; // default galvanized
+  if (mats.includes("stainless")) prefix = "S";
+  else if (mats.includes("aluminum")) prefix = "A";
+  else if (mats.includes("pvc")) prefix = "P";
+  return `${prefix}${dia}`;
+}
+
+// Shaft codes per Interroll convention
+const SHAFT_CODE_MAP = {
+  spring:          "SP",
+  fixed:           "FX",
+  female_M6:       "F06",
+  female_M8:       "F08",
+  female_M20:      "F20",
+  female_17:       "F17",
+  female_12:       "F12",
+  female_14:       "F14",
+  female_8:        "F08",
+  female_10:       "F10",
+  female_11hex:    "F11H",
+  female:          "F",
+  male:            "M",
+  male_8:          "M08",
+  male_10:         "M10",
+  male_12:         "M12",
+  male_14:         "M14",
+  male_20:         "M20",
+  flat:            "FL",
+  variable:        "VAR",
+  tapered_shuttle: "TH",
+  tapered_th:      "TH",
+  fixed_20:        "FX20",
+  spring_20:       "SP20",
+  fixed_ss_pin:    "SS",
+  spring_11hex_ss: "SP11H",
+  fixed_11hex_ss:  "FX11H",
+  female_M8_11hex_ss: "F11H",
+  bolt_ip55:       "IP55",
+  spring_11hex:    "SP11H",
+  fixed_11hex:     "FX11H",
+  female_20:       "F20",
+};
+
+function getShaftCode(shaftObj) {
+  if (!shaftObj) return "???";
+  return SHAFT_CODE_MAP[shaftObj.code] || shaftObj.code?.toUpperCase() || "???";
+}
+
+// Sleeve suffix codes
+function getSleeveCode(sleeve) {
+  if (!sleeve || sleeve === "None") return "";
+  if (/pvc/i.test(sleeve)) return "-PVC";
+  if (/pu/i.test(sleeve)) return "-PU";
+  if (/lagging/i.test(sleeve)) return "-LAG";
+  return "";
+}
+
 function buildPartNumber(series, tubeObj, shaftObj, rl, sleeve, groovesQty) {
-  const dia = tubeObj?.tube_mm || "?";
-  const wall = tubeObj?.wall_mm ? String(tubeObj.wall_mm).replace(".", "") : "?";
-  const shaftCode = (shaftObj?.code || "?").toUpperCase();
-  const rlPad = String(parseInt(rl) || 0).padStart(4, "0");
-  const slv = sleeve && sleeve !== "None" ? "-" + sleeve.replace(/\s+(sleeve|Lagging)/i, "").trim().toUpperCase().replace(/\s+/g, "") : "";
-  const grv = groovesQty > 0 ? "-G" + groovesQty : "";
-  return `${series.platform}-${dia}-${wall}-${shaftCode}-${rlPad}${slv}${grv}`;
+  const bearingCode = BEARING_CODES[series.platform] || BEARING_CODES[series.id] || "1.???";
+  const tubeCode = getTubeCode(tubeObj);
+  const shaftCode = getShaftCode(shaftObj);
+  const sleeveCode = getSleeveCode(sleeve);
+  const grooveCode = groovesQty > 0 ? `G${groovesQty}` : "";
+  // BF in inches = RL mm / 25.4, rounded to 2 decimals
+  const rlVal = parseInt(rl) || 600;
+  const bfInches = (rlVal / 25.4).toFixed(2);
+  // Options suffix
+  const optSuffix = [grooveCode, sleeveCode.replace("-", "")].filter(Boolean).join(".");
+  const optPart = optSuffix ? ` [${optSuffix}]` : "";
+  return `${bearingCode}.${tubeCode} ${shaftCode}-${bfInches}"${optPart}`;
 }
 
 // ─── Tear Sheet ───────────────────────────────────────────────────────────────
@@ -512,9 +673,22 @@ function Configurator({ series, onBack, onGoRFQ }) {
         </div>
       </div>
 
-      {/* Live Schematic */}
+      {/* Live Schematic + Part Number */}
       <div style={{ marginBottom: 20 }}>
-        <RollerSchematic series={series} rl={rl} tubeIdx={tubeIdx} />
+        <RollerSchematic series={series} rl={rl} tubeIdx={tubeIdx} sleeve={sleeve} />
+        {/* Live Part Number — updates as options change */}
+        <div style={{ marginTop: 10, background: NAVY, borderRadius: 8, padding: "10px 16px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+          <div>
+            <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "1.2px", color: "rgba(255,255,255,.45)", marginBottom: 3 }}>Interroll Part Number</div>
+            <div style={{ fontSize: 17, fontWeight: 900, color: "#fff", letterSpacing: "0.5px", fontFamily: "monospace" }}>
+              {buildPartNumber(series, tube, shaft, rl, sleeve, groovesQty)}
+            </div>
+          </div>
+          <div style={{ fontSize: 10, color: "rgba(255,255,255,.45)", lineHeight: 1.6, flex: 1 }}>
+            <span style={{ color: "rgba(255,255,255,.6)" }}>Format: </span>BearingNo.TubeCode ShaftCode-BF"<br />
+            BF = {((parseInt(rl) || 600) / 25.4).toFixed(2)}" between frames
+          </div>
+        </div>
       </div>
 
       {/* Config Options */}
@@ -612,7 +786,8 @@ function Configurator({ series, onBack, onGoRFQ }) {
           </button>
         )}
         <button onClick={() => {
-          const blob = new Blob([buildTearSheetHTML(series, config)], { type: "text/html" });
+          const html = buildTearSheetHTML(series, { tubeObj: tube, shaftObj: shaft, rl, sleeve, groovesQty });
+          const blob = new Blob([html], { type: "text/html" });
           window.open(URL.createObjectURL(blob), "_blank");
         }}
           style={{ padding: "12px 24px", borderRadius: 9, fontSize: 14, fontWeight: 700, cursor: "pointer", border: "1px solid " + NAVY, background: "#fff", color: NAVY }}>
