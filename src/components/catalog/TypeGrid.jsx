@@ -15,7 +15,7 @@ const CHAIN_SUBTYPE_KEYS = new Set([
 const CATEGORY_IMAGES = {
   "__chain__":             "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/b20f0b73a_Gemini_Generated_Image_4tqfl4tqfl4tqfl4.png",
   "Modular Belt":          "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/27e386ff8_modular-plastic-belting-3_2.jpg",
-  "Elevator Bucket":       "https://maxilift.com/hs-fs/hubfs/image%2025%20(10).png?width=500",
+  "Elevator Bucket":       "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/7799388e1_image.png",
   "__tabletop__":          "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80&auto=format&fit=crop",
   "Wire Mesh Belt":        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop",
   "Steel Hinged Belt":     "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80&auto=format&fit=crop",
