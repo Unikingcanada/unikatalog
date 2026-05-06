@@ -3,7 +3,7 @@
  * Extracted from Home.jsx to reduce file size.
  */
 import { useState, useEffect, useMemo } from "react";
-import { UniCatalog, CatalogProduct, ElevatorBucket, MacChainProduct } from "@/api/entities";
+import { UniCatalog, MacChainProduct } from "@/api/entities";
 
 const NAVY = "#1a3a5c";
 const AMBER = "#b45309";
@@ -297,11 +297,10 @@ export default function ElevBucketsView({onBack,onGoRFQ}) {
     async function load(){
       try{
         async function fetchAll(entity){let all=[],skip=0,hasMore=true;while(hasMore){const batch=await entity.list({limit:500,skip});all=[...all,...batch];hasMore=batch.length===500;skip+=batch.length;}return all;}
-        const [intralox,unicatalog,buckets,macChains]=await Promise.all([fetchAll(CatalogProduct),fetchAll(UniCatalog),fetchAll(ElevatorBucket),fetchAll(MacChainProduct)]);
+        const [unicatalog,macChains]=await Promise.all([fetchAll(UniCatalog),fetchAll(MacChainProduct)]);
+        const buckets=unicatalog.filter(r=>r.product_type==="Elevator Bucket");
         setAllProducts([
-          ...intralox.map(r=>({...r,_src:"intralox",_type:r.category||"Modular Plastic Belt"})),
-          ...unicatalog.map(r=>({...r,_src:"uni",_type:r.product_type})),
-          ...buckets.map(r=>({...r,_src:"bucket",_type:"Elevator Bucket"})),
+          ...buckets.map(r=>({...r,_src:"bucket",_type:"Elevator Bucket",material:r.materials||r.material||"",bucket_sizes_detail:r.belt_data||null,discharge_type:r.style||"",profile:r.series,series:r.model_code||r.series,page_range:r.page_range||""})),
           ...macChains.map(r=>({...r,_src:"mac",_type:r.product_type==="ANSI Roller Chain"?"ANSI Roller Chain":r.product_type==="ANSI Roller Chain Attachments"?"ANSI Roller Chain Attachments":"Engineered Chain",vendor:"",series:r.part_number||r.series,style:r.subcategory||r.category,image_url:r.product_image||r.image_url}))
         ]);
       }catch(e){console.error(e);}finally{setLoading(false);}
