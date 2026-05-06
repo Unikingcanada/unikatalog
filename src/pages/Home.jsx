@@ -1915,7 +1915,6 @@ export default function Home() {
           <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} /> :
           <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} rawMacRecords={rawMacRecords} />
           }
-          </div>
           <FloatingRFQButton onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0,0);}} />
           </div>
           </AppLayout>
