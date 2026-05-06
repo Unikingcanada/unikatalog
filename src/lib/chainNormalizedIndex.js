@@ -12,12 +12,14 @@
 
 import { NORMALIZED_CHAINS } from "./chainNormalizedDictionary";
 import { NORMALIZED_CHAINS_EXPANSION } from "./chainNormalizedExpansion";
+import { NORMALIZED_CHAINS_EXPANSION_2 } from "./chainNormalizedExpansion2";
+export { AL_SOURCE, AL_CATEGORIES, AL_ANSI_SINGLE_STRAND, AL_WELDED_MILL_CHAINS, AL_ATTACHMENT_CATEGORIES, AL_MATERIAL_VARIANTS, getALSpecByChainId, getALConflicts, buildALSourceEntry } from "./alliedLockeSourceRecord";
 
 /** Complete normalized chain catalog — base + expansion, deduplicated by chain_id */
 export const ALL_NORMALIZED_CHAINS = (() => {
   const seen = new Set();
   const merged = [];
-  for (const chain of [...NORMALIZED_CHAINS, ...NORMALIZED_CHAINS_EXPANSION]) {
+  for (const chain of [...NORMALIZED_CHAINS, ...NORMALIZED_CHAINS_EXPANSION, ...NORMALIZED_CHAINS_EXPANSION_2]) {
     if (!seen.has(chain.chain_id)) {
       seen.add(chain.chain_id);
       merged.push(chain);
