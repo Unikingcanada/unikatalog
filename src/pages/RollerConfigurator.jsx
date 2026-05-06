@@ -73,7 +73,7 @@ function getShaftExtMm(shaftObj) {
 }
 
 // ─── Roller Schematic ─────────────────────────────────────────────────────────
-function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial }) {
+function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groovesQty, driveHead }) {
   const tube = series.tubes[tubeIdx] || series.tubes[0];
   const tubeMm = tube?.tube_mm || 50;
   const wallMm = tube?.wall_mm || 1.5;
@@ -233,6 +233,61 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial }) {
                 {sleeve}
               </text>
             )}
+            {/* ── Grooves — evenly spaced notches on tube surface ── */}
+            {groovesQty > 0 && (() => {
+              const grooveW = 4;
+              const grooveDepth = Math.min(8, visualDia * 0.12);
+              const spacing = drawRL / (groovesQty + 1);
+              return Array.from({ length: groovesQty }, (_, gi) => {
+                const gx = cx + spacing * (gi + 1);
+                return (
+                  <g key={gi}>
+                    <rect x={gx - grooveW / 2} y={tubeY1} width={grooveW} height={grooveDepth}
+                      fill="#fff" stroke="#94a3b8" strokeWidth={1} />
+                    <rect x={gx - grooveW / 2} y={tubeY2 - grooveDepth} width={grooveW} height={grooveDepth}
+                      fill="#fff" stroke="#94a3b8" strokeWidth={1} />
+                    {gi === 0 && (
+                      <text x={gx} y={tubeY1 - 4} textAnchor="middle" fontSize={8} fill="#94a3b8" fontFamily="Arial,sans-serif">
+                        groove
+                      </text>
+                    )}
+                  </g>
+                );
+              });
+            })()}
+            {/* ── Drive-head / sprocket on right end ── */}
+            {driveHead && (() => {
+              const spOD = driveHead.OD_mm || 57;
+              const spVisR = Math.min(48, Math.max(20, (spOD / 80) * 44));
+              const toothH = Math.max(4, spVisR * 0.15);
+              const toothW = Math.max(3, spVisR * 0.2);
+              const numTeeth = driveHead.teeth || 12;
+              const sx = cx + drawRL + 2; // sprocket center-x at right end of tube
+              const sy = cy;
+              const teeth = Array.from({ length: numTeeth }, (_, ti) => {
+                const angle = (ti / numTeeth) * Math.PI * 2;
+                const innerR = spVisR;
+                const outerR = spVisR + toothH;
+                const half = toothW / (2 * outerR);
+                const ax = sx + Math.cos(angle - half) * outerR;
+                const ay = sy + Math.sin(angle - half) * outerR;
+                const bx = sx + Math.cos(angle + half) * outerR;
+                const by = sy + Math.sin(angle + half) * outerR;
+                const cx2 = sx + Math.cos(angle) * innerR;
+                const cy2 = sy + Math.sin(angle) * innerR;
+                return `M${cx2},${cy2} L${ax},${ay} L${bx},${by} Z`;
+              }).join(" ");
+              return (
+                <g>
+                  <circle cx={sx} cy={sy} r={spVisR} fill="#f59e0b" fillOpacity={0.25} stroke="#f59e0b" strokeWidth={2} />
+                  <path d={teeth} fill="#f59e0b" fillOpacity={0.8} stroke="#d97706" strokeWidth={0.5} />
+                  <circle cx={sx} cy={sy} r={spVisR * 0.28} fill="#fff" stroke="#f59e0b" strokeWidth={1.2} />
+                  <text x={sx} y={sy + spVisR + toothH + 11} textAnchor="middle" fontSize={8} fill="#d97706" fontWeight="700" fontFamily="Arial,sans-serif">
+                    {driveHead.pitch} {driveHead.teeth ? `T${driveHead.teeth}` : ""} Ø{spOD}mm
+                  </text>
+                </g>
+              );
+            })()}
             {/* Tube label */}
             <text x={cx + drawRL / 2} y={cy + 4}
               textAnchor="middle" fontSize={12} fill={color} fontWeight="700" fontFamily="Arial,sans-serif">
@@ -285,7 +340,19 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial }) {
         {isTapered && (
           <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#16a34a" }}>
             <div style={{ width: 16, height: 2, background: "#16a34a" }} />
-            <span>d = small end · D = large end (catalog "D" col)</span>
+            <span>d = small end · D = large end</span>
+          </div>
+        )}
+        {groovesQty > 0 && (
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#94a3b8" }}>
+            <div style={{ width: 6, height: 10, border: "1px solid #94a3b8", background: "#fff" }} />
+            <span>{groovesQty} groove{groovesQty > 1 ? "s" : ""} (round belt)</span>
+          </div>
+        )}
+        {driveHead && (
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#d97706" }}>
+            <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#f59e0b", opacity: 0.7 }} />
+            <span style={{ fontWeight: 600 }}>{driveHead.label}</span>
           </div>
         )}
         <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#64748b" }}>
@@ -790,6 +857,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
   const [groovesQty, setGroovesQty] = useState(0);
   const [rfqAdded, setRfqAdded] = useState(false);
   const [imperial, setImperial] = useState(false);
+  const [sprocketIdx, setSprocketIdx] = useState(0);
 
   const tube = series.tubes[tubeIdx];
   const shaft = series.shafts[shaftIdx];
@@ -797,6 +865,8 @@ function Configurator({ series, onBack, onGoRFQ }) {
   const bearings = series.bearings || [];
   const bearing = bearings[bearingIdx] || null;
   const hasGrooves = series.grooves === true || (typeof series.grooves === "object" && series.grooves);
+  const driveHeads = series.sprockets?.drives || null;
+  const driveHead = driveHeads ? driveHeads[sprocketIdx] : null;
 
   const config = {
     tubeObj: tube,
@@ -820,7 +890,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
       materials: tube?.materials?.join(", ") || "",
       application: series.applications?.[0] || "",
       quantity: 1, unit: "Each",
-      notes: `RL=${rl}mm | Bearing: ${bearing?.label || "std"} | Shaft: ${shaft?.label || ""} | Sleeve: ${sleeve || "None"}`
+      notes: `RL=${rl}mm | Bearing: ${bearing?.label || "std"} | Shaft: ${shaft?.label || ""} | Sleeve: ${sleeve || "None"}${driveHead ? " | Drive: " + driveHead.label : ""}${groovesQty > 0 ? " | Grooves: " + groovesQty : ""}`
     });
     saveRFQCart(cart);
     setRfqAdded(true);
@@ -863,7 +933,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
             ))}
           </div>
         </div>
-        <RollerSchematic series={series} rl={rl} tubeIdx={tubeIdx} sleeve={sleeve} shaftObj={shaft} imperial={imperial} />
+        <RollerSchematic series={series} rl={rl} tubeIdx={tubeIdx} sleeve={sleeve} shaftObj={shaft} imperial={imperial} groovesQty={groovesQty} driveHead={driveHead} />
         {/* Live Part Number — updates as options change */}
         <div style={{ marginTop: 10, background: NAVY, borderRadius: 8, padding: "10px 16px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
           <div>
@@ -964,8 +1034,44 @@ function Configurator({ series, onBack, onGoRFQ }) {
                 style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
                 {[0, 1, 2, 3, 4].map(n => <option key={n} value={n}>{n === 0 ? "No grooves" : `${n} groove${n > 1 ? "s" : ""}`}</option>)}
               </select>
+              {groovesQty > 0 && (
+                <div style={{ marginTop: 6, background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 6, padding: "8px 10px", fontSize: 11, color: "#15803d" }}>
+                  <b>{groovesQty} groove{groovesQty > 1 ? "s" : ""}</b> — evenly spaced along RL = {imperial ? `${((parseInt(rl)||600)/25.4).toFixed(3)}"` : `${parseInt(rl)||600} mm`}
+                  · spacing = {imperial ? `${(((parseInt(rl)||600)/25.4)/(groovesQty+1)).toFixed(3)}"` : `${Math.round((parseInt(rl)||600)/(groovesQty+1))} mm`} apart
+                </div>
+              )}
               {typeof series.grooves === "object" && series.grooves.note && (
                 <div style={{ fontSize: 10, color: C.muted, marginTop: 4, lineHeight: 1.5 }}>{series.grooves.note}</div>
+              )}
+            </div>
+          )}
+          {driveHeads && (
+            <div style={{ gridColumn: "1 / -1" }}>
+              <label style={{ fontSize: 11, fontWeight: 700, color: "#d97706", display: "block", marginBottom: 5 }}>⚙ Drive Head / Sprocket</label>
+              <select value={sprocketIdx} onChange={e => setSprocketIdx(Number(e.target.value))}
+                style={{ width: "100%", padding: "9px 10px", border: "1px solid #fde68a", borderRadius: 7, fontSize: 12, outline: "none", background: "#fffbeb" }}>
+                {driveHeads.map((d, i) => <option key={i} value={i}>{d.label}</option>)}
+              </select>
+              {driveHead && (
+                <div style={{ marginTop: 8, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px,1fr))", gap: 8 }}>
+                  {[
+                    ["Pitch", driveHead.pitch],
+                    driveHead.teeth ? ["Teeth", driveHead.teeth] : null,
+                    driveHead.OD_mm ? ["Sprocket OD", imperial ? `${(driveHead.OD_mm/25.4).toFixed(3)}"` : `${driveHead.OD_mm} mm`] : null,
+                    driveHead.EL_formula ? ["EL Formula", driveHead.EL_formula] : null,
+                    driveHead.max_load_N ? ["Max Load", `${driveHead.max_load_N.toLocaleString()} N`] : null,
+                    driveHead.type ? ["Type", driveHead.type] : null,
+                    driveHead.material ? ["Material", driveHead.material] : null,
+                  ].filter(Boolean).map(([k, v]) => (
+                    <div key={k} style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 6, padding: "6px 10px" }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8, color: "#d97706", marginBottom: 2 }}>{k}</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: "#92400e" }}>{v}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {series.sprockets?.note && (
+                <div style={{ fontSize: 10, color: C.muted, marginTop: 6, lineHeight: 1.5 }}>{series.sprockets.note}</div>
               )}
             </div>
           )}
@@ -997,8 +1103,9 @@ function Configurator({ series, onBack, onGoRFQ }) {
                 ["Body Length (RL)", fmtMm(rlVal)],
                 ["Shaft Extension (B each side)", fmtMm(bMm)],
                 ["Overall End Length (EL)", fmtMm(elMm)],
+                driveHead ? ["Drive Head / Sprocket", `${driveHead.label}${driveHead.OD_mm ? " — OD " + (imperial ? (driveHead.OD_mm/25.4).toFixed(3)+'"' : driveHead.OD_mm+" mm") : ""}`] : null,
                 ["Sleeve / Surface", sleeve || "None"],
-                ["Grooves", groovesQty > 0 ? groovesQty + " groove(s)" : "None"],
+                ["Grooves", groovesQty > 0 ? `${groovesQty} groove(s) — spacing ${imperial ? ((parseInt(rl)||600)/25.4/(groovesQty+1)).toFixed(3)+'"' : Math.round((parseInt(rl)||600)/(groovesQty+1))+" mm"} apart` : "None"],
                 ["Drive Type", series.driveType],
                 ["Max Load", series.maxLoad_N.toLocaleString() + " N"],
                 ["Max Speed", series.maxSpeed_ms + " m/s"],
