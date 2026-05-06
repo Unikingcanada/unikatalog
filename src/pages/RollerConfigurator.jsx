@@ -97,7 +97,7 @@ function RollerSchematic({ series, rl, tubeIdx }) {
 }
 
 // ─── Tear Sheet ───────────────────────────────────────────────────────────────
-function printTearSheet(series, config) {
+function buildTearSheetHTML(series, config) {
   const { tube, shaft, rl, sleeve, grooves } = config;
   const html = `<!DOCTYPE html><html><head><title>Roller Tear Sheet — ${series.name}</title>
 <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Segoe UI',Arial,sans-serif;color:#111;}
@@ -143,8 +143,7 @@ function printTearSheet(series, config) {
   <div class="notes">${series.notes}</div>
   <div class="footer">Uniking Canada · unikingcanada.com · rfq@unikingcanada.com · Specifications per Interroll catalog. Confirm before supply.</div>
 </div></body></html>`;
-  const blob = new Blob([html], { type: "text/html" });
-  window.open(URL.createObjectURL(blob), "_blank");
+  return html;
 }
 
 // ─── VIEW 1: Series Grid ──────────────────────────────────────────────────────
@@ -542,7 +541,10 @@ function Configurator({ series, onBack, onGoRFQ }) {
             View RFQ Cart →
           </button>
         )}
-        <button onClick={() => printTearSheet(series, config)}
+        <button onClick={() => {
+          const blob = new Blob([buildTearSheetHTML(series, config)], { type: "text/html" });
+          window.open(URL.createObjectURL(blob), "_blank");
+        }}
           style={{ padding: "12px 24px", borderRadius: 9, fontSize: 14, fontWeight: 700, cursor: "pointer", border: "1px solid " + NAVY, background: "#fff", color: NAVY }}>
           🖨 Print Tear Sheet
         </button>
