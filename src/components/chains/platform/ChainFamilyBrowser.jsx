@@ -36,7 +36,6 @@ function FamilyCard({ family, count, onClick }) {
         transform: hov ? "translateY(-2px)" : "none",
       }}
     >
-      <div style={{ fontSize: 22, lineHeight: 1 }}>{family.icon}</div>
       <div style={{ fontSize: 13, fontWeight: 800, color: hov ? "#fff" : C.text, lineHeight: 1.3 }}>{family.label}</div>
       <div style={{ fontSize: 11, color: hov ? "rgba(255,255,255,0.7)" : C.muted, lineHeight: 1.5 }}>{family.description?.slice(0, 80)}…</div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>

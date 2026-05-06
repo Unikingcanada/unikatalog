@@ -50,10 +50,7 @@ export default function ChainCategoryView({ category, onBack, onSelectProduct })
             style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", borderRadius: 7, padding: "5px 12px", cursor: "pointer", fontSize: 12, marginBottom: 14 }}>
             ← Back to Chain Catalog
           </button>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
-            <span style={{ fontSize: 26 }}>{category.icon}</span>
-            <h1 style={{ color: "#fff", fontSize: 24, fontWeight: 900, margin: 0 }}>{category.label}</h1>
-          </div>
+          <h1 style={{ color: "#fff", fontSize: 24, fontWeight: 900, margin: 0, marginBottom: 6 }}>{category.label}</h1>
           <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 13, maxWidth: 580, lineHeight: 1.7, margin: "0 0 16px" }}>{category.description}</p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
             <div style={{ position: "relative" }}>
