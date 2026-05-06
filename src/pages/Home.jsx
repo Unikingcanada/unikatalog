@@ -1030,34 +1030,34 @@ function ProductCard({ product, showBrand, onClick, onToggleCompare, inCompare }
 
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-    style={{ background: C.card, borderRadius: 10, border: "1px solid " + (hovered ? C.navyLight : C.border), boxShadow: hovered ? "0 4px 16px rgba(15,35,64,0.10)" : "0 1px 4px rgba(15,35,64,0.05)", transition: "border-color 0.15s, box-shadow 0.15s", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      <div style={{ height: 3, background: C.navyMid, flexShrink: 0 }} />
+    style={{ background: C.card, borderRadius: 12, border: "1px solid " + (hovered ? C.navyMid : C.border), boxShadow: hovered ? "0 6px 20px rgba(0,60,91,0.12)" : "0 1px 3px rgba(0,60,91,0.05)", transition: "all 0.15s", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div style={{ height: 2, background: C.navyMid, flexShrink: 0 }} />
       {product.image_url ?
-      <div onClick={() => onClick(product)} style={{ background: "#f8fafc", borderBottom: "1px solid #f1f5f9", height: 110, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", cursor: "pointer" }}>
-          <img src={product.image_url} alt="" style={{ maxHeight: 98, maxWidth: "86%", objectFit: "contain" }} onError={(e) => {e.target.parentElement.style.display = "none";}} />
+      <div onClick={() => onClick(product)} style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0", height: 120, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", cursor: "pointer" }}>
+          <img src={product.image_url} alt="" style={{ maxHeight: 105, maxWidth: "90%", objectFit: "contain" }} onError={(e) => {e.target.parentElement.style.display = "none";}} />
         </div> :
       null}
-      <div onClick={() => onClick(product)} style={{ padding: "13px 15px", flex: 1, display: "flex", flexDirection: "column", gap: 5, cursor: "pointer" }}>
+      <div onClick={() => onClick(product)} style={{ padding: "16px 14px", flex: 1, display: "flex", flexDirection: "column", gap: 6, cursor: "pointer" }}>
         {showBrand && product.brand ?
-        <span style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", color: C.navyMid, background: "#eef3f8", padding: "2px 7px", borderRadius: 3, alignSelf: "flex-start" }}>{product.brand}</span> :
+        <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.7px", color: C.navyMid, background: "#eef3f8", padding: "3px 8px", borderRadius: 4, alignSelf: "flex-start" }}>{product.brand}</span> :
         null}
-        <div style={{ fontSize: 14, fontWeight: 700, color: C.text, lineHeight: 1.3 }}>{product.series}</div>
-        {product.style && product.style !== product.series ? <div style={{ fontSize: 12, color: C.muted }}>{product.style}</div> : null}
+        <div style={{ fontSize: 13, fontWeight: 800, color: C.text, lineHeight: 1.3 }}>{product.series}</div>
+        {product.style && product.style !== product.series ? <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.4 }}>{product.style}</div> : null}
         {topSpecs.length > 0 ?
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 4 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 2 }}>
             {topSpecs.map(([k, v]) =>
-          <div key={k} style={{ fontSize: 11, background: C.bg, border: "1px solid " + C.border, borderRadius: 3, padding: "2px 7px", color: C.slate }}>
-                <span style={{ color: C.muted }}>{k}: </span>
-                {String(v).length > 20 ? String(v).slice(0, 20) + "…" : String(v)}
+          <div key={k} style={{ fontSize: 10, background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 4, padding: "3px 7px", color: C.slate }}>
+                <span style={{ color: C.muted, fontWeight: 500 }}>{k}: </span>
+                <span style={{ fontWeight: 600 }}>{String(v).length > 18 ? String(v).slice(0, 18) + "…" : String(v)}</span>
               </div>
           )}
           </div> :
         null}
       </div>
-      <div style={{ borderTop: "1px solid " + C.bg, padding: "7px 12px", background: hovered ? "#f1f5f9" : C.card, transition: "background 0.13s", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 4 }}>
-        <span onClick={() => onClick(product)} style={{ fontSize: 11, fontWeight: 600, color: C.navyMid, cursor: "pointer", whiteSpace: "nowrap" }}>View ›</span>
-        {onToggleCompare && <button onClick={e=>{e.stopPropagation();onToggleCompare(product);}} style={{ padding: "3px 7px", borderRadius: 5, fontSize: 10, fontWeight: 700, cursor: "pointer", border: inCompare?"1px solid #7c3aed":"1px solid #cbd5e1", background: inCompare?"#ede9fe":"#f8fafc", color: inCompare?"#7c3aed":C.muted, whiteSpace: "nowrap" }}>{inCompare?"✓ Cmp":"Cmp"}</button>}
-        <button onClick={handleAddRFQ} style={{ padding: "4px 9px", borderRadius: 5, fontSize: 10, fontWeight: 700, cursor: "pointer", border: added?"1px solid #16a34a":"1px solid #2563eb", background: added?"#f0fdf4":"#eff6ff", color: added?"#16a34a":"#2563eb", whiteSpace: "nowrap", transition: "all 0.15s" }}>
+      <div style={{ borderTop: "1px solid #e2e8f0", padding: "10px 14px", background: hovered ? "#f8fafc" : C.card, transition: "background 0.12s", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
+        <span onClick={() => onClick(product)} style={{ fontSize: 11, fontWeight: 600, color: C.navyMid, cursor: "pointer", whiteSpace: "nowrap" }}>View →</span>
+        {onToggleCompare && <button onClick={e=>{e.stopPropagation();onToggleCompare(product);}} style={{ padding: "4px 8px", borderRadius: 4, fontSize: 9, fontWeight: 700, cursor: "pointer", border: inCompare?"1px solid #7c3aed":"1px solid #cbd5e1", background: inCompare?"#ede9fe":"#f8fafc", color: inCompare?"#7c3aed":C.muted, whiteSpace: "nowrap" }}>{inCompare?"✓ Compare":"Compare"}</button>}
+        <button onClick={handleAddRFQ} style={{ padding: "4px 10px", borderRadius: 4, fontSize: 9, fontWeight: 700, cursor: "pointer", border: added?"1px solid #16a34a":"1px solid #2563eb", background: added?"#f0fdf4":"#eff6ff", color: added?"#16a34a":"#2563eb", whiteSpace: "nowrap", transition: "all 0.12s" }}>
           {added ? "✓ RFQ" : "+ RFQ"}
         </button>
       </div>
