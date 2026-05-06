@@ -1878,9 +1878,7 @@ export default function Home() {
   if (currentPage==="intraloxCatalog") return <IntraloxCatalog onBack={goBack} onGoRFQ={goRFQ}/>;  if (currentPage==="chainCatalog") return <ChainCatalog onBack={goBack} onGoRFQ={goRFQ}/>;
   if (["tableTopChain","tableTopChains"].includes(currentPage)) return <div style={{minHeight:"100vh",background:"#f8fafc"}}><TableTopChainCatalog onBack={goBack}/></div>;if(currentPage==="rfqCart")return<RFQCartView onBack={goBack}/>;return(
     <AppLayout hideHeader={false}>
-      <div style={{ minHeight: "auto", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column", overscrollBehavior: "contain" }}>
-        <TopBar onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0, 0);}} />
-        <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "20px clamp(12px,4vw,36px)", boxSizing: "border-box" }}>
+      <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "20px clamp(12px,4vw,36px)", boxSizing: "border-box" }}>
           {view !== "home" ? <Breadcrumb items={breadcrumbs} onNav={navTo} /> : null}
           {loading ?
           <div style={{ textAlign: "center", padding: 80, color: C.muted, fontSize: 14 }}>Loading catalog...</div> :
@@ -1918,9 +1916,8 @@ export default function Home() {
           <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} rawMacRecords={rawMacRecords} />
           }
           </div>
-        </div>
-        <FloatingRFQButton onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0,0);}} />
-      </div>
-    </AppLayout>
+          <FloatingRFQButton onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0,0);}} />
+          </div>
+          </AppLayout>
   );
   }
