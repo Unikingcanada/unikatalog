@@ -310,22 +310,6 @@ export default function ElevBucketsView({onBack,onGoRFQ}) {
   const brandCounts={};brands.forEach(b=>{brandCounts[b]=buckets.filter(p=>p.vendor===b).length;});
   const brandSeries=selectedBrand?buckets.filter(p=>p.vendor===selectedBrand):null;
 
-  function BucketSection({title,items,accentColor}){
-    if(!items.length)return null;
-    return(
-      <div style={{marginBottom:40}}>
-        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:18}}>
-          <div style={{height:3,width:32,background:accentColor,borderRadius:99}}/>
-          <h2 style={{margin:0,fontSize:18,fontWeight:900,color:NAVY}}>{title}</h2>
-          <span style={{fontSize:12,color:"#9ca3af"}}>{items.length} series</span>
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:16}}>
-          {items.map(rec=><BucketCard key={rec.id} rec={rec} onClick={()=>setSelected(rec)}/>)}
-        </div>
-      </div>
-    );
-  }
-
   return(
     <div style={{minHeight:"100vh",background:"#f8fafc",fontFamily:"'Inter','Segoe UI',sans-serif"}}>
       <div style={{background:NAVY,padding:"0 24px",display:"flex",alignItems:"center",justifyContent:"space-between",height:56,boxShadow:"0 2px 8px rgba(0,0,0,.18)"}}>
