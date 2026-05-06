@@ -13,18 +13,49 @@
 import { NORMALIZED_CHAINS } from "./chainNormalizedDictionary";
 import { NORMALIZED_CHAINS_EXPANSION } from "./chainNormalizedExpansion";
 import { NORMALIZED_CHAINS_EXPANSION_2 } from "./chainNormalizedExpansion2";
+import { DH_MERGE_REFS, DH_NEW_CHAINS } from "./donghuaNormalizedChains";
 export { AL_SOURCE, AL_CATEGORIES, AL_ANSI_SINGLE_STRAND, AL_WELDED_MILL_CHAINS, AL_ATTACHMENT_CATEGORIES, AL_MATERIAL_VARIANTS, getALSpecByChainId, getALConflicts, buildALSourceEntry } from "./alliedLockeSourceRecord";
+export { DH_SOURCE, DH_CATEGORIES, DH_MATERIAL_VARIANTS } from "./donghuaSourceRecord";
 
-/** Complete normalized chain catalog — base + expansion, deduplicated by chain_id */
+/** Complete normalized chain catalog — base + all expansions, deduplicated by chain_id,
+ *  with Donghua merge-refs patched onto existing entries */
 export const ALL_NORMALIZED_CHAINS = (() => {
   const seen = new Set();
   const merged = [];
-  for (const chain of [...NORMALIZED_CHAINS, ...NORMALIZED_CHAINS_EXPANSION, ...NORMALIZED_CHAINS_EXPANSION_2]) {
+
+  // 1. Collect all base + expansion chains, deduplicating by chain_id
+  for (const chain of [
+    ...NORMALIZED_CHAINS,
+    ...NORMALIZED_CHAINS_EXPANSION,
+    ...NORMALIZED_CHAINS_EXPANSION_2,
+    ...DH_NEW_CHAINS,
+  ]) {
     if (!seen.has(chain.chain_id)) {
       seen.add(chain.chain_id);
-      merged.push(chain);
+      // Deep-clone so we don't mutate source objects
+      merged.push({ ...chain, source_refs: [...(chain.source_refs || [])] });
     }
   }
+
+  // 2. Patch DH_MERGE_REFS onto existing chains (add Donghua as source where not already present)
+  for (const ref of DH_MERGE_REFS) {
+    const chain = merged.find(c => c.chain_id === ref.chain_id);
+    if (!chain) continue;
+    const alreadyHasDH = chain.source_refs.some(
+      r => r.manufacturer === "Donghua" && r.code === ref.code
+    );
+    if (!alreadyHasDH) {
+      chain.source_refs.push({
+        manufacturer: "Donghua",
+        code: ref.code,
+        confidence: ref.confidence,
+        catalog_page: ref.catalog_page,
+        catalog_url: "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+        notes: ref.notes || null,
+      });
+    }
+  }
+
   return merged;
 })();
 
