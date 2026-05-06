@@ -94,13 +94,8 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
   }
   const isTapered = !!taperedRow;
 
-  // Shaft type classification for tip rendering
+  // Shaft type classification (kept for reference but tips are plain bars)
   const shaftCode = shaftObj?.code || "";
-  const isSpring = /spring/i.test(shaftCode);
-  const isMale = /^male/i.test(shaftCode);
-  const isHex = /hex/i.test(shaftCode);
-  const isFlat = /flat/i.test(shaftCode);
-  const isSSPin = /fixed_ss_pin/i.test(shaftCode);
 
   // Fixed SVG canvas — extra height for cleaner dim lines
   const VW = 580, VH = isTapered ? 250 : 220;
@@ -181,71 +176,6 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
     );
   }
 
-  // ── Helper: shaft tip shape ───────────────────────────────────────────────
-  function ShaftTip({ side }) {
-    // side: "left" (tip at x=0) or "right" (tip at x=VW)
-    const tipLen = 10;
-    const shaftR = 3;
-    const tipX = side === "left" ? 0 : VW;
-    const dirSign = side === "left" ? 1 : -1; // points inward
-
-    if (isSpring) {
-      // Spring coil: zigzag lines at the tip
-      const coilX = side === "left" ? 2 : VW - 2;
-      const coilCount = 5;
-      const coilSpan = 14;
-      const coilW = 5;
-      const pts = Array.from({ length: coilCount * 2 + 1 }, (_, i) => {
-        const px = coilX + dirSign * (i / (coilCount * 2)) * coilSpan;
-        const py = cy + (i % 2 === 0 ? -coilW : coilW);
-        return `${px},${py}`;
-      }).join(" ");
-      return <polyline points={pts} fill="none" stroke="#64748b" strokeWidth={1.5} strokeLinejoin="round" />;
-    }
-    if (isMale) {
-      // Male thread: short parallel lines across the shaft tip
-      const threadX = side === "left" ? 4 : VW - 4;
-      return (
-        <g>
-          {[cy - 3.5, cy - 1, cy + 1.5, cy + 4].map((ty, i) => (
-            <line key={i}
-              x1={threadX} y1={ty}
-              x2={threadX + dirSign * 10} y2={ty}
-              stroke="#64748b" strokeWidth={0.9} />
-          ))}
-        </g>
-      );
-    }
-    if (isHex) {
-      // Hex head: small hexagon shape
-      const hx = side === "left" ? 8 : VW - 8;
-      const hr = 5;
-      const pts = Array.from({ length: 6 }, (_, i) => {
-        const angle = (i * 60 - 90) * Math.PI / 180;
-        return `${hx + hr * Math.cos(angle)},${cy + hr * Math.sin(angle)}`;
-      }).join(" ");
-      return <polygon points={pts} fill="#e2e8f0" stroke="#64748b" strokeWidth={1.2} />;
-    }
-    if (isFlat) {
-      // Flat shaft: rectangle with flat sides at tip
-      const fx = side === "left" ? 2 : VW - 14;
-      return <rect x={fx} y={cy - 3} width={12} height={6} fill="#e2e8f0" stroke="#64748b" strokeWidth={1} rx={1} />;
-    }
-    if (isSSPin) {
-      // SS pin: small circle cap
-      const px = side === "left" ? 5 : VW - 5;
-      return <circle cx={px} cy={cy} r={4} fill="#e2e8f0" stroke="#64748b" strokeWidth={1.2} />;
-    }
-    // Female / fixed default: small end-cap ring
-    const ex = side === "left" ? 3 : VW - 3;
-    return (
-      <g>
-        <rect x={side === "left" ? 0 : VW - 8} y={cy - 4} width={8} height={8}
-          rx={2} fill="#e2e8f0" stroke="#64748b" strokeWidth={1} />
-      </g>
-    );
-  }
-
   return (
     <div style={{ background: "#f1f5f9", borderRadius: 10, padding: "14px 16px", border: "1px solid " + C.border }}>
       <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 8 }}>
@@ -286,9 +216,7 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
         <line x1={cx + drawRL} y1={cy} x2={VW} y2={cy}
           stroke={isVariable ? "#b45309" : "#64748b"} strokeWidth={isVariable ? 6 : 5} strokeLinecap="round" />
 
-        {/* ── Shaft tip visuals (A: differentiated ends) ── */}
-        {!isTapered && <ShaftTip side="left" />}
-        {!isTapered && <ShaftTip side="right" />}
+
 
         {isTapered ? (
           <>
