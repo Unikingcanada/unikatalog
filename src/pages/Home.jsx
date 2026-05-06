@@ -4,7 +4,6 @@ import RFQCartView from "@/components/RFQCartView";
 import WireMeshConfigurator from "@/components/WireMeshConfigurator";
 import ElevBucketsView from "@/components/elevatorBuckets/ElevBucketsView";
 import ForgedChainView from "@/pages/ForgedChain";
-import RollerConfigView from "@/pages/RollerConfigurator";
 import SharpTopCatalog from "@/components/sharpTop/SharpTopCatalog";
 import IntraloxCatalog from "@/components/intralox/IntraloxCatalog";
 import ChainCatalog from "@/components/chains/ChainCatalog";
@@ -1875,7 +1874,7 @@ export default function Home() {
   function selectType(typeKey) {
     if (typeKey === "__chain__") {setCurrentPage("chainCatalog");window.scrollTo(0,0);return;}
     if (typeKey === "Elevator Bucket") {setCurrentPage("elevatorBuckets");window.scrollTo(0, 0);return;}
-    if (typeKey==="Conveyor Rollers") {setCurrentPage("rollerConfig");window.scrollTo(0,0);return;}
+    if (typeKey==="Conveyor Rollers") {setSelectedType("Conveyor Rollers");setSelectedBrand(null);setSelectedAnsiSub(null);setSelectedWeldedSub(null);setSelectedEngineeredSub(null);setView("products");return;}
     if (typeKey==="Wire Mesh Belt") {setCurrentPage("wireMesh");window.scrollTo(0,0);return;}if(typeKey==="Monitoring System"){setCurrentPage("fourBCatalog");window.scrollTo(0,0);return;}
     if(["Table Top Chain","__tabletop__","Plastic Chain","Metal Chain"].includes(typeKey)){setCurrentPage("tableTopChains");window.scrollTo(0,0);return;}if(typeKey==="Modular Belt"){setCurrentPage("intraloxCatalog");window.scrollTo(0,0);return;}if(typeKey==="Forged Chain"||typeKey==="Sharptop Chain"){setCurrentPage(typeKey==="Forged Chain"?"forgedChain":"sharpTopCatalog");window.scrollTo(0,0);return;}
     if (typeKey==="Engineered Chain") {setSelectedType("Engineered Chain");setSelectedEngineeredSub(null);setSelectedAnsiSub(null);setView("engineered_subs");return;}
@@ -1914,7 +1913,7 @@ export default function Home() {
 
   if (currentPage==="sharpTopCatalog") return <SharpTopCatalog onBack={goBack} onGoRFQ={goRFQ}/>;if (currentPage==="elevatorBuckets") return <ElevBucketsView onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="forgedChain") return <ForgedChainView onBack={goBack} onGoRFQ={goRFQ}/>;
-  if (currentPage==="rollerConfig") return <RollerConfigView onBack={goBack} onGoRFQ={goRFQ}/>;
+
   if (currentPage==="wireMesh") return <WireMeshConfigurator onBack={goBack} onGoRFQ={goRFQ}/>;if(currentPage==="fourBCatalog")return<FourBCatalog onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="intraloxCatalog") return <IntraloxCatalog onBack={goBack} onGoRFQ={goRFQ}/>;  if (currentPage==="chainCatalog") return <ChainCatalog onBack={goBack} onGoRFQ={goRFQ}/>;
   if (["tableTopChain","tableTopChains"].includes(currentPage)) return <div style={{minHeight:"100vh",background:"#f8fafc"}}><TableTopChainCatalog onBack={goBack}/></div>;if(currentPage==="rfqCart")return<RFQCartView onBack={goBack}/>;return(
