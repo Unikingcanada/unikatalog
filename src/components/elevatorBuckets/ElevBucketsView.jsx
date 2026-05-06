@@ -296,7 +296,7 @@ export default function ElevBucketsView({onBack,onGoRFQ}) {
   useEffect(()=>{
     async function load(){
       try{
-        async function fetchAll(entity){let all=[],skip=0,hasMore=true;while(hasMore){const batch=await entity.list({limit:500,skip});all=[...all,...batch];hasMore=batch.length===500;skip+=batch.length;}return all;}
+        async function fetchAll(entity){let all=[],skip=0,hasMore=true;while(hasMore){const batch=await entity.list(undefined,undefined,{limit:500,skip});all=[...all,...batch];hasMore=batch.length===500;skip+=batch.length;}return all;}
         const [buckets,macChains]=await Promise.all([fetchAll(ElevatorBucket),fetchAll(MacChainProduct)]);
         setAllProducts([
           ...buckets.map(r=>({...r,_src:"bucket",_type:"Elevator Bucket"})),
