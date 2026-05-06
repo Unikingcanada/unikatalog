@@ -919,8 +919,12 @@ function Configurator({ series, onBack, onGoRFQ }) {
               const fmtMm = v => imperial ? `${(v / 25.4).toFixed(3)}"` : `${v} mm`;
               return [
                 bearing ? ["Bearing", bearing.label] : null,
-                ["Tube", tube?.label || "—"],
-                ["Shaft", shaft?.label || "—"],
+                ["Tube", imperial && tube?.tube_mm
+                  ? `${(tube.tube_mm/25.4).toFixed(3)}" OD × ${tube.wall_mm ? (tube.wall_mm/25.4).toFixed(4)+'" wall' : ''} — ${tube.materials?.join("/")||""}`
+                  : (tube?.label || "—")],
+                ["Shaft", imperial && getShaftExtMm(shaft)
+                  ? `${shaft?.label || "—"} — B=${(getShaftExtMm(shaft)/25.4).toFixed(3)}"`
+                  : (shaft?.label || "—")],
                 ["Body Length (RL)", fmtMm(rlVal)],
                 ["Shaft Extension (B each side)", fmtMm(bMm)],
                 ["Overall End Length (EL)", fmtMm(elMm)],
