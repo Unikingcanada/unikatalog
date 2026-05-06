@@ -288,9 +288,7 @@ function BucketCard({rec,onClick}) {
 export default function ElevBucketsView({onBack,onGoRFQ}) {
   const [allProducts,setAllProducts]=useState([]);
   const [loading,setLoading]=useState(true);
-  const [search,setSearch]=useState("");
-  const [typeFilter,setTypeFilter]=useState("Elevator Bucket");
-  const [appFilter,setAppFilter]=useState("All");
+  const [selectedBrand,setSelectedBrand]=useState(null);
   const [selected,setSelected]=useState(null);
 
   useEffect(()=>{
@@ -307,19 +305,10 @@ export default function ElevBucketsView({onBack,onGoRFQ}) {
     load();
   },[]);
 
-  const isBucketView=typeFilter==="Elevator Bucket";
-  const filtered=useMemo(()=>{
-    let list=allProducts;
-    if(typeFilter!=="All")list=list.filter(p=>p._type===typeFilter);
-    if(isBucketView&&appFilter!=="All")list=list.filter(p=>(p.application||"").toLowerCase().includes(appFilter.toLowerCase()));
-    if(search.trim()){const q=search.toLowerCase();list=list.filter(p=>[p.series,p.style,p.category,p.notes,p.materials,p.material,p.application,p.part_number,p.description].some(f=>f&&f.toLowerCase().includes(q)));}
-    return list.sort((a,b)=>{const pn=s=>{const m=(s||"").trim().match(/^(\d+(?:\.\d+)?)(.*)/);if(!m)return[0,0,s||""];const st=(m[2]||"").match(/-(\d+)$/);return[parseFloat(m[1]),st?parseInt(st[1]):1,m[2]||""];};const[an,as2,ar]=pn(a.series),[bn,bs2,br]=pn(b.series);return an!==bn?an-bn:as2!==bs2?as2-bs2:ar.localeCompare(br);});
-  },[allProducts,typeFilter,appFilter,isBucketView,search]);
-
-  const bucketAg=filtered.filter(p=>p._src==="bucket"&&(p.application||"").toLowerCase().includes("ag"));
-  const bucketInd=filtered.filter(p=>p._src==="bucket"&&(p.application||"").toLowerCase().includes("ind"));
-  const bucketOther=filtered.filter(p=>p._src==="bucket"&&!bucketAg.includes(p)&&!bucketInd.includes(p));
-  const anyFilter=typeFilter!=="All"||appFilter!=="All"||search;
+  const buckets=allProducts.filter(p=>p._src==="bucket");
+  const brands=[...new Set(buckets.map(p=>p.vendor))].sort();
+  const brandCounts={};brands.forEach(b=>{brandCounts[b]=buckets.filter(p=>p.vendor===b).length;});
+  const brandSeries=selectedBrand?buckets.filter(p=>p.vendor===selectedBrand):null;
 
   function BucketSection({title,items,accentColor}){
     if(!items.length)return null;
@@ -346,32 +335,38 @@ export default function ElevBucketsView({onBack,onGoRFQ}) {
           <span style={{color:"#fff",fontSize:13,fontWeight:700}}>Elevator Buckets</span>
         </div>
         <div style={{display:"flex",gap:14,alignItems:"center"}}>
-          <span style={{fontSize:11,color:"rgba(255,255,255,.4)"}}>{loading?"Loading...":` ${filtered.length} products`}</span>
+          <span style={{fontSize:11,color:"rgba(255,255,255,.4)"}}>{loading?"Loading...":` ${allProducts.length} products`}</span>
           <a href="#" onClick={e=>{e.preventDefault();onGoRFQ();}} style={{padding:"6px 14px",borderRadius:8,background:"rgba(255,255,255,.12)",border:"1px solid rgba(255,255,255,.2)",color:"#fff",fontSize:12,fontWeight:700,textDecoration:"none"}}>RFQ Cart</a>
-        </div>
-      </div>
-      <div style={{background:"#fff",borderBottom:"1px solid #e5e7eb",padding:"14px 24px"}}>
-        <div style={{display:"flex",gap:10,flexWrap:"wrap",maxWidth:1200,margin:"0 auto"}}>
-          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search series, style, application, material..." style={{flex:1,minWidth:240,padding:"8px 14px",borderRadius:8,border:"1px solid #d1d5db",fontSize:13,outline:"none"}}/>
-          <select value={typeFilter} onChange={e=>{setTypeFilter(e.target.value);setAppFilter("All");}} style={{padding:"8px 12px",borderRadius:8,border:"1px solid #d1d5db",fontSize:13,color:NAVY,background:"#fff",cursor:"pointer"}}>
-            <option value="Elevator Bucket">Elevator Bucket</option>
-            <option value="All">All Types</option>
-          </select>
-          {isBucketView&&<select value={appFilter} onChange={e=>setAppFilter(e.target.value)} style={{padding:"8px 12px",borderRadius:8,border:"1px solid #d1d5db",fontSize:13,color:NAVY,background:"#fff",cursor:"pointer"}}>
-            <option value="All">All Applications</option>
-            <option value="Agricultural">Agricultural</option>
-            <option value="Industrial">Industrial</option>
-          </select>}
-          {anyFilter&&<button onClick={()=>{setTypeFilter("Elevator Bucket");setAppFilter("All");setSearch("");}} style={{padding:"8px 14px",borderRadius:8,border:"1px solid #d1d5db",background:"#f9fafb",cursor:"pointer",fontSize:13,color:"#6b7280"}}>Clear</button>}
         </div>
       </div>
       <div style={{maxWidth:1200,margin:"0 auto",padding:24}}>
         {loading?<div style={{textAlign:"center",padding:80,color:"#9ca3af",fontSize:14}}>Loading catalog...</div>:
-        filtered.length===0?<div style={{textAlign:"center",padding:80,color:"#9ca3af",fontSize:14}}>No products match your search.</div>:
+        !selectedBrand?
         <>
-          <BucketSection title={isBucketView&&appFilter!=="All"?"":"Agricultural Buckets"} items={bucketAg} accentColor="#065f46"/>
-          <BucketSection title={isBucketView&&appFilter!=="All"?"":"Industrial Buckets"} items={bucketInd} accentColor="#1d4ed8"/>
-          <BucketSection title="Steel / Other Buckets" items={bucketOther} accentColor="#374151"/>
+          <div style={{marginBottom:28}}>
+            <div style={{fontSize:22,fontWeight:800,color:NAVY,marginBottom:4}}>Elevator Bucket Brands</div>
+            <div style={{fontSize:14,color:"#9ca3af"}}>Select a manufacturer to view their bucket series</div>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:16}}>
+            {brands.map(brand=>(
+              <div key={brand} onClick={()=>setSelectedBrand(brand)} style={{background:"#fff",borderRadius:12,border:"1px solid #e5e7eb",padding:"18px 16px",cursor:"pointer",transition:"all .15s"}}
+                onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.1)";}}
+                onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow="";}}>
+                <div style={{fontSize:16,fontWeight:800,color:NAVY,marginBottom:6}}>{brand}</div>
+                <div style={{fontSize:13,color:"#9ca3af"}}>{brandCounts[brand]} series</div>
+              </div>
+            ))}
+          </div>
+        </>
+        :
+        <>
+          <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}>
+            <button onClick={()=>setSelectedBrand(null)} style={{padding:"6px 14px",borderRadius:8,background:"rgba(0,60,91,.1)",border:"1px solid #d1d5db",color:NAVY,fontSize:12,fontWeight:700,cursor:"pointer"}}>← {selectedBrand}</button>
+            <span style={{fontSize:13,color:"#9ca3af"}}>{brandSeries?.length||0} series</span>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:16}}>
+            {brandSeries?.map(rec=><BucketCard key={rec.id} rec={rec} onClick={()=>setSelected(rec)}/>)}
+          </div>
         </>}
       </div>
       {selected&&<BucketStyleModal rec={selected} onClose={()=>setSelected(null)}/>}
