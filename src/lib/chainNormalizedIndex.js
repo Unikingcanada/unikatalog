@@ -14,8 +14,10 @@ import { NORMALIZED_CHAINS } from "./chainNormalizedDictionary";
 import { NORMALIZED_CHAINS_EXPANSION } from "./chainNormalizedExpansion";
 import { NORMALIZED_CHAINS_EXPANSION_2 } from "./chainNormalizedExpansion2";
 import { DH_MERGE_REFS, DH_NEW_CHAINS } from "./donghuaNormalizedChains";
+import { UK_MERGE_REFS, UK_NEW_CHAINS } from "./unikingBulkChains";
 export { AL_SOURCE, AL_CATEGORIES, AL_ANSI_SINGLE_STRAND, AL_WELDED_MILL_CHAINS, AL_ATTACHMENT_CATEGORIES, AL_MATERIAL_VARIANTS, getALSpecByChainId, getALConflicts, buildALSourceEntry } from "./alliedLockeSourceRecord";
 export { DH_SOURCE, DH_CATEGORIES, DH_MATERIAL_VARIANTS } from "./donghuaSourceRecord";
+export { UK_BULK_SOURCE, UK_APPLICATION_TAGS, UK_CATALOG_SECTIONS } from "./unikingBulkSourceRecord";
 
 /** Complete normalized chain catalog — base + all expansions, deduplicated by chain_id,
  *  with Donghua merge-refs patched onto existing entries */
@@ -29,6 +31,7 @@ export const ALL_NORMALIZED_CHAINS = (() => {
     ...NORMALIZED_CHAINS_EXPANSION,
     ...NORMALIZED_CHAINS_EXPANSION_2,
     ...DH_NEW_CHAINS,
+    ...UK_NEW_CHAINS,
   ]) {
     if (!seen.has(chain.chain_id)) {
       seen.add(chain.chain_id);
@@ -41,16 +44,36 @@ export const ALL_NORMALIZED_CHAINS = (() => {
   for (const ref of DH_MERGE_REFS) {
     const chain = merged.find(c => c.chain_id === ref.chain_id);
     if (!chain) continue;
-    const alreadyHasDH = chain.source_refs.some(
+    const alreadyHas = chain.source_refs.some(
       r => r.manufacturer === "Donghua" && r.code === ref.code
     );
-    if (!alreadyHasDH) {
+    if (!alreadyHas) {
       chain.source_refs.push({
         manufacturer: "Donghua",
         code: ref.code,
         confidence: ref.confidence,
         catalog_page: ref.catalog_page,
         catalog_url: "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+        notes: ref.notes || null,
+      });
+    }
+  }
+
+  // 3. Patch UK_MERGE_REFS onto existing chains (add Uniking as primary baseline source)
+  for (const ref of UK_MERGE_REFS) {
+    const chain = merged.find(c => c.chain_id === ref.chain_id);
+    if (!chain) continue;
+    const alreadyHas = chain.source_refs.some(
+      r => r.manufacturer === "Uniking" && r.code === ref.code
+    );
+    if (!alreadyHas) {
+      // Uniking is priority 0 — insert at FRONT of source_refs array
+      chain.source_refs.unshift({
+        manufacturer: "Uniking",
+        code: ref.code,
+        confidence: ref.confidence,
+        catalog_page: ref.catalog_page,
+        catalog_url: "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
         notes: ref.notes || null,
       });
     }
