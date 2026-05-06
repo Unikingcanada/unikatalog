@@ -13,7 +13,7 @@ const CHAIN_SUBTYPE_KEYS = new Set([
 ]);
 
 const CATEGORY_IMAGES = {
-  "__chain__":             "https://chains.alliedlocke.com/ImgMedium/PRC%20Ansi%20Drawing.jpg",
+  "__chain__":             "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/b20f0b73a_Gemini_Generated_Image_4tqfl4tqfl4tqfl4.png",
   "Modular Belt":          "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/27e386ff8_modular-plastic-belting-3_2.jpg",
   "Elevator Bucket":       "https://maxilift.com/hs-fs/hubfs/image%2025%20(10).png?width=500",
   "__tabletop__":          "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80&auto=format&fit=crop",
