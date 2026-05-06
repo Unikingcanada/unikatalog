@@ -14,6 +14,7 @@ import { NORMALIZED_CHAINS } from "./chainNormalizedDictionary";
 import { NORMALIZED_CHAINS_EXPANSION } from "./chainNormalizedExpansion";
 import { NORMALIZED_CHAINS_EXPANSION_2 } from "./chainNormalizedExpansion2";
 import { DH_MERGE_REFS, DH_NEW_CHAINS } from "./donghuaNormalizedChains";
+import { DH_DEEP_MERGE_REFS, DH_DEEP_NEW_CHAINS } from "./donghuaDeepExpansion";
 import { UK_MERGE_REFS, UK_NEW_CHAINS } from "./unikingBulkChains";
 export { AL_SOURCE, AL_CATEGORIES, AL_ANSI_SINGLE_STRAND, AL_WELDED_MILL_CHAINS, AL_ATTACHMENT_CATEGORIES, AL_MATERIAL_VARIANTS, getALSpecByChainId, getALConflicts, buildALSourceEntry } from "./alliedLockeSourceRecord";
 export { DH_SOURCE, DH_CATEGORIES, DH_MATERIAL_VARIANTS } from "./donghuaSourceRecord";
@@ -31,6 +32,7 @@ export const ALL_NORMALIZED_CHAINS = (() => {
     ...NORMALIZED_CHAINS_EXPANSION,
     ...NORMALIZED_CHAINS_EXPANSION_2,
     ...DH_NEW_CHAINS,
+    ...DH_DEEP_NEW_CHAINS,
     ...UK_NEW_CHAINS,
   ]) {
     if (!seen.has(chain.chain_id)) {
@@ -40,8 +42,27 @@ export const ALL_NORMALIZED_CHAINS = (() => {
     }
   }
 
-  // 2. Patch DH_MERGE_REFS onto existing chains (add Donghua as source where not already present)
+  // 2a. Patch DH_MERGE_REFS (Phase 1–2) onto existing chains
   for (const ref of DH_MERGE_REFS) {
+    const chain = merged.find(c => c.chain_id === ref.chain_id);
+    if (!chain) continue;
+    const alreadyHas = chain.source_refs.some(
+      r => r.manufacturer === "Donghua" && r.code === ref.code
+    );
+    if (!alreadyHas) {
+      chain.source_refs.push({
+        manufacturer: "Donghua",
+        code: ref.code,
+        confidence: ref.confidence,
+        catalog_page: ref.catalog_page,
+        catalog_url: "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+        notes: ref.notes || null,
+      });
+    }
+  }
+
+  // 2b. Patch DH_DEEP_MERGE_REFS (Phase 3 deep ingestion) onto existing chains
+  for (const ref of DH_DEEP_MERGE_REFS) {
     const chain = merged.find(c => c.chain_id === ref.chain_id);
     if (!chain) continue;
     const alreadyHas = chain.source_refs.some(

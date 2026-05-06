@@ -4,10 +4,25 @@
  * Official Donghua Chain source record for the Uniking chain procurement platform.
  *
  * SOURCE ID:    donghua_official
- * IMPORT DATE:  2026-05-06
+ * IMPORT DATE:  2026-05-06 (Phase 1–2) / 2026-05-06 (Phase 3 deep ingestion)
  * SOURCE URL:   http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf
  * TRUST LEVEL:  Trusted (Priority 1)
  * SCOPE:        Chains ecosystem ONLY
+ *
+ * PHASE 3 DEEP EXPANSION (donghuaDeepExpansion.js):
+ *   3A — Attachment chains (A1/A2/K1/K2 ANSI configs)
+ *   3B — Engineering class bushed conveyor (M56, M80, M112, P102, P142)
+ *   3C — Welded steel chains (102B, 132B, 160B)
+ *   3D — Steel pintle chains (667, 667H, 667X, 88K, 102B-P)
+ *   3E — Agricultural conveyor variants (CA550F2, CA550V5, CA557V5, S77V1, CA2060HF5)
+ *   3F — Specialty conveyor (en-masse 2.609\", F6 scraper 102mm)
+ *   3G — Bucket elevator (VC series, FU160, TH102 high-speed)
+ *   3H — Hollow pin extensions (100HP, C2060HP, C2080HP)
+ *   3I — Double pitch attachment chains (C2060H-A1, C2080H-A1)
+ *   3J — Connecting links & offset links (CL-40/60/80, OL-40/80)
+ *   3K — Corrosion-resistant variants (zinc-plated, nickel-plated, dacromet)
+ *   3L — SH Series high strength heavy duty (60SH, 80SH, 100SH)
+ *   3M — Additional leaf chain sizes (AL1266, BL2034, BL2046)
  *
  * NORMALIZATION RULES:
  *   - brand_specific_products: false (no Donghua-only duplicates for standard ANSI/ISO chains)
@@ -62,7 +77,9 @@ export const DH_SOURCE = {
     specialty_chains_as_new_entries: true,
   },
   confidence_default: "Confirmed",
-  notes: "Donghua A-series → ANSI families. Donghua B-series → BS/ISO families. Heavy (H) variants preserved. Specialty chains (sugar mill, palm oil, escalator, lumber, bucket elevator) as new normalized entries.",
+  notes: "Donghua A-series → ANSI families. Donghua B-series → BS/ISO families. Heavy (H) variants preserved. Specialty chains (sugar mill, palm oil, escalator, lumber, bucket elevator) as new normalized entries. Phase 3: deep expansion covers attachment chains, engineering class bushed conveyor, welded steel, steel pintle, agricultural variants, specialty conveyor, bucket elevator, hollow pin, double pitch attachment, connecting links, corrosion-resistant variants, SH series, additional leaf chains.",
+  deep_ingestion_file: "lib/donghuaDeepExpansion.js",
+  total_phases_complete: 3,
 };
 
 // ─── Donghua Category → Uniking Family Mapping ────────────────────────────────
