@@ -1,0 +1,65 @@
+{
+  "name": "ElevatorBucket",
+  "type": "object",
+  "properties": {
+    "series": {
+      "type": "string",
+      "description": "Bucket series/model name"
+    },
+    "style": {
+      "type": "string",
+      "description": "Style description"
+    },
+    "vendor": {
+      "type": "string",
+      "description": "Brand/vendor"
+    },
+    "application": {
+      "type": "string",
+      "description": "Application type (Agricultural / Industrial)"
+    },
+    "discharge_type": {
+      "type": "string",
+      "description": "Discharge type"
+    },
+    "duty": {
+      "type": "string",
+      "description": "Duty rating"
+    },
+    "material": {
+      "type": "string",
+      "description": "Available materials (e.g. Poly/Nylon/Urethane)"
+    },
+    "profile": {
+      "type": "string",
+      "description": "Bucket profile"
+    },
+    "bucket_sizes": {
+      "type": "string",
+      "description": "Available sizes summary"
+    },
+    "bucket_sizes_detail": {
+      "type": "string",
+      "description": "JSON array of size detail objects"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "tech_doc_url": {
+      "type": "string",
+      "description": "Technical doc URL"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Product image URL"
+    },
+    "page_range": {
+      "type": "string",
+      "description": "Catalog page reference"
+    }
+  },
+  "required": [
+    "series"
+  ]
+}

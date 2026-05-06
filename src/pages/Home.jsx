@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { UniCatalog, DonghuaChain, MacChainProduct } from "@/api/entities";
+import { UniCatalog, CatalogProduct, ElevatorBucket, DonghuaChain, MacChainProduct } from "@/api/entities";
 import RFQCartView from "@/components/RFQCartView";
 import WireMeshConfigurator from "@/components/WireMeshConfigurator";
 import ElevBucketsView from "@/components/elevatorBuckets/ElevBucketsView";
@@ -1847,9 +1847,9 @@ export default function Home() {
     }
     async function load() {
       const s=(p)=>p.catch(()=>[]);
-      const [uni,allied,donghua]=await Promise.all([s(fetchAll(UniCatalog)),s(fetchAll(MacChainProduct)),s(fetchAll(DonghuaChain))]);
+      const [cat,elev,uni,allied,donghua]=await Promise.all([s(fetchAll(CatalogProduct)),s(fetchAll(ElevatorBucket)),s(fetchAll(UniCatalog)),s(fetchAll(MacChainProduct)),s(fetchAll(DonghuaChain))]);
       setRawMacRecords(allied||[]);
-      setAllData([...(uni||[]).map(normalizeUniCatalog),...(allied||[]).map(normalizeAllied),...(donghua||[]).map(normalizeDonghuaChain),...FOURB_PRODUCTS.map(normalizeFourBProduct)]);
+      setAllData([...(cat||[]).map(normalizeCatalogProduct),...(elev||[]).map(normalizeElevatorBucket),...(uni||[]).map(normalizeUniCatalog),...(allied||[]).map(normalizeAllied),...(donghua||[]).map(normalizeDonghuaChain),...FOURB_PRODUCTS.map(normalizeFourBProduct)]);
       setLoading(false);
     }
     load();

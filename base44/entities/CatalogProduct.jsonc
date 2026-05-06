@@ -1,0 +1,70 @@
+{
+  "name": "CatalogProduct",
+  "type": "object",
+  "properties": {
+    "series": {
+      "type": "string",
+      "description": "Product series name"
+    },
+    "style": {
+      "type": "string",
+      "description": "Style or variant"
+    },
+    "category": {
+      "type": "string",
+      "description": "Product category (e.g. Modular Plastic Belt)"
+    },
+    "vendor": {
+      "type": "string",
+      "description": "Brand/vendor"
+    },
+    "pitch_in": {
+      "type": "number",
+      "description": "Pitch in inches"
+    },
+    "pitch_mm": {
+      "type": "number",
+      "description": "Pitch in mm"
+    },
+    "min_width_in": {
+      "type": "number",
+      "description": "Minimum width in inches"
+    },
+    "materials": {
+      "type": "string",
+      "description": "Available materials"
+    },
+    "hinge_style": {
+      "type": "string",
+      "description": "Hinge style"
+    },
+    "open_area": {
+      "type": "string",
+      "description": "Open area percentage"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    },
+    "tech_doc_url": {
+      "type": "string",
+      "description": "Technical documentation URL"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Product image URL"
+    },
+    "belt_data": {
+      "type": "string",
+      "description": "JSON belt material data"
+    },
+    "sprocket_data": {
+      "type": "string",
+      "description": "JSON sprocket compatibility data"
+    }
+  },
+  "required": [
+    "series",
+    "category"
+  ]
+}
