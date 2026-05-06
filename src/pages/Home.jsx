@@ -1877,45 +1877,50 @@ export default function Home() {
   if (currentPage==="wireMesh") return <WireMeshConfigurator onBack={goBack} onGoRFQ={goRFQ}/>;if(currentPage==="fourBCatalog")return<FourBCatalog onBack={goBack} onGoRFQ={goRFQ}/>;
   if (currentPage==="intraloxCatalog") return <IntraloxCatalog onBack={goBack} onGoRFQ={goRFQ}/>;  if (currentPage==="chainCatalog") return <ChainCatalog onBack={goBack} onGoRFQ={goRFQ}/>;
   if (["tableTopChain","tableTopChains"].includes(currentPage)) return <div style={{minHeight:"100vh",background:"#f8fafc"}}><TableTopChainCatalog onBack={goBack}/></div>;if(currentPage==="rfqCart")return<RFQCartView onBack={goBack}/>;return(
-    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column", overscrollBehavior: "contain" }}>
-      <TopBar onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0, 0);}} />
-      <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "20px clamp(12px,4vw,36px)", boxSizing: "border-box" }}>
-        {view !== "home" ? <Breadcrumb items={breadcrumbs} onNav={navTo} /> : null}
-        {loading ?
-        <div style={{ textAlign: "center", padding: 80, color: C.muted, fontSize: 14 }}>Loading catalog...</div> :
-        view === "home" ?
-        <div>
-            {/* Global Search Bar — improved fuzzy search with instant dropdown */}
-            <div style={{ marginBottom: 32 }}>
-              <HomeGlobalSearch allData={allData} onSelect={(p) => setGlobalSelected(p)} />
-            </div>
+    <AppLayout hideHeader={false}>
+      <div style={{ minHeight: "auto", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif", display: "flex", flexDirection: "column", overscrollBehavior: "contain" }}>
+        <TopBar onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0, 0);}} />
+        <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "20px clamp(12px,4vw,36px)", boxSizing: "border-box" }}>
+          {view !== "home" ? <Breadcrumb items={breadcrumbs} onNav={navTo} /> : null}
+          {loading ?
+          <div style={{ textAlign: "center", padding: 80, color: C.muted, fontSize: 14 }}>Loading catalog...</div> :
+          view === "home" ?
+          <div>
+              {/* Global Search Bar — improved fuzzy search with instant dropdown */}
+              <div style={{ marginBottom: 32 }}>
+                <HomeGlobalSearch allData={allData} onSelect={(p) => setGlobalSelected(p)} />
+              </div>
 
-            <TypeGrid types={availableTypes} counts={typeCounts} onSelect={selectType} />
+              <TypeGrid types={availableTypes} counts={typeCounts} onSelect={selectType} />
 
-            {/* Global search result modal */}
-            {globalSelected && (() => {
-            const rawRecord = globalSelected._source === "mac" || globalSelected._source === "allied" ?
-            rawMacRecords.find((r) => r.id === globalSelected.id) || null : null;
-            if (rawRecord) return <MacProductModal record={rawRecord} slugMap={{}} sprocketMap={{}} loadSprockets={() => {}} onSelect={(r) => setGlobalSelected(r)} onClose={() => setGlobalSelected(null)} />;
-            return <ProductModal product={globalSelected} showBrand={true} onClose={() => setGlobalSelected(null)} />;
-          })()}
-          </div> :
-        view === "chains" ?
-        <ChainSubGrid
-          types={availableTypes.filter((t) => CHAIN_SUBTYPE_KEYS.has(t.key))}
-          counts={typeCounts}
-          onSelect={selectType} /> :
+              {/* Global search result modal */}
+              {globalSelected && (() => {
+              const rawRecord = globalSelected._source === "mac" || globalSelected._source === "allied" ?
+              rawMacRecords.find((r) => r.id === globalSelected.id) || null : null;
+              if (rawRecord) return <MacProductModal record={rawRecord} slugMap={{}} sprocketMap={{}} loadSprockets={() => {}} onSelect={(r) => setGlobalSelected(r)} onClose={() => setGlobalSelected(null)} />;
+              return <ProductModal product={globalSelected} showBrand={true} onClose={() => setGlobalSelected(null)} />;
+            })()}
+            </div> :
+          view === "chains" ?
+          <ChainSubGrid
+            types={availableTypes.filter((t) => CHAIN_SUBTYPE_KEYS.has(t.key))}
+            counts={typeCounts}
+            onSelect={selectType} /> :
 
-        view === "engineered_subs" ?
-        <EngineeredSubGrid allProducts={allData} onSelect={selectEngineeredSub} /> :
-        view === "ansi_subs" ?
-        <AnsiSubGrid allProducts={allData} onSelect={selectAnsiSub} /> :
-        view === "welded_products" ?
-        <WeldedSeriesView MacProductModal={MacProductModal} /> :
-        view === "brands" ?
-        <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} /> :
-        <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} rawMacRecords={rawMacRecords} />
-        }
-      <FloatingRFQButton onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0,0);}} />
+          view === "engineered_subs" ?
+          <EngineeredSubGrid allProducts={allData} onSelect={selectEngineeredSub} /> :
+          view === "ansi_subs" ?
+          <AnsiSubGrid allProducts={allData} onSelect={selectAnsiSub} /> :
+          view === "welded_products" ?
+          <WeldedSeriesView MacProductModal={MacProductModal} /> :
+          view === "brands" ?
+          <BrandGrid products={typeProducts} typeDef={TYPE_MAP[selectedType]} onSelect={selectBrand} /> :
+          <ProductList typeKey={selectedType} brand={selectedBrand} products={viewProducts} showBrand={showBrand} rawMacRecords={rawMacRecords} />
+          }
+          </div>
+        </div>
+        <FloatingRFQButton onGoRFQ={() => {setCurrentPage("rfqCart");window.scrollTo(0,0);}} />
       </div>
-    </AppLayout>);}
+    </AppLayout>
+  );
+  }
