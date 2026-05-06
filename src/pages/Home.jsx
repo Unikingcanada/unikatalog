@@ -107,21 +107,21 @@ function addToRFQCart(product) {
 }
 
 function FloatingRFQButton({ onGoRFQ }) {
-  const [count, setCount] = useState(() => getRFQCart().length);
-  const [pulse, setPulse] = useState(false);
-  useEffect(() => {
-    const update = () => {const n = getRFQCart().length;if (n > count) setPulse(true);setCount(n);setTimeout(() => setPulse(false), 600);};
-    window.addEventListener("rfq_cart_updated", update);
-    return () => window.removeEventListener("rfq_cart_updated", update);
-  }, [count]);
-  if (count === 0) return null;
-  return (
-    <a href="#" onClick={(e) => {e.preventDefault();onGoRFQ && onGoRFQ();}} style={{ textDecoration: "none" }}>
-      <div style={{ position: "fixed", bottom: 28, right: 28, zIndex: 9999, background: "#003c5b", color: "#fff", borderRadius: 50, width: 60, height: 60, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(0,60,91,0.45)", cursor: "pointer", transform: pulse ? "scale(1.15)" : "scale(1)", transition: "transform 0.2s", border: "2px solid #C9A84C" }}>
-        <span style={{ fontSize: 22 }}>📋</span>
-        <div style={{ position: "absolute", top: -6, right: -6, background: "#2563eb", color: "#fff", borderRadius: "50%", width: 22, height: 22, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, border: "2px solid #fff" }}>{count}</div>
-      </div>
-    </a>);
+   const [count, setCount] = useState(() => getRFQCart().length);
+   const [pulse, setPulse] = useState(false);
+   useEffect(() => {
+     const update = () => {const n = getRFQCart().length;if (n > count) setPulse(true);setCount(n);setTimeout(() => setPulse(false), 600);};
+     window.addEventListener("rfq_cart_updated", update);
+     return () => window.removeEventListener("rfq_cart_updated", update);
+   }, [count]);
+   if (count === 0) return null;
+   return (
+     <a href="#" onClick={(e) => {e.preventDefault();onGoRFQ && onGoRFQ();}} style={{ textDecoration: "none" }}>
+       <div style={{ position: "fixed", bottom: 28, right: 28, zIndex: 9999, background: "#003c5b", color: "#fff", borderRadius: 50, width: 60, height: 60, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 20px rgba(0,60,91,0.45)", cursor: "pointer", transform: pulse ? "scale(1.15)" : "scale(1)", transition: "transform 0.2s", border: "2px solid #C9A84C" }}>
+         <svg style={{ width: 24, height: 24, fill: "currentColor" }} viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+         <div style={{ position: "absolute", top: -6, right: -6, background: "#2563eb", color: "#fff", borderRadius: "50%", width: 22, height: 22, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, border: "2px solid #fff" }}>{count}</div>
+       </div>
+     </a>);
 
 }
 
@@ -1161,20 +1161,20 @@ function FilterBar({ typeKey, allProducts, activeFilters, onChange }) {
 // ─── View Toggle Button ───────────────────────────────────────────────────────
 
 function ViewToggle({ view, onChange }) {
-  return (
-    <div style={{ display: "flex", border: "1px solid " + C.border, borderRadius: 7, overflow: "hidden" }}>
-      {[
-      { key: "grid", icon: "⊞", title: "Card view" },
-      { key: "list", icon: "☰", title: "List view" }].
-      map(({ key, icon, title }) =>
-      <button key={key} title={title} onClick={() => onChange(key)}
-      style={{ padding: "6px 11px", background: view === key ? C.navy : "#fff", color: view === key ? "#fff" : C.muted, border: "none", cursor: "pointer", fontSize: 15, fontWeight: 700, transition: "background 0.15s, color 0.15s", borderRight: key === "grid" ? "1px solid " + C.border : "none" }}>
-          {icon}
-        </button>
-      )}
-    </div>);
+   return (
+     <div style={{ display: "flex", border: "1px solid " + C.border, borderRadius: 7, overflow: "hidden" }}>
+       {[
+       { key: "grid", label: "Grid", title: "Card view" },
+       { key: "list", label: "List", title: "List view" }].
+       map(({ key, label, title }) =>
+       <button key={key} title={title} onClick={() => onChange(key)}
+       style={{ padding: "6px 11px", background: view === key ? C.navy : "#fff", color: view === key ? "#fff" : C.muted, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 700, transition: "background 0.15s, color 0.15s", borderRight: key === "grid" ? "1px solid " + C.border : "none" }}>
+           {label}
+         </button>
+       )}
+     </div>);
 
-}
+ }
 
 // ─── Product List ─────────────────────────────────────────────────────────────
 function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacRecords }) {
