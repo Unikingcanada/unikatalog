@@ -60,35 +60,46 @@ function LoadTable({ table }) {
   );
 }
 
+// ─── Shaft extension lookup (Interroll "B" dimension per shaft type) ─────────
+// Returns the standard shaft projection beyond the tube face on each side, in mm
+function getShaftExtMm(shaftObj) {
+  if (!shaftObj) return 10;
+  const code = shaftObj.code || "";
+  if (/spring/i.test(code)) return 13;   // spring adds ~13mm each side
+  if (/male/i.test(code)) return 16;     // male thread projects more
+  if (/variable/i.test(code)) return 10;
+  if (/bolt_ip55/i.test(code)) return 10;
+  return 10; // female / fixed / flat — standard 10mm
+}
+
 // ─── Roller Schematic ─────────────────────────────────────────────────────────
-// Fixed-size frame — roller proportions scale inside, but container stays constant
-function RollerSchematic({ series, rl, tubeIdx, sleeve }) {
+function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial }) {
   const tube = series.tubes[tubeIdx] || series.tubes[0];
   const tubeMm = tube?.tube_mm || 50;
   const wallMm = tube?.wall_mm || 1.5;
   const rlVal = parseInt(rl) || 600;
+  const shaftExtMm = getShaftExtMm(shaftObj);
 
-  // Fixed SVG canvas — never changes size
-  const VW = 520, VH = 180;
-  const shaftLen = 32;
-  const drawRL = VW - shaftLen * 2 - 20; // constant roller body width
-  const cx = shaftLen + 10; // left tube edge
+  // Fixed SVG canvas
+  const VW = 560, VH = 200;
+  const shaftVisLen = 40;  // visual shaft arm length
+  const cx = shaftVisLen + 4;
+  const drawRL = VW - shaftVisLen * 2 - 8;
 
-  // Scale tube diameter to fit within fixed height, max 120px visual height
-  const maxVisualDia = 120;
+  // Scale tube diameter
+  const maxVisualDia = 110;
   const minVisualDia = 24;
-  // Map tube_mm 16–89 → visual range
   const visualDia = Math.max(minVisualDia, Math.min(maxVisualDia, (tubeMm / 89) * maxVisualDia));
   const visualWall = Math.max(2, wallMm * (visualDia / tubeMm));
 
-  const cy = VH / 2;
+  const cy = VH / 2 - 8; // shift up a bit to leave room for dim lines below
   const tubeY1 = cy - visualDia / 2;
   const tubeY2 = cy + visualDia / 2;
   const innerY1 = tubeY1 + visualWall;
   const innerY2 = tubeY2 - visualWall;
   const color = series.color || NAVY;
 
-  // Sleeve thickness (visual)
+  // Sleeve
   const hasSleeve = sleeve && sleeve !== "None";
   const sleeveThick = hasSleeve ? Math.max(4, visualDia * 0.09) : 0;
   let sleeveColor = "#f59e0b";
@@ -96,15 +107,24 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve }) {
   if (/pvc/i.test(sleeve || "")) sleeveColor = "#60a5fa";
   if (/lagging/i.test(sleeve || "")) sleeveColor = "#6b7280";
 
-  const bfInches = (rlVal / 25.4).toFixed(2);
+  // Dimension labels
+  const fmtMm = v => imperial ? `${(v / 25.4).toFixed(2)}"` : `${v} mm`;
+  const rlLabel = `RL = ${fmtMm(rlVal)}`;
+  const bLabel = `B = ${fmtMm(shaftExtMm)}`;
+  const elMm = rlVal + shaftExtMm * 2;
+  const elLabel = `EL = ${fmtMm(elMm)}`;
+
+  // Dim line Y positions
+  const dimY1 = tubeY2 + 16;  // RL dim line
+  const dimY2 = tubeY2 + 34;  // EL dim line
+  const shaftDimY = tubeY1 - 16; // B dim line (above)
 
   return (
     <div style={{ background: "#f1f5f9", borderRadius: 10, padding: "14px 16px", border: "1px solid " + C.border }}>
       <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 8 }}>
-        Live Schematic — RL = {rlVal} mm ({bfInches}")
+        Live Schematic — {rlLabel} · EL = {fmtMm(elMm)}
       </div>
-      {/* Fixed-size SVG container */}
-      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" height={VH} style={{ display: "block", maxWidth: 560 }}>
+      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" height={VH} style={{ display: "block", maxWidth: 580 }}>
         <defs>
           <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
             <path d="M0,0 L6,3 L0,6 Z" fill="#64748b" />
@@ -112,11 +132,23 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve }) {
           <marker id="arrL" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
             <path d="M6,0 L0,3 L6,6 Z" fill="#64748b" />
           </marker>
+          <marker id="arrB" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#2563eb" />
+          </marker>
+          <marker id="arrBL" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
+            <path d="M6,0 L0,3 L6,6 Z" fill="#2563eb" />
+          </marker>
         </defs>
 
-        {/* Shafts */}
-        <line x1={0} y1={cy} x2={cx} y2={cy} stroke="#94a3b8" strokeWidth={4} strokeLinecap="round" />
-        <line x1={cx + drawRL} y1={cy} x2={VW} y2={cy} stroke="#94a3b8" strokeWidth={4} strokeLinecap="round" />
+        {/* Shaft arms */}
+        <line x1={0} y1={cy} x2={cx} y2={cy} stroke="#64748b" strokeWidth={5} strokeLinecap="round" />
+        <line x1={cx + drawRL} y1={cy} x2={VW} y2={cy} stroke="#64748b" strokeWidth={5} strokeLinecap="round" />
+
+        {/* Sleeve overlay — drawn BEHIND tube so tube border is on top */}
+        {hasSleeve && (
+          <rect x={cx} y={tubeY1 - sleeveThick} width={drawRL} height={visualDia + sleeveThick * 2}
+            rx={visualDia / 6} fill={sleeveColor} fillOpacity={0.35} stroke={sleeveColor} strokeWidth={1.5} />
+        )}
 
         {/* Tube body */}
         <rect x={cx} y={tubeY1} width={drawRL} height={visualDia}
@@ -126,19 +158,12 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve }) {
         <rect x={cx + visualWall} y={innerY1} width={drawRL - visualWall * 2} height={innerY2 - innerY1}
           rx={(innerY2 - innerY1) / 8} fill="#fff" fillOpacity={0.55} stroke={color} strokeWidth={0.8} strokeDasharray="5 3" />
 
-        {/* Sleeve / covering overlay */}
+        {/* Sleeve top strip label */}
         {hasSleeve && (
-          <>
-            <rect x={cx} y={tubeY1 - sleeveThick} width={drawRL} height={sleeveThick}
-              rx={3} fill={sleeveColor} fillOpacity={0.75} />
-            <rect x={cx} y={tubeY2} width={drawRL} height={sleeveThick}
-              rx={3} fill={sleeveColor} fillOpacity={0.75} />
-            {/* Sleeve label */}
-            <text x={cx + drawRL - 6} y={tubeY1 - sleeveThick / 2 + 4}
-              textAnchor="end" fontSize={9} fill={sleeveColor} fontWeight="700">
-              {sleeve}
-            </text>
-          </>
+          <text x={cx + drawRL - 6} y={tubeY1 - sleeveThick - 3}
+            textAnchor="end" fontSize={9} fill={sleeveColor} fontWeight="700" fontFamily="Arial,sans-serif">
+            {sleeve}
+          </text>
         )}
 
         {/* Tube label */}
@@ -147,28 +172,66 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve }) {
           Ø{tubeMm} × {wallMm} mm
         </text>
 
-        {/* RL dimension line */}
-        <line x1={cx} y1={tubeY2 + 18} x2={cx + drawRL} y2={tubeY2 + 18}
+        {/* ── RL dimension line (body length) ── */}
+        <line x1={cx} y1={dimY1} x2={cx + drawRL} y2={dimY1}
           stroke="#64748b" strokeWidth={1} markerEnd="url(#arr)" markerStart="url(#arrL)" />
-        <text x={cx + drawRL / 2} y={tubeY2 + 30}
-          textAnchor="middle" fontSize={10} fill="#64748b" fontFamily="Arial,sans-serif">
-          RL = {rlVal} mm
+        <text x={cx + drawRL / 2} y={dimY1 + 11}
+          textAnchor="middle" fontSize={10} fill="#64748b" fontFamily="Arial,sans-serif" fontWeight="600">
+          {rlLabel}
         </text>
 
-        {/* Shaft labels */}
-        <text x={cx / 2} y={cy - visualDia / 2 - 6}
-          textAnchor="middle" fontSize={9} fill="#94a3b8" fontFamily="Arial,sans-serif">Shaft</text>
-        <text x={cx + drawRL + shaftLen / 2} y={cy - visualDia / 2 - 6}
-          textAnchor="middle" fontSize={9} fill="#94a3b8" fontFamily="Arial,sans-serif">Shaft</text>
+        {/* ── EL dimension line (overall end-to-end) ── */}
+        <line x1={0} y1={dimY2} x2={VW} y2={dimY2}
+          stroke="#374151" strokeWidth={1} strokeDasharray="4 2" markerEnd="url(#arr)" markerStart="url(#arrL)" />
+        <text x={VW / 2} y={dimY2 + 11}
+          textAnchor="middle" fontSize={10} fill="#374151" fontFamily="Arial,sans-serif" fontWeight="600">
+          {elLabel}
+        </text>
+
+        {/* ── B dimension (left shaft extension) ── */}
+        <line x1={0} y1={shaftDimY} x2={cx} y2={shaftDimY}
+          stroke="#2563eb" strokeWidth={1} markerEnd="url(#arrB)" markerStart="url(#arrBL)" />
+        <text x={cx / 2} y={shaftDimY - 3}
+          textAnchor="middle" fontSize={9} fill="#2563eb" fontFamily="Arial,sans-serif" fontWeight="700">
+          B={fmtMm(shaftExtMm)}
+        </text>
+
+        {/* ── B dimension (right shaft extension) ── */}
+        <line x1={cx + drawRL} y1={shaftDimY} x2={VW} y2={shaftDimY}
+          stroke="#2563eb" strokeWidth={1} markerEnd="url(#arrB)" markerStart="url(#arrBL)" />
+        <text x={cx + drawRL + shaftVisLen / 2} y={shaftDimY - 3}
+          textAnchor="middle" fontSize={9} fill="#2563eb" fontFamily="Arial,sans-serif" fontWeight="700">
+          B={fmtMm(shaftExtMm)}
+        </text>
+
+        {/* Shaft label */}
+        <text x={cx / 2} y={cy - visualDia / 2 - (hasSleeve ? sleeveThick : 0) - 18}
+          textAnchor="middle" fontSize={8} fill="#94a3b8" fontFamily="Arial,sans-serif">Shaft ext.</text>
+        <text x={cx + drawRL + shaftVisLen / 2} y={cy - visualDia / 2 - (hasSleeve ? sleeveThick : 0) - 18}
+          textAnchor="middle" fontSize={8} fill="#94a3b8" fontFamily="Arial,sans-serif">Shaft ext.</text>
       </svg>
 
-      {/* Sleeve legend */}
-      {hasSleeve && (
-        <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: sleeveColor }}>
-          <div style={{ width: 12, height: 12, borderRadius: 2, background: sleeveColor, opacity: 0.8 }} />
-          <span style={{ fontWeight: 600 }}>{sleeve} (shown in color)</span>
+      {/* Legend row */}
+      <div style={{ marginTop: 6, display: "flex", gap: 14, flexWrap: "wrap", fontSize: 11 }}>
+        {hasSleeve && (
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: sleeveColor }}>
+            <div style={{ width: 12, height: 12, borderRadius: 2, background: sleeveColor, opacity: 0.7 }} />
+            <span style={{ fontWeight: 600 }}>{sleeve}</span>
+          </div>
+        )}
+        <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#64748b" }}>
+          <div style={{ width: 16, height: 2, background: "#64748b" }} />
+          <span>RL = body length</span>
         </div>
-      )}
+        <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#374151" }}>
+          <div style={{ width: 16, height: 2, background: "#374151", borderTop: "2px dashed #374151" }} />
+          <span>EL = end-to-end</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#2563eb" }}>
+          <div style={{ width: 16, height: 2, background: "#2563eb" }} />
+          <span>B = shaft extension</span>
+        </div>
+      </div>
     </div>
   );
 }
@@ -276,26 +339,63 @@ function buildTearSheetHTML(series, config) {
   const tubeMm = tubeObj?.tube_mm || 50;
   const wallMm = tubeObj?.wall_mm || 1.5;
   const color = series.color || "#1A3A5C";
-  const scale = Math.min(420, rlVal) / rlVal;
-  const drawRL = rlVal * scale;
-  const cx = 50;
-  const svgH = tubeMm * 2.4 + 50;
-  const cy = svgH / 2;
+  const bMm = getShaftExtMm(shaftObj);
+  const elMm = rlVal + bMm * 2;
+
+  // Sleeve
+  const hasSleeve = sleeve && sleeve !== "None";
+  let sleeveColor = "#f59e0b";
+  if (/pu/i.test(sleeve || "")) sleeveColor = "#a78bfa";
+  if (/pvc/i.test(sleeve || "")) sleeveColor = "#60a5fa";
+  if (/lagging/i.test(sleeve || "")) sleeveColor = "#6b7280";
+
+  // SVG layout
+  const shaftArm = 44;
+  const drawRL = Math.min(400, rlVal * 0.55 + 160);
+  const cx = shaftArm + 4;
+  const svgW = drawRL + shaftArm * 2 + 8;
+  const svgH = Math.max(120, tubeMm * 2.2 + 80);
+  const cy = svgH / 2 - 10;
   const tubeY1 = cy - tubeMm / 2;
   const tubeY2 = cy + tubeMm / 2;
   const innerY1 = cy - (tubeMm / 2 - wallMm);
-  const svgW = drawRL + 100;
+  const sleeveThick = hasSleeve ? Math.max(4, tubeMm * 0.1) : 0;
+  const dimY1 = tubeY2 + 14;
+  const dimY2 = tubeY2 + 28;
+  const bDimY = tubeY1 - (hasSleeve ? sleeveThick : 0) - 14;
 
   const schematicSVG = `<svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg">
-    <line x1="${cx-30}" y1="${cy}" x2="${cx}" y2="${cy}" stroke="#94a3b8" stroke-width="3"/>
-    <line x1="${cx+drawRL}" y1="${cy}" x2="${cx+drawRL+30}" y2="${cy}" stroke="#94a3b8" stroke-width="3"/>
+    <defs>
+      <marker id="a1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/></marker>
+      <marker id="a2" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="#64748b"/></marker>
+      <marker id="b1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2563eb"/></marker>
+      <marker id="b2" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="#2563eb"/></marker>
+    </defs>
+    <!-- Shaft arms -->
+    <line x1="0" y1="${cy}" x2="${cx}" y2="${cy}" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
+    <line x1="${cx+drawRL}" y1="${cy}" x2="${svgW}" y2="${cy}" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
+    <!-- Sleeve overlay -->
+    ${hasSleeve ? `<rect x="${cx}" y="${tubeY1-sleeveThick}" width="${drawRL}" height="${tubeMm+sleeveThick*2}" rx="${tubeMm/6}" fill="${sleeveColor}" fill-opacity="0.3" stroke="${sleeveColor}" stroke-width="1.5"/>` : ""}
+    <!-- Tube body -->
     <rect x="${cx}" y="${tubeY1}" width="${drawRL}" height="${tubeMm}" rx="${tubeMm/6}" fill="${color}" fill-opacity="0.18" stroke="${color}" stroke-width="2"/>
+    <!-- Inner bore -->
     <rect x="${cx+wallMm*2}" y="${innerY1}" width="${drawRL-wallMm*4}" height="${tubeMm-wallMm*2}" rx="${(tubeMm-wallMm*2)/6}" fill="white" fill-opacity="0.7" stroke="${color}" stroke-width="0.7" stroke-dasharray="4 2"/>
-    <line x1="${cx}" y1="${tubeY2+12}" x2="${cx+drawRL}" y2="${tubeY2+12}" stroke="#64748b" stroke-width="1"/>
-    <text x="${cx+drawRL/2}" y="${tubeY2+26}" text-anchor="middle" font-size="10" fill="#64748b" font-family="Arial,sans-serif">RL = ${rlVal} mm</text>
-    <text x="${cx+drawRL/2}" y="${cy+4}" text-anchor="middle" font-size="11" fill="${color}" font-weight="bold" font-family="Arial,sans-serif">O${tubeMm} x ${wallMm} mm wall</text>
-    <text x="${cx-10}" y="${cy+4}" text-anchor="end" font-size="9" fill="#94a3b8" font-family="Arial,sans-serif">Shaft</text>
-    <text x="${cx+drawRL+10}" y="${cy+4}" text-anchor="start" font-size="9" fill="#94a3b8" font-family="Arial,sans-serif">Shaft</text>
+    <!-- Sleeve label -->
+    ${hasSleeve ? `<text x="${cx+drawRL-4}" y="${tubeY1-sleeveThick-3}" text-anchor="end" font-size="8" fill="${sleeveColor}" font-weight="bold" font-family="Arial,sans-serif">${sleeve}</text>` : ""}
+    <!-- Tube label -->
+    <text x="${cx+drawRL/2}" y="${cy+4}" text-anchor="middle" font-size="10" fill="${color}" font-weight="bold" font-family="Arial,sans-serif">&#216;${tubeMm} x ${wallMm}mm</text>
+    <!-- RL dim line -->
+    <line x1="${cx}" y1="${dimY1}" x2="${cx+drawRL}" y2="${dimY1}" stroke="#64748b" stroke-width="1" marker-end="url(#a1)" marker-start="url(#a2)"/>
+    <text x="${cx+drawRL/2}" y="${dimY1+11}" text-anchor="middle" font-size="9" fill="#64748b" font-family="Arial,sans-serif" font-weight="600">RL = ${rlVal} mm (${(rlVal/25.4).toFixed(3)}")</text>
+    <!-- EL dim line -->
+    <line x1="0" y1="${dimY2}" x2="${svgW}" y2="${dimY2}" stroke="#374151" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#a1)" marker-start="url(#a2)"/>
+    <text x="${svgW/2}" y="${dimY2+11}" text-anchor="middle" font-size="9" fill="#374151" font-family="Arial,sans-serif" font-weight="600">EL = ${elMm} mm (${(elMm/25.4).toFixed(3)}")</text>
+    <!-- B dim left -->
+    <line x1="0" y1="${bDimY}" x2="${cx}" y2="${bDimY}" stroke="#2563eb" stroke-width="1" marker-end="url(#b1)" marker-start="url(#b2)"/>
+    <text x="${cx/2}" y="${bDimY-3}" text-anchor="middle" font-size="8" fill="#2563eb" font-weight="bold" font-family="Arial,sans-serif">B=${bMm}mm</text>
+    <!-- B dim right -->
+    <line x1="${cx+drawRL}" y1="${bDimY}" x2="${svgW}" y2="${bDimY}" stroke="#2563eb" stroke-width="1" marker-end="url(#b1)" marker-start="url(#b2)"/>
+    <text x="${cx+drawRL+shaftArm/2}" y="${bDimY-3}" text-anchor="middle" font-size="8" fill="#2563eb" font-weight="bold" font-family="Arial,sans-serif">B=${bMm}mm</text>
   </svg>`;
 
   const date = new Date().toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" });
@@ -354,14 +454,16 @@ function buildTearSheetHTML(series, config) {
     </div>
   </div>
   <div class="schematic">
-    <div class="schem-title">Dimensional Schematic - RL = ${rlVal} mm</div>
+    <div class="schem-title">Dimensional Schematic — RL = ${rlVal} mm &nbsp;|&nbsp; B = ${bMm} mm each side &nbsp;|&nbsp; EL = ${elMm} mm</div>
     ${schematicSVG}
   </div>
   <div class="spec">
     ${bearingObj ? `<div class="spec-row"><span class="lbl">Bearing</span><span class="val">${bearingObj.label}</span></div>` : ""}
     <div class="spec-row"><span class="lbl">Tube</span><span class="val">${tubeObj?.label || "---"}</span></div>
     <div class="spec-row"><span class="lbl">Shaft Type</span><span class="val">${shaftObj?.label || "---"}</span></div>
-    <div class="spec-row"><span class="lbl">Body Length (RL)</span><span class="val">${rlVal} mm</span></div>
+    <div class="spec-row"><span class="lbl">Body Length (RL)</span><span class="val">${rlVal} mm &nbsp;(${(rlVal/25.4).toFixed(3)}")</span></div>
+    <div class="spec-row"><span class="lbl">Shaft Extension B (each side)</span><span class="val">${bMm} mm &nbsp;(${(bMm/25.4).toFixed(3)}")</span></div>
+    <div class="spec-row"><span class="lbl">End Length (EL = RL + 2B)</span><span class="val">${elMm} mm &nbsp;(${(elMm/25.4).toFixed(3)}")</span></div>
     <div class="spec-row"><span class="lbl">Sleeve / Surface</span><span class="val">${sleeve || "None"}</span></div>
     <div class="spec-row"><span class="lbl">Grooves</span><span class="val">${groovesQty > 0 ? groovesQty + " groove(s)" : "None"}</span></div>
     <div class="spec-row"><span class="lbl">Drive Type</span><span class="val">${series.driveType}</span></div>
@@ -618,6 +720,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
   const [rl, setRl] = useState("600");
   const [groovesQty, setGroovesQty] = useState(0);
   const [rfqAdded, setRfqAdded] = useState(false);
+  const [imperial, setImperial] = useState(false);
 
   const tube = series.tubes[tubeIdx];
   const shaft = series.shafts[shaftIdx];
@@ -631,7 +734,8 @@ function Configurator({ series, onBack, onGoRFQ }) {
     shaftObj: shaft,
     rl,
     sleeve,
-    groovesQty
+    groovesQty,
+    bearingObj: bearing
   };
 
   function addToRFQ() {
@@ -679,7 +783,18 @@ function Configurator({ series, onBack, onGoRFQ }) {
 
       {/* Live Schematic + Part Number */}
       <div style={{ marginBottom: 20 }}>
-        <RollerSchematic series={series} rl={rl} tubeIdx={tubeIdx} sleeve={sleeve} />
+        {/* Metric / Imperial toggle */}
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+          <div style={{ display: "flex", background: C.border, borderRadius: 8, padding: 2, gap: 2 }}>
+            {[["mm", false], ["in", true]].map(([label, val]) => (
+              <button key={label} onClick={() => setImperial(val)}
+                style={{ padding: "4px 14px", borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: "pointer", border: "none", background: imperial === val ? NAVY : "transparent", color: imperial === val ? "#fff" : C.muted, transition: "all .13s" }}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <RollerSchematic series={series} rl={rl} tubeIdx={tubeIdx} sleeve={sleeve} shaftObj={shaft} imperial={imperial} />
         {/* Live Part Number — updates as options change */}
         <div style={{ marginTop: 10, background: NAVY, borderRadius: 8, padding: "10px 16px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
           <div>
@@ -690,7 +805,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
           </div>
           <div style={{ fontSize: 10, color: "rgba(255,255,255,.45)", lineHeight: 1.6, flex: 1 }}>
             <span style={{ color: "rgba(255,255,255,.6)" }}>Format: </span>BearingNo.TubeCode ShaftCode-BF"<br />
-            BF = {((parseInt(rl) || 600) / 25.4).toFixed(2)}" between frames
+            BF = {((parseInt(rl) || 600) / 25.4).toFixed(2)}" · EL = {(((parseInt(rl) || 600) + getShaftExtMm(shaft) * 2) / 25.4).toFixed(2)}"
           </div>
         </div>
       </div>
@@ -726,7 +841,9 @@ function Configurator({ series, onBack, onGoRFQ }) {
             </select>
           </div>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Body Length RL (mm)</label>
+            <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>
+              Body Length RL (mm) {imperial && <span style={{ color: "#94a3b8", fontWeight: 400 }}>= {((parseInt(rl) || 600) / 25.4).toFixed(3)}"</span>}
+            </label>
             <input type="number" value={rl} min={100} max={3000} step={10} onChange={e => setRl(e.target.value)}
               style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none" }} />
           </div>
@@ -763,24 +880,33 @@ function Configurator({ series, onBack, onGoRFQ }) {
         <div style={{ fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 14 }}>Configuration Summary</div>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
           <tbody>
-            {[
-              bearing ? ["Bearing", bearing.label] : null,
-              ["Tube", tube?.label || "—"],
-              ["Shaft", shaft?.label || "—"],
-              ["Body Length (RL)", rl + " mm"],
-              ["Sleeve / Surface", sleeve || "None"],
-              ["Grooves", groovesQty > 0 ? groovesQty + " groove(s)" : "None"],
-              ["Drive Type", series.driveType],
-              ["Max Load", series.maxLoad_N.toLocaleString() + " N"],
-              ["Max Speed", series.maxSpeed_ms + " m/s"],
-              ["Temperature", series.temp_min_C + "°C to +" + series.temp_max_C + "°C"],
-              ["Antistatic", series.antistatic],
-            ].filter(Boolean).map(([k, v], i) => (
+            {(() => {
+              const rlVal = parseInt(rl) || 600;
+              const bMm = getShaftExtMm(shaft);
+              const elMm = rlVal + bMm * 2;
+              const fmtMm = v => imperial ? `${(v / 25.4).toFixed(3)}"` : `${v} mm`;
+              return [
+                bearing ? ["Bearing", bearing.label] : null,
+                ["Tube", tube?.label || "—"],
+                ["Shaft", shaft?.label || "—"],
+                ["Body Length (RL)", fmtMm(rlVal)],
+                ["Shaft Extension (B each side)", fmtMm(bMm)],
+                ["Overall End Length (EL)", fmtMm(elMm)],
+                ["Sleeve / Surface", sleeve || "None"],
+                ["Grooves", groovesQty > 0 ? groovesQty + " groove(s)" : "None"],
+                ["Drive Type", series.driveType],
+                ["Max Load", series.maxLoad_N.toLocaleString() + " N"],
+                ["Max Speed", series.maxSpeed_ms + " m/s"],
+                ["Temperature", series.temp_min_C + "°C to +" + series.temp_max_C + "°C"],
+                ["Antistatic", series.antistatic],
+              ].filter(Boolean);
+            })().map(([k, v], i) => (
               <tr key={k} style={{ background: i % 2 === 0 ? C.bg : "#fff", borderBottom: "1px solid " + C.border }}>
-                <td style={{ padding: "8px 12px", color: C.muted, fontWeight: 600, width: "40%" }}>{k}</td>
+                <td style={{ padding: "8px 12px", color: C.muted, fontWeight: 600, width: "45%" }}>{k}</td>
                 <td style={{ padding: "8px 12px", color: C.text, fontWeight: 600 }}>{v}</td>
               </tr>
-            ))}
+            ))
+            }
           </tbody>
         </table>
         {series.notes && (
