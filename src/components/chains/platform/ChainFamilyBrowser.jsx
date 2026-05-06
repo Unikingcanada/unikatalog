@@ -6,7 +6,7 @@
 import { useState, useMemo } from "react";
 import { CHAIN_FAMILIES } from "@/lib/chainFamilyData";
 import { CHAIN_PRODUCTS } from "@/lib/chainCatalogData";
-import { NORMALIZED_CHAINS } from "@/lib/chainNormalizedDictionary";
+import { ALL_NORMALIZED_CHAINS } from "@/lib/chainNormalizedIndex";
 
 const C = {
   navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
@@ -56,7 +56,7 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator 
     const counts = {};
     CHAIN_FAMILIES.forEach(fam => {
       // Count normalized chains first, fall back to legacy
-      const normalized = NORMALIZED_CHAINS.filter(c => c.chain_family === fam.key).length;
+      const normalized = ALL_NORMALIZED_CHAINS.filter(c => c.chain_family === fam.key).length;
       if (normalized > 0) {
         counts[fam.key] = normalized;
       } else {
@@ -121,7 +121,7 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator 
 
       {/* Footer note */}
       <div style={{ marginTop: 24, padding: "12px 16px", background: C.bg, borderRadius: 8, border: "1px solid " + C.border, fontSize: 11, color: C.muted, lineHeight: 1.6 }}>
-        Platform sourced from: Allied-Locke, MAC Chain, Donghua. Future integration: Peer, Tsubaki, Rexnord, Renold, Can-Am, Connexus.
+        Platform sourced from: Allied-Locke, MAC Chain, Donghua, Tsubaki, Peer, Rexnord, Renold, Iwis, Can-Am, Connexus, Webster, Viking, Summit, Kobo.
         Do not duplicate products by brand — use normalized chain numbers.
       </div>
     </div>

@@ -27,7 +27,7 @@
  * - MAC Chain: WH78, WH124, etc.
  */
 
-import { NORMALIZED_CHAINS, getChainById } from "./chainNormalizedDictionary.js";
+import { ALL_NORMALIZED_CHAINS as NORMALIZED_CHAINS, getChainById } from "./chainNormalizedIndex.js";
 
 // ─── Build flat equivalency index from normalized dictionary ──────────────────
 // Index structure: { "tsubaki::rs80": "ANSI-80", "donghua::80a-1": "ANSI-80", ... }
