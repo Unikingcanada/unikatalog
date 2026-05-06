@@ -65,10 +65,13 @@ function LoadTable({ table }) {
 function getShaftExtMm(shaftObj) {
   if (!shaftObj) return 10;
   const code = shaftObj.code || "";
-  if (/spring/i.test(code)) return 13;   // spring adds ~13mm each side
-  if (/male/i.test(code)) return 16;     // male thread projects more
+  if (/spring/i.test(code)) return 13;    // spring adds ~13mm each side
+  if (/male/i.test(code)) return 16;      // male thread projects more
   if (/variable/i.test(code)) return 10;
   if (/bolt_ip55/i.test(code)) return 10;
+  if (/fixed_17|female_17/i.test(code)) return 10; // Ø17 shaft — standard 10mm ext
+  if (/female_20|male_20|fixed_20|spring_20/i.test(code)) return 10; // Ø20 shaft series 1450/3950
+  if (/fixed_ss_pin/i.test(code)) return 8;  // 1500/1520 SS pin
   return 10; // female / fixed / flat — standard 10mm
 }
 
@@ -92,8 +95,8 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
   }
   const isTapered = !!taperedRow;
 
-  // Fixed SVG canvas — extra height when sprocket present for tooth tips
-  const VW = 560, VH = isTapered ? 230 : (driveHead ? 220 : 200);
+  // Fixed SVG canvas
+  const VW = 560, VH = isTapered ? 230 : 200;
   const shaftVisLen = 40;
   const cx = shaftVisLen + 4;
   const drawRL = VW - shaftVisLen * 2 - 8;
@@ -260,70 +263,103 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
                 );
               });
             })()}
-            {/* ── Drive-head / sprocket — SIDE PROFILE VIEW ── */}
+            {/* ── Drive-head / sprocket — SIDE VIEW (profile) at right end of tube ── */}
             {driveHead && (() => {
               const spOD = driveHead.OD_mm || 57;
-              // Hub visual dimensions (side view)
-              const spVisH = Math.max(20, Math.min(48, (spOD / 80) * 44)); // half-height = radius in side view
-              const hubW = Math.max(14, spVisH * 0.55);   // axial width of hub body
-              const toothH = Math.max(5, spVisH * 0.18);  // tooth tip projection
-              const toothW = Math.max(5, hubW * 0.28);    // tooth width
-              const numTeeth = driveHead.teeth || 12;
-              // Position: sprocket hub sits flush against right end of tube
-              const sx = cx + drawRL;  // left face of hub
-              const sy = cy;           // centerline
+              const isDouble = /double/i.test(driveHead.type || "");
+              const isPolyVee = /polyvee/i.test(driveHead.pitch || "");
+              const isRoundBelt = /round/i.test(driveHead.pitch || "");
 
-              // Hub body (cylindrical side view = rectangle)
-              const hubTop = sy - spVisH;
-              const hubBot = sy + spVisH;
+              // Scale OD visually relative to tube OD
+              const spVisR = Math.min(50, Math.max(16, (spOD / tubeMm) * (visualDia / 2) * 1.15));
+              const numTeeth = driveHead.teeth || (isPolyVee ? 0 : 12);
+              const toothH = isPolyVee || isRoundBelt ? 0 : Math.max(4, spVisR * 0.13);
+              const toothW = numTeeth > 0 ? Math.max(3, (2 * spVisR * 0.85) / numTeeth * 0.6) : 0;
 
-              // Chain teeth — evenly spaced along both top and bottom edges, pointing outward
-              const teethPerSide = Math.max(3, Math.min(numTeeth, 8));
-              const toothSpacing = hubW / (teethPerSide + 1);
+              // Hub dimensions — single or double
+              const singleHubW = Math.max(12, spVisR * 0.5);
+              const hubGap = isDouble ? Math.max(5, spVisR * 0.18) : 0;
+              const totalHubW = isDouble ? singleHubW * 2 + hubGap : singleHubW;
 
-              const topTeeth = Array.from({ length: teethPerSide }, (_, ti) => {
-                const tx = sx + toothSpacing * (ti + 1);
-                const tw = toothW * 0.5;
-                return `M${tx - tw},${hubTop} L${tx},${hubTop - toothH} L${tx + tw},${hubTop} Z`;
-              }).join(" ");
+              // Anchor the sprocket at the right end of the tube, overlapping slightly
+              const sx = cx + drawRL - singleHubW * 0.3; // left edge of first disc
+              const sy = cy;
+              const hubTop = sy - spVisR;
+              const hubBot = sy + spVisR;
+              const boreR = Math.max(4, spVisR * 0.2);
 
-              const botTeeth = Array.from({ length: teethPerSide }, (_, ti) => {
-                const tx = sx + toothSpacing * (ti + 1);
-                const tw = toothW * 0.5;
-                return `M${tx - tw},${hubBot} L${tx},${hubBot + toothH} L${tx + tw},${hubBot} Z`;
-              }).join(" ");
+              // Draw one sprocket disc (side view)
+              function renderDisc(x0, w, key) {
+                const dcx = x0 + w / 2;
+                const visTeeth = numTeeth > 0 ? Math.max(3, Math.round(numTeeth / 3.5)) : 0;
+                const tSpacing = w / (visTeeth + 1);
+                const topT = Array.from({ length: visTeeth }, (_, i) => {
+                  const tx = x0 + tSpacing * (i + 1);
+                  return `M${tx - toothW/2},${hubTop} L${tx},${hubTop - toothH} L${tx + toothW/2},${hubTop}`;
+                }).join(" ");
+                const botT = Array.from({ length: visTeeth }, (_, i) => {
+                  const tx = x0 + tSpacing * (i + 1);
+                  return `M${tx - toothW/2},${hubBot} L${tx},${hubBot + toothH} L${tx + toothW/2},${hubBot}`;
+                }).join(" ");
+                // PolyVee: V-grooves instead of teeth
+                const polyVeeGrooves = isPolyVee ? Array.from({ length: Math.max(4, Math.floor(w / 5)) }, (_, i) => {
+                  const gx = x0 + (i + 1) * w / (Math.floor(w / 5) + 1);
+                  const gDepth = spVisR * 0.15;
+                  return `M${gx},${hubTop} L${gx},${hubTop + gDepth} M${gx},${hubBot} L${gx},${hubBot - gDepth}`;
+                }).join(" ") : null;
+                return (
+                  <g key={key}>
+                    {/* Main disc body */}
+                    <rect x={x0} y={hubTop} width={w} height={spVisR * 2}
+                      fill={isPolyVee ? "#a78bfa" : isRoundBelt ? "#60a5fa" : "#f59e0b"}
+                      fillOpacity={0.2} stroke={isPolyVee ? "#7c3aed" : isRoundBelt ? "#2563eb" : "#d97706"}
+                      strokeWidth={1.8} rx={1.5} />
+                    {/* Teeth top */}
+                    {numTeeth > 0 && <path d={topT} fill={isPolyVee ? "#a78bfa" : "#f59e0b"} fillOpacity={0.8}
+                      stroke={isPolyVee ? "#7c3aed" : "#d97706"} strokeWidth={0.8} strokeLinejoin="round" />}
+                    {/* Teeth bottom */}
+                    {numTeeth > 0 && <path d={botT} fill={isPolyVee ? "#a78bfa" : "#f59e0b"} fillOpacity={0.8}
+                      stroke={isPolyVee ? "#7c3aed" : "#d97706"} strokeWidth={0.8} strokeLinejoin="round" />}
+                    {/* PolyVee grooves */}
+                    {isPolyVee && <path d={polyVeeGrooves} fill="none" stroke="#7c3aed" strokeWidth={1.5} strokeOpacity={0.6} />}
+                    {/* Round belt crown profile — curved top/bottom */}
+                    {isRoundBelt && <ellipse cx={dcx} cy={hubTop} rx={w * 0.35} ry={spVisR * 0.12}
+                      fill="#60a5fa" fillOpacity={0.6} stroke="#2563eb" strokeWidth={0.8} />}
+                    {isRoundBelt && <ellipse cx={dcx} cy={hubBot} rx={w * 0.35} ry={spVisR * 0.12}
+                      fill="#60a5fa" fillOpacity={0.6} stroke="#2563eb" strokeWidth={0.8} />}
+                    {/* Vertical shading lines for depth */}
+                    {[0.25, 0.5, 0.75].map((f, i) => (
+                      <line key={i} x1={x0 + w * f} y1={hubTop + 3} x2={x0 + w * f} y2={hubBot - 3}
+                        stroke={isPolyVee ? "#7c3aed" : "#d97706"} strokeWidth={0.5} strokeOpacity={0.3} />
+                    ))}
+                    {/* Bore hole */}
+                    <circle cx={dcx} cy={sy} r={boreR}
+                      fill="#fff" stroke={isPolyVee ? "#7c3aed" : "#d97706"} strokeWidth={1.2} />
+                  </g>
+                );
+              }
 
-              // Bearing bore lines (internal detail lines across hub)
-              const boreR = spVisH * 0.3;
+              const labelColor = isPolyVee ? "#7c3aed" : isRoundBelt ? "#1d4ed8" : "#b45309";
+              const totalRight = sx + totalHubW;
+              const labelCx = sx + totalHubW / 2;
 
               return (
                 <g>
-                  {/* Hub body */}
-                  <rect x={sx} y={hubTop} width={hubW} height={spVisH * 2}
-                    fill="#fef3c7" fillOpacity={0.85} stroke="#d97706" strokeWidth={1.5} rx={2} />
-                  {/* Inner bore circle (side view shows as ellipse-like rect) */}
-                  <rect x={sx + hubW * 0.1} y={sy - boreR} width={hubW * 0.8} height={boreR * 2}
-                    fill="#fff" fillOpacity={0.7} stroke="#d97706" strokeWidth={0.8} strokeDasharray="3 2" rx={boreR * 0.4} />
-                  {/* Shaft passing through center */}
-                  <line x1={sx} y1={sy} x2={sx + hubW} y2={sy}
-                    stroke="#92400e" strokeWidth={1} strokeDasharray="4 2" />
-                  {/* Chain teeth top */}
-                  <path d={topTeeth} fill="#f59e0b" fillOpacity={0.9} stroke="#d97706" strokeWidth={0.8} />
-                  {/* Chain teeth bottom */}
-                  <path d={botTeeth} fill="#f59e0b" fillOpacity={0.9} stroke="#d97706" strokeWidth={0.8} />
-                  {/* Hub face lines (depth cues) */}
-                  <line x1={sx} y1={hubTop} x2={sx} y2={hubBot} stroke="#d97706" strokeWidth={2} />
-                  <line x1={sx + hubW} y1={hubTop} x2={sx + hubW} y2={hubBot} stroke="#d97706" strokeWidth={1.5} />
-                  {/* Label */}
-                  <text x={sx + hubW / 2} y={hubBot + toothH + 12}
-                    textAnchor="middle" fontSize={8} fill="#92400e" fontWeight="700" fontFamily="Arial,sans-serif">
-                    {driveHead.pitch}{driveHead.teeth ? ` T${driveHead.teeth}` : ""} Ø{spOD}mm
+                  {renderDisc(sx, singleHubW, "disc1")}
+                  {isDouble && renderDisc(sx + singleHubW + hubGap, singleHubW, "disc2")}
+                  {/* Gap indicator for double */}
+                  {isDouble && <rect x={sx + singleHubW} y={sy - spVisR * 0.4} width={hubGap} height={spVisR * 0.8}
+                    fill="#e5e7eb" fillOpacity={0.6} />}
+                  {/* OD dimension tick — left side */}
+                  <line x1={sx - 7} y1={hubTop - toothH} x2={sx - 7} y2={hubBot + toothH}
+                    stroke={labelColor} strokeWidth={0.8} strokeDasharray="2 2" />
+                  <text x={sx - 9} y={sy + 4} textAnchor="end" fontSize={7.5} fill={labelColor}
+                    fontWeight="700" fontFamily="Arial,sans-serif">Ø{spOD}</text>
+                  {/* Label below */}
+                  <text x={labelCx} y={hubBot + toothH + 13} textAnchor="middle" fontSize={8}
+                    fill={labelColor} fontWeight="700" fontFamily="Arial,sans-serif">
+                    {driveHead.pitch}{numTeeth > 0 ? ` T${numTeeth}` : ""}{isDouble ? " ×2" : ""}
                   </text>
-                  {/* W dimension arrow (hub width) */}
-                  <line x1={sx} y1={hubTop - 8} x2={sx + hubW} y2={hubTop - 8}
-                    stroke="#d97706" strokeWidth={0.8} markerEnd="url(#arr)" markerStart="url(#arrL)" />
-                  <text x={sx + hubW / 2} y={hubTop - 10}
-                    textAnchor="middle" fontSize={7} fill="#d97706" fontFamily="Arial,sans-serif">W</text>
                 </g>
               );
             })()}
@@ -390,7 +426,7 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
         )}
         {driveHead && (
           <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#d97706" }}>
-            <div style={{ width: 18, height: 10, background: "#fef3c7", border: "1px solid #d97706", borderRadius: 2 }} />
+            <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#f59e0b", opacity: 0.7 }} />
             <span style={{ fontWeight: 600 }}>{driveHead.label}</span>
           </div>
         )}
