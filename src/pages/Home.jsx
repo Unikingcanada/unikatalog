@@ -1735,6 +1735,16 @@ export default function Home() {
   const [allData, setAllData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Auto-open section from URL param (e.g. ?section=rollers)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("section") === "rollers") {
+      _setSelectedType("Conveyor Rollers");
+      _setView("products");
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
+
   function getNav(key, def) {
     try {const v = sessionStorage.getItem("unk_nav_" + key);return v !== null ? JSON.parse(v) : def;} catch {return def;}
   }
