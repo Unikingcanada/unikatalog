@@ -805,7 +805,14 @@ function Configurator({ series, onBack, onGoRFQ }) {
           </div>
           <div style={{ fontSize: 10, color: "rgba(255,255,255,.45)", lineHeight: 1.6, flex: 1 }}>
             <span style={{ color: "rgba(255,255,255,.6)" }}>Format: </span>BearingNo.TubeCode ShaftCode-BF"<br />
-            BF = {((parseInt(rl) || 600) / 25.4).toFixed(2)}" · EL = {(((parseInt(rl) || 600) + getShaftExtMm(shaft) * 2) / 25.4).toFixed(2)}"
+            {(() => {
+              const rlV = parseInt(rl) || 600;
+              const bMm = getShaftExtMm(shaft);
+              const elMm = rlV + bMm * 2;
+              return imperial
+                ? `RL = ${(rlV/25.4).toFixed(3)}" · B = ${(bMm/25.4).toFixed(3)}" · EL = ${(elMm/25.4).toFixed(3)}"`
+                : `RL = ${rlV} mm · B = ${bMm} mm · EL = ${elMm} mm`;
+            })()}
           </div>
         </div>
       </div>
@@ -827,25 +834,50 @@ function Configurator({ series, onBack, onGoRFQ }) {
             </div>
           )}
           <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Tube</label>
+            <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Tube {imperial && <span style={{ fontWeight: 400, color: "#94a3b8" }}>(dimensions in inches)</span>}</label>
             <select value={tubeIdx} onChange={e => setTubeIdx(Number(e.target.value))}
               style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
-              {series.tubes.map((t, i) => <option key={i} value={i}>{t.label}</option>)}
+              {series.tubes.map((t, i) => {
+                const label = imperial && t.tube_mm
+                  ? `${(t.tube_mm / 25.4).toFixed(3)}" OD × ${t.wall_mm ? (t.wall_mm / 25.4).toFixed(4) + '" wall' : ''} — ${t.materials?.join("/")||""}`
+                  : t.label;
+                return <option key={i} value={i}>{label}</option>;
+              })}
             </select>
           </div>
           <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Shaft Type</label>
+            <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Shaft Type {imperial && <span style={{ fontWeight: 400, color: "#94a3b8" }}>(B ext. in inches)</span>}</label>
             <select value={shaftIdx} onChange={e => setShaftIdx(Number(e.target.value))}
               style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
-              {series.shafts.map((s, i) => <option key={i} value={i}>{s.label}</option>)}
+              {series.shafts.map((s, i) => {
+                const bMm = getShaftExtMm(s);
+                const label = imperial && bMm
+                  ? `${s.label} — B=${( bMm / 25.4).toFixed(3)}"`
+                  : s.label;
+                return <option key={i} value={i}>{label}</option>;
+              })}
             </select>
           </div>
           <div>
             <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>
-              Body Length RL (mm) {imperial && <span style={{ color: "#94a3b8", fontWeight: 400 }}>= {((parseInt(rl) || 600) / 25.4).toFixed(3)}"</span>}
+              Body Length (RL) — {imperial ? 'inches' : 'mm'}
+              {imperial
+                ? <span style={{ color: "#94a3b8", fontWeight: 400 }}> = {(parseInt(rl) || 600)} mm</span>
+                : <span style={{ color: "#94a3b8", fontWeight: 400 }}> = {((parseInt(rl) || 600) / 25.4).toFixed(3)}"</span>
+              }
             </label>
-            <input type="number" value={rl} min={100} max={3000} step={10} onChange={e => setRl(e.target.value)}
-              style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none" }} />
+            {imperial ? (
+              <input type="number"
+                value={((parseInt(rl) || 600) / 25.4).toFixed(3)}
+                min={(100 / 25.4).toFixed(3)}
+                max={(3000 / 25.4).toFixed(3)}
+                step="0.125"
+                onChange={e => setRl(String(Math.round(parseFloat(e.target.value) * 25.4)))}
+                style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none" }} />
+            ) : (
+              <input type="number" value={rl} min={100} max={3000} step={10} onChange={e => setRl(e.target.value)}
+                style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none" }} />
+            )}
           </div>
           {series.sleeves?.length > 0 && (
             <div>
