@@ -84,49 +84,57 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
   const shaftExtMm = getShaftExtMm(shaftObj);
 
   // ── Tapered (conical) detection ───────────────────────────────────────────
-  const conicity = tube?.conicity; // e.g. "1.8°" or "2.2°"
+  const conicity = tube?.conicity;
   const taperedTable = conicity && series.tapered_elements?.[conicity];
   let taperedRow = null;
   if (taperedTable) {
-    // Find closest RL entry
     taperedRow = taperedTable.reduce((prev, cur) =>
       Math.abs(cur.rl_mm - rlVal) < Math.abs(prev.rl_mm - rlVal) ? cur : prev
     );
   }
   const isTapered = !!taperedRow;
 
-  // Fixed SVG canvas
-  const VW = 560, VH = isTapered ? 230 : 200;
-  const shaftVisLen = 40;
+  // Shaft type classification for tip rendering
+  const shaftCode = shaftObj?.code || "";
+  const isSpring = /spring/i.test(shaftCode);
+  const isMale = /^male/i.test(shaftCode);
+  const isHex = /hex/i.test(shaftCode);
+  const isFlat = /flat/i.test(shaftCode);
+  const isSSPin = /fixed_ss_pin/i.test(shaftCode);
+
+  // Fixed SVG canvas — extra height for cleaner dim lines
+  const VW = 580, VH = isTapered ? 250 : 220;
+  const shaftVisLen = 48;
   const cx = shaftVisLen + 4;
   const drawRL = VW - shaftVisLen * 2 - 8;
 
-  // Scale tube diameter
   const maxVisualDia = 110;
   const minVisualDia = 24;
 
-  // For tapered: use min_dia and max_dia from catalog; for regular use tube_mm
   const smallDiaMm = isTapered ? taperedRow.min_dia_mm : tubeMm;
   const largeDiaMm = isTapered ? taperedRow.max_dia_mm : tubeMm;
   const visualSmall = Math.max(minVisualDia, Math.min(maxVisualDia, (smallDiaMm / 120) * maxVisualDia));
   const visualLarge = Math.max(minVisualDia, Math.min(maxVisualDia, (largeDiaMm / 120) * maxVisualDia));
   const visualDia = isTapered ? visualLarge : Math.max(minVisualDia, Math.min(maxVisualDia, (tubeMm / 89) * maxVisualDia));
-  const visualWall = Math.max(2, wallMm * (visualDia / tubeMm));
+  const visualWall = Math.max(3, wallMm * (visualDia / tubeMm));
 
   const color = series.color || NAVY;
-  const cy = VH / 2 - 10;
+  const cy = VH / 2 - 14;
 
-  // For tapered: trapezoid corners (small end = left, large end = right)
   const smallHalf = visualSmall / 2;
   const largeHalf = visualLarge / 2;
 
-  // Non-tapered geometry
   const tubeY1 = cy - visualDia / 2;
   const tubeY2 = cy + visualDia / 2;
   const innerY1 = tubeY1 + visualWall;
   const innerY2 = tubeY2 - visualWall;
 
-  // Sleeve
+  // Bearing housing end-cap geometry
+  const capW = Math.max(8, visualWall * 2.2);    // width of bearing seat ring
+  const capH = visualDia * 0.72;                 // height of bearing cap (smaller than tube)
+  const capY = cy - capH / 2;
+  const capColor = "#94a3b8";
+
   const hasSleeve = sleeve && sleeve !== "None";
   const sleeveThick = hasSleeve ? Math.max(4, visualDia * 0.09) : 0;
   let sleeveColor = "#f59e0b";
@@ -134,38 +142,117 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
   if (/pvc/i.test(sleeve || "")) sleeveColor = "#60a5fa";
   if (/lagging/i.test(sleeve || "")) sleeveColor = "#6b7280";
 
-  // Variable shaft support
   const isVariable = varRHmm != null && varLHmm != null;
   const leftExtMm = isVariable ? varLHmm : shaftExtMm;
   const rightExtMm = isVariable ? varRHmm : shaftExtMm;
 
-  // Dimension labels
   const fmtMm = v => imperial ? `${(v / 25.4).toFixed(2)}"` : `${v} mm`;
   const rlLabel = `RL = ${fmtMm(rlVal)}`;
   const elMm = rlVal + leftExtMm + rightExtMm;
   const elLabel = `EL = ${fmtMm(elMm)}`;
+  const bLabel = isVariable ? null : `B = ${fmtMm(shaftExtMm)}`;
+  const lhLabel = isVariable ? `LH = ${fmtMm(leftExtMm)}` : null;
+  const rhLabel = isVariable ? `RH = ${fmtMm(rightExtMm)}` : null;
 
-  // For tapered: top of schematic is the larger end
   const topRef = isTapered ? cy - largeHalf : tubeY1;
   const botRef = isTapered ? cy + largeHalf : tubeY2;
-  const dimY1 = botRef + 16;
-  const dimY2 = botRef + 34;
-  const shaftDimY = topRef - 16;
+  // Dimension line positions — stacked below the tube with spacing
+  const dimY_RL  = botRef + 20;
+  const dimY_EL  = botRef + 42;
+  const shaftDimY = topRef - 22;
 
-  // Tapered SVG polygon points
-  // small end = left (cx), large end = right (cx+drawRL)
   const tapOuterPoints = `${cx},${cy - smallHalf} ${cx + drawRL},${cy - largeHalf} ${cx + drawRL},${cy + largeHalf} ${cx},${cy + smallHalf}`;
   const innerSmall = smallHalf - visualWall;
   const innerLarge = largeHalf - visualWall;
   const tapInnerPoints = `${cx + visualWall * 2},${cy - innerSmall} ${cx + drawRL - visualWall * 2},${cy - innerLarge} ${cx + drawRL - visualWall * 2},${cy + innerLarge} ${cx + visualWall * 2},${cy + innerSmall}`;
 
+  // ── Helper: boxed callout label (engineering drawing style) ──────────────
+  function DimLabel({ x, y, text, color: lc = "#64748b", anchor = "middle" }) {
+    const pad = 4, h = 16;
+    const approxW = text.length * 6 + pad * 2;
+    const lx = anchor === "middle" ? x - approxW / 2 : anchor === "end" ? x - approxW : x;
+    return (
+      <g>
+        <rect x={lx} y={y - h / 2} width={approxW} height={h} rx={3}
+          fill="#fff" stroke={lc} strokeWidth={1} />
+        <text x={x} y={y + 4.5} textAnchor={anchor} fontSize={9.5}
+          fill={lc} fontWeight="700" fontFamily="Arial,sans-serif">{text}</text>
+      </g>
+    );
+  }
+
+  // ── Helper: shaft tip shape ───────────────────────────────────────────────
+  function ShaftTip({ side }) {
+    // side: "left" (tip at x=0) or "right" (tip at x=VW)
+    const tipLen = 10;
+    const shaftR = 3;
+    const tipX = side === "left" ? 0 : VW;
+    const dirSign = side === "left" ? 1 : -1; // points inward
+
+    if (isSpring) {
+      // Spring coil: zigzag lines at the tip
+      const coilX = side === "left" ? 2 : VW - 2;
+      const coilCount = 5;
+      const coilSpan = 14;
+      const coilW = 5;
+      const pts = Array.from({ length: coilCount * 2 + 1 }, (_, i) => {
+        const px = coilX + dirSign * (i / (coilCount * 2)) * coilSpan;
+        const py = cy + (i % 2 === 0 ? -coilW : coilW);
+        return `${px},${py}`;
+      }).join(" ");
+      return <polyline points={pts} fill="none" stroke="#64748b" strokeWidth={1.5} strokeLinejoin="round" />;
+    }
+    if (isMale) {
+      // Male thread: short parallel lines across the shaft tip
+      const threadX = side === "left" ? 4 : VW - 4;
+      return (
+        <g>
+          {[cy - 3.5, cy - 1, cy + 1.5, cy + 4].map((ty, i) => (
+            <line key={i}
+              x1={threadX} y1={ty}
+              x2={threadX + dirSign * 10} y2={ty}
+              stroke="#64748b" strokeWidth={0.9} />
+          ))}
+        </g>
+      );
+    }
+    if (isHex) {
+      // Hex head: small hexagon shape
+      const hx = side === "left" ? 8 : VW - 8;
+      const hr = 5;
+      const pts = Array.from({ length: 6 }, (_, i) => {
+        const angle = (i * 60 - 90) * Math.PI / 180;
+        return `${hx + hr * Math.cos(angle)},${cy + hr * Math.sin(angle)}`;
+      }).join(" ");
+      return <polygon points={pts} fill="#e2e8f0" stroke="#64748b" strokeWidth={1.2} />;
+    }
+    if (isFlat) {
+      // Flat shaft: rectangle with flat sides at tip
+      const fx = side === "left" ? 2 : VW - 14;
+      return <rect x={fx} y={cy - 3} width={12} height={6} fill="#e2e8f0" stroke="#64748b" strokeWidth={1} rx={1} />;
+    }
+    if (isSSPin) {
+      // SS pin: small circle cap
+      const px = side === "left" ? 5 : VW - 5;
+      return <circle cx={px} cy={cy} r={4} fill="#e2e8f0" stroke="#64748b" strokeWidth={1.2} />;
+    }
+    // Female / fixed default: small end-cap ring
+    const ex = side === "left" ? 3 : VW - 3;
+    return (
+      <g>
+        <rect x={side === "left" ? 0 : VW - 8} y={cy - 4} width={8} height={8}
+          rx={2} fill="#e2e8f0" stroke="#64748b" strokeWidth={1} />
+      </g>
+    );
+  }
+
   return (
     <div style={{ background: "#f1f5f9", borderRadius: 10, padding: "14px 16px", border: "1px solid " + C.border }}>
       <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 8 }}>
-        Live Schematic — {rlLabel} · EL = {fmtMm(elMm)}
+        Engineering Schematic — {rlLabel} · EL = {fmtMm(elMm)}
         {isTapered && <span style={{ marginLeft: 8, color: series.color, fontWeight: 800 }}>· Tapered {conicity}</span>}
       </div>
-      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" height={VH} style={{ display: "block", maxWidth: 580 }}>
+      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" height={VH} style={{ display: "block", maxWidth: 620 }}>
         <defs>
           <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
             <path d="M0,0 L6,3 L0,6 Z" fill="#64748b" />
@@ -179,6 +266,12 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
           <marker id="arrBL" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
             <path d="M6,0 L0,3 L6,6 Z" fill="#2563eb" />
           </marker>
+          <marker id="arrV" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#b45309" />
+          </marker>
+          <marker id="arrVL" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
+            <path d="M6,0 L0,3 L6,6 Z" fill="#b45309" />
+          </marker>
           <marker id="arrG" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
             <path d="M0,0 L6,3 L0,6 Z" fill="#16a34a" />
           </marker>
@@ -187,33 +280,33 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
           </marker>
         </defs>
 
-        {/* Shaft arms — thicker when variable to visually distinguish */}
-        <line x1={0} y1={cy} x2={cx} y2={cy} stroke={isVariable ? "#b45309" : "#64748b"} strokeWidth={isVariable ? 6 : 5} strokeLinecap="round" />
-        <line x1={cx + drawRL} y1={cy} x2={VW} y2={cy} stroke={isVariable ? "#b45309" : "#64748b"} strokeWidth={isVariable ? 6 : 5} strokeLinecap="round" />
+        {/* ── Shaft arms ── */}
+        <line x1={0} y1={cy} x2={cx} y2={cy}
+          stroke={isVariable ? "#b45309" : "#64748b"} strokeWidth={isVariable ? 6 : 5} strokeLinecap="round" />
+        <line x1={cx + drawRL} y1={cy} x2={VW} y2={cy}
+          stroke={isVariable ? "#b45309" : "#64748b"} strokeWidth={isVariable ? 6 : 5} strokeLinecap="round" />
+
+        {/* ── Shaft tip visuals (A: differentiated ends) ── */}
+        {!isTapered && <ShaftTip side="left" />}
+        {!isTapered && <ShaftTip side="right" />}
 
         {isTapered ? (
           <>
-            {/* Tapered / conical tube body */}
             <polygon points={tapOuterPoints}
               fill={color} fillOpacity={0.18} stroke={color} strokeWidth={2} />
-            {/* Inner bore (dashed) */}
             <polygon points={tapInnerPoints}
               fill="#fff" fillOpacity={0.55} stroke={color} strokeWidth={0.8} strokeDasharray="5 3" />
-            {/* Center label */}
             <text x={cx + drawRL / 2} y={cy + 4}
               textAnchor="middle" fontSize={11} fill={color} fontWeight="700" fontFamily="Arial,sans-serif">
               {conicity} Tapered
             </text>
-            {/* d_small label — left (small end) */}
-            <line x1={cx} y1={cy - smallHalf - 4} x2={cx} y2={cy + smallHalf + 4}
-              stroke="#16a34a" strokeWidth={1.2} />
+            <line x1={cx} y1={cy - smallHalf - 4} x2={cx} y2={cy + smallHalf + 4} stroke="#16a34a" strokeWidth={1.2} />
             <line x1={cx - 1} y1={cy - smallHalf} x2={cx - 1} y2={cy + smallHalf}
               stroke="#16a34a" strokeWidth={1} markerEnd="url(#arrG)" markerStart="url(#arrGL)" />
             <text x={cx - 5} y={cy - smallHalf - 6}
               textAnchor="middle" fontSize={9} fill="#16a34a" fontWeight="700" fontFamily="Arial,sans-serif">
               d={fmtMm(smallDiaMm)}
             </text>
-            {/* d_large label — right (large end) */}
             <line x1={cx + drawRL + 1} y1={cy - largeHalf} x2={cx + drawRL + 1} y2={cy + largeHalf}
               stroke="#16a34a" strokeWidth={1} markerEnd="url(#arrG)" markerStart="url(#arrGL)" />
             <text x={cx + drawRL + 5} y={cy - largeHalf - 6}
@@ -228,20 +321,43 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
               <rect x={cx} y={tubeY1 - sleeveThick} width={drawRL} height={visualDia + sleeveThick * 2}
                 rx={visualDia / 6} fill={sleeveColor} fillOpacity={0.35} stroke={sleeveColor} strokeWidth={1.5} />
             )}
+
             {/* Tube body */}
             <rect x={cx} y={tubeY1} width={drawRL} height={visualDia}
-              rx={visualDia / 8} fill={color} fillOpacity={0.15} stroke={color} strokeWidth={2} />
-            {/* Inner bore */}
+              rx={visualDia / 10} fill={color} fillOpacity={0.13} stroke={color} strokeWidth={2.2} />
+
+            {/* Inner bore (hollow section) */}
             <rect x={cx + visualWall} y={innerY1} width={drawRL - visualWall * 2} height={innerY2 - innerY1}
-              rx={(innerY2 - innerY1) / 8} fill="#fff" fillOpacity={0.55} stroke={color} strokeWidth={0.8} strokeDasharray="5 3" />
+              rx={(innerY2 - innerY1) / 10} fill="#fff" fillOpacity={0.6} stroke={color} strokeWidth={0.8} strokeDasharray="6 3" />
+
+            {/* ── A: Bearing housing end-caps — left side ── */}
+            <rect x={cx} y={capY} width={capW} height={capH}
+              rx={3} fill={capColor} fillOpacity={0.25} stroke={capColor} strokeWidth={1.5} />
+            {/* inner ring */}
+            <rect x={cx + capW * 0.25} y={capY + capH * 0.15} width={capW * 0.5} height={capH * 0.7}
+              rx={2} fill="#fff" fillOpacity={0.7} stroke={capColor} strokeWidth={1} />
+
+            {/* ── A: Bearing housing end-caps — right side ── */}
+            <rect x={cx + drawRL - capW} y={capY} width={capW} height={capH}
+              rx={3} fill={capColor} fillOpacity={0.25} stroke={capColor} strokeWidth={1.5} />
+            <rect x={cx + drawRL - capW + capW * 0.25} y={capY + capH * 0.15} width={capW * 0.5} height={capH * 0.7}
+              rx={2} fill="#fff" fillOpacity={0.7} stroke={capColor} strokeWidth={1} />
+
             {/* Sleeve label */}
             {hasSleeve && (
-              <text x={cx + drawRL - 6} y={tubeY1 - sleeveThick - 3}
+              <text x={cx + drawRL - 6} y={tubeY1 - sleeveThick - 4}
                 textAnchor="end" fontSize={9} fill={sleeveColor} fontWeight="700" fontFamily="Arial,sans-serif">
                 {sleeve}
               </text>
             )}
-            {/* ── Grooves — evenly spaced notches on tube surface ── */}
+
+            {/* Tube label */}
+            <text x={cx + drawRL / 2} y={cy + 5}
+              textAnchor="middle" fontSize={12} fill={color} fontWeight="700" fontFamily="Arial,sans-serif">
+              Ø{tubeMm} × {wallMm} mm
+            </text>
+
+            {/* Grooves */}
             {groovesQty > 0 && (() => {
               const grooveW = 4;
               const grooveDepth = Math.min(8, visualDia * 0.12);
@@ -255,7 +371,7 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
                     <rect x={gx - grooveW / 2} y={tubeY2 - grooveDepth} width={grooveW} height={grooveDepth}
                       fill="#fff" stroke="#94a3b8" strokeWidth={1} />
                     {gi === 0 && (
-                      <text x={gx} y={tubeY1 - 4} textAnchor="middle" fontSize={8} fill="#94a3b8" fontFamily="Arial,sans-serif">
+                      <text x={gx} y={tubeY1 - 5} textAnchor="middle" fontSize={8} fill="#94a3b8" fontFamily="Arial,sans-serif">
                         groove
                       </text>
                     )}
@@ -263,32 +379,25 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
                 );
               });
             })()}
-            {/* ── Drive-head / sprocket — SIDE VIEW (profile) at right end of tube ── */}
+
+            {/* Drive head / sprocket */}
             {driveHead && (() => {
               const spOD = driveHead.OD_mm || 57;
               const isDouble = /double/i.test(driveHead.type || "");
               const isPolyVee = /polyvee/i.test(driveHead.pitch || "");
               const isRoundBelt = /round/i.test(driveHead.pitch || "");
-
-              // Scale OD visually relative to tube OD
               const spVisR = Math.min(50, Math.max(16, (spOD / tubeMm) * (visualDia / 2) * 1.15));
               const numTeeth = driveHead.teeth || (isPolyVee ? 0 : 12);
               const toothH = isPolyVee || isRoundBelt ? 0 : Math.max(4, spVisR * 0.13);
               const toothW = numTeeth > 0 ? Math.max(3, (2 * spVisR * 0.85) / numTeeth * 0.6) : 0;
-
-              // Hub dimensions — single or double
               const singleHubW = Math.max(12, spVisR * 0.5);
               const hubGap = isDouble ? Math.max(5, spVisR * 0.18) : 0;
-              const totalHubW = isDouble ? singleHubW * 2 + hubGap : singleHubW;
-
-              // Anchor the sprocket at the right end of the tube, overlapping slightly
-              const sx = cx + drawRL - singleHubW * 0.3; // left edge of first disc
+              const sx = cx + drawRL - singleHubW * 0.3;
               const sy = cy;
               const hubTop = sy - spVisR;
               const hubBot = sy + spVisR;
               const boreR = Math.max(4, spVisR * 0.2);
 
-              // Draw one sprocket disc (side view)
               function renderDisc(x0, w, key) {
                 const dcx = x0 + w / 2;
                 const visTeeth = numTeeth > 0 ? Math.max(3, Math.round(numTeeth / 3.5)) : 0;
@@ -301,7 +410,6 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
                   const tx = x0 + tSpacing * (i + 1);
                   return `M${tx - toothW/2},${hubBot} L${tx},${hubBot + toothH} L${tx + toothW/2},${hubBot}`;
                 }).join(" ");
-                // PolyVee: V-grooves instead of teeth
                 const polyVeeGrooves = isPolyVee ? Array.from({ length: Math.max(4, Math.floor(w / 5)) }, (_, i) => {
                   const gx = x0 + (i + 1) * w / (Math.floor(w / 5) + 1);
                   const gDepth = spVisR * 0.15;
@@ -309,53 +417,40 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
                 }).join(" ") : null;
                 return (
                   <g key={key}>
-                    {/* Main disc body */}
                     <rect x={x0} y={hubTop} width={w} height={spVisR * 2}
                       fill={isPolyVee ? "#a78bfa" : isRoundBelt ? "#60a5fa" : "#f59e0b"}
                       fillOpacity={0.2} stroke={isPolyVee ? "#7c3aed" : isRoundBelt ? "#2563eb" : "#d97706"}
                       strokeWidth={1.8} rx={1.5} />
-                    {/* Teeth top */}
                     {numTeeth > 0 && <path d={topT} fill={isPolyVee ? "#a78bfa" : "#f59e0b"} fillOpacity={0.8}
                       stroke={isPolyVee ? "#7c3aed" : "#d97706"} strokeWidth={0.8} strokeLinejoin="round" />}
-                    {/* Teeth bottom */}
                     {numTeeth > 0 && <path d={botT} fill={isPolyVee ? "#a78bfa" : "#f59e0b"} fillOpacity={0.8}
                       stroke={isPolyVee ? "#7c3aed" : "#d97706"} strokeWidth={0.8} strokeLinejoin="round" />}
-                    {/* PolyVee grooves */}
                     {isPolyVee && <path d={polyVeeGrooves} fill="none" stroke="#7c3aed" strokeWidth={1.5} strokeOpacity={0.6} />}
-                    {/* Round belt crown profile — curved top/bottom */}
                     {isRoundBelt && <ellipse cx={dcx} cy={hubTop} rx={w * 0.35} ry={spVisR * 0.12}
                       fill="#60a5fa" fillOpacity={0.6} stroke="#2563eb" strokeWidth={0.8} />}
                     {isRoundBelt && <ellipse cx={dcx} cy={hubBot} rx={w * 0.35} ry={spVisR * 0.12}
                       fill="#60a5fa" fillOpacity={0.6} stroke="#2563eb" strokeWidth={0.8} />}
-                    {/* Vertical shading lines for depth */}
                     {[0.25, 0.5, 0.75].map((f, i) => (
                       <line key={i} x1={x0 + w * f} y1={hubTop + 3} x2={x0 + w * f} y2={hubBot - 3}
                         stroke={isPolyVee ? "#7c3aed" : "#d97706"} strokeWidth={0.5} strokeOpacity={0.3} />
                     ))}
-                    {/* Bore hole */}
                     <circle cx={dcx} cy={sy} r={boreR}
                       fill="#fff" stroke={isPolyVee ? "#7c3aed" : "#d97706"} strokeWidth={1.2} />
                   </g>
                 );
               }
-
               const labelColor = isPolyVee ? "#7c3aed" : isRoundBelt ? "#1d4ed8" : "#b45309";
-              const totalRight = sx + totalHubW;
-              const labelCx = sx + totalHubW / 2;
-
+              const labelCx = sx + (isDouble ? singleHubW * 2 + hubGap : singleHubW) / 2;
               return (
                 <g>
                   {renderDisc(sx, singleHubW, "disc1")}
                   {isDouble && renderDisc(sx + singleHubW + hubGap, singleHubW, "disc2")}
-                  {/* Gap indicator for double */}
                   {isDouble && <rect x={sx + singleHubW} y={sy - spVisR * 0.4} width={hubGap} height={spVisR * 0.8}
                     fill="#e5e7eb" fillOpacity={0.6} />}
-                  {/* OD dimension tick — left side */}
                   <line x1={sx - 7} y1={hubTop - toothH} x2={sx - 7} y2={hubBot + toothH}
                     stroke={labelColor} strokeWidth={0.8} strokeDasharray="2 2" />
                   <text x={sx - 9} y={sy + 4} textAnchor="end" fontSize={7.5} fill={labelColor}
                     fontWeight="700" fontFamily="Arial,sans-serif">Ø{spOD}</text>
-                  {/* Label below */}
                   <text x={labelCx} y={hubBot + toothH + 13} textAnchor="middle" fontSize={8}
                     fill={labelColor} fontWeight="700" fontFamily="Arial,sans-serif">
                     {driveHead.pitch}{numTeeth > 0 ? ` T${numTeeth}` : ""}{isDouble ? " ×2" : ""}
@@ -363,49 +458,50 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
                 </g>
               );
             })()}
-            {/* Tube label */}
-            <text x={cx + drawRL / 2} y={cy + 4}
-              textAnchor="middle" fontSize={12} fill={color} fontWeight="700" fontFamily="Arial,sans-serif">
-              Ø{tubeMm} × {wallMm} mm
-            </text>
           </>
         )}
 
-        {/* ── RL dimension line (body length) ── */}
-        <line x1={cx} y1={dimY1} x2={cx + drawRL} y2={dimY1}
+        {/* ── C: Boxed dimension callout — RL ── */}
+        <line x1={cx} y1={dimY_RL} x2={cx + drawRL} y2={dimY_RL}
           stroke="#64748b" strokeWidth={1} markerEnd="url(#arr)" markerStart="url(#arrL)" />
-        <text x={cx + drawRL / 2} y={dimY1 + 11}
-          textAnchor="middle" fontSize={10} fill="#64748b" fontFamily="Arial,sans-serif" fontWeight="600">
-          {rlLabel}
-        </text>
+        {/* Extension tick lines */}
+        <line x1={cx} y1={botRef + 4} x2={cx} y2={dimY_RL + 2} stroke="#64748b" strokeWidth={0.7} strokeDasharray="2 2" />
+        <line x1={cx + drawRL} y1={botRef + 4} x2={cx + drawRL} y2={dimY_RL + 2} stroke="#64748b" strokeWidth={0.7} strokeDasharray="2 2" />
+        <DimLabel x={cx + drawRL / 2} y={dimY_RL} text={rlLabel} color="#475569" />
 
-        {/* ── EL dimension line (overall end-to-end) ── */}
-        <line x1={0} y1={dimY2} x2={VW} y2={dimY2}
-          stroke="#374151" strokeWidth={1} strokeDasharray="4 2" markerEnd="url(#arr)" markerStart="url(#arrL)" />
-        <text x={VW / 2} y={dimY2 + 11}
-          textAnchor="middle" fontSize={10} fill="#374151" fontFamily="Arial,sans-serif" fontWeight="600">
-          {elLabel}
-        </text>
+        {/* ── C: Boxed dimension callout — EL ── */}
+        <line x1={4} y1={dimY_EL} x2={VW - 4} y2={dimY_EL}
+          stroke="#374151" strokeWidth={1} strokeDasharray="5 3" markerEnd="url(#arr)" markerStart="url(#arrL)" />
+        <DimLabel x={VW / 2} y={dimY_EL} text={elLabel} color="#1f2937" />
 
-        {/* ── B / LH dimension (left shaft extension) ── */}
-        <line x1={0} y1={shaftDimY} x2={cx} y2={shaftDimY}
-          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={1} markerEnd="url(#arrB)" markerStart="url(#arrBL)" />
-        <text x={cx / 2} y={shaftDimY - 3}
-          textAnchor="middle" fontSize={9} fill={isVariable ? "#b45309" : "#2563eb"} fontFamily="Arial,sans-serif" fontWeight="700">
-          {isVariable ? `LH=${fmtMm(leftExtMm)}` : `B=${fmtMm(shaftExtMm)}`}
-        </text>
+        {/* ── C: Boxed dimension callout — B / LH (left) ── */}
+        <line x1={4} y1={shaftDimY} x2={cx - 2} y2={shaftDimY}
+          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={1}
+          markerEnd={isVariable ? "url(#arrV)" : "url(#arrB)"}
+          markerStart={isVariable ? "url(#arrVL)" : "url(#arrBL)"} />
+        <line x1={4} y1={topRef - 4} x2={4} y2={shaftDimY + 2}
+          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={0.7} strokeDasharray="2 2" />
+        <line x1={cx} y1={topRef - 4} x2={cx} y2={shaftDimY + 2}
+          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={0.7} strokeDasharray="2 2" />
+        <DimLabel x={cx / 2} y={shaftDimY} text={isVariable ? lhLabel : bLabel}
+          color={isVariable ? "#b45309" : "#2563eb"} />
 
-        {/* ── B / RH dimension (right shaft extension) ── */}
-        <line x1={cx + drawRL} y1={shaftDimY} x2={VW} y2={shaftDimY}
-          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={1} markerEnd="url(#arrB)" markerStart="url(#arrBL)" />
-        <text x={cx + drawRL + shaftVisLen / 2} y={shaftDimY - 3}
-          textAnchor="middle" fontSize={9} fill={isVariable ? "#b45309" : "#2563eb"} fontFamily="Arial,sans-serif" fontWeight="700">
-          {isVariable ? `RH=${fmtMm(rightExtMm)}` : `B=${fmtMm(shaftExtMm)}`}
-        </text>
+        {/* ── C: Boxed dimension callout — B / RH (right) ── */}
+        <line x1={cx + drawRL + 2} y1={shaftDimY} x2={VW - 4} y2={shaftDimY}
+          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={1}
+          markerEnd={isVariable ? "url(#arrV)" : "url(#arrB)"}
+          markerStart={isVariable ? "url(#arrVL)" : "url(#arrBL)"} />
+        <line x1={cx + drawRL} y1={topRef - 4} x2={cx + drawRL} y2={shaftDimY + 2}
+          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={0.7} strokeDasharray="2 2" />
+        <line x1={VW - 4} y1={topRef - 4} x2={VW - 4} y2={shaftDimY + 2}
+          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={0.7} strokeDasharray="2 2" />
+        <DimLabel x={cx + drawRL + shaftVisLen / 2} y={shaftDimY}
+          text={isVariable ? rhLabel : bLabel}
+          color={isVariable ? "#b45309" : "#2563eb"} />
       </svg>
 
       {/* Legend row */}
-      <div style={{ marginTop: 6, display: "flex", gap: 14, flexWrap: "wrap", fontSize: 11 }}>
+      <div style={{ marginTop: 8, display: "flex", gap: 14, flexWrap: "wrap", fontSize: 11 }}>
         {hasSleeve && !isTapered && (
           <div style={{ display: "flex", alignItems: "center", gap: 5, color: sleeveColor }}>
             <div style={{ width: 12, height: 12, borderRadius: 2, background: sleeveColor, opacity: 0.7 }} />
@@ -418,10 +514,16 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
             <span>d = small end · D = large end</span>
           </div>
         )}
+        {!isTapered && (
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#94a3b8" }}>
+            <div style={{ width: 10, height: 10, borderRadius: 2, background: "#94a3b8", opacity: 0.4, border: "1px solid #94a3b8" }} />
+            <span>Bearing housing</span>
+          </div>
+        )}
         {groovesQty > 0 && (
           <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#94a3b8" }}>
             <div style={{ width: 6, height: 10, border: "1px solid #94a3b8", background: "#fff" }} />
-            <span>{groovesQty} groove{groovesQty > 1 ? "s" : ""} (round belt)</span>
+            <span>{groovesQty} groove{groovesQty > 1 ? "s" : ""}</span>
           </div>
         )}
         {driveHead && (
@@ -430,22 +532,22 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
             <span style={{ fontWeight: 600 }}>{driveHead.label}</span>
           </div>
         )}
-        <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#64748b" }}>
-          <div style={{ width: 16, height: 2, background: "#64748b" }} />
-          <span>RL = body length</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569" }}>
+          <div style={{ width: 16, height: 1.5, background: "#475569" }} />
+          <span>RL = body</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#374151" }}>
-          <div style={{ width: 16, height: 2, background: "#374151", borderTop: "2px dashed #374151" }} />
+        <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#1f2937" }}>
+          <div style={{ width: 16, height: 1.5, background: "#1f2937", borderTop: "2px dashed #374151" }} />
           <span>EL = end-to-end</span>
         </div>
         {isVariable ? (
           <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#b45309" }}>
-            <div style={{ width: 16, height: 2, background: "#b45309" }} />
-            <span>LH / RH = variable shaft extensions</span>
+            <div style={{ width: 16, height: 1.5, background: "#b45309" }} />
+            <span>LH / RH shaft extensions</span>
           </div>
         ) : (
           <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#2563eb" }}>
-            <div style={{ width: 16, height: 2, background: "#2563eb" }} />
+            <div style={{ width: 16, height: 1.5, background: "#2563eb" }} />
             <span>B = shaft extension</span>
           </div>
         )}
@@ -983,10 +1085,264 @@ function Configurator({ series, onBack, onGoRFQ }) {
     setRfqAdded(true);
   }
 
+  // ── Config options panel (shared content) ────────────────────────────────
+  const OptionsPanel = (
+    <div style={{ background: C.card, borderRadius: 12, border: "1px solid " + C.border, padding: "22px 24px", marginBottom: 20 }}>
+      <div style={{ fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 18 }}>Configuration Options</div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
+        {bearings.length > 0 && (
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Bearing Type</label>
+            <select value={bearingIdx} onChange={e => setBearingIdx(Number(e.target.value))}
+              style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
+              {bearings.map((b, i) => <option key={i} value={i}>{b.label}</option>)}
+            </select>
+            {bearing?.note && <div style={{ fontSize: 10, color: C.muted, marginTop: 4, lineHeight: 1.5 }}>{bearing.note}</div>}
+          </div>
+        )}
+        <div>
+          <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Tube</label>
+          <select value={tubeIdx} onChange={e => setTubeIdx(Number(e.target.value))}
+            style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
+            {series.tubes.map((t, i) => {
+              const label = imperial && t.tube_mm
+                ? `${(t.tube_mm / 25.4).toFixed(3)}" OD × ${t.wall_mm ? (t.wall_mm / 25.4).toFixed(4) + '" wall' : ''} — ${t.materials?.join("/")||""}`
+                : t.label;
+              return <option key={i} value={i}>{label}</option>;
+            })}
+          </select>
+        </div>
+        <div>
+          <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Shaft Type</label>
+          <select value={shaftIdx} onChange={e => setShaftIdx(Number(e.target.value))}
+            style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
+            {series.shafts.map((s, i) => {
+              const bMm = getShaftExtMm(s);
+              const label = imperial && bMm ? `${s.label} — B=${(bMm / 25.4).toFixed(3)}"` : s.label;
+              return <option key={i} value={i}>{label}</option>;
+            })}
+          </select>
+        </div>
+        {isVariable && (
+          <div style={{ gridColumn: "1 / -1", background: "#fef3c7", border: "1px solid #fde68a", borderRadius: 8, padding: "14px 16px" }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: "#b45309", marginBottom: 10, textTransform: "uppercase", letterSpacing: 1 }}>Variable Shaft Extensions</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "#92400e", display: "block", marginBottom: 5 }}>LH (Left) — {imperial ? "in" : "mm"}</label>
+                <input type="number" value={varShaftLH} min={imperial ? "0.5" : "10"} max={imperial ? "20" : "500"} step={imperial ? "0.125" : "5"}
+                  onChange={e => setVarShaftLH(e.target.value)}
+                  style={{ width: "100%", padding: "9px 10px", border: "1px solid #fde68a", borderRadius: 7, fontSize: 13, fontWeight: 700, outline: "none", background: "#fff", color: "#92400e" }} />
+                <div style={{ fontSize: 10, color: "#b45309", marginTop: 3 }}>
+                  = {imperial ? `${Math.round(parseFloat(varShaftLH||0)*25.4)} mm` : `${((parseInt(varShaftLH)||0)/25.4).toFixed(3)}"`}
+                </div>
+              </div>
+              <div>
+                <label style={{ fontSize: 11, fontWeight: 700, color: "#92400e", display: "block", marginBottom: 5 }}>RH (Right) — {imperial ? "in" : "mm"}</label>
+                <input type="number" value={varShaftRH} min={imperial ? "0.5" : "10"} max={imperial ? "20" : "500"} step={imperial ? "0.125" : "5"}
+                  onChange={e => setVarShaftRH(e.target.value)}
+                  style={{ width: "100%", padding: "9px 10px", border: "1px solid #fde68a", borderRadius: 7, fontSize: 13, fontWeight: 700, outline: "none", background: "#fff", color: "#92400e" }} />
+                <div style={{ fontSize: 10, color: "#b45309", marginTop: 3 }}>
+                  = {imperial ? `${Math.round(parseFloat(varShaftRH||0)*25.4)} mm` : `${((parseInt(varShaftRH)||0)/25.4).toFixed(3)}"`}
+                </div>
+              </div>
+            </div>
+            <div style={{ marginTop: 10, fontSize: 11, color: "#92400e", background: "#fff", border: "1px solid #fde68a", borderRadius: 6, padding: "7px 10px" }}>
+              EL = RL + LH + RH = {imperial
+                ? `${((parseInt(rl)||600)/25.4).toFixed(3)}" + ${parseFloat(varShaftLH||0).toFixed(3)}" + ${parseFloat(varShaftRH||0).toFixed(3)}" = ${(((parseInt(rl)||600) + varLHmm + varRHmm)/25.4).toFixed(3)}"`
+                : `${parseInt(rl)||600} + ${varLHmm} + ${varRHmm} = ${(parseInt(rl)||600) + varLHmm + varRHmm} mm`}
+            </div>
+          </div>
+        )}
+        <div>
+          <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>
+            Body Length (RL) — {imperial ? "in" : "mm"}
+            <span style={{ color: "#94a3b8", fontWeight: 400 }}>
+              {imperial ? ` = ${parseInt(rl)||600} mm` : ` = ${((parseInt(rl)||600)/25.4).toFixed(3)}"`}
+            </span>
+          </label>
+          {imperial ? (
+            <input type="number" value={((parseInt(rl)||600)/25.4).toFixed(3)}
+              min={(100/25.4).toFixed(3)} max={(3000/25.4).toFixed(3)} step="0.125"
+              onChange={e => setRl(String(Math.round(parseFloat(e.target.value)*25.4)))}
+              style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none" }} />
+          ) : (
+            <input type="number" value={rl} min={100} max={3000} step={10} onChange={e => setRl(e.target.value)}
+              style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none" }} />
+          )}
+        </div>
+        {series.sleeves?.length > 0 && (
+          <div>
+            <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Sleeve / Surface</label>
+            <select value={sleeveIdx} onChange={e => setSleeveIdx(Number(e.target.value))}
+              style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
+              {series.sleeves.map((s, i) => <option key={i} value={i}>{s}</option>)}
+            </select>
+          </div>
+        )}
+        {hasGrooves && (
+          <div>
+            <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Grooves (round belt)</label>
+            <select value={groovesQty} onChange={e => setGroovesQty(Number(e.target.value))}
+              style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
+              {[0,1,2,3,4].map(n => <option key={n} value={n}>{n === 0 ? "No grooves" : `${n} groove${n>1?"s":""}`}</option>)}
+            </select>
+            {groovesQty > 0 && (
+              <div style={{ marginTop: 6, background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 6, padding: "8px 10px", fontSize: 11, color: "#15803d" }}>
+                <b>{groovesQty} groove{groovesQty>1?"s":""}</b> — spacing {imperial ? `${(((parseInt(rl)||600)/25.4)/(groovesQty+1)).toFixed(3)}"` : `${Math.round((parseInt(rl)||600)/(groovesQty+1))} mm`} apart
+              </div>
+            )}
+            {typeof series.grooves === "object" && series.grooves.note && (
+              <div style={{ fontSize: 10, color: C.muted, marginTop: 4, lineHeight: 1.5 }}>{series.grooves.note}</div>
+            )}
+          </div>
+        )}
+        {driveHeads && (
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label style={{ fontSize: 11, fontWeight: 700, color: "#d97706", display: "block", marginBottom: 5 }}>⚙ Drive Head / Sprocket</label>
+            <select value={sprocketIdx} onChange={e => setSprocketIdx(Number(e.target.value))}
+              style={{ width: "100%", padding: "9px 10px", border: "1px solid #fde68a", borderRadius: 7, fontSize: 12, outline: "none", background: "#fffbeb" }}>
+              {driveHeads.map((d, i) => <option key={i} value={i}>{d.label}</option>)}
+            </select>
+            {driveHead && (
+              <div style={{ marginTop: 8, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px,1fr))", gap: 8 }}>
+                {[
+                  ["Pitch", driveHead.pitch],
+                  driveHead.teeth ? ["Teeth", driveHead.teeth] : null,
+                  driveHead.OD_mm ? ["OD", imperial ? `${(driveHead.OD_mm/25.4).toFixed(3)}"` : `${driveHead.OD_mm} mm`] : null,
+                  driveHead.EL_formula ? ["EL Formula", driveHead.EL_formula] : null,
+                  driveHead.max_load_N ? ["Max Load", `${driveHead.max_load_N.toLocaleString()} N`] : null,
+                  driveHead.type ? ["Type", driveHead.type] : null,
+                  driveHead.material ? ["Material", driveHead.material] : null,
+                ].filter(Boolean).map(([k, v]) => (
+                  <div key={k} style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 6, padding: "6px 10px" }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8, color: "#d97706", marginBottom: 2 }}>{k}</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#92400e" }}>{v}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {series.sprockets?.note && <div style={{ fontSize: 10, color: C.muted, marginTop: 6, lineHeight: 1.5 }}>{series.sprockets.note}</div>}
+          </div>
+        )}
+      </div>
+      <div style={{ marginTop: 16, background: "#f0f7ff", borderRadius: 7, padding: "10px 14px", fontSize: 11, color: NAVY_MID, lineHeight: 1.7 }}>
+        <b>Dimension Formula:</b> {series.dim_formula}
+      </div>
+    </div>
+  );
+
+  // ── Summary table ──────────────────────────────────────────────────────────
+  const SummaryPanel = (
+    <div style={{ background: C.card, borderRadius: 12, border: "1px solid " + C.border, padding: "20px 24px", marginBottom: 20 }}>
+      <div style={{ fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 14 }}>Configuration Summary</div>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+        <tbody>
+          {(() => {
+            const rlVal = parseInt(rl) || 600;
+            const bMm = getShaftExtMm(shaft);
+            const elMm = rlVal + bMm * 2;
+            const fmtMm = v => imperial ? `${(v / 25.4).toFixed(3)}"` : `${v} mm`;
+            return [
+              bearing ? ["Bearing", bearing.label] : null,
+              ["Tube", imperial && tube?.tube_mm
+                ? `${(tube.tube_mm/25.4).toFixed(3)}" OD × ${tube.wall_mm ? (tube.wall_mm/25.4).toFixed(4)+'" wall' : ''} — ${tube.materials?.join("/")||""}`
+                : (tube?.label || "—")],
+              ["Shaft", imperial && getShaftExtMm(shaft)
+                ? `${shaft?.label || "—"} — B=${(getShaftExtMm(shaft)/25.4).toFixed(3)}"`
+                : (shaft?.label || "—")],
+              isVariable ? ["LH Extension", imperial ? `${parseFloat(varShaftLH||0).toFixed(3)}"` : `${varLHmm} mm`] : null,
+              isVariable ? ["RH Extension", imperial ? `${parseFloat(varShaftRH||0).toFixed(3)}"` : `${varRHmm} mm`] : null,
+              ["Body Length (RL)", fmtMm(rlVal)],
+              isVariable ? ["End Length (EL = RL+LH+RH)", fmtMm(rlVal + varLHmm + varRHmm)] : ["Shaft Ext. B (each side)", fmtMm(bMm)],
+              isVariable ? null : ["End Length (EL)", fmtMm(elMm)],
+              driveHead ? ["Drive Head", `${driveHead.label}${driveHead.OD_mm ? " — OD " + (imperial ? (driveHead.OD_mm/25.4).toFixed(3)+'"' : driveHead.OD_mm+" mm") : ""}`] : null,
+              ["Sleeve / Surface", sleeve || "None"],
+              ["Grooves", groovesQty > 0 ? `${groovesQty} groove(s) — ${imperial ? ((parseInt(rl)||600)/25.4/(groovesQty+1)).toFixed(3)+'"' : Math.round((parseInt(rl)||600)/(groovesQty+1))+" mm"} spacing` : "None"],
+              ["Drive Type", series.driveType],
+              ["Max Load", series.maxLoad_N.toLocaleString() + " N"],
+              ["Max Speed", series.maxSpeed_ms + " m/s"],
+              ["Temperature", series.temp_min_C + "°C to +" + series.temp_max_C + "°C"],
+              ["Antistatic", series.antistatic],
+            ].filter(Boolean);
+          })().map(([k, v], i) => (
+            <tr key={k} style={{ background: i % 2 === 0 ? C.bg : "#fff", borderBottom: "1px solid " + C.border }}>
+              <td style={{ padding: "8px 12px", color: C.muted, fontWeight: 600, width: "45%" }}>{k}</td>
+              <td style={{ padding: "8px 12px", color: C.text, fontWeight: 600 }}>{v}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {series.notes && (
+        <div style={{ marginTop: 14, background: "#fff8ed", borderLeft: "3px solid #f59e0b", borderRadius: 4, padding: "10px 14px", fontSize: 12, color: C.slate, lineHeight: 1.75 }}>
+          {series.notes}
+        </div>
+      )}
+    </div>
+  );
+
+  // ── Right sticky panel: schematic + part number + actions ──────────────────
+  const StickyRight = (
+    <div style={{ position: "sticky", top: 16, display: "flex", flexDirection: "column", gap: 12 }}>
+      {/* Metric / Imperial toggle */}
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <div style={{ display: "flex", background: C.border, borderRadius: 8, padding: 2, gap: 2 }}>
+          {[["mm", false], ["in", true]].map(([label, val]) => (
+            <button key={label} onClick={() => setImperial(val)}
+              style={{ padding: "4px 14px", borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: "pointer", border: "none", background: imperial === val ? NAVY : "transparent", color: imperial === val ? "#fff" : C.muted, transition: "all .13s" }}>
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Live Schematic */}
+      <RollerSchematic series={series} rl={rl} tubeIdx={tubeIdx} sleeve={sleeve} shaftObj={shaft} imperial={imperial} groovesQty={groovesQty} driveHead={driveHead} varRHmm={isVariable ? varRHmm : null} varLHmm={isVariable ? varLHmm : null} />
+
+      {/* Live Part Number */}
+      <div style={{ background: NAVY, borderRadius: 8, padding: "10px 16px" }}>
+        <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "1.2px", color: "rgba(255,255,255,.45)", marginBottom: 3 }}>Interroll Part Number</div>
+        <div style={{ fontSize: 15, fontWeight: 900, color: "#fff", letterSpacing: "0.5px", fontFamily: "monospace", wordBreak: "break-all" }}>
+          {buildPartNumber(series, tube, shaft, rl, sleeve, groovesQty, bearing)}
+        </div>
+        <div style={{ fontSize: 10, color: "rgba(255,255,255,.45)", lineHeight: 1.6, marginTop: 6 }}>
+          {(() => {
+            const rlV = parseInt(rl) || 600;
+            const bMm = getShaftExtMm(shaft);
+            const elMm = rlV + bMm * 2;
+            return imperial
+              ? `RL = ${(rlV/25.4).toFixed(3)}" · B = ${(bMm/25.4).toFixed(3)}" · EL = ${(elMm/25.4).toFixed(3)}"`
+              : `RL = ${rlV} mm · B = ${bMm} mm · EL = ${elMm} mm`;
+          })()}
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+        <button onClick={addToRFQ}
+          style={{ flex: 1, padding: "11px 16px", borderRadius: 9, fontSize: 13, fontWeight: 800, cursor: "pointer", border: "none", background: rfqAdded ? "#16a34a" : "#2563eb", color: "#fff", transition: "background .15s", minWidth: 120 }}>
+          {rfqAdded ? "✓ Added to RFQ" : "+ Add to RFQ"}
+        </button>
+        <button onClick={() => {
+          const html = buildTearSheetHTML(series, { tubeObj: tube, shaftObj: shaft, rl, sleeve, groovesQty, bearingObj: bearing });
+          const blob = new Blob([html], { type: "text/html" });
+          window.open(URL.createObjectURL(blob), "_blank");
+        }} style={{ padding: "11px 14px", borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: "pointer", border: "1px solid " + NAVY, background: "#fff", color: NAVY }}>
+          🖨 Tear Sheet
+        </button>
+      </div>
+      {rfqAdded && (
+        <button onClick={onGoRFQ}
+          style={{ width: "100%", padding: "10px", borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: "pointer", border: "1px solid #16a34a", background: "#f0fdf4", color: "#16a34a" }}>
+          View RFQ Cart →
+        </button>
+      )}
+    </div>
+  );
+
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px clamp(12px,3vw,32px)" }}>
+    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px clamp(12px,3vw,32px)" }}>
       {/* Breadcrumb */}
-      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: C.muted, marginBottom: 20 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: C.muted, marginBottom: 16 }}>
         <span onClick={() => onBack("list")} style={{ cursor: "pointer", color: NAVY_MID, fontWeight: 600 }}>All Series</span>
         <span>›</span>
         <span onClick={() => onBack("detail")} style={{ cursor: "pointer", color: NAVY_MID, fontWeight: 600 }}>{series.name}</span>
@@ -997,8 +1353,8 @@ function Configurator({ series, onBack, onGoRFQ }) {
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
         {series.image_url && (
-          <div style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 8, padding: 8, width: 70, height: 54, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <img src={series.image_url} alt={series.name} style={{ maxWidth: 60, maxHeight: 46, objectFit: "contain" }} onError={e => e.target.parentElement.style.display = "none"} />
+          <div style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 8, padding: 8, width: 64, height: 50, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <img src={series.image_url} alt={series.name} style={{ maxWidth: 56, maxHeight: 42, objectFit: "contain" }} onError={e => e.target.parentElement.style.display = "none"} />
           </div>
         )}
         <div>
@@ -1007,272 +1363,17 @@ function Configurator({ series, onBack, onGoRFQ }) {
         </div>
       </div>
 
-      {/* Live Schematic + Part Number */}
-      <div style={{ marginBottom: 20 }}>
-        {/* Metric / Imperial toggle */}
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
-          <div style={{ display: "flex", background: C.border, borderRadius: 8, padding: 2, gap: 2 }}>
-            {[["mm", false], ["in", true]].map(([label, val]) => (
-              <button key={label} onClick={() => setImperial(val)}
-                style={{ padding: "4px 14px", borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: "pointer", border: "none", background: imperial === val ? NAVY : "transparent", color: imperial === val ? "#fff" : C.muted, transition: "all .13s" }}>
-                {label}
-              </button>
-            ))}
-          </div>
+      {/* ── B: Side-by-side layout — left: options, right: sticky schematic ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,520px)", gap: 24, alignItems: "start" }}>
+        {/* Left: scrollable options + summary */}
+        <div>
+          {OptionsPanel}
+          {SummaryPanel}
         </div>
-        <RollerSchematic series={series} rl={rl} tubeIdx={tubeIdx} sleeve={sleeve} shaftObj={shaft} imperial={imperial} groovesQty={groovesQty} driveHead={driveHead} varRHmm={isVariable ? varRHmm : null} varLHmm={isVariable ? varLHmm : null} />
-        {/* Live Part Number — updates as options change */}
-        <div style={{ marginTop: 10, background: NAVY, borderRadius: 8, padding: "10px 16px", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
-          <div>
-            <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "1.2px", color: "rgba(255,255,255,.45)", marginBottom: 3 }}>Interroll Part Number</div>
-            <div style={{ fontSize: 17, fontWeight: 900, color: "#fff", letterSpacing: "0.5px", fontFamily: "monospace" }}>
-              {buildPartNumber(series, tube, shaft, rl, sleeve, groovesQty, bearing)}
-            </div>
-          </div>
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,.45)", lineHeight: 1.6, flex: 1 }}>
-            <span style={{ color: "rgba(255,255,255,.6)" }}>Format: </span>BearingNo.TubeCode ShaftCode-BF"<br />
-            {(() => {
-              const rlV = parseInt(rl) || 600;
-              const bMm = getShaftExtMm(shaft);
-              const elMm = rlV + bMm * 2;
-              return imperial
-                ? `RL = ${(rlV/25.4).toFixed(3)}" · B = ${(bMm/25.4).toFixed(3)}" · EL = ${(elMm/25.4).toFixed(3)}"`
-                : `RL = ${rlV} mm · B = ${bMm} mm · EL = ${elMm} mm`;
-            })()}
-          </div>
+        {/* Right: sticky schematic + part number + actions */}
+        <div>
+          {StickyRight}
         </div>
-      </div>
-
-      {/* Config Options */}
-      <div style={{ background: C.card, borderRadius: 12, border: "1px solid " + C.border, padding: "22px 24px", marginBottom: 20 }}>
-        <div style={{ fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 18 }}>Configuration Options</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 16 }}>
-          {bearings.length > 0 && (
-            <div style={{ gridColumn: bearings.length > 1 ? "1 / -1" : undefined }}>
-              <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Bearing Type</label>
-              <select value={bearingIdx} onChange={e => setBearingIdx(Number(e.target.value))}
-                style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
-                {bearings.map((b, i) => <option key={i} value={i}>{b.label}</option>)}
-              </select>
-              {bearing?.note && (
-                <div style={{ fontSize: 10, color: C.muted, marginTop: 4, lineHeight: 1.5 }}>{bearing.note}</div>
-              )}
-            </div>
-          )}
-          <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Tube {imperial && <span style={{ fontWeight: 400, color: "#94a3b8" }}>(dimensions in inches)</span>}</label>
-            <select value={tubeIdx} onChange={e => setTubeIdx(Number(e.target.value))}
-              style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
-              {series.tubes.map((t, i) => {
-                const label = imperial && t.tube_mm
-                  ? `${(t.tube_mm / 25.4).toFixed(3)}" OD × ${t.wall_mm ? (t.wall_mm / 25.4).toFixed(4) + '" wall' : ''} — ${t.materials?.join("/")||""}`
-                  : t.label;
-                return <option key={i} value={i}>{label}</option>;
-              })}
-            </select>
-          </div>
-          <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Shaft Type {imperial && <span style={{ fontWeight: 400, color: "#94a3b8" }}>(B ext. in inches)</span>}</label>
-            <select value={shaftIdx} onChange={e => setShaftIdx(Number(e.target.value))}
-              style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
-              {series.shafts.map((s, i) => {
-                const bMm = getShaftExtMm(s);
-                const label = imperial && bMm
-                  ? `${s.label} — B=${( bMm / 25.4).toFixed(3)}"`
-                  : s.label;
-                return <option key={i} value={i}>{label}</option>;
-              })}
-            </select>
-          </div>
-          {isVariable && (
-            <div style={{ gridColumn: "1 / -1", background: "#fef3c7", border: "1px solid #fde68a", borderRadius: 8, padding: "14px 16px" }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: "#b45309", marginBottom: 10, textTransform: "uppercase", letterSpacing: 1 }}>Variable Length Shaft Extensions</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: "#92400e", display: "block", marginBottom: 5 }}>
-                    LH Extension (Left) — {imperial ? "inches" : "mm"}
-                  </label>
-                  <input type="number"
-                    value={varShaftLH} min={imperial ? "0.5" : "10"} max={imperial ? "20" : "500"} step={imperial ? "0.125" : "5"}
-                    onChange={e => setVarShaftLH(e.target.value)}
-                    style={{ width: "100%", padding: "9px 10px", border: "1px solid #fde68a", borderRadius: 7, fontSize: 13, fontWeight: 700, outline: "none", background: "#fff", color: "#92400e" }} />
-                  <div style={{ fontSize: 10, color: "#b45309", marginTop: 3 }}>
-                    = {imperial ? `${Math.round(parseFloat(varShaftLH||0)*25.4)} mm` : `${((parseInt(varShaftLH)||0)/25.4).toFixed(3)}"`}
-                  </div>
-                </div>
-                <div>
-                  <label style={{ fontSize: 11, fontWeight: 700, color: "#92400e", display: "block", marginBottom: 5 }}>
-                    RH Extension (Right) — {imperial ? "inches" : "mm"}
-                  </label>
-                  <input type="number"
-                    value={varShaftRH} min={imperial ? "0.5" : "10"} max={imperial ? "20" : "500"} step={imperial ? "0.125" : "5"}
-                    onChange={e => setVarShaftRH(e.target.value)}
-                    style={{ width: "100%", padding: "9px 10px", border: "1px solid #fde68a", borderRadius: 7, fontSize: 13, fontWeight: 700, outline: "none", background: "#fff", color: "#92400e" }} />
-                  <div style={{ fontSize: 10, color: "#b45309", marginTop: 3 }}>
-                    = {imperial ? `${Math.round(parseFloat(varShaftRH||0)*25.4)} mm` : `${((parseInt(varShaftRH)||0)/25.4).toFixed(3)}"`}
-                  </div>
-                </div>
-              </div>
-              <div style={{ marginTop: 10, fontSize: 11, color: "#92400e", background: "#fff", border: "1px solid #fde68a", borderRadius: 6, padding: "7px 10px" }}>
-                EL = RL + LH + RH = {imperial
-                  ? `${((parseInt(rl)||600)/25.4).toFixed(3)}" + ${parseFloat(varShaftLH||0).toFixed(3)}" + ${parseFloat(varShaftRH||0).toFixed(3)}" = ${(((parseInt(rl)||600) + varLHmm + varRHmm)/25.4).toFixed(3)}"`
-                  : `${parseInt(rl)||600} mm + ${varLHmm} mm + ${varRHmm} mm = ${(parseInt(rl)||600) + varLHmm + varRHmm} mm`}
-              </div>
-            </div>
-          )}
-          <div>
-            <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>
-              Body Length (RL) — {imperial ? 'inches' : 'mm'}
-              {imperial
-                ? <span style={{ color: "#94a3b8", fontWeight: 400 }}> = {(parseInt(rl) || 600)} mm</span>
-                : <span style={{ color: "#94a3b8", fontWeight: 400 }}> = {((parseInt(rl) || 600) / 25.4).toFixed(3)}"</span>
-              }
-            </label>
-            {imperial ? (
-              <input type="number"
-                value={((parseInt(rl) || 600) / 25.4).toFixed(3)}
-                min={(100 / 25.4).toFixed(3)}
-                max={(3000 / 25.4).toFixed(3)}
-                step="0.125"
-                onChange={e => setRl(String(Math.round(parseFloat(e.target.value) * 25.4)))}
-                style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none" }} />
-            ) : (
-              <input type="number" value={rl} min={100} max={3000} step={10} onChange={e => setRl(e.target.value)}
-                style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none" }} />
-            )}
-          </div>
-          {series.sleeves?.length > 0 && (
-            <div>
-              <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Sleeve / Surface</label>
-              <select value={sleeveIdx} onChange={e => setSleeveIdx(Number(e.target.value))}
-                style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
-                {series.sleeves.map((s, i) => <option key={i} value={i}>{s}</option>)}
-              </select>
-            </div>
-          )}
-          {hasGrooves && (
-            <div>
-              <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Grooves (round belt)</label>
-              <select value={groovesQty} onChange={e => setGroovesQty(Number(e.target.value))}
-                style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
-                {[0, 1, 2, 3, 4].map(n => <option key={n} value={n}>{n === 0 ? "No grooves" : `${n} groove${n > 1 ? "s" : ""}`}</option>)}
-              </select>
-              {groovesQty > 0 && (
-                <div style={{ marginTop: 6, background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 6, padding: "8px 10px", fontSize: 11, color: "#15803d" }}>
-                  <b>{groovesQty} groove{groovesQty > 1 ? "s" : ""}</b> — evenly spaced along RL = {imperial ? `${((parseInt(rl)||600)/25.4).toFixed(3)}"` : `${parseInt(rl)||600} mm`}
-                  · spacing = {imperial ? `${(((parseInt(rl)||600)/25.4)/(groovesQty+1)).toFixed(3)}"` : `${Math.round((parseInt(rl)||600)/(groovesQty+1))} mm`} apart
-                </div>
-              )}
-              {typeof series.grooves === "object" && series.grooves.note && (
-                <div style={{ fontSize: 10, color: C.muted, marginTop: 4, lineHeight: 1.5 }}>{series.grooves.note}</div>
-              )}
-            </div>
-          )}
-          {driveHeads && (
-            <div style={{ gridColumn: "1 / -1" }}>
-              <label style={{ fontSize: 11, fontWeight: 700, color: "#d97706", display: "block", marginBottom: 5 }}>⚙ Drive Head / Sprocket</label>
-              <select value={sprocketIdx} onChange={e => setSprocketIdx(Number(e.target.value))}
-                style={{ width: "100%", padding: "9px 10px", border: "1px solid #fde68a", borderRadius: 7, fontSize: 12, outline: "none", background: "#fffbeb" }}>
-                {driveHeads.map((d, i) => <option key={i} value={i}>{d.label}</option>)}
-              </select>
-              {driveHead && (
-                <div style={{ marginTop: 8, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px,1fr))", gap: 8 }}>
-                  {[
-                    ["Pitch", driveHead.pitch],
-                    driveHead.teeth ? ["Teeth", driveHead.teeth] : null,
-                    driveHead.OD_mm ? ["Sprocket OD", imperial ? `${(driveHead.OD_mm/25.4).toFixed(3)}"` : `${driveHead.OD_mm} mm`] : null,
-                    driveHead.EL_formula ? ["EL Formula", driveHead.EL_formula] : null,
-                    driveHead.max_load_N ? ["Max Load", `${driveHead.max_load_N.toLocaleString()} N`] : null,
-                    driveHead.type ? ["Type", driveHead.type] : null,
-                    driveHead.material ? ["Material", driveHead.material] : null,
-                  ].filter(Boolean).map(([k, v]) => (
-                    <div key={k} style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 6, padding: "6px 10px" }}>
-                      <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8, color: "#d97706", marginBottom: 2 }}>{k}</div>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: "#92400e" }}>{v}</div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              {series.sprockets?.note && (
-                <div style={{ fontSize: 10, color: C.muted, marginTop: 6, lineHeight: 1.5 }}>{series.sprockets.note}</div>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div style={{ marginTop: 16, background: "#f0f7ff", borderRadius: 7, padding: "10px 14px", fontSize: 11, color: NAVY_MID, lineHeight: 1.7 }}>
-          <b>Dimension Formula:</b> {series.dim_formula}
-        </div>
-      </div>
-
-      {/* Summary */}
-      <div style={{ background: C.card, borderRadius: 12, border: "1px solid " + C.border, padding: "20px 24px", marginBottom: 20 }}>
-        <div style={{ fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 14 }}>Configuration Summary</div>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-          <tbody>
-            {(() => {
-              const rlVal = parseInt(rl) || 600;
-              const bMm = getShaftExtMm(shaft);
-              const elMm = rlVal + bMm * 2;
-              const fmtMm = v => imperial ? `${(v / 25.4).toFixed(3)}"` : `${v} mm`;
-              return [
-                bearing ? ["Bearing", bearing.label] : null,
-                ["Tube", imperial && tube?.tube_mm
-                  ? `${(tube.tube_mm/25.4).toFixed(3)}" OD × ${tube.wall_mm ? (tube.wall_mm/25.4).toFixed(4)+'" wall' : ''} — ${tube.materials?.join("/")||""}`
-                  : (tube?.label || "—")],
-                ["Shaft", imperial && getShaftExtMm(shaft)
-                  ? `${shaft?.label || "—"} — B=${(getShaftExtMm(shaft)/25.4).toFixed(3)}"`
-                  : (shaft?.label || "—")],
-                isVariable ? ["Shaft LH Extension (Left)", imperial ? `${parseFloat(varShaftLH||0).toFixed(3)}"` : `${varLHmm} mm`] : null,
-                isVariable ? ["Shaft RH Extension (Right)", imperial ? `${parseFloat(varShaftRH||0).toFixed(3)}"` : `${varRHmm} mm`] : null,
-                ["Body Length (RL)", fmtMm(rlVal)],
-                isVariable ? ["Overall End Length (EL = RL+LH+RH)", fmtMm(rlVal + varLHmm + varRHmm)] : ["Shaft Extension (B each side)", fmtMm(bMm)],
-                isVariable ? null : ["Overall End Length (EL)", fmtMm(elMm)],
-                driveHead ? ["Drive Head / Sprocket", `${driveHead.label}${driveHead.OD_mm ? " — OD " + (imperial ? (driveHead.OD_mm/25.4).toFixed(3)+'"' : driveHead.OD_mm+" mm") : ""}`] : null,
-                ["Sleeve / Surface", sleeve || "None"],
-                ["Grooves", groovesQty > 0 ? `${groovesQty} groove(s) — spacing ${imperial ? ((parseInt(rl)||600)/25.4/(groovesQty+1)).toFixed(3)+'"' : Math.round((parseInt(rl)||600)/(groovesQty+1))+" mm"} apart` : "None"],
-                ["Drive Type", series.driveType],
-                ["Max Load", series.maxLoad_N.toLocaleString() + " N"],
-                ["Max Speed", series.maxSpeed_ms + " m/s"],
-                ["Temperature", series.temp_min_C + "°C to +" + series.temp_max_C + "°C"],
-                ["Antistatic", series.antistatic],
-              ].filter(Boolean);
-            })().map(([k, v], i) => (
-              <tr key={k} style={{ background: i % 2 === 0 ? C.bg : "#fff", borderBottom: "1px solid " + C.border }}>
-                <td style={{ padding: "8px 12px", color: C.muted, fontWeight: 600, width: "45%" }}>{k}</td>
-                <td style={{ padding: "8px 12px", color: C.text, fontWeight: 600 }}>{v}</td>
-              </tr>
-            ))
-            }
-          </tbody>
-        </table>
-        {series.notes && (
-          <div style={{ marginTop: 14, background: "#fff8ed", borderLeft: "3px solid #f59e0b", borderRadius: 4, padding: "10px 14px", fontSize: 12, color: C.slate, lineHeight: 1.75 }}>
-            {series.notes}
-          </div>
-        )}
-      </div>
-
-      {/* Actions */}
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-        <button onClick={addToRFQ}
-          style={{ padding: "12px 28px", borderRadius: 9, fontSize: 14, fontWeight: 800, cursor: "pointer", border: "none", background: rfqAdded ? "#16a34a" : "#2563eb", color: "#fff", transition: "background .15s" }}>
-          {rfqAdded ? "✓ Added to RFQ" : "+ Add to RFQ"}
-        </button>
-        {rfqAdded && (
-          <button onClick={onGoRFQ}
-            style={{ padding: "12px 24px", borderRadius: 9, fontSize: 14, fontWeight: 700, cursor: "pointer", border: "1px solid #16a34a", background: "#f0fdf4", color: "#16a34a" }}>
-            View RFQ Cart →
-          </button>
-        )}
-        <button onClick={() => {
-          const html = buildTearSheetHTML(series, { tubeObj: tube, shaftObj: shaft, rl, sleeve, groovesQty, bearingObj: bearing });
-          const blob = new Blob([html], { type: "text/html" });
-          window.open(URL.createObjectURL(blob), "_blank");
-        }}
-          style={{ padding: "12px 24px", borderRadius: 9, fontSize: 14, fontWeight: 700, cursor: "pointer", border: "1px solid " + NAVY, background: "#fff", color: NAVY }}>
-          🖨 Print Tear Sheet
-        </button>
       </div>
     </div>
   );
