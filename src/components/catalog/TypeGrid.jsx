@@ -30,7 +30,7 @@ const CATEGORY_IMAGES = {
   "Thermoforming Chain":   "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&q=80&auto=format&fit=crop",
   "Conveyor Chain":        "https://chains.alliedlocke.com/ImgMedium/MSR6018.jpg",
   "Table Top Chain":       "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80&auto=format&fit=crop",
-  "Conveyor Rollers":      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&q=80&auto=format&fit=crop",
+  "Conveyor Rollers":      "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/9b340da5c_interroll.webp",
   "Monitoring System":     "https://images.unsplash.com/photo-1550745165-9ff02c59580b?w=600&q=80&auto=format&fit=crop",
   "Magnetic Conveyor":     "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80&auto=format&fit=crop",
   "Pintle Chain":          "https://chains.alliedlocke.com/ImgMedium/steel-pintle-chains.jpg",
