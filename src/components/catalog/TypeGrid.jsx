@@ -18,7 +18,7 @@ const CATEGORY_IMAGES = {
   "Elevator Bucket":       "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/7799388e1_image.png",
   "__tabletop__":          "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/61c0323ef_Gemini_Generated_Image_knktp3knktp3knkt1.png",
   "Wire Mesh Belt":        "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/a5f69a754_image.png",
-  "Steel Hinged Belt":     "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80&auto=format&fit=crop",
+  "Steel Hinged Belt":     "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/554b73b91_Gemini_Generated_Image_8flefc8flefc8fle.png",
   "ANSI/BS Chain":         "https://chains.alliedlocke.com/ImgMedium/PRC%20Ansi%20Drawing.jpg",
   "Engineered Chain":      "https://chains.alliedlocke.com/ImgMedium/SS188%20copy.jpg",
   "Cast Chain":            "https://chains.alliedlocke.com/ImgMedium/Cast%20Manganese.jpg",
