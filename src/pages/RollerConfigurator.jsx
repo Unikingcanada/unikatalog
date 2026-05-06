@@ -253,8 +253,8 @@ function getSleeveCode(sleeve) {
   return "";
 }
 
-function buildPartNumber(series, tubeObj, shaftObj, rl, sleeve, groovesQty) {
-  const bearingCode = BEARING_CODES[series.platform] || BEARING_CODES[series.id] || "1.???";
+function buildPartNumber(series, tubeObj, shaftObj, rl, sleeve, groovesQty, bearingObj) {
+  const bearingCode = bearingObj?.code || BEARING_CODES[series.platform] || BEARING_CODES[series.id] || "1.???";
   const tubeCode = getTubeCode(tubeObj);
   const shaftCode = getShaftCode(shaftObj);
   const sleeveCode = getSleeveCode(sleeve);
@@ -270,8 +270,8 @@ function buildPartNumber(series, tubeObj, shaftObj, rl, sleeve, groovesQty) {
 
 // ─── Tear Sheet ───────────────────────────────────────────────────────────────
 function buildTearSheetHTML(series, config) {
-  const { tubeObj, shaftObj, rl, sleeve, groovesQty } = config;
-  const partNumber = buildPartNumber(series, tubeObj, shaftObj, rl, sleeve, groovesQty);
+  const { tubeObj, shaftObj, rl, sleeve, groovesQty, bearingObj } = config;
+  const partNumber = buildPartNumber(series, tubeObj, shaftObj, rl, sleeve, groovesQty, bearingObj);
   const rlVal = parseInt(rl) || 600;
   const tubeMm = tubeObj?.tube_mm || 50;
   const wallMm = tubeObj?.wall_mm || 1.5;
@@ -358,6 +358,7 @@ function buildTearSheetHTML(series, config) {
     ${schematicSVG}
   </div>
   <div class="spec">
+    ${bearingObj ? `<div class="spec-row"><span class="lbl">Bearing</span><span class="val">${bearingObj.label}</span></div>` : ""}
     <div class="spec-row"><span class="lbl">Tube</span><span class="val">${tubeObj?.label || "---"}</span></div>
     <div class="spec-row"><span class="lbl">Shaft Type</span><span class="val">${shaftObj?.label || "---"}</span></div>
     <div class="spec-row"><span class="lbl">Body Length (RL)</span><span class="val">${rlVal} mm</span></div>
@@ -613,6 +614,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
   const [tubeIdx, setTubeIdx] = useState(0);
   const [shaftIdx, setShaftIdx] = useState(0);
   const [sleeveIdx, setSleeveIdx] = useState(0);
+  const [bearingIdx, setBearingIdx] = useState(0);
   const [rl, setRl] = useState("600");
   const [groovesQty, setGroovesQty] = useState(0);
   const [rfqAdded, setRfqAdded] = useState(false);
@@ -620,6 +622,8 @@ function Configurator({ series, onBack, onGoRFQ }) {
   const tube = series.tubes[tubeIdx];
   const shaft = series.shafts[shaftIdx];
   const sleeve = series.sleeves?.[sleeveIdx];
+  const bearings = series.bearings || [];
+  const bearing = bearings[bearingIdx] || null;
   const hasGrooves = series.grooves === true || (typeof series.grooves === "object" && series.grooves);
 
   const config = {
@@ -643,7 +647,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
       materials: tube?.materials?.join(", ") || "",
       application: series.applications?.[0] || "",
       quantity: 1, unit: "Each",
-      notes: `RL=${rl}mm | Shaft: ${shaft?.label || ""} | Sleeve: ${sleeve || "None"}`
+      notes: `RL=${rl}mm | Bearing: ${bearing?.label || "std"} | Shaft: ${shaft?.label || ""} | Sleeve: ${sleeve || "None"}`
     });
     saveRFQCart(cart);
     setRfqAdded(true);
@@ -681,7 +685,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
           <div>
             <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "1.2px", color: "rgba(255,255,255,.45)", marginBottom: 3 }}>Interroll Part Number</div>
             <div style={{ fontSize: 17, fontWeight: 900, color: "#fff", letterSpacing: "0.5px", fontFamily: "monospace" }}>
-              {buildPartNumber(series, tube, shaft, rl, sleeve, groovesQty)}
+              {buildPartNumber(series, tube, shaft, rl, sleeve, groovesQty, bearing)}
             </div>
           </div>
           <div style={{ fontSize: 10, color: "rgba(255,255,255,.45)", lineHeight: 1.6, flex: 1 }}>
@@ -695,6 +699,18 @@ function Configurator({ series, onBack, onGoRFQ }) {
       <div style={{ background: C.card, borderRadius: 12, border: "1px solid " + C.border, padding: "22px 24px", marginBottom: 20 }}>
         <div style={{ fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 18 }}>Configuration Options</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 16 }}>
+          {bearings.length > 0 && (
+            <div style={{ gridColumn: bearings.length > 1 ? "1 / -1" : undefined }}>
+              <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Bearing Type</label>
+              <select value={bearingIdx} onChange={e => setBearingIdx(Number(e.target.value))}
+                style={{ width: "100%", padding: "9px 10px", border: "1px solid " + C.border, borderRadius: 7, fontSize: 12, outline: "none", background: "#fff" }}>
+                {bearings.map((b, i) => <option key={i} value={i}>{b.label}</option>)}
+              </select>
+              {bearing?.note && (
+                <div style={{ fontSize: 10, color: C.muted, marginTop: 4, lineHeight: 1.5 }}>{bearing.note}</div>
+              )}
+            </div>
+          )}
           <div>
             <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>Tube</label>
             <select value={tubeIdx} onChange={e => setTubeIdx(Number(e.target.value))}
@@ -748,6 +764,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
           <tbody>
             {[
+              bearing ? ["Bearing", bearing.label] : null,
               ["Tube", tube?.label || "—"],
               ["Shaft", shaft?.label || "—"],
               ["Body Length (RL)", rl + " mm"],
@@ -758,7 +775,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
               ["Max Speed", series.maxSpeed_ms + " m/s"],
               ["Temperature", series.temp_min_C + "°C to +" + series.temp_max_C + "°C"],
               ["Antistatic", series.antistatic],
-            ].map(([k, v], i) => (
+            ].filter(Boolean).map(([k, v], i) => (
               <tr key={k} style={{ background: i % 2 === 0 ? C.bg : "#fff", borderBottom: "1px solid " + C.border }}>
                 <td style={{ padding: "8px 12px", color: C.muted, fontWeight: 600, width: "40%" }}>{k}</td>
                 <td style={{ padding: "8px 12px", color: C.text, fontWeight: 600 }}>{v}</td>
@@ -786,7 +803,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
           </button>
         )}
         <button onClick={() => {
-          const html = buildTearSheetHTML(series, { tubeObj: tube, shaftObj: shaft, rl, sleeve, groovesQty });
+          const html = buildTearSheetHTML(series, { tubeObj: tube, shaftObj: shaft, rl, sleeve, groovesQty, bearingObj: bearing });
           const blob = new Blob([html], { type: "text/html" });
           window.open(URL.createObjectURL(blob), "_blank");
         }}

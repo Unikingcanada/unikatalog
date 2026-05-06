@@ -3,6 +3,9 @@ export const ROLLER_SERIES = [
 {
   id: "1100", name: "Series 1100", subtitle: "Gravity Conveyor Roller",
   platform: "1100", duty: "Light", color: "#3b82f6",
+  bearings: [
+    { code: "1.111", label: "Plastic bearing – stainless balls (standard)", temp_max_C: 66, note: "PP or acetal housing, 302 SS balls. Washable." },
+  ],
   driveType: "Gravity / Push (non-driven)", maxLoad_N: 350, maxSpeed_ms: 0.3,
   temp_min_C: -5, temp_max_C: 40, antistatic: "Available (grooved/sleeved versions)",
   image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/643c8bc1a_1100_p32_i0.jpeg",
@@ -37,6 +40,11 @@ export const ROLLER_SERIES = [
 {
   id: "1200", name: "Series 1200", subtitle: "Steel Conveyor Roller",
   platform: "1200", duty: "Medium", color: "#8b5cf6",
+  bearings: [
+    { code: "1.121", label: "Steel bearing – oiled (standard, up to Ø40)", temp_max_C: 80, note: "Oiled bearings standard up to Ø40 mm." },
+    { code: "1.122", label: "Steel bearing – greased (Ø50+)", temp_max_C: 80, note: "Greased bearings from Ø50 mm." },
+    { code: "1.123", label: "Steel bearing – deep freeze (−30°C)", temp_min_C: -30, temp_max_C: 80, note: "Special oiled bearings for extreme temperatures." },
+  ],
   driveType: "Gravity / Belt / Driven", maxLoad_N: 1200, maxSpeed_ms: 0.8,
   temp_min_C: -30, temp_max_C: 80, antistatic: "Standard (all versions)",
   image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/0a354bdce_1200_p38_i0.jpeg",
@@ -65,6 +73,10 @@ export const ROLLER_SERIES = [
 {
   id: "1450", name: "Series 1450", subtitle: "Heavy-Duty Universal Conveyor Roller",
   platform: "1450", duty: "Heavy", color: "#ef4444",
+  bearings: [
+    { code: "1.145", label: "Polyamide housing – 6205 2RZ (standard, 5000 N)", temp_max_C: 40, note: "Polyamide housing, 5000 N capacity. −5°C to +40°C." },
+    { code: "1.146", label: "Steel housing – deep freeze (2500 N, −30°C)", temp_min_C: -30, temp_max_C: 80, note: "Steel housing for deep freeze. Max load 2500 N." },
+  ],
   driveType: "Gravity / Chain / Belt (driven or non-driven)", maxLoad_N: 5000, maxSpeed_ms: 0.8,
   temp_min_C: -5, temp_max_C: 40, antistatic: "Optional",
   image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/1ac6db2ed_1450_p44_i0.jpeg",
@@ -96,6 +108,9 @@ export const ROLLER_SERIES = [
 {
   id: "1500", name: "Series 1500 / 1520", subtitle: "Slide Bearing Conveyor Roller — Food Grade",
   platform: "1500", duty: "Light", color: "#10b981",
+  bearings: [
+    { code: "1.150", label: "PTFE slide bearing – grease-free (standard)", temp_max_C: 40, note: "Runs completely dry. No grease washout. FDA compliant." },
+  ],
   driveType: "Non-driven (gravity / push)", maxLoad_N: 1100, maxSpeed_ms: 0.8,
   temp_min_C: -5, temp_max_C: 40, antistatic: "No",
   image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/f9eafd36b_1500_p50_i0.jpeg",
@@ -117,6 +132,10 @@ export const ROLLER_SERIES = [
 {
   id: "1700L", name: "Series 1700 Light", subtitle: "Universal Conveyor Roller — Light",
   platform: "1700", duty: "Light", color: "#64748b",
+  bearings: [
+    { code: "1.170L", label: "Ball bearing 689 2Z – standard", temp_max_C: 40, note: "689 2Z bearing. PVC tube min −5°C." },
+    { code: "1.171L", label: "Ball bearing 689 2Z – deep freeze oiled (−30°C)", temp_min_C: -30, temp_max_C: 40, note: "Oiled for deep freeze applications." },
+  ],
   driveType: "Gravity / Push (non-driven)", maxLoad_N: 150, maxSpeed_ms: 1.5,
   temp_min_C: -30, temp_max_C: 40, antistatic: "Available (grooved/sleeved, not PVC)",
   image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/89ecec097_1700_light_p56_i0.jpeg",
@@ -140,6 +159,11 @@ export const ROLLER_SERIES = [
 {
   id: "1700", name: "Series 1700", subtitle: "Universal Conveyor Roller — Standard",
   platform: "1700", duty: "Medium", color: "#f59e0b",
+  bearings: [
+    { code: "1.170", label: "Ball bearing 6002 2RZ – standard", temp_max_C: 40, note: "6002 2RZ. Standard duty." },
+    { code: "1.171", label: "Ball bearing 6002 2RZ – deep freeze oiled (−30°C)", temp_min_C: -30, temp_max_C: 40, note: "Oiled bearings for −30°C deep freeze." },
+    { code: "1.172", label: "Ball bearing 6002 2RZ – antistatic", temp_max_C: 40, note: "Antistatic version. Not available with PVC tube." },
+  ],
   driveType: "Driven / Non-driven / Belt idler", maxLoad_N: 2000, maxSpeed_ms: 2.0,
   temp_min_C: -30, temp_max_C: 40, antistatic: "Standard (grooved/sleeved, not PVC)",
   image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/792d28c13_1700_p60_i0.jpeg",
@@ -190,6 +214,10 @@ export const ROLLER_SERIES = [
 {
   id: "1700KXO", name: "Series 1700KXO", subtitle: "Tapered Curve Roller",
   platform: "1700", duty: "Medium", color: "#06b6d4",
+  bearings: [
+    { code: "1.170K", label: "Ball bearing 6002 2RZ – standard (gray elements)", temp_max_C: 40, note: "Standard gray tapered elements." },
+    { code: "1.172K", label: "Ball bearing 6002 2RZ – antistatic (black elements only)", temp_max_C: 40, note: "Antistatic available with 1.8° black elements only." },
+  ],
   driveType: "Gravity / Driven — curve sections", maxLoad_N: 500, maxSpeed_ms: 2.0,
   temp_min_C: -30, temp_max_C: 40, antistatic: "1.8° black elements only",
   image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/d5de1faf1_1700KXO_p70_i0.jpeg",
@@ -233,6 +261,11 @@ export const ROLLER_SERIES = [
 {
   id: "1700H", name: "Series 1700 Heavy", subtitle: "Universal Conveyor Roller — Heavy",
   platform: "1700", duty: "Heavy", color: "#dc2626",
+  bearings: [
+    { code: "1.170H", label: "Ball bearing 6003 2RZ – standard", temp_max_C: 40, note: "6003 2RZ bearing. Carbonitrided races on Ø50×1.5." },
+    { code: "1.171H", label: "Ball bearing 6003 2RZ – deep freeze oiled (−30°C)", temp_min_C: -30, temp_max_C: 40, note: "Oiled for −30°C." },
+    { code: "1.172H", label: "Ball bearing 6003 2RZ – antistatic", temp_max_C: 40, note: "Antistatic. Available on grooved/sleeved versions." },
+  ],
   driveType: "Driven / Belt idler (Ø60×3 seamless)", maxLoad_N: 3000, maxSpeed_ms: 2.0,
   temp_min_C: -30, temp_max_C: 40, antistatic: "Standard (grooved/sleeved versions)",
   image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/70725b856_1700_heavy_p76_i0.jpeg",
@@ -259,6 +292,9 @@ export const ROLLER_SERIES = [
 {
   id: "3500L", name: "Series 3500 Light", subtitle: "Fixed Drive Roller — Light",
   platform: "1700", duty: "Light", color: "#7c3aed",
+  bearings: [
+    { code: "1.350L", label: "Ball bearing 689 2Z – standard", temp_max_C: 40, note: "689 2Z. Drive heads zinc-plated after welding." },
+  ],
   driveType: "3/8\" chain — wrapping or tangential", maxLoad_N: 150, maxSpeed_ms: 0.5,
   temp_min_C: -30, temp_max_C: 40, antistatic: "Available (grooved/sleeved)",
   image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/36a851e75_3500_light_p80_i0.jpeg",
@@ -284,6 +320,12 @@ export const ROLLER_SERIES = [
 {
   id: "3500", name: "Series 3500", subtitle: "Fixed Drive Roller — Standard",
   platform: "1700", duty: "Medium", color: "#4f46e5",
+  bearings: [
+    { code: "1.350", label: "Ball bearing 6002 2RZ – standard", temp_max_C: 40, note: "6002 2RZ. Standard duty." },
+    { code: "1.351", label: "Ball bearing 6002 2RZ – deep freeze oiled (−30°C)", temp_min_C: -30, temp_max_C: 40, note: "Oiled for deep freeze." },
+    { code: "1.352", label: "Ball bearing 6002 2RZ – antistatic", temp_max_C: 40, note: "Not available with PVC tube or IP55 variant." },
+    { code: "1.353", label: "IP55 sealed bearing – washdown/dusty", temp_max_C: 40, note: "IP55. 0°C to +40°C only. Both-side shaft bolt required." },
+  ],
   driveType: "Chain / PolyVee / Flat belt / Toothed belt / Round belt", maxLoad_N: 2000, maxSpeed_ms: 2.0,
   temp_min_C: -30, temp_max_C: 40, antistatic: "Available (not PVC, not IP55)",
   image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/808a4015d_3500_p84_i0.jpeg",
@@ -323,6 +365,10 @@ export const ROLLER_SERIES = [
 {
   id: "3800", name: "Series 3800", subtitle: "Friction Roller — Zero Pressure Accumulation",
   platform: "1700", duty: "Medium", color: "#ec4899",
+  bearings: [
+    { code: "1.380", label: "Ball bearing 6002 2RZ – standard with friction coupling", temp_max_C: 40, note: "Friction slip coupling releases under back-pressure." },
+    { code: "1.381", label: "Ball bearing 6002 2RZ – antistatic friction (<10⁶ Ω)", temp_max_C: 40, note: "Antistatic friction coupling." },
+  ],
   driveType: "Chain / Flat belt / Toothed belt (friction slip coupling)", maxLoad_N: 500, maxSpeed_ms: 0.5,
   temp_min_C: -5, temp_max_C: 40, antistatic: "Available (<10⁶ Ω)",
   image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/644fcc1be_3800_p126_i0.jpeg",
@@ -349,6 +395,10 @@ export const ROLLER_SERIES = [
 {
   id: "3950", name: "Series 3950", subtitle: "Heavy-Duty Fixed Drive Roller",
   platform: "1450", duty: "Heavy", color: "#b45309",
+  bearings: [
+    { code: "1.395", label: "Polyamide housing – 6205 2RZ (standard, 5000 N)", temp_max_C: 40, note: "Polyamide housing. 5000 N capacity." },
+    { code: "1.396", label: "Steel housing – deep freeze (2500 N, −30°C)", temp_min_C: -30, temp_max_C: 40, note: "Steel housing for deep freeze. Max 2500 N." },
+  ],
   driveType: "5/8\" permanently welded steel chain sprockets", maxLoad_N: 5000, maxSpeed_ms: 0.5,
   temp_min_C: -5, temp_max_C: 40, antistatic: "Via sprocket head",
   image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/d3be2eb5e_3950_p132_i0.jpeg",
@@ -377,6 +427,9 @@ export const ROLLER_SERIES = [
 {
   id: "MSC50", name: "Series MSC 50", subtitle: "Magnetic Speed Controller — Brake Roller",
   platform: "1700", duty: "Light", color: "#0f766e",
+  bearings: [
+    { code: "1.MSC", label: "Ball bearing 6002 2RZ – oiled (eddy current brake)", temp_min_C: 0, temp_max_C: 40, note: "Oiled bearing. Non-contact eddy current brake. Min 0°C." },
+  ],
   driveType: "Gravity only — eddy current brake (no drive)", maxLoad_N: 350, maxSpeed_ms: 2.0,
   temp_min_C: 0, temp_max_C: 40, antistatic: "Standard",
   image_url: "https://base44.app/api/apps/69dd9ffccab4dd693d4d92f5/files/mp/public/69dd9ffccab4dd693d4d92f5/42d2269d6_MSC50_p138_i0.jpeg",
