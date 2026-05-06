@@ -16,7 +16,7 @@ import { NORMALIZED_CHAINS_EXPANSION_2 } from "./chainNormalizedExpansion2";
 import { DH_MERGE_REFS, DH_NEW_CHAINS } from "./donghuaNormalizedChains";
 import { DH_DEEP_MERGE_REFS, DH_DEEP_NEW_CHAINS } from "./donghuaDeepExpansion";
 import { DH_PHASE4_MERGE_REFS, DH_PHASE4_NEW_CHAINS } from "./donghuaPhase4Expansion";
-import { ANSI_EXPANSION_MERGE_REFS, ANSI_EXPANSION_CHAINS } from "./ansiFamilyExpansion";
+import { ANSI_FAMILY_MERGE_REFS, ANSI_FAMILY_NEW_CHAINS } from "./ansiRollerChainExpansion";
 import { UK_MERGE_REFS, UK_NEW_CHAINS } from "./unikingBulkChains";
 export { AL_SOURCE, AL_CATEGORIES, AL_ANSI_SINGLE_STRAND, AL_WELDED_MILL_CHAINS, AL_ATTACHMENT_CATEGORIES, AL_MATERIAL_VARIANTS, getALSpecByChainId, getALConflicts, buildALSourceEntry } from "./alliedLockeSourceRecord";
 export { DH_SOURCE, DH_CATEGORIES, DH_MATERIAL_VARIANTS } from "./donghuaSourceRecord";
@@ -36,7 +36,7 @@ export const ALL_NORMALIZED_CHAINS = (() => {
     ...DH_NEW_CHAINS,
     ...DH_DEEP_NEW_CHAINS,
     ...DH_PHASE4_NEW_CHAINS,
-    ...ANSI_EXPANSION_CHAINS,
+    ...ANSI_FAMILY_NEW_CHAINS,
     ...UK_NEW_CHAINS,
   ]) {
     if (!seen.has(chain.chain_id)) {
@@ -103,8 +103,8 @@ export const ALL_NORMALIZED_CHAINS = (() => {
     }
   }
 
-  // 2d. Patch ANSI_EXPANSION_MERGE_REFS (Family Expansion Phase 1 — ANSI enrichment)
-  for (const ref of ANSI_EXPANSION_MERGE_REFS) {
+  // 2d. Patch ANSI_FAMILY_MERGE_REFS (Family Expansion Phase 1 — ANSI multi-manufacturer enrichment)
+  for (const ref of ANSI_FAMILY_MERGE_REFS) {
     const chain = merged.find(c => c.chain_id === ref.chain_id);
     if (!chain) continue;
     const alreadyHas = chain.source_refs.some(
@@ -115,8 +115,8 @@ export const ALL_NORMALIZED_CHAINS = (() => {
         manufacturer: ref.manufacturer,
         code: ref.code,
         confidence: ref.confidence,
-        notes: ref.notes || null,
         catalog_page: ref.catalog_page || null,
+        notes: ref.notes || null,
       });
     }
   }
