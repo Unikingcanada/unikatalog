@@ -296,8 +296,8 @@ export default function ElevBucketsView({onBack,onGoRFQ}) {
   useEffect(()=>{
     async function load(){
       try{
-        async function fetchAll(entity){let all=[],skip=0,hasMore=true;while(hasMore){const batch=await entity.list();all=[...all,...batch];hasMore=batch.length<500;skip+=batch.length;}return all;}
-        const [buckets,macChains]=await Promise.all([fetchAll(ElevatorBucket),fetchAll(MacChainProduct)]);
+        const buckets=await ElevatorBucket.list();
+        const macChains=await MacChainProduct.list();
         setAllProducts([
           ...buckets.map(r=>({...r,_src:"bucket",_type:"Elevator Bucket"})),
           ...macChains.map(r=>({...r,_src:"mac",_type:r.product_type==="ANSI Roller Chain"?"ANSI Roller Chain":r.product_type==="ANSI Roller Chain Attachments"?"ANSI Roller Chain Attachments":"Engineered Chain",vendor:"",series:r.part_number||r.series,style:r.subcategory||r.category,image_url:r.product_image||r.image_url}))
