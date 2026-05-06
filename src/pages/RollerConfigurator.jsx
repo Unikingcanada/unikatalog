@@ -80,24 +80,48 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial }) {
   const rlVal = parseInt(rl) || 600;
   const shaftExtMm = getShaftExtMm(shaftObj);
 
+  // ── Tapered (conical) detection ───────────────────────────────────────────
+  const conicity = tube?.conicity; // e.g. "1.8°" or "2.2°"
+  const taperedTable = conicity && series.tapered_elements?.[conicity];
+  let taperedRow = null;
+  if (taperedTable) {
+    // Find closest RL entry
+    taperedRow = taperedTable.reduce((prev, cur) =>
+      Math.abs(cur.rl_mm - rlVal) < Math.abs(prev.rl_mm - rlVal) ? cur : prev
+    );
+  }
+  const isTapered = !!taperedRow;
+
   // Fixed SVG canvas
-  const VW = 560, VH = 200;
-  const shaftVisLen = 40;  // visual shaft arm length
+  const VW = 560, VH = isTapered ? 230 : 200;
+  const shaftVisLen = 40;
   const cx = shaftVisLen + 4;
   const drawRL = VW - shaftVisLen * 2 - 8;
 
   // Scale tube diameter
   const maxVisualDia = 110;
   const minVisualDia = 24;
-  const visualDia = Math.max(minVisualDia, Math.min(maxVisualDia, (tubeMm / 89) * maxVisualDia));
+
+  // For tapered: use min_dia and max_dia from catalog; for regular use tube_mm
+  const smallDiaMm = isTapered ? taperedRow.min_dia_mm : tubeMm;
+  const largeDiaMm = isTapered ? taperedRow.max_dia_mm : tubeMm;
+  const visualSmall = Math.max(minVisualDia, Math.min(maxVisualDia, (smallDiaMm / 120) * maxVisualDia));
+  const visualLarge = Math.max(minVisualDia, Math.min(maxVisualDia, (largeDiaMm / 120) * maxVisualDia));
+  const visualDia = isTapered ? visualLarge : Math.max(minVisualDia, Math.min(maxVisualDia, (tubeMm / 89) * maxVisualDia));
   const visualWall = Math.max(2, wallMm * (visualDia / tubeMm));
 
-  const cy = VH / 2 - 8; // shift up a bit to leave room for dim lines below
+  const color = series.color || NAVY;
+  const cy = VH / 2 - 10;
+
+  // For tapered: trapezoid corners (small end = left, large end = right)
+  const smallHalf = visualSmall / 2;
+  const largeHalf = visualLarge / 2;
+
+  // Non-tapered geometry
   const tubeY1 = cy - visualDia / 2;
   const tubeY2 = cy + visualDia / 2;
   const innerY1 = tubeY1 + visualWall;
   const innerY2 = tubeY2 - visualWall;
-  const color = series.color || NAVY;
 
   // Sleeve
   const hasSleeve = sleeve && sleeve !== "None";
@@ -110,19 +134,28 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial }) {
   // Dimension labels
   const fmtMm = v => imperial ? `${(v / 25.4).toFixed(2)}"` : `${v} mm`;
   const rlLabel = `RL = ${fmtMm(rlVal)}`;
-  const bLabel = `B = ${fmtMm(shaftExtMm)}`;
   const elMm = rlVal + shaftExtMm * 2;
   const elLabel = `EL = ${fmtMm(elMm)}`;
 
-  // Dim line Y positions
-  const dimY1 = tubeY2 + 16;  // RL dim line
-  const dimY2 = tubeY2 + 34;  // EL dim line
-  const shaftDimY = tubeY1 - 16; // B dim line (above)
+  // For tapered: top of schematic is the larger end
+  const topRef = isTapered ? cy - largeHalf : tubeY1;
+  const botRef = isTapered ? cy + largeHalf : tubeY2;
+  const dimY1 = botRef + 16;
+  const dimY2 = botRef + 34;
+  const shaftDimY = topRef - 16;
+
+  // Tapered SVG polygon points
+  // small end = left (cx), large end = right (cx+drawRL)
+  const tapOuterPoints = `${cx},${cy - smallHalf} ${cx + drawRL},${cy - largeHalf} ${cx + drawRL},${cy + largeHalf} ${cx},${cy + smallHalf}`;
+  const innerSmall = smallHalf - visualWall;
+  const innerLarge = largeHalf - visualWall;
+  const tapInnerPoints = `${cx + visualWall * 2},${cy - innerSmall} ${cx + drawRL - visualWall * 2},${cy - innerLarge} ${cx + drawRL - visualWall * 2},${cy + innerLarge} ${cx + visualWall * 2},${cy + innerSmall}`;
 
   return (
     <div style={{ background: "#f1f5f9", borderRadius: 10, padding: "14px 16px", border: "1px solid " + C.border }}>
       <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 8 }}>
         Live Schematic — {rlLabel} · EL = {fmtMm(elMm)}
+        {isTapered && <span style={{ marginLeft: 8, color: series.color, fontWeight: 800 }}>· Tapered {conicity}</span>}
       </div>
       <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" height={VH} style={{ display: "block", maxWidth: 580 }}>
         <defs>
@@ -138,39 +171,75 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial }) {
           <marker id="arrBL" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
             <path d="M6,0 L0,3 L6,6 Z" fill="#2563eb" />
           </marker>
+          <marker id="arrG" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#16a34a" />
+          </marker>
+          <marker id="arrGL" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
+            <path d="M6,0 L0,3 L6,6 Z" fill="#16a34a" />
+          </marker>
         </defs>
 
         {/* Shaft arms */}
         <line x1={0} y1={cy} x2={cx} y2={cy} stroke="#64748b" strokeWidth={5} strokeLinecap="round" />
         <line x1={cx + drawRL} y1={cy} x2={VW} y2={cy} stroke="#64748b" strokeWidth={5} strokeLinecap="round" />
 
-        {/* Sleeve overlay — drawn BEHIND tube so tube border is on top */}
-        {hasSleeve && (
-          <rect x={cx} y={tubeY1 - sleeveThick} width={drawRL} height={visualDia + sleeveThick * 2}
-            rx={visualDia / 6} fill={sleeveColor} fillOpacity={0.35} stroke={sleeveColor} strokeWidth={1.5} />
+        {isTapered ? (
+          <>
+            {/* Tapered / conical tube body */}
+            <polygon points={tapOuterPoints}
+              fill={color} fillOpacity={0.18} stroke={color} strokeWidth={2} />
+            {/* Inner bore (dashed) */}
+            <polygon points={tapInnerPoints}
+              fill="#fff" fillOpacity={0.55} stroke={color} strokeWidth={0.8} strokeDasharray="5 3" />
+            {/* Center label */}
+            <text x={cx + drawRL / 2} y={cy + 4}
+              textAnchor="middle" fontSize={11} fill={color} fontWeight="700" fontFamily="Arial,sans-serif">
+              {conicity} Tapered
+            </text>
+            {/* d_small label — left (small end) */}
+            <line x1={cx} y1={cy - smallHalf - 4} x2={cx} y2={cy + smallHalf + 4}
+              stroke="#16a34a" strokeWidth={1.2} />
+            <line x1={cx - 1} y1={cy - smallHalf} x2={cx - 1} y2={cy + smallHalf}
+              stroke="#16a34a" strokeWidth={1} markerEnd="url(#arrG)" markerStart="url(#arrGL)" />
+            <text x={cx - 5} y={cy - smallHalf - 6}
+              textAnchor="middle" fontSize={9} fill="#16a34a" fontWeight="700" fontFamily="Arial,sans-serif">
+              d={fmtMm(smallDiaMm)}
+            </text>
+            {/* d_large label — right (large end) */}
+            <line x1={cx + drawRL + 1} y1={cy - largeHalf} x2={cx + drawRL + 1} y2={cy + largeHalf}
+              stroke="#16a34a" strokeWidth={1} markerEnd="url(#arrG)" markerStart="url(#arrGL)" />
+            <text x={cx + drawRL + 5} y={cy - largeHalf - 6}
+              textAnchor="start" fontSize={9} fill="#16a34a" fontWeight="700" fontFamily="Arial,sans-serif">
+              D={fmtMm(largeDiaMm)}
+            </text>
+          </>
+        ) : (
+          <>
+            {/* Sleeve overlay */}
+            {hasSleeve && (
+              <rect x={cx} y={tubeY1 - sleeveThick} width={drawRL} height={visualDia + sleeveThick * 2}
+                rx={visualDia / 6} fill={sleeveColor} fillOpacity={0.35} stroke={sleeveColor} strokeWidth={1.5} />
+            )}
+            {/* Tube body */}
+            <rect x={cx} y={tubeY1} width={drawRL} height={visualDia}
+              rx={visualDia / 8} fill={color} fillOpacity={0.15} stroke={color} strokeWidth={2} />
+            {/* Inner bore */}
+            <rect x={cx + visualWall} y={innerY1} width={drawRL - visualWall * 2} height={innerY2 - innerY1}
+              rx={(innerY2 - innerY1) / 8} fill="#fff" fillOpacity={0.55} stroke={color} strokeWidth={0.8} strokeDasharray="5 3" />
+            {/* Sleeve label */}
+            {hasSleeve && (
+              <text x={cx + drawRL - 6} y={tubeY1 - sleeveThick - 3}
+                textAnchor="end" fontSize={9} fill={sleeveColor} fontWeight="700" fontFamily="Arial,sans-serif">
+                {sleeve}
+              </text>
+            )}
+            {/* Tube label */}
+            <text x={cx + drawRL / 2} y={cy + 4}
+              textAnchor="middle" fontSize={12} fill={color} fontWeight="700" fontFamily="Arial,sans-serif">
+              Ø{tubeMm} × {wallMm} mm
+            </text>
+          </>
         )}
-
-        {/* Tube body */}
-        <rect x={cx} y={tubeY1} width={drawRL} height={visualDia}
-          rx={visualDia / 8} fill={color} fillOpacity={0.15} stroke={color} strokeWidth={2} />
-
-        {/* Inner bore */}
-        <rect x={cx + visualWall} y={innerY1} width={drawRL - visualWall * 2} height={innerY2 - innerY1}
-          rx={(innerY2 - innerY1) / 8} fill="#fff" fillOpacity={0.55} stroke={color} strokeWidth={0.8} strokeDasharray="5 3" />
-
-        {/* Sleeve top strip label */}
-        {hasSleeve && (
-          <text x={cx + drawRL - 6} y={tubeY1 - sleeveThick - 3}
-            textAnchor="end" fontSize={9} fill={sleeveColor} fontWeight="700" fontFamily="Arial,sans-serif">
-            {sleeve}
-          </text>
-        )}
-
-        {/* Tube label */}
-        <text x={cx + drawRL / 2} y={cy + 4}
-          textAnchor="middle" fontSize={12} fill={color} fontWeight="700" fontFamily="Arial,sans-serif">
-          Ø{tubeMm} × {wallMm} mm
-        </text>
 
         {/* ── RL dimension line (body length) ── */}
         <line x1={cx} y1={dimY1} x2={cx + drawRL} y2={dimY1}
@@ -203,20 +272,20 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial }) {
           textAnchor="middle" fontSize={9} fill="#2563eb" fontFamily="Arial,sans-serif" fontWeight="700">
           B={fmtMm(shaftExtMm)}
         </text>
-
-        {/* Shaft label */}
-        <text x={cx / 2} y={cy - visualDia / 2 - (hasSleeve ? sleeveThick : 0) - 18}
-          textAnchor="middle" fontSize={8} fill="#94a3b8" fontFamily="Arial,sans-serif">Shaft ext.</text>
-        <text x={cx + drawRL + shaftVisLen / 2} y={cy - visualDia / 2 - (hasSleeve ? sleeveThick : 0) - 18}
-          textAnchor="middle" fontSize={8} fill="#94a3b8" fontFamily="Arial,sans-serif">Shaft ext.</text>
       </svg>
 
       {/* Legend row */}
       <div style={{ marginTop: 6, display: "flex", gap: 14, flexWrap: "wrap", fontSize: 11 }}>
-        {hasSleeve && (
+        {hasSleeve && !isTapered && (
           <div style={{ display: "flex", alignItems: "center", gap: 5, color: sleeveColor }}>
             <div style={{ width: 12, height: 12, borderRadius: 2, background: sleeveColor, opacity: 0.7 }} />
             <span style={{ fontWeight: 600 }}>{sleeve}</span>
+          </div>
+        )}
+        {isTapered && (
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#16a34a" }}>
+            <div style={{ width: 16, height: 2, background: "#16a34a" }} />
+            <span>d = small end · D = large end (catalog "D" col)</span>
           </div>
         )}
         <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#64748b" }}>
