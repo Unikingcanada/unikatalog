@@ -546,11 +546,10 @@ function printTearSheet(product) {
     </table>
   </div>` : ""}
 
-  ${product.catalog_url || product.tech_doc_url ? `
+  ${product.tech_doc_url ? `
   <div class="section-wrap">
     <div class="section-title">Technical Resources</div>
     <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;">
-      ${product.catalog_url ? `<a href="${product.catalog_url}" style="font-size:12px;color:#1a3a5c;font-weight:600;">View Catalog PDF</a>` : ""}
       ${product.tech_doc_url ? `<a href="${product.tech_doc_url}" style="font-size:12px;color:#1a3a5c;font-weight:600;">Technical Documentation</a>` : ""}
     </div>
   </div>` : ""}
@@ -872,7 +871,7 @@ function BeltDataTable({ data }) {
 // ─── Spec Table ───────────────────────────────────────────────────────────────
 
 function SpecTable({ specs }) {
-  const entries = Object.entries(specs).filter(([, v]) => v != null && v !== "" && v !== "N/A" && String(v) !== "undefined");
+  const entries = Object.entries(specs).filter(([k, v]) => v != null && v !== "" && v !== "N/A" && String(v) !== "undefined" && !k.toLowerCase().includes("page"));
   if (!entries.length) return <div style={{ color: C.muted, fontSize: 13 }}>No specifications available.</div>;
   return (
     <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
@@ -988,11 +987,6 @@ function ProductModal({ product, showBrand, onClose }) {
           }
           {tab === "docs" &&
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {product.catalog_url ?
-            <a href={product.catalog_url} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 14px", background: C.bg, borderRadius: 8, border: "1px solid " + C.border, color: C.navyMid, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
-                  View Catalog PDF
-                </a> :
-            null}
               {product.tech_doc_url ?
             <a href={product.tech_doc_url} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 14px", background: C.bg, borderRadius: 8, border: "1px solid " + C.border, color: C.navyMid, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
                   Technical Documentation
