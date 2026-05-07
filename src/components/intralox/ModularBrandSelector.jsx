@@ -15,9 +15,9 @@ const BRANDS = [
     name: "Intralox",
     tagline: "Modular Plastic Belting (MPB)",
     description: "The world leader in modular plastic belting. Straight-running, radius, and spiral belt systems from Series 100 to Series 10000.",
-    logo: null,
+    logo: INTRALOX_LOGO,
+    logoBg: "#fff",
     accentColor: INTRALOX_RED,
-    logoText: "INTRALOX",
     available: true,
     features: ["Straight-Running", "Radius", "Spiral", "Belt Support Tools", "24 Straight + 6 Radius + 2 Spiral Series"],
   },
@@ -25,10 +25,10 @@ const BRANDS = [
     key: "systemplast",
     name: "System Plast",
     tagline: "Modular Belts & Sprockets — Regal Rexnord",
-    description: "System Plast (Regal Rexnord) offers a comprehensive range of modular plastic belts and sprockets. 8 mm to 63.5 mm pitch. NGevo material for longer wear life. Straight-running, sideflexing, raised rib, anti-slip, and magnetic chainbelt series.",
-    logo: null,
+    description: "System Plast (Regal Rexnord) offers a comprehensive range of modular plastic belts and sprockets. 8 mm to 63.5 mm pitch. NGevo material for longer wear life.",
+    logo: "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/65db03af1_System-Plast-logo.png",
+    logoBg: "#fff",
     accentColor: "#0057A8",
-    logoText: "SP",
     available: true,
     features: ["8 mm to 63.5 mm Pitch", "NGevo Material", "Raised Rib (2500RR)", "Anti-Slip (2508/2630)", "Magnetic Chainbelt", "Smart Guide Rev.005"],
   },
@@ -37,53 +37,53 @@ const BRANDS = [
     name: "Rexnord",
     tagline: "Modular Conveyor Belts & Components",
     description: "Rexnord offers a complete line of modular plastic conveyor belts, chains, and accessories for food, packaging, and industrial applications.",
-    logo: null,
+    logo: "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/8086b3ebe_1762088522rexnord-logo-new.svg",
+    logoBg: "#fff",
     accentColor: "#B71C1C",
-    logoText: "REXNORD",
     available: false,
     features: ["MatTop Chains", "TableTop Chains", "Modular Belts", "Packaging Lines"],
   },
   {
-    key: "regina",
-    name: "Regina",
-    tagline: "Power Transmission & Conveying Solutions",
-    description: "Regina provides modular plastic belts alongside roller chains and conveyor components for diverse industrial applications.",
-    logo: null,
-    accentColor: "#E65100",
-    logoText: "REGINA",
-    available: false,
-    features: ["Modular Plastic Belts", "Roller Chains", "TableTop Chains", "Industrial Conveying"],
+    key: "movex",
+    name: "Movex",
+    tagline: "Italian Innovation — Blueline® Food Grade",
+    description: "Movex S.p.A. (Italy) manufactures high-quality modular belts for beverage, food, logistics, and automotive industries. The Blueline® range covers meat, poultry, seafood, and bakery.",
+    logo: "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/8acc5f5a2_movex-logo-news-01.png",
+    logoBg: "#fff",
+    accentColor: "#E63946",
+    available: true,
+    features: ["8 mm to 50.8 mm Pitch", "Blueline® Food Grade", "Sideflexing Belts", "BluLub® Self-Lubricating POM", "Interchangeable Design"],
   },
   {
     key: "uni",
     name: "Uni-Chains",
     tagline: "Plastic Conveyor Chains & Belts",
     description: "Uni-Chains (formerly Uni-Kæden) manufactures a comprehensive range of modular plastic belts, flat-top chains, and conveyor components.",
-    logo: null,
-    accentColor: "#1B5E20",
-    logoText: "UNI",
+    logo: "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/9bea8e86c_uni.webp",
+    logoBg: "#fff",
+    accentColor: "#E85D04",
     available: false,
     features: ["Sideflexing Chains", "Flat Top Chains", "Modular Belts", "Food Grade Materials"],
   },
   {
-    key: "movex",
-    name: "Movex",
-    tagline: "Italian Innovation — Blueline® Food Grade",
-    description: "Movex S.p.A. (Italy) manufactures high-quality modular belts for beverage, food, logistics, and automotive industries. The Blueline® range covers meat, poultry, seafood, and bakery. 8–50.8 mm pitch. Full interchangeability with major belt producers.",
-    logo: null,
-    accentColor: "#E63946",
-    logoText: "MVX",
-    available: true,
-    features: ["8 mm to 50.8 mm Pitch", "Blueline® Food Grade", "Sideflexing Belts", "BluLub® Self-Lubricating POM", "Interchangeable Design"],
+    key: "regina",
+    name: "Regina",
+    tagline: "Power Transmission & Conveying Solutions",
+    description: "Regina provides modular plastic belts alongside roller chains and conveyor components for diverse industrial applications.",
+    logo: "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/faa575d0c_Regina-Logo-e1587655270372.webp",
+    logoBg: "#fff",
+    accentColor: "#F5C400",
+    available: false,
+    features: ["Modular Plastic Belts", "Roller Chains", "TableTop Chains", "Industrial Conveying"],
   },
   {
     key: "forbo",
     name: "Forbo / Forbo Siegling",
     tagline: "Conveyor & Processing Belts",
     description: "Forbo Siegling offers Siegling Transilon conveyor belts, Siegling Prolink modular belts, and comprehensive processing belt solutions.",
-    logo: null,
-    accentColor: "#004D40",
-    logoText: "FORBO",
+    logo: "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/0b95c51db_logo-forbo.webp",
+    logoBg: "#fff",
+    accentColor: "#0077C8",
     available: false,
     features: ["Transilon Conveyor Belts", "Prolink Modular Belts", "Processing Belts", "Flat Belts"],
   },
@@ -112,7 +112,7 @@ export default function ModularBrandSelector({ onSelectBrand, onBack }) {
 
       {/* Brand grid */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px clamp(16px,4vw,32px) 80px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20 }}>
           {BRANDS.map((brand, idx) => (
             <div
               key={brand.key + idx}
@@ -138,12 +138,9 @@ export default function ModularBrandSelector({ onSelectBrand, onBack }) {
 
               {/* Brand header */}
               <div style={{ padding: "18px 20px 14px", display: "flex", alignItems: "center", gap: 14 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 10, background: brand.key === "intralox" ? "#fff" : brand.accentColor, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: brand.key === "intralox" ? `1px solid ${C.border}` : "none" }}>
-                    {brand.key === "intralox"
-                      ? <img src={INTRALOX_LOGO} alt="Intralox" style={{ width: 38, height: 38, objectFit: "contain" }} />
-                      : <span style={{ color: "#fff", fontWeight: 900, fontSize: 11, letterSpacing: "0.5px" }}>{brand.logoText}</span>
-                    }
-                  </div>
+                <div style={{ width: 80, height: 44, borderRadius: 8, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, border: `1px solid ${C.border}`, padding: "4px 8px" }}>
+                  <img src={brand.logo} alt={brand.name} style={{ maxWidth: 72, maxHeight: 36, objectFit: "contain" }} />
+                </div>
                 <div>
                   <div style={{ fontSize: 17, fontWeight: 800, color: C.text }}>{brand.name}</div>
                   <div style={{ fontSize: 11, color: C.muted, marginTop: 1 }}>{brand.tagline}</div>
