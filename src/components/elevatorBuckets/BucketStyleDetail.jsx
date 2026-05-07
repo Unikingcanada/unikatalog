@@ -1,6 +1,7 @@
 // Full style detail — material toggle, spec table, compare, RFQ modal
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import HolePatternModal from "./HolePatternModal";
+import { addCompareItem, removeCompareItem, isInCompare, buildCompareItem, getCompareItems } from "@/lib/bucketCompareState";
 
 const NAVY = "#1a3a5c";
 const AMBER = "#b45309";
@@ -63,6 +64,15 @@ export default function BucketStyleDetail({ rec, onBack }) {
   const [activeMat, setActiveMat] = useState(materials[0] || "");
   const [rfqSize, setRfqSize] = useState(null);
   const [compareSet, setCompareSet] = useState(new Set());
+  const [compareItems, setCompareItems] = useState(() => getCompareItems());
+  const [maxWarning, setMaxWarning] = useState(false);
+
+  // Sync compare state from global storage
+  useEffect(() => {
+    const h = () => setCompareItems(getCompareItems());
+    window.addEventListener("bucket_compare_updated", h);
+    return () => window.removeEventListener("bucket_compare_updated", h);
+  }, []);
 
   const sizesByMaterial = useMemo(() => {
     try { return rec.sizes_by_material ? JSON.parse(rec.sizes_by_material) : null; } catch { return null; }
@@ -148,7 +158,7 @@ export default function BucketStyleDetail({ rec, onBack }) {
   const compareArr = baseSizes.filter(s => compareSet.has(s.sizeNominal || s.size));
 
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px clamp(12px,4vw,32px)", paddingBottom: compareSet.size > 0 ? 90 : 32 }}>
+    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px clamp(12px,4vw,32px)", paddingBottom: (compareSet.size > 0 || compareItems.length > 0) ? 100 : 32 }}>
       {/* Back + Breadcrumb */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
         <button onClick={onBack} className="uk-btn-back">← Back</button>
@@ -229,6 +239,20 @@ export default function BucketStyleDetail({ rec, onBack }) {
         </div>
       )}
 
+      {/* Cross-manufacturer compare hint */}
+      {!isPending && baseSizes.length > 0 && (
+        <div style={{ fontSize: 12, color: "#9ca3af", marginBottom: 12, fontStyle: "italic" }}>
+          Want to compare this style against other manufacturers? Use the <b style={{ color: "#7c3aed" }}>Compare</b> buttons on any row below.
+        </div>
+      )}
+
+      {/* Max compare warning */}
+      {maxWarning && (
+        <div style={{ background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 8, padding: "10px 16px", fontSize: 12, color: "#c2410c", fontWeight: 600, marginBottom: 12 }}>
+          Maximum 6 buckets can be compared at once. Remove one to add another.
+        </div>
+      )}
+
       {/* Spec table or pending state */}
       {isPending ? (
         <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "48px 24px", textAlign: "center", marginBottom: 20 }}>
@@ -269,7 +293,7 @@ export default function BucketStyleDetail({ rec, onBack }) {
                   {sizesByMaterial && (
                     <th style={{ padding: "10px 12px", color: "#fbbf24", fontWeight: 700, whiteSpace: "nowrap" }}>Weight ({activeMat || "—"}) lbs</th>
                   )}
-                  <th style={{ padding: "10px 12px", color: "#c4b5fd", fontWeight: 700, whiteSpace: "nowrap" }}>Compare</th>
+                  <th style={{ padding: "10px 12px", color: "#86efac", fontWeight: 700, whiteSpace: "nowrap" }}>+ Compare</th>
                   <th style={{ padding: "10px 12px", color: "#fff", fontWeight: 700, whiteSpace: "nowrap" }}>RFQ</th>
                 </tr>
               </thead>
@@ -292,9 +316,34 @@ export default function BucketStyleDetail({ rec, onBack }) {
                           {weightMap[nom] != null ? `${weightMap[nom]}` : "—"}
                         </td>
                       )}
-                      <td style={{ padding: "9px 12px", textAlign: "center" }}>
-                        <input type="checkbox" checked={inCompare} onChange={() => toggleCompare(nom)}
-                          style={{ cursor: "pointer", width: 15, height: 15, accentColor: "#7c3aed" }} />
+                      <td style={{ padding: "8px 12px", whiteSpace: "nowrap" }}>
+                        {(() => {
+                          const compareItem = buildCompareItem(rec, size, activeMat);
+                          const inGlobal = compareItems.some(ci => ci.id === compareItem.id);
+                          return (
+                            <button
+                              onClick={() => {
+                                if (inGlobal) {
+                                  removeCompareItem(compareItem.id);
+                                  setMaxWarning(false);
+                                } else {
+                                  const result = addCompareItem(compareItem);
+                                  if (!result.ok) setMaxWarning(true);
+                                  else setMaxWarning(false);
+                                }
+                              }}
+                              style={{
+                                padding: "5px 10px", borderRadius: 6, cursor: "pointer", fontSize: 11, fontWeight: 700, transition: "all 0.15s", whiteSpace: "nowrap",
+                                border: inGlobal ? "none" : "1px solid #7c3aed",
+                                background: inGlobal ? "#7c3aed" : "#faf5ff",
+                                color: inGlobal ? "#fff" : "#7c3aed",
+                              }}
+                              onMouseEnter={e => { if (!inGlobal) { e.currentTarget.style.background = "#7c3aed"; e.currentTarget.style.color = "#fff"; }}}
+                              onMouseLeave={e => { if (!inGlobal) { e.currentTarget.style.background = "#faf5ff"; e.currentTarget.style.color = "#7c3aed"; }}}>
+                              {inGlobal ? "✓ In Compare" : "Compare"}
+                            </button>
+                          );
+                        })()}
                       </td>
                       <td style={{ padding: "8px 12px", whiteSpace: "nowrap" }}>
                         <button onClick={() => setRfqSize(buildRFQSize(size))}

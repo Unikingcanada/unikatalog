@@ -7,6 +7,7 @@ import RFQCart from './pages/RFQCart';
 import ElevatorBuckets from './pages/ElevatorBuckets';
 import Catalog from './pages/Catalog';
 import TableTopChains from './pages/TableTopChains';
+import BucketCompare from './pages/BucketCompare';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/ElevatorBuckets" element={<ElevatorBuckets />} />
         <Route path="/Catalog" element={<Catalog />} />
         <Route path="/TableTopChains" element={<TableTopChains />} />
+        <Route path="/BucketCompare" element={<BucketCompare />} />
       </Routes>
     </BrowserRouter>
   )
