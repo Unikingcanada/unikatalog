@@ -3,7 +3,7 @@
  * Sections: Buckets (supplier → style → detail) | Belts | Hardware | Splices
  */
 import { useState, useEffect } from "react";
-import { ElevatorBucket } from "@/api/entities";
+import { base44 } from "@/api/base44Client";
 
 import ElevSectionNav from "./ElevSectionNav";
 import ElevSupplierGrid from "./ElevSupplierGrid";
@@ -23,7 +23,7 @@ export default function ElevBucketsView({ onBack, onGoRFQ }) {
   const [selectedStyle, setSelectedStyle] = useState(null); // bucket record
 
   useEffect(() => {
-    ElevatorBucket.list()
+    base44.entities.ElevatorBucket.list()
       .then(data => setBuckets(data || []))
       .catch(() => setBuckets([]))
       .finally(() => setLoading(false));

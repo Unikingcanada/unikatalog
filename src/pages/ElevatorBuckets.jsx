@@ -1,7 +1,13 @@
-// Redirects to the unified Home app
+import ElevBucketsView from "@/components/elevatorBuckets/ElevBucketsView";
+import AppLayout from "@/components/layout/AppLayout";
 import { useEffect } from "react";
-import { createPageUrl } from "@/utils";
+
 export default function ElevatorBuckets() {
-  useEffect(() => { window.location.replace(createPageUrl("Home")); }, []);
-  return null;
+  function goHome() { window.location.href = "/Home"; }
+  function goRFQ() { window.location.href = "/RFQCart"; }
+  return (
+    <AppLayout onBack={goHome}>
+      <ElevBucketsView onBack={goHome} onGoRFQ={goRFQ} />
+    </AppLayout>
+  );
 }

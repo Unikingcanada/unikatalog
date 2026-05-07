@@ -1,67 +1,32 @@
-// Shows all bucket series for a given supplier as styled cards
+// Bucket style grid with category tabs + material pills + product images
 import { useState } from "react";
 
 const NAVY = "#1a3a5c";
-const AMBER = "#b45309";
 
-function parseMaterials(str) {
-  if (!str) return [];
-  return str.split(/\s*[\/,]\s*/).map(s => s.trim()).filter(Boolean).filter((v, i, a) => a.indexOf(v) === i);
-}
-
-const MAT_DOTS = {
-  "Poly": "#f97316", "Polyethylene": "#f97316", "Nylon": "#d97706",
-  "Urethane": "#10b981", "FDA Nylon": "#6366f1", "Mild Steel": "#64748b",
-  "Carbon Steel": "#64748b", "Stainless Steel": "#3b82f6", "Nylathane": "#10b981",
-  "Nyrim": "#6366f1", "Aluminum": "#9ca3af", "Reinforced Poly": "#f97316",
+const MAT_STYLES = {
+  "Polyethylene": { bg: "#dbeafe", color: "#1d4ed8" },
+  "Nylon":        { bg: "#f3f4f6", color: "#374151" },
+  "Urethane":     { bg: "#fef3c7", color: "#b45309" },
+  "Carbon Steel": { bg: "#e5e7eb", color: "#374151" },
+  "Mild Steel":   { bg: "#e5e7eb", color: "#374151" },
+  "Stainless Steel": { bg: "#e0e7ff", color: "#3730a3" },
+  "Ductile Iron": { bg: "#fde8d8", color: "#92400e" },
+  "Aluminum":     { bg: "#e0f2fe", color: "#0369a1" },
+  "Nylathane":    { bg: "#ccfbf1", color: "#0f766e" },
+  "Nyrim":        { bg: "#ede9fe", color: "#6d28d9" },
 };
 
-function BucketCard({ rec, onClick }) {
-  const materials = parseMaterials(rec.material);
-  const isAg = (rec.application || "").toLowerCase().includes("ag");
-  let sizeCount = 0;
-  try { sizeCount = rec.bucket_sizes_detail ? JSON.parse(rec.bucket_sizes_detail).length : 0; } catch {}
+function getMat(m) {
+  for (const [k, v] of Object.entries(MAT_STYLES)) {
+    if (m.toLowerCase().includes(k.toLowerCase())) return v;
+  }
+  return { bg: "#f1f5f9", color: "#334155" };
+}
 
-  return (
-    <div onClick={onClick}
-      style={{ background: "#fff", borderRadius: 14, border: "1px solid #e5e7eb", cursor: "pointer", overflow: "hidden", display: "flex", flexDirection: "column", transition: "transform 0.15s, box-shadow 0.15s" }}
-      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 8px 28px rgba(0,0,0,0.11)"; e.currentTarget.style.borderColor = AMBER; }}
-      onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; e.currentTarget.style.borderColor = "#e5e7eb"; }}>
-      <div style={{ height: 3, background: `linear-gradient(90deg, ${AMBER}, ${AMBER}66)` }} />
-      <div style={{ background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", height: 130, overflow: "hidden", position: "relative" }}>
-        {rec.image_url
-          ? <img src={rec.image_url} alt={rec.series} style={{ maxHeight: 115, maxWidth: "90%", objectFit: "contain", padding: 8 }} onError={e => e.target.style.display = "none"} />
-          : <div style={{ color: "#d1d5db", fontSize: 44 }}>🪣</div>}
-        {materials.length > 0 && (
-          <div style={{ position: "absolute", bottom: 8, right: 8, display: "flex", gap: 4 }}>
-            {materials.slice(0, 4).map(m => (
-              <span key={m} title={m} style={{ width: 11, height: 11, borderRadius: "50%", background: MAT_DOTS[m] || "#9ca3af", border: "2px solid #fff", boxShadow: "0 1px 3px rgba(0,0,0,0.2)", display: "block" }} />
-            ))}
-          </div>
-        )}
-      </div>
-      <div style={{ padding: "12px 14px 8px", flex: 1 }}>
-        <div style={{ display: "flex", gap: 5, marginBottom: 6, flexWrap: "wrap" }}>
-          <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: isAg ? "#d1fae5" : "#dbeafe", color: isAg ? "#065f46" : "#1d4ed8" }}>
-            {isAg ? "Agricultural" : "Industrial"}
-          </span>
-          {rec.duty && <span style={{ fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 99, background: "#f3f4f6", color: "#374151" }}>{rec.duty}</span>}
-        </div>
-        <div style={{ fontSize: 14, fontWeight: 900, color: NAVY, lineHeight: 1.25, marginBottom: 4 }}>{rec.series}</div>
-        {rec.style && <div style={{ fontSize: 11, color: "#6b7280", marginBottom: 6 }}>{rec.style}</div>}
-        <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-          {materials.slice(0, 4).map(m => {
-            const dot = MAT_DOTS[m] || "#9ca3af";
-            return <span key={m} style={{ fontSize: 10, padding: "2px 8px", borderRadius: 99, background: "#f3f4f6", color: "#374151", fontWeight: 600 }}>{m}</span>;
-          })}
-        </div>
-      </div>
-      <div style={{ padding: "8px 14px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #f9fafb" }}>
-        <span style={{ fontSize: 10, color: "#9ca3af" }}>{sizeCount > 0 ? `${sizeCount} sizes` : rec.bucket_sizes || ""}</span>
-        <span style={{ fontSize: 11, color: AMBER, fontWeight: 800 }}>View & Configure →</span>
-      </div>
-    </div>
-  );
+function parseMaterials(rec) {
+  if (rec.materials && Array.isArray(rec.materials) && rec.materials.length > 0) return rec.materials;
+  if (!rec.material) return [];
+  return rec.material.split(/\s*[\/,]\s*/).map(s => s.trim()).filter(Boolean).filter((v,i,a) => a.indexOf(v) === i);
 }
 
 function normSupplier(vendor) {
@@ -73,61 +38,140 @@ function normSupplier(vendor) {
   return vendor;
 }
 
+function BucketCard({ rec, onClick }) {
+  const [hov, setHov] = useState(false);
+  const mats = parseMaterials(rec);
+  const isAg = (rec.category || rec.application || "").toLowerCase().includes("ag");
+  let sizeCount = 0;
+  try {
+    const sbm = rec.sizes_by_material ? JSON.parse(rec.sizes_by_material) : null;
+    if (sbm) { const vals = Object.values(sbm); sizeCount = vals[0]?.length || 0; }
+    else if (rec.bucket_sizes_detail) sizeCount = JSON.parse(rec.bucket_sizes_detail).length;
+  } catch {}
+  const isPending = rec.specs_status === "pending";
+
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        background: "#fff",
+        borderRadius: 14,
+        border: `1px solid ${hov ? "#b45309" : "#e5e7eb"}`,
+        cursor: "pointer",
+        overflow: "hidden",
+        display: "flex", flexDirection: "column",
+        transition: "all 0.15s",
+        transform: hov ? "translateY(-3px)" : "none",
+        boxShadow: hov ? "0 8px 28px rgba(0,0,0,0.11)" : "0 1px 4px rgba(0,0,0,0.04)",
+      }}>
+      <div style={{ height: 3, background: `linear-gradient(90deg, ${NAVY}, #2d5986)` }} />
+      {/* Image */}
+      <div style={{ background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", height: 130, overflow: "hidden", position: "relative" }}>
+        {rec.image_url ? (
+          <img src={rec.image_url} alt={rec.series}
+            style={{ maxHeight: 115, maxWidth: "88%", objectFit: "contain", padding: 8 }}
+            onError={e => { e.target.style.display = "none"; e.target.nextSibling.style.display = "flex"; }} />
+        ) : null}
+        {/* SVG placeholder shown if no image or image fails */}
+        <div style={{ display: rec.image_url ? "none" : "flex", width: "100%", height: "100%", alignItems: "center", justifyContent: "center" }}>
+          <svg width="80" height="64" viewBox="0 0 80 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="16" width="64" height="44" rx="4" fill="#e2e8f0" stroke="#cbd5e1" strokeWidth="1.5"/>
+            <rect x="20" y="4" width="40" height="16" rx="3" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="1.5"/>
+            <text x="40" y="44" textAnchor="middle" fontSize="9" fill="#94a3b8" fontFamily="Arial">Bucket</text>
+            <text x="40" y="55" textAnchor="middle" fontSize="7" fill="#94a3b8" fontFamily="Arial">No Image</text>
+          </svg>
+        </div>
+        {/* Category badge */}
+        <div style={{ position: "absolute", top: 8, left: 8 }}>
+          <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 99, background: isAg ? "#d1fae5" : "#dbeafe", color: isAg ? "#065f46" : "#1d4ed8" }}>
+            {isAg ? "AG" : "IND"}
+          </span>
+        </div>
+        {isPending && (
+          <div style={{ position: "absolute", top: 8, right: 8 }}>
+            <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 99, background: "#fef3c7", color: "#b45309" }}>Specs Soon</span>
+          </div>
+        )}
+      </div>
+      {/* Body */}
+      <div style={{ padding: "12px 14px 8px", flex: 1 }}>
+        <div style={{ fontSize: 13, fontWeight: 900, color: NAVY, lineHeight: 1.25, marginBottom: 4 }}>{rec.styleName || rec.series}</div>
+        {rec.discharge_type && <div style={{ fontSize: 11, color: "#6b7280", marginBottom: 6 }}>{rec.discharge_type}</div>}
+        {rec.application && <div style={{ fontSize: 11, color: "#6b7280", lineHeight: 1.5, marginBottom: 8, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{rec.application}</div>}
+        {/* Material pills */}
+        {mats.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+            {mats.map(m => {
+              const s = getMat(m);
+              return <span key={m} style={{ fontSize: 10, padding: "2px 7px", borderRadius: 99, background: s.bg, color: s.color, fontWeight: 600 }}>{m}</span>;
+            })}
+          </div>
+        )}
+      </div>
+      {/* Footer */}
+      <div style={{ padding: "8px 14px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #f9fafb" }}>
+        <span style={{ fontSize: 10, color: "#9ca3af" }}>{sizeCount > 0 ? `${sizeCount} sizes` : rec.bucket_sizes || ""}</span>
+        <span style={{ fontSize: 11, color: NAVY, fontWeight: 800 }}>View Specs →</span>
+      </div>
+    </div>
+  );
+}
+
 export default function BucketStyleGrid({ supplier, buckets, onSelectStyle, onBack }) {
+  const [tab, setTab] = useState("ag");
   const [search, setSearch] = useState("");
+
   const supplierBuckets = buckets.filter(b => normSupplier(b.supplier || b.vendor) === supplier);
 
-  const filtered = search.trim()
-    ? supplierBuckets.filter(b => {
-        const q = search.toLowerCase();
-        return (b.series || "").toLowerCase().includes(q) || (b.style || "").toLowerCase().includes(q) || (b.application || "").toLowerCase().includes(q) || (b.material || "").toLowerCase().includes(q);
-      })
-    : supplierBuckets;
+  const agBuckets = supplierBuckets.filter(b => (b.category || b.application || "").toLowerCase().includes("ag"));
+  const indBuckets = supplierBuckets.filter(b => !(b.category || b.application || "").toLowerCase().includes("ag"));
 
-  const agBuckets = filtered.filter(b => (b.application || "").toLowerCase().includes("ag"));
-  const indBuckets = filtered.filter(b => !(b.application || "").toLowerCase().includes("ag"));
+  // Default to the tab that has content
+  const activeTab = tab === "ag" && agBuckets.length === 0 ? "ind" : tab === "ind" && indBuckets.length === 0 ? "ag" : tab;
+  const activeBuckets = activeTab === "ag" ? agBuckets : indBuckets;
+
+  const filtered = search.trim()
+    ? activeBuckets.filter(b => {
+        const q = search.toLowerCase();
+        return (b.series || "").toLowerCase().includes(q) || (b.styleName || "").toLowerCase().includes(q) || (b.application || "").toLowerCase().includes(q) || (b.material || "").toLowerCase().includes(q);
+      })
+    : activeBuckets;
 
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "24px clamp(12px,4vw,32px)" }}>
+      {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
-        <button onClick={onBack} style={{ background: "#f1f5f9", border: "1px solid #e2e8f0", color: "#334155", borderRadius: 7, padding: "6px 14px", cursor: "pointer", fontSize: 12, fontWeight: 600, flexShrink: 0 }}>
-          ← Suppliers
-        </button>
+        <button onClick={onBack} className="uk-btn-back">← Suppliers</button>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 20, fontWeight: 900, color: NAVY }}>{supplier} Buckets</div>
-          <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>{supplierBuckets.length} series in catalog</div>
+          <div style={{ fontSize: 20, fontWeight: 900, color: NAVY }}>{supplier}</div>
+          <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>{supplierBuckets.length} styles available</div>
         </div>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search styles..."
           style={{ padding: "8px 14px", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 13, outline: "none", width: 200 }} />
       </div>
 
-      {filtered.length === 0 && (
+      {/* Category tabs */}
+      <div className="uk-tab-bar" style={{ marginBottom: 24 }}>
+        <button className={`uk-tab-btn${activeTab === "ag" ? " active" : ""}`} onClick={() => setTab("ag")} style={{ opacity: agBuckets.length === 0 ? 0.4 : 1 }}>
+          Agricultural {agBuckets.length > 0 && <span style={{ marginLeft: 5, fontSize: 10, background: "#d1fae5", color: "#065f46", borderRadius: 99, padding: "1px 7px", fontWeight: 700 }}>{agBuckets.length}</span>}
+        </button>
+        <button className={`uk-tab-btn${activeTab === "ind" ? " active" : ""}`} onClick={() => setTab("ind")} style={{ opacity: indBuckets.length === 0 ? 0.4 : 1 }}>
+          Industrial {indBuckets.length > 0 && <span style={{ marginLeft: 5, fontSize: 10, background: "#dbeafe", color: "#1d4ed8", borderRadius: 99, padding: "1px 7px", fontWeight: 700 }}>{indBuckets.length}</span>}
+        </button>
+      </div>
+
+      {filtered.length === 0 ? (
         <div style={{ textAlign: "center", padding: "60px 20px", color: "#9ca3af" }}>
-          <div style={{ fontSize: 13 }}>No series match your search. This supplier's full catalog is being added — contact Uniking for any style.</div>
+          <div style={{ fontSize: 32, marginBottom: 10 }}>🪣</div>
+          <div style={{ fontSize: 13 }}>{search ? "No styles match your search." : "No styles in this category — check the other tab or contact Uniking."}</div>
         </div>
-      )}
-
-      {agBuckets.length > 0 && (
-        <div style={{ marginBottom: 28 }}>
-          <div style={{ fontSize: 13, fontWeight: 800, color: "#065f46", textTransform: "uppercase", letterSpacing: 1, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981", display: "inline-block" }} />
-            Agricultural
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 14 }}>
-            {agBuckets.map(rec => <BucketCard key={rec.id} rec={rec} onClick={() => onSelectStyle(rec)} />)}
-          </div>
-        </div>
-      )}
-
-      {indBuckets.length > 0 && (
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 800, color: "#1d4ed8", textTransform: "uppercase", letterSpacing: 1, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#3b82f6", display: "inline-block" }} />
-            Industrial
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 14 }}>
-            {indBuckets.map(rec => <BucketCard key={rec.id} rec={rec} onClick={() => onSelectStyle(rec)} />)}
-          </div>
+      ) : (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 14 }}>
+          {filtered.map(rec => (
+            <BucketCard key={rec.id} rec={rec} onClick={() => onSelectStyle(rec)} />
+          ))}
         </div>
       )}
     </div>
