@@ -462,14 +462,15 @@ function printTearSheet(product) {
   <button class="btn btn-secondary" onclick="window.close()">Close</button>
 </div>
 <div class="header">
-  <div class="header-left">
-    <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style="max-height:38px;width:auto;filter:brightness(0) invert(1);opacity:0.92;" alt="Uniking Canada" />
-  </div>
-  <div class="header-meta">
-    <div style="font-size:13px;font-weight:700;color:#fff;">${product.series}</div>
-    <div>${typeDef?.label || product.type}</div>
-    <div style="margin-top:4px;">${new Date().toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" })}</div>
-  </div>
+<div class="header-left">
+  <img src="https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/9544927ac_Kshort.png" style="height:42px;width:auto;filter:brightness(0) invert(1);opacity:0.85;margin-right:4px;" alt="K" />
+  <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style="max-height:34px;width:auto;filter:brightness(0) invert(1);opacity:0.90;" alt="Uniking Canada" />
+</div>
+<div class="header-meta">
+  <div style="font-size:13px;font-weight:700;color:#fff;">${product.series}</div>
+  <div>${typeDef?.label || product.type}</div>
+  <div style="margin-top:4px;">${new Date().toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" })}</div>
+</div>
 </div>
 <div class="accent-bar"></div>
 <div class="body">
@@ -532,7 +533,10 @@ function printTearSheet(product) {
 
   <div class="footer">
     <div class="footer-left">
-      <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style="max-height:20px;width:auto;opacity:0.65;margin-bottom:4px;" alt="Uniking Canada" /><br/>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+        <img src="https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/9544927ac_Kshort.png" style="height:18px;width:auto;opacity:0.50;" alt="K" />
+        <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style="max-height:16px;width:auto;opacity:0.55;" alt="Uniking Canada" />
+      </div>
       <div>unikingcanada.com · rfq@unikingcanada.com</div>
       <div class="confidential">Confidential — Internal Use Only</div>
     </div>
@@ -630,11 +634,12 @@ function printMacTearSheet(record) {
   <button class="btn btn-secondary" onclick="window.close()">Close</button>
 </div>
 <div class="header">
-  <div class="header-left">
-    <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style="max-height:38px;width:auto;filter:brightness(0) invert(1);opacity:0.92;" alt="Uniking Canada" />
-  </div>
-  <div class="header-meta">
-    <div style="font-size:13px;font-weight:700;color:#fff;">${record.part_number}</div>
+<div class="header-left">
+  <img src="https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/9544927ac_Kshort.png" style="height:42px;width:auto;filter:brightness(0) invert(1);opacity:0.85;margin-right:4px;" alt="K" />
+  <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style="max-height:34px;width:auto;filter:brightness(0) invert(1);opacity:0.90;" alt="Uniking Canada" />
+</div>
+<div class="header-meta">
+  <div style="font-size:13px;font-weight:700;color:#fff;">${record.part_number}</div>
     <div>${record.product_type}${record.category ? " · " + record.category : ""}</div>
     <div style="margin-top:4px;">${date}</div>
   </div>
@@ -666,7 +671,10 @@ function printMacTearSheet(record) {
 
   <div class="footer">
     <div class="footer-left">
-      <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style="max-height:20px;width:auto;opacity:0.65;margin-bottom:4px;" alt="Uniking Canada" /><br/>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+        <img src="https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/9544927ac_Kshort.png" style="height:18px;width:auto;opacity:0.50;" alt="K" />
+        <img src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png" style="max-height:16px;width:auto;opacity:0.55;" alt="Uniking Canada" />
+      </div>
       <div>unikingcanada.com · rfq@unikingcanada.com</div>
       <div class="confidential">Confidential — Internal Use Only</div>
     </div>

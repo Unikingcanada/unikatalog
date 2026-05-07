@@ -31,11 +31,18 @@ export default function AppLayout({ children, hideHeader = false }) {
       {!hideHeader && (
         <header style={{ background: C.navy, padding: "12px clamp(16px,4vw,40px)", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <img
-              src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png"
-              alt="Uniking Canada"
-              style={{ maxHeight: 32, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.95 }}
-            />
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <img
+                src="https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/9544927ac_Kshort.png"
+                alt="K"
+                style={{ height: 34, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.92 }}
+              />
+              <img
+                src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png"
+                alt="Uniking Canada"
+                style={{ maxHeight: 30, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.90 }}
+              />
+            </div>
             {cartCount > 0 && (
               <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", background: "rgba(37,99,235,0.9)", padding: "4px 10px", borderRadius: 20 }}>
                 RFQ ({cartCount})
@@ -47,7 +54,12 @@ export default function AppLayout({ children, hideHeader = false }) {
       <main style={{ flex: 1, width: "100%" }}>
         {children}
       </main>
-      <footer style={{ borderTop: "1px solid " + C.border, padding: "12px clamp(16px,4vw,40px)", textAlign: "center", fontSize: 11, color: C.muted, background: "#fff" }}>
+      <footer style={{ borderTop: "1px solid " + C.border, padding: "12px clamp(16px,4vw,40px)", textAlign: "center", fontSize: 11, color: C.muted, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+        <img
+          src="https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/9544927ac_Kshort.png"
+          alt="K"
+          style={{ height: 16, width: "auto", opacity: 0.35 }}
+        />
         Uniking Canada · Final specifications must be confirmed before supply
       </footer>
     </div>
