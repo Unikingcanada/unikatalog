@@ -12,7 +12,7 @@
     },
     "vendor": {
       "type": "string",
-      "description": "Brand/vendor"
+      "description": "Brand/vendor (Maxi-Lift / Tapco / 4B)"
     },
     "application": {
       "type": "string",
@@ -28,7 +28,7 @@
     },
     "material": {
       "type": "string",
-      "description": "Available materials (e.g. Poly/Nylon/Urethane)"
+      "description": "Available materials (e.g. Poly/Nylon/Urethane) \u2014 comma or slash separated"
     },
     "profile": {
       "type": "string",
@@ -40,7 +40,15 @@
     },
     "bucket_sizes_detail": {
       "type": "string",
-      "description": "JSON array of size detail objects"
+      "description": "JSON array of size detail objects: [{size, length_in, projection_in, depth_in, capacity_cu_in, weight_lbs, drilling_pattern, water_level_capacity, bolt_size, holes, std_spacing_in, wall_thickness, weight_hdpe_lbs, capacity_cu_ft, part_number}]"
+    },
+    "schematic_image": {
+      "type": "string",
+      "description": "URL of bucket schematic/diagram showing hole pattern"
+    },
+    "standard_hole_spacing": {
+      "type": "string",
+      "description": "JSON object: {holeDiameter, numberOfHoles, horizontalSpacing, verticalSpacing, notes}"
     },
     "notes": {
       "type": "string",
