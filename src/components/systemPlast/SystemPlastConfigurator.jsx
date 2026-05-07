@@ -25,32 +25,46 @@ const UNITS_OPTIONS = [
 
 function Header({ onClose }) {
   return (
-    <div style={{ background: `linear-gradient(90deg, ${C.navy}, ${SP_BLUE})`, padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <div style={{ background: "rgba(255,255,255,0.2)", borderRadius: 5, padding: "3px 8px" }}>
-          <span style={{ fontSize: 10, fontWeight: 800, color: "#fff" }}>SYSTEM PLAST</span>
+    <div style={{ padding: "20px 24px 0", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+      <div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+          <div style={{ background: SP_BLUE, borderRadius: 4, padding: "2px 8px" }}>
+            <span style={{ fontSize: 10, fontWeight: 800, color: "#fff" }}>SYSTEM PLAST</span>
+          </div>
+          <span style={{ fontSize: 13, fontWeight: 700, color: C.text }}>Belt Configurator</span>
         </div>
-        <span style={{ color: "#fff", fontSize: 14, fontWeight: 700 }}>Belt Configurator</span>
+        <div style={{ fontSize: 12, color: C.muted }}>Build your RFQ line item step by step</div>
       </div>
-      <button onClick={onClose} style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", borderRadius: 7, padding: "5px 12px", cursor: "pointer", fontSize: 12 }}>✕ Close</button>
+      <button onClick={onClose} style={{ background: "#f1f5f9", border: "1px solid #e2e8f0", color: C.muted, borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>✕</button>
     </div>
   );
 }
 
 function ProgressBar({ step }) {
   return (
-    <div style={{ background: "#fff", padding: "10px 16px", borderBottom: `1px solid ${C.border}`, display: "flex", gap: 4 }}>
-      {STEP_LABELS.map((label, i) => (
-        <div key={i} style={{ flex: 1, textAlign: "center" }}>
-          <div style={{ height: 4, background: i <= step ? SP_BLUE : "#e2e8f0", borderRadius: 4, marginBottom: 4 }} />
-          <div style={{ fontSize: 9, color: i <= step ? SP_BLUE : C.muted, fontWeight: i === step ? 700 : 400 }}>{label}</div>
-        </div>
+    <div style={{ display: "flex", gap: 4, padding: "14px 24px 0" }}>
+      {STEP_LABELS.map((_, i) => (
+        <div key={i} style={{ flex: 1, height: 4, borderRadius: 4, background: i <= step ? C.navyMid : "#e2e8f0", transition: "background 0.2s" }} />
       ))}
     </div>
   );
 }
 
-const body = { padding: "18px 20px", overflowY: "auto", maxHeight: "calc(100vh - 220px)" };
+function StepHeader({ number, title, subtitle }) {
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+        <div style={{ width: 28, height: 28, borderRadius: "50%", background: C.navyMid, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, flexShrink: 0 }}>
+          {number}
+        </div>
+        <div style={{ fontSize: 17, fontWeight: 800, color: C.text }}>{title}</div>
+      </div>
+      {subtitle && <div style={{ fontSize: 12, color: C.muted, marginLeft: 38 }}>{subtitle}</div>}
+    </div>
+  );
+}
+
+const body = { padding: "16px 24px 24px", overflowY: "auto", maxHeight: "calc(100vh - 200px)" };
 const label = { fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 6, display: "block" };
 const select = { width: "100%", padding: "9px 12px", border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12, color: C.text, background: "#fff", marginBottom: 14, outline: "none" };
 const input = { width: "100%", padding: "9px 12px", border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12, color: C.text, background: "#fff", marginBottom: 14, outline: "none", boxSizing: "border-box" };
@@ -99,7 +113,7 @@ export default function SystemPlastConfigurator({ initialSeries, initialStyle, o
         <Header onClose={onClose} />
         <ProgressBar step={step} />
         <div style={body}>
-          <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 12 }}>Select Belt Series</div>
+          <StepHeader number={1} title="Select Belt Series" />
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10 }}>
             {SP_SERIES.map(s => (
               <button key={s.id} onClick={() => { set("seriesId", s.id); set("styleKey", ""); setStep(STEP.STYLE); }}
@@ -127,8 +141,7 @@ export default function SystemPlastConfigurator({ initialSeries, initialStyle, o
         <Header onClose={onClose} />
         <ProgressBar step={step} />
         <div style={body}>
-          <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Select Belt Style — {seriesData?.name}</div>
-          <div style={{ fontSize: 12, color: C.muted, marginBottom: 14 }}>Select the surface style for your application.</div>
+          <StepHeader number={2} title="Select Belt Style" subtitle={seriesData?.name} />
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 10 }}>
             {(seriesData?.styles || []).map(style => {
               const sel = config.styleKey === style.key;
@@ -166,7 +179,7 @@ export default function SystemPlastConfigurator({ initialSeries, initialStyle, o
         <Header onClose={onClose} />
         <ProgressBar step={step} />
         <div style={body}>
-          <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Belt Material — {styleData?.label}</div>
+          <StepHeader number={3} title="Belt Material" subtitle={styleData?.label} />
           {hasBeltData ? (
             <>
               <div style={{ fontSize: 12, color: C.muted, marginBottom: 14 }}>Select module material. Strength and temperature ratings per Smart Guide.</div>
@@ -240,7 +253,7 @@ export default function SystemPlastConfigurator({ initialSeries, initialStyle, o
         <Header onClose={onClose} />
         <ProgressBar step={step} />
         <div style={body}>
-          <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Belt Dimensions</div>
+          <StepHeader number={4} title="Belt Dimensions" />
           <div style={{ fontSize: 12, color: C.muted, marginBottom: 14 }}>
             {minWmm ? `Min width: ${minWin}" (${minWmm} mm). ` : ""}
             {incWmm ? `Width increment: ${incWin}" (${incWmm} mm). ` : ""}
@@ -307,8 +320,7 @@ export default function SystemPlastConfigurator({ initialSeries, initialStyle, o
         <Header onClose={onClose} />
         <ProgressBar step={step} />
         <div style={body}>
-          <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Attachments & Options</div>
-          <div style={{ fontSize: 12, color: C.muted, marginBottom: 16 }}>Select any flights, sideguards, or attachments for this belt.</div>
+          <StepHeader number={5} title="Attachments & Options" subtitle="Select any flights, sideguards, or attachments for this belt" />
 
           {/* Flights */}
           <div style={{ background: "#fff", border: `1px solid ${C.border}`, borderRadius: 10, padding: "14px", marginBottom: 12 }}>
@@ -488,7 +500,7 @@ export default function SystemPlastConfigurator({ initialSeries, initialStyle, o
             units="mm"
           />
 
-          <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 12 }}>Configuration Summary</div>
+          <StepHeader number={6} title="Review & Submit" subtitle="Confirm your configuration before adding to RFQ" />
           <div style={{ background: C.bg, borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden", marginBottom: 14 }}>
             {fields.map(([k, v], i) => (
               <div key={k} style={{ display: "flex", gap: 12, padding: "8px 14px", background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: i < fields.length - 1 ? `1px solid ${C.border}` : "none" }}>

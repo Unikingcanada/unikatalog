@@ -52,23 +52,39 @@ const STEP = {
 // ── Shared sub-components ──────────────────────────────────────────────────────
 function Header({ step, onClose }) {
   return (
-    <div style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.navyMid})`, padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <div style={{ padding: "20px 24px 0", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
       <div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
-          <img src={INTRALOX_LOGO} alt="Intralox" style={{ height: 16, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.9 }} />
-          <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 11 }}>Belt Configurator — Step {step + 1}/{STEPS.length}</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+          <img src={INTRALOX_LOGO} alt="Intralox" style={{ height: 18, width: "auto" }} />
+          <span style={{ fontSize: 13, fontWeight: 700, color: C.text }}>Belt Configurator</span>
         </div>
-        <div style={{ color: "#fff", fontSize: 14, fontWeight: 700 }}>{STEPS[step]}</div>
+        <div style={{ fontSize: 12, color: C.muted }}>Build your RFQ line item step by step</div>
       </div>
-      <button onClick={onClose} style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", color: "#fff", cursor: "pointer", borderRadius: 8, padding: "6px 14px", fontSize: 13, fontWeight: 700 }}>✕ Exit</button>
+      <button onClick={onClose} style={{ background: "#f1f5f9", border: "1px solid #e2e8f0", color: C.muted, cursor: "pointer", borderRadius: 8, padding: "6px 12px", fontSize: 13, fontWeight: 700 }}>✕</button>
     </div>
   );
 }
 
 function ProgressBar({ step }) {
   return (
-    <div style={{ background: "#e5e7eb", height: 4 }}>
-      <div style={{ background: C.gold, height: "100%", width: `${((step + 1) / STEPS.length) * 100}%`, transition: "width 0.3s" }} />
+    <div style={{ display: "flex", gap: 4, padding: "14px 24px 0" }}>
+      {STEPS.map((_, n) => (
+        <div key={n} style={{ flex: 1, height: 4, borderRadius: 4, background: n <= step ? C.navyMid : "#e2e8f0", transition: "background 0.2s" }} />
+      ))}
+    </div>
+  );
+}
+
+function StepHeader({ number, title, subtitle }) {
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+        <div style={{ width: 28, height: 28, borderRadius: "50%", background: C.navyMid, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, flexShrink: 0 }}>
+          {number}
+        </div>
+        <div style={{ fontSize: 17, fontWeight: 800, color: C.text }}>{title}</div>
+      </div>
+      {subtitle && <div style={{ fontSize: 12, color: C.muted, marginLeft: 38 }}>{subtitle}</div>}
     </div>
   );
 }
@@ -155,7 +171,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
   function next() { setStep(s => Math.min(s + 1, STEPS.length - 1)); }
   function back() { setStep(s => Math.max(s - 1, 0)); }
 
-  const body = { padding: 20, maxHeight: "70vh", overflowY: "auto" };
+  const body = { padding: "16px 24px 24px", maxHeight: "70vh", overflowY: "auto" };
 
   // Units toggle pill
   const UnitToggle = () => (
@@ -174,8 +190,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
   if (step === STEP.SERIES) return (
     <div><Header step={step} onClose={onClose} /><ProgressBar step={step} />
       <div style={body}>
-        <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Select Series</div>
-        <div style={{ fontSize: 12, color: C.muted, marginBottom: 14 }}>Choose the Intralox belt series for your application.</div>
+        <StepHeader number={1} title="Select Belt Series" subtitle="Choose the Intralox belt series for your application" />
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {INTRALOX_SERIES.map(s => (
             <button key={s.id} onClick={() => { set("seriesId", s.id); set("beltStyleKey", ""); setTimeout(next, 120); }}
@@ -198,7 +213,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
     <div><Header step={step} onClose={onClose} /><ProgressBar step={step} />
       <div style={body}>
         <BeltSchematic config={config} series={series} beltStyle={beltStyle} units={units} />
-        <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Select Belt Style</div>
+        <StepHeader number={2} title="Select Belt Style" subtitle={series?.name} />
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {series?.styles?.map(s => (
             <button key={s.key} onClick={() => { set("beltStyleKey", s.key); setTimeout(next, 120); }}
@@ -220,8 +235,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
     <div><Header step={step} onClose={onClose} /><ProgressBar step={step} />
       <div style={body}>
         <BeltSchematic config={config} series={series} beltStyle={beltStyle} units={units} />
-        <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Industry / Application</div>
-        <div style={{ fontSize: 12, color: C.muted, marginBottom: 12 }}>Select your industry — you'll automatically proceed to the next step.</div>
+        <StepHeader number={3} title="Industry / Application" subtitle="Select your industry — you'll automatically proceed to the next step" />
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
           {INTRALOX_INDUSTRIES.map(i => (
             <Opt key={i} label={i} selected={config.industry === i}
