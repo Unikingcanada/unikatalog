@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import BackButton from "@/components/shared/BackButton";
 
 const C = {
   navy: "#003c5b",
@@ -9,7 +10,7 @@ const C = {
   muted: "#64748b",
 };
 
-export default function AppLayout({ children, hideHeader = false }) {
+export default function AppLayout({ children, hideHeader = false, onBack = null }) {
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
@@ -27,11 +28,13 @@ export default function AppLayout({ children, hideHeader = false }) {
   }, []);
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, display: "flex", flexDirection: "column" }}>
+    <div style={{ minHeight: "100vh", background: C.bg, display: "flex", flexDirection: "column", fontFamily: "'Inter', 'Segoe UI', sans-serif" }}>
       {!hideHeader && (
-        <header style={{ background: C.navy, padding: "12px clamp(16px,4vw,40px)", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}>
-          <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <header style={{ background: C.navy, padding: "10px clamp(16px,4vw,40px)", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}>
+          <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              {onBack && <BackButton onClick={onBack} label="Back" />}
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <img
                 src="https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/9544927ac_Kshort.png"
                 alt="K"
@@ -42,6 +45,7 @@ export default function AppLayout({ children, hideHeader = false }) {
                 alt="Uniking Canada"
                 style={{ maxHeight: 30, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.90 }}
               />
+              </div>
             </div>
             {cartCount > 0 && (
               <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", background: "rgba(37,99,235,0.9)", padding: "4px 10px", borderRadius: 20 }}>

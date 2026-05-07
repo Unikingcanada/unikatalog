@@ -1878,15 +1878,15 @@ export default function Home() {
   function goBack() {setCurrentPage(null);window.scrollTo(0, 0);}
   function goRFQ() {setCurrentPage("rfqCart");window.scrollTo(0, 0);}
 
-  if (currentPage==="sharpTopCatalog") return <AppLayout><SharpTopCatalog onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
-  if (currentPage==="elevatorBuckets") return <AppLayout><ElevBucketsView onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
-  if (currentPage==="forgedChain") return <AppLayout><ForgedChainView onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
-  if (currentPage==="rollerConfig") return <AppLayout><RollerConfigView onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
-  if (currentPage==="wireMesh") return <AppLayout><WireMeshConfigurator onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
-  if (currentPage==="fourBCatalog") return <AppLayout><FourBCatalog onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
-  if (currentPage==="intraloxCatalog") return <AppLayout><IntraloxCatalog onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
-  if (currentPage==="chainCatalog") return <AppLayout><ChainCatalog onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
-  if (["tableTopChain","tableTopChains"].includes(currentPage)) return <AppLayout><TableTopChainCatalog onBack={goBack}/></AppLayout>;
+  if (currentPage==="sharpTopCatalog") return <AppLayout onBack={goBack}><SharpTopCatalog onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
+  if (currentPage==="elevatorBuckets") return <AppLayout onBack={goBack}><ElevBucketsView onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
+  if (currentPage==="forgedChain") return <AppLayout onBack={goBack}><ForgedChainView onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
+  if (currentPage==="rollerConfig") return <AppLayout onBack={goBack}><RollerConfigView onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
+  if (currentPage==="wireMesh") return <AppLayout onBack={goBack}><WireMeshConfigurator onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
+  if (currentPage==="fourBCatalog") return <AppLayout onBack={goBack}><FourBCatalog onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
+  if (currentPage==="intraloxCatalog") return <AppLayout onBack={goBack}><IntraloxCatalog onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
+  if (currentPage==="chainCatalog") return <AppLayout onBack={goBack}><ChainCatalog onBack={goBack} onGoRFQ={goRFQ}/></AppLayout>;
+  if (["tableTopChain","tableTopChains"].includes(currentPage)) return <AppLayout onBack={goBack}><TableTopChainCatalog onBack={goBack}/></AppLayout>;
   if (currentPage==="rfqCart") return <RFQCartView onBack={goBack}/>;return(
     <AppLayout hideHeader={false}>
       <div style={{ flex: 1, maxWidth: 1280, width: "100%", margin: "0 auto", padding: "20px clamp(12px,4vw,36px)", boxSizing: "border-box" }}>

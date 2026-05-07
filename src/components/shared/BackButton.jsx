@@ -1,29 +1,35 @@
-const C = {
-  bg: "#f1f5f9",
-  border: "#e2e8f0",
-  text: "#334155",
-  muted: "#64748b",
-};
+import { ArrowLeft } from "lucide-react";
 
-export default function BackButton({ onClick, label = "← Back" }) {
+export default function BackButton({ onClick, label = "Back" }) {
   return (
     <button
       onClick={onClick}
       style={{
-        background: C.bg,
-        border: `1px solid ${C.border}`,
-        color: C.text,
-        borderRadius: 7,
-        padding: "8px 14px",
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        background: "rgba(255,255,255,0.10)",
+        border: "1px solid rgba(255,255,255,0.22)",
+        color: "#fff",
+        borderRadius: 8,
+        padding: "7px 14px",
         cursor: "pointer",
-        fontSize: 12,
+        fontSize: 13,
         fontWeight: 600,
+        fontFamily: "inherit",
         whiteSpace: "nowrap",
-        transition: "background 0.15s",
+        transition: "background 0.15s, border-color 0.15s",
       }}
-      onMouseEnter={(e) => (e.target.style.background = C.border)}
-      onMouseLeave={(e) => (e.target.style.background = C.bg)}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = "rgba(255,255,255,0.20)";
+        e.currentTarget.style.borderColor = "rgba(255,255,255,0.40)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = "rgba(255,255,255,0.10)";
+        e.currentTarget.style.borderColor = "rgba(255,255,255,0.22)";
+      }}
     >
+      <ArrowLeft size={15} strokeWidth={2.5} />
       {label}
     </button>
   );
