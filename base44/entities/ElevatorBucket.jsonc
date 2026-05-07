@@ -8,19 +8,31 @@
     },
     "style": {
       "type": "string",
-      "description": "Style description"
+      "description": "Style code (e.g. CC-HD, Tiger-Tuff, Starco)"
+    },
+    "styleName": {
+      "type": "string",
+      "description": "Full display name"
     },
     "vendor": {
       "type": "string",
-      "description": "Brand/vendor (Maxi-Lift / Tapco / 4B)"
+      "description": "Brand/vendor (Maxi-Lift / Tapco / 4B / Maxilift)"
+    },
+    "supplier": {
+      "type": "string",
+      "description": "Normalized supplier: Maxi-Lift | Tapco | 4B"
+    },
+    "category": {
+      "type": "string",
+      "description": "Agricultural | Industrial"
     },
     "application": {
       "type": "string",
-      "description": "Application type (Agricultural / Industrial)"
+      "description": "Application type / use case description"
     },
     "discharge_type": {
       "type": "string",
-      "description": "Discharge type"
+      "description": "Centrifugal | Continuous | Slow Speed Centrifugal"
     },
     "duty": {
       "type": "string",
@@ -28,27 +40,46 @@
     },
     "material": {
       "type": "string",
-      "description": "Available materials (e.g. Poly/Nylon/Urethane) \u2014 comma or slash separated"
+      "description": "Available materials \u2014 comma or slash separated (legacy field)"
+    },
+    "materials": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of available materials: Polyethylene, Nylon, Urethane, Carbon Steel, Stainless Steel, Ductile Iron, Aluminum, Nylathane, Nyrim, etc."
     },
     "profile": {
       "type": "string",
-      "description": "Bucket profile"
+      "description": "Bucket profile description"
     },
     "bucket_sizes": {
       "type": "string",
-      "description": "Available sizes summary"
+      "description": "Available sizes summary (legacy)"
     },
     "bucket_sizes_detail": {
       "type": "string",
-      "description": "JSON array of size detail objects: [{size, length_in, projection_in, depth_in, capacity_cu_in, weight_lbs, drilling_pattern, water_level_capacity, bolt_size, holes, std_spacing_in, wall_thickness, weight_hdpe_lbs, capacity_cu_ft, part_number}]"
+      "description": "JSON array of size objects with full spec data per size"
+    },
+    "sizes_by_material": {
+      "type": "string",
+      "description": "JSON object keyed by material name, each containing array of size objects with weight_lbs per that material"
     },
     "schematic_image": {
       "type": "string",
-      "description": "URL of bucket schematic/diagram showing hole pattern"
+      "description": "URL of bucket schematic/diagram"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Product image URL"
     },
     "standard_hole_spacing": {
       "type": "string",
-      "description": "JSON object: {holeDiameter, numberOfHoles, horizontalSpacing, verticalSpacing, notes}"
+      "description": "JSON: {holeDiameter, numberOfHoles, horizontalSpacing, verticalSpacing, notes}"
+    },
+    "standardHoleNotes": {
+      "type": "string",
+      "description": "Footnotes on drilling standard, e.g. holes drilled 1/32 oversize"
     },
     "notes": {
       "type": "string",
@@ -58,13 +89,13 @@
       "type": "string",
       "description": "Technical doc URL"
     },
-    "image_url": {
-      "type": "string",
-      "description": "Product image URL"
-    },
     "page_range": {
       "type": "string",
       "description": "Catalog page reference"
+    },
+    "specs_status": {
+      "type": "string",
+      "description": "pending | complete \u2014 flags records awaiting full size data"
     }
   },
   "required": [

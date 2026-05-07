@@ -49,6 +49,16 @@ const SUPPLIER_STYLES = {
   },
 };
 
+// Normalize vendor name to canonical supplier key
+function normSupplier(vendor) {
+  if (!vendor) return "";
+  const v = vendor.toLowerCase();
+  if (v.includes("maxi") || v === "maxilift") return "Maxi-Lift";
+  if (v.includes("tapco")) return "Tapco";
+  if (v === "4b" || v.includes("4b braime") || v.includes("4 b")) return "4B";
+  return vendor;
+}
+
 export default function ElevSupplierGrid({ buckets, onSelectSupplier, onBack }) {
   const suppliers = ["Maxi-Lift", "Tapco", "4B"];
 
@@ -64,7 +74,7 @@ export default function ElevSupplierGrid({ buckets, onSelectSupplier, onBack }) 
         {suppliers.map(sup => {
           const info = SUPPLIER_INFO[sup] || {};
           const styles = SUPPLIER_STYLES[sup]?.styles || [];
-          const dbCount = buckets.filter(b => b.vendor === sup).length;
+          const dbCount = buckets.filter(b => normSupplier(b.supplier || b.vendor) === sup).length;
           const agStyles = styles.filter(s => s.app === "Agricultural");
           const indStyles = styles.filter(s => s.app === "Industrial");
           return (

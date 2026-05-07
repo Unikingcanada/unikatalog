@@ -64,9 +64,18 @@ function BucketCard({ rec, onClick }) {
   );
 }
 
+function normSupplier(vendor) {
+  if (!vendor) return "";
+  const v = vendor.toLowerCase();
+  if (v.includes("maxi") || v === "maxilift") return "Maxi-Lift";
+  if (v.includes("tapco")) return "Tapco";
+  if (v === "4b" || v.includes("4b braime")) return "4B";
+  return vendor;
+}
+
 export default function BucketStyleGrid({ supplier, buckets, onSelectStyle, onBack }) {
   const [search, setSearch] = useState("");
-  const supplierBuckets = buckets.filter(b => b.vendor === supplier);
+  const supplierBuckets = buckets.filter(b => normSupplier(b.supplier || b.vendor) === supplier);
 
   const filtered = search.trim()
     ? supplierBuckets.filter(b => {

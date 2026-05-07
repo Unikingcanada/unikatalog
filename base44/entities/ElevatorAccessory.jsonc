@@ -1,0 +1,38 @@
+{
+  "name": "ElevatorAccessory",
+  "type": "object",
+  "properties": {
+    "supplier": {
+      "type": "string",
+      "description": "Supplier/brand"
+    },
+    "category": {
+      "type": "string",
+      "description": "Belt | Hardware | Splice"
+    },
+    "productName": {
+      "type": "string",
+      "description": "Product name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Product description"
+    },
+    "specs": {
+      "type": "string",
+      "description": "Freetext specs: widths, grades, ratings, sizes"
+    },
+    "imageURL": {
+      "type": "string",
+      "description": "Product image URL"
+    },
+    "url": {
+      "type": "string",
+      "description": "External product URL"
+    }
+  },
+  "required": [
+    "productName",
+    "category"
+  ]
+}
