@@ -90,30 +90,18 @@ export default function FourBCatalog({ onBack, onGoRFQ }) {
       {/* Home — subcategory grid */}
       {!activeSubcat && (
         <>
-          {/* Hero */}
-          <div style={{ background: `linear-gradient(135deg, ${NAVY} 0%, #2a1a1a 100%)`, padding: "32px 24px 28px" }}>
-            <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                <div style={{ background: FOURBRED, color: "#fff", fontSize: 20, fontWeight: 900, padding: "4px 12px", borderRadius: 6 }}>4B</div>
-                <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 12 }}>Braime™ · Authorized Distributor</span>
-              </div>
-              <h1 style={{ color: "#fff", fontSize: 26, fontWeight: 900, margin: "0 0 8px" }}>4B Electronics & Monitoring</h1>
-              <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 13, maxWidth: 620, lineHeight: 1.7, margin: "0 0 16px" }}>
-                Industry-leading hazard monitoring, alignment, speed, temperature and level sensing systems for bucket elevators and conveyors. CSA, ATEX and CE approved for dust hazard environments.
-              </p>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {["CSA Approved", "ATEX Rated", "CE Certified", "IECEx Available", "Dust Hazard Environments", "HazardMon.com Cloud"].map(tag => (
-                  <span key={tag} style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)", padding: "4px 12px", borderRadius: 20, fontSize: 11, fontWeight: 600 }}>{tag}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-
           {/* Subcategory grid */}
           <div style={{ maxWidth: 1200, margin: "0 auto", padding: "28px clamp(12px,4vw,28px) 80px" }}>
+            {/* Page title */}
             <div style={{ marginBottom: 22 }}>
-              <div style={{ fontSize: 19, fontWeight: 800, color: NAVY, marginBottom: 4 }}>Product Categories</div>
-              <div style={{ fontSize: 13, color: "#64748b" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: 6 }}>4B Braime™ · Authorized Distributor</div>
+              <h1 style={{ fontSize: 22, fontWeight: 900, color: NAVY, margin: "0 0 6px" }}>4B Electronics & Monitoring</h1>
+              <p style={{ fontSize: 13, color: "#64748b", lineHeight: 1.7, margin: 0 }}>
+                Industry-leading hazard monitoring, alignment, speed, temperature and level sensing systems for bucket elevators and conveyors. CSA, ATEX and CE approved for dust hazard environments.
+              </p>
+            </div>
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 13, color: "#64748b", fontWeight: 700 }}>
                 {PRODUCTS.length} products across {SUBCATEGORIES.length} categories — all directly sourced from go4b.com
               </div>
             </div>

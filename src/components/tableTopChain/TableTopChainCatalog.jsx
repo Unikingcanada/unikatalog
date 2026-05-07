@@ -142,54 +142,13 @@ export default function TableTopChainCatalog({ onBack }) {
   return (
     <div>
       {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, ${C.navyMid} 100%)`, padding: "24px clamp(14px,4vw,28px)" }}>
-        {onBack && (
-          <button onClick={onBack} style={{
-            background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
-            color: "#fff", borderRadius: 7, padding: "5px 12px", cursor: "pointer", fontSize: 12, marginBottom: 16,
-          }}>
-            ← Back
-          </button>
-        )}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
-          <div>
-            <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 10, letterSpacing: "1.5px", textTransform: "uppercase", marginBottom: 6 }}>
-              Procurement Catalog
-            </div>
-            <h1 style={{ color: "#fff", fontSize: 28, fontWeight: 900, margin: "0 0 8px" }}>Table Top Chains</h1>
-            <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 13, maxWidth: 560, lineHeight: 1.6, margin: 0 }}>
-              Unified product-first catalog. Select the right chain and material — regardless of brand.
-              Source: Movex Imperial Catalog (p. 7–108) + System Plast Smart Guide.
-            </p>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-end" }}>
-            <a href="https://wpbackend.movexii.com/wp-content/uploads/2024/11/Movex_Conveyor_modular_belts_and_chains_Catalog_Digital_Imperial.pdf"
-              target="_blank" rel="noreferrer"
-              style={{ color: C.gold, fontSize: 11, fontWeight: 700, textDecoration: "none" }}>
-              📄 Movex Imperial Catalog ↗
-            </a>
-            <a href="https://www.systemplastsmartguide.com/INT/Smart-Guide/"
-              target="_blank" rel="noreferrer"
-              style={{ color: C.gold, fontSize: 11, fontWeight: 700, textDecoration: "none" }}>
-              📄 System Plast Smart Guide ↗
-            </a>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div style={{ display: "flex", gap: 14, marginTop: 20, flexWrap: "wrap" }}>
-          {[
-            ["Plastic Chains", plasticCount],
-            ["Steel Chains", steelCount],
-            ["Normalized Materials", "10"],
-            ["Pitch Range", '0.43" – 1.5"'],
-          ].map(([k, v]) => (
-            <div key={k} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 8, padding: "8px 16px", minWidth: 110, textAlign: "center" }}>
-              <div style={{ fontSize: 18, fontWeight: 900, color: C.gold }}>{v}</div>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.55)", marginTop: 2 }}>{k}</div>
-            </div>
-          ))}
-        </div>
+      <div style={{ padding: "24px clamp(14px,4vw,28px) 16px", background: C.bg }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 6 }}>Procurement Catalog</div>
+        <h1 style={{ fontSize: 22, fontWeight: 900, color: C.text, margin: "0 0 6px" }}>Table Top Chains</h1>
+        <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.7, margin: 0 }}>
+          Unified product-first catalog. Select the right chain and material — regardless of brand.
+          Source: Movex Imperial Catalog (p. 7–108) + System Plast Smart Guide.
+        </p>
       </div>
 
       {/* Category Selector */}

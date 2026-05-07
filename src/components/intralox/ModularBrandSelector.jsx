@@ -97,21 +97,17 @@ export default function ModularBrandSelector({ onSelectBrand, onBack }) {
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif" }}>
 
-      {/* Hero */}
-      <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, ${C.navyLight} 100%)`, padding: "32px clamp(16px,4vw,32px) 28px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: "1px", marginBottom: 8 }}>
-            Modular Plastic Belting
-          </div>
-          <h1 style={{ color: "#fff", fontSize: 28, fontWeight: 900, margin: "0 0 10px" }}>Select a Brand</h1>
-          <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 14, margin: 0, maxWidth: 560, lineHeight: 1.75 }}>
-            Browse modular plastic belting by manufacturer. Select a brand to view available series, belt styles, sprockets, and configurator tools.
-          </p>
-        </div>
+      {/* Page header */}
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "28px clamp(16px,4vw,32px) 0" }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 6 }}>Modular Plastic Belting</div>
+        <h1 style={{ fontSize: 22, fontWeight: 900, color: C.text, margin: "0 0 6px" }}>Select a Brand</h1>
+        <p style={{ fontSize: 13, color: C.muted, margin: 0, lineHeight: 1.7 }}>
+          Browse modular plastic belting by manufacturer. Select a brand to view available series, belt styles, sprockets, and configurator tools.
+        </p>
       </div>
 
       {/* Brand grid */}
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px clamp(16px,4vw,32px) 80px" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "20px clamp(16px,4vw,32px) 80px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20 }}>
           {BRANDS.map((brand, idx) => (
             <div

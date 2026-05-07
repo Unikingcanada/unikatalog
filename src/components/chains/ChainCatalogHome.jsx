@@ -56,7 +56,8 @@ export default function ChainCatalogHome({ onSelectCategory, onSelectProduct, on
       <PageHeader
         title="Industrial Chain Catalog"
         subtitle="Unified, brand-neutral catalog. Browse by chain type and standard number. Sources: MAC Chain + Allied-Locke Industries."
-        onBack={onBack || undefined}
+        dark={false}
+        onBack={undefined}
         below={
           <div>
             {/* Search */}

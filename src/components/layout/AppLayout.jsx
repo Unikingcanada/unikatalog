@@ -40,11 +40,6 @@ export default function AppLayout({ children, hideHeader = false, onBack = null 
                 alt="K"
                 style={{ height: 34, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.92 }}
               />
-              <img
-                src="https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png"
-                alt="Uniking Canada"
-                style={{ maxHeight: 30, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.90 }}
-              />
               </div>
             </div>
             {cartCount > 0 && (
