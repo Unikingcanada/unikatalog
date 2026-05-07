@@ -108,7 +108,7 @@ export default function ModularBrandSelector({ onSelectBrand, onBack }) {
 
       {/* Brand grid */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "20px clamp(16px,4vw,32px) 80px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 440px), 1fr))", gap: 16 }}>
           {BRANDS.map((brand, idx) => (
             <div
               key={brand.key + idx}

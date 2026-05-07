@@ -1224,7 +1224,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
 
   // ── Right sticky panel: schematic + part number + actions ──────────────────
   const StickyRight = (
-    <div style={{ position: "sticky", top: 16, display: "flex", flexDirection: "column", gap: 12 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       {/* Metric / Imperial toggle */}
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <div style={{ display: "flex", background: C.border, borderRadius: 8, padding: 2, gap: 2 }}>
@@ -1312,15 +1312,25 @@ function Configurator({ series, onBack, onGoRFQ }) {
       </div>
 
       {/* ── B: Side-by-side layout — left: options, right: sticky schematic ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,520px)", gap: 24, alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr)", gap: 24, alignItems: "start" }}
+        className="roller-config-grid">
+        <style>{`
+          @media (min-width: 900px) {
+            .roller-config-grid { grid-template-columns: minmax(0,1fr) minmax(0,520px) !important; }
+            .roller-schematic-col { order: 0 !important; }
+          }
+          @media (max-width: 899px) {
+            .roller-schematic-col { order: -1; }
+          }
+        `}</style>
+        {/* Right: schematic + part number + actions (moves to top on mobile) */}
+        <div className="roller-schematic-col">
+          {StickyRight}
+        </div>
         {/* Left: scrollable options + summary */}
         <div>
           {OptionsPanel}
           {SummaryPanel}
-        </div>
-        {/* Right: sticky schematic + part number + actions */}
-        <div>
-          {StickyRight}
         </div>
       </div>
     </div>
