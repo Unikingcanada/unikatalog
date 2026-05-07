@@ -1016,7 +1016,14 @@ function Configurator({ series, onBack, onGoRFQ }) {
   // ── Config options panel (shared content) ────────────────────────────────
   const OptionsPanel = (
     <div style={{ background: C.card, borderRadius: 12, border: "1px solid " + C.border, padding: "22px 24px", marginBottom: 20 }}>
-      <div style={{ fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 18 }}>Configuration Options</div>
+      {/* Step Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+        <div style={{ width: 28, height: 28, borderRadius: "50%", background: NAVY_MID, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, flexShrink: 0 }}>1</div>
+        <div>
+          <div style={{ fontSize: 16, fontWeight: 800, color: C.text }}>Configuration Options</div>
+          <div style={{ fontSize: 12, color: C.muted }}>Select tube, shaft, length and surface options</div>
+        </div>
+      </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
         {bearings.length > 0 && (
           <div style={{ gridColumn: "1 / -1" }}>
@@ -1162,7 +1169,14 @@ function Configurator({ series, onBack, onGoRFQ }) {
   // ── Summary table ──────────────────────────────────────────────────────────
   const SummaryPanel = (
     <div style={{ background: C.card, borderRadius: 12, border: "1px solid " + C.border, padding: "20px 24px", marginBottom: 20 }}>
-      <div style={{ fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 14 }}>Configuration Summary</div>
+      {/* Step Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+        <div style={{ width: 28, height: 28, borderRadius: "50%", background: NAVY_MID, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800, flexShrink: 0 }}>2</div>
+        <div>
+          <div style={{ fontSize: 16, fontWeight: 800, color: C.text }}>Configuration Summary</div>
+          <div style={{ fontSize: 12, color: C.muted }}>Review your selections before adding to RFQ</div>
+        </div>
+      </div>
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
         <tbody>
           {(() => {
@@ -1279,15 +1293,21 @@ function Configurator({ series, onBack, onGoRFQ }) {
       </div>
 
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 20 }}>
+      <div style={{ background: "#fff", border: "1px solid " + C.border, borderRadius: 12, padding: "18px 22px", marginBottom: 20, display: "flex", alignItems: "center", gap: 14 }}>
         {series.image_url && (
-          <div style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 8, padding: 8, width: 64, height: 50, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <div style={{ background: C.bg, border: "1px solid " + C.border, borderRadius: 8, padding: 8, width: 64, height: 50, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             <img src={series.image_url} alt={series.name} style={{ maxWidth: 56, maxHeight: 42, objectFit: "contain" }} onError={e => e.target.parentElement.style.display = "none"} />
           </div>
         )}
-        <div>
-          <div style={{ fontSize: 20, fontWeight: 900, color: C.text }}>{series.name} — Configurator</div>
-          <div style={{ fontSize: 13, color: C.muted }}>{series.subtitle}</div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 18, fontWeight: 900, color: C.text }}>{series.name} — Configurator</div>
+          <div style={{ fontSize: 12, color: C.muted }}>{series.subtitle}</div>
+        </div>
+        {/* Progress bar */}
+        <div style={{ display: "flex", gap: 4, width: 120 }}>
+          {["Options", "Review"].map((_, i) => (
+            <div key={i} style={{ flex: 1, height: 4, borderRadius: 4, background: C.navyMid }} />
+          ))}
         </div>
       </div>
 
