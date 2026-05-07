@@ -1019,31 +1019,6 @@ export default function WireMeshConfigurator({ onBack, onGoRFQ }) {
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif" }}>
 
-      {/* Top Nav */}
-      <div style={{ background: C.navy, borderBottom: `3px solid ${C.gold}`, position: "sticky", top: 0, zIndex: 200 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(12px,4vw,20px)", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <a href="#" onClick={(e) => { e.preventDefault(); onBack(); }} style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 28, height: 28, background: C.gold, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ color: C.navy, fontWeight: 900, fontSize: 13 }}>U</span>
-              </div>
-              <span style={{ color: "#fff", fontWeight: 700, fontSize: 15 }}>UniKonnect</span>
-            </a>
-            <div style={{ width: 1, height: 22, background: "rgba(255,255,255,0.15)" }} />
-            <span style={{ color: C.gold, fontSize: 13, fontWeight: 600 }}>Wire Mesh Belt Configurator</span>
-          </div>
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            {rfqAdded && (
-              <span style={{ background: C.green, color: "#fff", padding: "5px 12px", borderRadius: 8, fontSize: 12, fontWeight: 700 }}>✓ Added to RFQ</span>
-            )}
-            <a href="#" onClick={(e) => { e.preventDefault(); onGoRFQ(); }}
-              style={{ background: C.gold, color: C.navy, padding: "7px 16px", borderRadius: 8, fontSize: 13, fontWeight: 700, textDecoration: "none" }}>
-              RFQ Cart
-            </a>
-          </div>
-        </div>
-      </div>
-
       {/* Hero */}
       <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, ${C.navyLight} 100%)`, padding: "32px 20px 28px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>

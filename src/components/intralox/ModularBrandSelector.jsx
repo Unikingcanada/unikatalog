@@ -97,25 +97,6 @@ export default function ModularBrandSelector({ onSelectBrand, onBack }) {
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif" }}>
 
-      {/* Top nav */}
-      <div style={{ background: C.navy, height: 56, display: "flex", alignItems: "center", padding: "0 clamp(12px,4vw,32px)", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <a href="#" onClick={e => { e.preventDefault(); onBack(); }}
-            style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 28, height: 28, background: C.gold, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <span style={{ color: C.navy, fontWeight: 900, fontSize: 13 }}>U</span>
-            </div>
-            <span style={{ color: "#fff", fontWeight: 700, fontSize: 15 }}>UniKonnect</span>
-          </a>
-          <div style={{ width: 1, height: 22, background: "rgba(255,255,255,0.15)" }} />
-          <span style={{ color: C.gold, fontSize: 13, fontWeight: 600 }}>Modular Plastic Belting</span>
-        </div>
-        <a href="#" onClick={e => { e.preventDefault(); onBack(); }}
-          style={{ color: "rgba(255,255,255,0.7)", fontSize: 12, fontWeight: 600, textDecoration: "none" }}>
-          ← Back to Catalog
-        </a>
-      </div>
-
       {/* Hero */}
       <div style={{ background: `linear-gradient(135deg, ${C.navy} 0%, ${C.navyLight} 100%)`, padding: "32px clamp(16px,4vw,32px) 28px" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>

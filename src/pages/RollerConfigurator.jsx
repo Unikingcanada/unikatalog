@@ -1340,7 +1340,6 @@ export default function RollerConfigurator({ onBack, onGoRFQ }) {
 
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif" }}>
-      <TopBar onBack={handleTopBack} onGoRFQ={onGoRFQ || (() => {})} />
       {view === "list" && <SeriesGrid onSelect={handleSelectSeries} />}
       {view === "detail" && selected && <SeriesDetail series={selected} onBack={() => handleBack("list")} onConfigure={handleConfigure} />}
       {view === "configure" && selected && <Configurator series={selected} onBack={handleBack} onGoRFQ={onGoRFQ || (() => {})} />}

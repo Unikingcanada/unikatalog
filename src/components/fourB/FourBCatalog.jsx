@@ -78,37 +78,6 @@ export default function FourBCatalog({ onBack, onGoRFQ }) {
   return (
     <div style={{ minHeight: "100vh", background: BG, fontFamily: "'Inter','Segoe UI',Arial,sans-serif" }}>
 
-      {/* Top nav */}
-      <div style={{ background: NAVY, borderBottom: `3px solid ${FOURBRED}`, position: "sticky", top: 0, zIndex: 200 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(12px,4vw,24px)", display: "flex", alignItems: "center", justifyContent: "space-between", height: 56 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <button onClick={handleBack} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.6)", cursor: "pointer", fontSize: 13, display: "flex", alignItems: "center", gap: 4 }}>
-              ← {activeSubcat ? "All Categories" : "Back"}
-            </button>
-            <div style={{ width: 1, height: 22, background: "rgba(255,255,255,0.15)" }} />
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ background: FOURBRED, color: "#fff", fontSize: 13, fontWeight: 900, padding: "2px 8px", borderRadius: 4 }}>4B</div>
-              <span style={{ color: "#fff", fontWeight: 700, fontSize: 14 }}>Electronics & Monitoring</span>
-              {activeSub && (
-                <>
-                  <span style={{ color: "rgba(255,255,255,0.35)", fontSize: 14 }}>›</span>
-                  <span style={{ color: "rgba(255,255,255,0.8)", fontSize: 13 }}>{activeSub.label}</span>
-                </>
-              )}
-            </div>
-          </div>
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <a href="https://www.go4b.com/usa/products/default.asp" target="_blank" rel="noopener noreferrer"
-              style={{ color: "rgba(255,255,255,0.6)", fontSize: 11, fontWeight: 600, textDecoration: "none" }}>
-              go4b.com ↗
-            </a>
-            <button onClick={onGoRFQ} style={{ background: FOURBRED, color: "#fff", border: "none", padding: "7px 16px", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-              RFQ Cart
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Product detail modal */}
       {selectedProduct && (
         <FourBProductDetail

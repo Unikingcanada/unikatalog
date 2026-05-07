@@ -190,35 +190,6 @@ export default function SharpTopCatalog({ onBack, onGoRFQ }) {
 
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Inter','Segoe UI',Arial,sans-serif" }}>
-      {/* Top nav */}
-      <div style={{ background: C.navy, position: "sticky", top: 0, zIndex: 200, borderBottom: `3px solid ${C.gold}` }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 clamp(12px,4vw,20px)", display: "flex", alignItems: "center", justifyContent: "space-between", height: 54 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <button onClick={handleBack} style={{ background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", padding: "5px 12px", borderRadius: 6, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>
-              ← {selectedSub ? "Categories" : "Back"}
-            </button>
-            <div style={{ width: 1, height: 22, background: "rgba(255,255,255,0.15)" }} />
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 26, height: 26, background: C.gold, borderRadius: 5, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ color: C.navy, fontWeight: 900, fontSize: 12 }}>U</span>
-              </div>
-              <span style={{ color: "#fff", fontWeight: 700, fontSize: 15 }}>SharpTop Chains</span>
-              {selectedSub && (
-                <>
-                  <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 14 }}>›</span>
-                  <span style={{ color: C.gold, fontSize: 13, fontWeight: 600 }}>
-                    {SHARPTOP_SUBCATEGORIES.find(s => s.key === selectedSub)?.label}
-                  </span>
-                </>
-              )}
-            </div>
-          </div>
-          <button onClick={onGoRFQ} style={{ background: C.gold, color: C.navy, padding: "6px 16px", borderRadius: 7, fontSize: 12, fontWeight: 700, border: "none", cursor: "pointer" }}>
-            RFQ Cart
-          </button>
-        </div>
-      </div>
-
       {/* Content */}
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px clamp(12px,4vw,28px) 80px" }}>
         {!selectedSub ? (

@@ -6,7 +6,6 @@ import IntraloxConfigurator from "./IntraloxConfigurator";
 import ModularBrandSelector from "./ModularBrandSelector";
 import MovexCatalog from "@/components/movex/MovexCatalog";
 import SystemPlastCatalog from "@/components/systemPlast/SystemPlastCatalog";
-import AppLayout from "@/components/layout/AppLayout";
 import BackButton from "@/components/shared/BackButton";
 import { COLORS, TYPOGRAPHY } from "@/lib/designSystem";
 
@@ -133,11 +132,10 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
   const tabSeries = { straight: STRAIGHT_SERIES, radius: RADIUS_SERIES, spiral: SPIRAL_SERIES, tools: [] }[activeTab] || [];
 
   return (
-    <AppLayout hideHeader={false}>
-      <div style={{ minHeight: "auto", background: C.bg }}>
+    <div style={{ minHeight: "auto", background: C.bg }}>
 
       {/* Category nav bar - beneath app header */}
-      <div style={{ background: "#fff", borderBottom: `1px solid ${C.border}`, position: "sticky", top: 56, zIndex: 100, padding: "12px clamp(12px,4vw,20px)" }}>
+      <div style={{ background: "#fff", borderBottom: `1px solid ${C.border}`, position: "sticky", top: 56, zIndex: 90, padding: "12px clamp(12px,4vw,20px)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <BackButton onClick={handleNavBack} label="← Back" />
@@ -296,7 +294,6 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
           </div>
         </>
       )}
-      </div>
-    </AppLayout>
+    </div>
   );
 }

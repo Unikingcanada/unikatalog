@@ -312,17 +312,6 @@ export default function ElevBucketsView({onBack,onGoRFQ}) {
 
   return(
     <div style={{minHeight:"100vh",background:"#f8fafc",fontFamily:"'Inter','Segoe UI',sans-serif"}}>
-      <div style={{background:NAVY,padding:"0 24px",display:"flex",alignItems:"center",justifyContent:"space-between",height:56,boxShadow:"0 2px 8px rgba(0,0,0,.18)"}}>
-        <div style={{display:"flex",alignItems:"center",gap:12}}>
-          <a href="#" onClick={e=>{e.preventDefault();onBack();}} style={{display:"flex",alignItems:"center",gap:6,padding:"6px 14px",borderRadius:8,background:"rgba(255,255,255,0.12)",border:"1px solid rgba(255,255,255,0.2)",color:"#fff",fontWeight:700,fontSize:13,textDecoration:"none"}}>← Home</a>
-          <span style={{color:"rgba(255,255,255,.3)",fontSize:12}}>/</span>
-          <span style={{color:"#fff",fontSize:13,fontWeight:700}}>Elevator Buckets</span>
-        </div>
-        <div style={{display:"flex",gap:14,alignItems:"center"}}>
-          <span style={{fontSize:11,color:"rgba(255,255,255,.4)"}}>{loading?"Loading...":` ${allProducts.length} products`}</span>
-          <a href="#" onClick={e=>{e.preventDefault();onGoRFQ();}} style={{padding:"6px 14px",borderRadius:8,background:"rgba(255,255,255,.12)",border:"1px solid rgba(255,255,255,.2)",color:"#fff",fontSize:12,fontWeight:700,textDecoration:"none"}}>RFQ Cart</a>
-        </div>
-      </div>
       <div style={{maxWidth:1200,margin:"0 auto",padding:24}}>
         {loading?<div style={{textAlign:"center",padding:80,color:"#9ca3af",fontSize:14}}>Loading catalog...</div>:
         !selectedBrand?
