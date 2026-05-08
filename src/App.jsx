@@ -8,6 +8,7 @@ import ElevatorBuckets from './pages/ElevatorBuckets';
 import Catalog from './pages/Catalog';
 import TableTopChains from './pages/TableTopChains';
 import BucketCompare from './pages/BucketCompare';
+import ChainReviewAdmin from './pages/ChainReviewAdmin';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/Catalog" element={<Catalog />} />
         <Route path="/TableTopChains" element={<TableTopChains />} />
         <Route path="/BucketCompare" element={<BucketCompare />} />
+        <Route path="/admin/chain-review" element={<ChainReviewAdmin />} />
       </Routes>
     </BrowserRouter>
   )
