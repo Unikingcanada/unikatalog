@@ -74,11 +74,8 @@
       "description": "Confirmed available materials / coatings \u2014 e.g. Carbon Steel, Stainless Steel, Nickel Plated"
     },
     "options_upgrades": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "Available options and upgrade variants \u2014 e.g. O-Ring Sealed, Self-Lube, Heavy Series"
+      "type": "string",
+      "description": "Available upgrades/options such as nickel plated, lambda, hardened pins, corrosion resistant, etc."
     },
     "image_url": {
       "type": "string",
@@ -86,7 +83,7 @@
     },
     "drawing_url": {
       "type": "string",
-      "description": "Dimensional drawing image URL"
+      "description": "Technical drawing or dimensional drawing URL"
     },
     "status": {
       "type": "string",
@@ -106,7 +103,7 @@
     },
     "uniking_notes": {
       "type": "string",
-      "description": "Internal Uniking review notes and flags"
+      "description": "Internal Uniking notes, engineering comments, sourcing notes, or application guidance"
     }
   },
   "required": [
