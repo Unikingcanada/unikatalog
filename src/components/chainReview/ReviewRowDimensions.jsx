@@ -1,7 +1,7 @@
 /**
  * ReviewRowDimensions — row renderer for Chain_Dimensions QA review
  */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StatusBadge from "./StatusBadge";
 import ActionButtons from "./ActionButtons";
 
@@ -20,6 +20,8 @@ export default function ReviewRowDimensions({ record, expanded, onToggle, onAppr
   const [notes, setNotes] = useState(record.resolution_notes || "");
   const [saving, setSaving] = useState(false);
 
+  useEffect(() => { setNotes(record.resolution_notes || ""); }, [record.resolution_notes]);
+
   async function handleSave() {
     setSaving(true);
     await onSaveNotes(notes);
@@ -30,8 +32,8 @@ export default function ReviewRowDimensions({ record, expanded, onToggle, onAppr
 
   return (
     <div style={{ padding: "14px 20px" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-        <div style={{ flex: 1, minWidth: 0, cursor: "pointer" }} onClick={onToggle}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", cursor: "pointer" }} onClick={onToggle}>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
             <span style={{ fontSize: 13, fontWeight: 800, color: "#1a3a5c" }}>chain_id: {record.chain_id || "—"}</span>
             {record.source_brand && <span style={{ fontSize: 10, background: "#e0f2fe", color: "#0369a1", padding: "2px 7px", borderRadius: 99, fontWeight: 700 }}>{record.source_brand}</span>}

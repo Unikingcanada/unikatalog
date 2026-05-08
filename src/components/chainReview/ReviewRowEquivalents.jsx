@@ -1,13 +1,15 @@
 /**
  * ReviewRowEquivalents — row renderer for Manufacturer_Equivalents QA review
  */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StatusBadge from "./StatusBadge";
 import ActionButtons from "./ActionButtons";
 
 export default function ReviewRowEquivalents({ record, expanded, onToggle, onApprove, onReject, onFlag, onSaveNotes }) {
   const [notes, setNotes] = useState(record.resolution_notes || "");
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => { setNotes(record.resolution_notes || ""); }, [record.resolution_notes]);
 
   async function handleSave() {
     setSaving(true);
@@ -18,8 +20,8 @@ export default function ReviewRowEquivalents({ record, expanded, onToggle, onApp
   return (
     <div style={{ padding: "14px 20px" }}>
       {/* Main row */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }} onClick={onToggle} style2={{ cursor: "pointer" }}>
-        <div style={{ flex: 1, minWidth: 0, cursor: "pointer" }} onClick={onToggle}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", cursor: "pointer" }} onClick={onToggle}>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
             <span style={{ fontSize: 13, fontWeight: 800, color: "#1a3a5c" }}>{record.brand_part_number || "—"}</span>
             <span style={{ fontSize: 11, color: "#64748b" }}>({record.brand || "Unknown Brand"})</span>

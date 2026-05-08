@@ -1,7 +1,7 @@
 /**
  * ReviewRowFlags — row renderer for Chain_Review_Flags QA review
  */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StatusBadge from "./StatusBadge";
 import ActionButtons from "./ActionButtons";
 
@@ -16,6 +16,8 @@ export default function ReviewRowFlags({ record, expanded, onToggle, onApprove, 
   const [notes, setNotes] = useState(record.resolution_notes || "");
   const [saving, setSaving] = useState(false);
 
+  useEffect(() => { setNotes(record.resolution_notes || ""); }, [record.resolution_notes]);
+
   async function handleSave() {
     setSaving(true);
     await onSaveNotes(notes);
@@ -26,8 +28,8 @@ export default function ReviewRowFlags({ record, expanded, onToggle, onApprove, 
 
   return (
     <div style={{ padding: "14px 20px", borderLeft: `4px solid ${sevFg}` }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-        <div style={{ flex: 1, minWidth: 0, cursor: "pointer" }} onClick={onToggle}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", cursor: "pointer" }} onClick={onToggle}>
+        <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
             <span style={{ fontSize: 10, fontWeight: 800, background: sevBg, color: sevFg, padding: "2px 9px", borderRadius: 99 }}>{record.severity || "Medium"}</span>
             <span style={{ fontSize: 13, fontWeight: 800, color: "#1a3a5c" }}>{record.flag_type || "Flag"}</span>

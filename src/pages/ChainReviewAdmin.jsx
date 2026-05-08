@@ -48,16 +48,17 @@ export default function ChainReviewAdmin() {
   useEffect(() => { if (user?.role === "admin") load(); }, [load, user]);
 
   async function applyAction(record, action) {
+    const isFlags = currentTab.entity === "Chain_Review_Flags";
     const updates = {
-      approve:   { review_status: "Approved",  needs_review: false },
-      reject:    { review_status: "Rejected",  needs_review: false },
-      flag:      { review_status: "Pending",   needs_review: true  },
+      approve: { review_status: "Approved", needs_review: false, ...(isFlags ? { resolved: true } : {}) },
+      reject:  { review_status: "Rejected", needs_review: false },
+      flag:    { review_status: "Pending",  needs_review: true,  ...(isFlags ? { resolved: false } : {}) },
     }[action];
     if (!updates) return;
     try {
       await base44.entities[currentTab.entity].update(record.id, updates);
-      setActionMsg(`✓ ${action === "approve" ? "Approved" : action === "reject" ? "Rejected" : "Flagged"}`);
-      setTimeout(() => setActionMsg(null), 2000);
+      setActionMsg(`✓ ${action === "approve" ? "Approved" : action === "reject" ? "Rejected" : "Flagged for Engineering Review"}`);
+      setTimeout(() => setActionMsg(null), 3000);
       load();
     } catch (e) {
       setActionMsg("Error: " + e.message);
@@ -65,8 +66,14 @@ export default function ChainReviewAdmin() {
   }
 
   async function saveNotes(record, resolution_notes) {
-    await base44.entities[currentTab.entity].update(record.id, { resolution_notes });
-    load();
+    try {
+      await base44.entities[currentTab.entity].update(record.id, { resolution_notes });
+      setActionMsg("✓ Notes saved");
+      setTimeout(() => setActionMsg(null), 2000);
+      load();
+    } catch (e) {
+      setActionMsg("Error saving notes: " + e.message);
+    }
   }
 
   // Filter records client-side

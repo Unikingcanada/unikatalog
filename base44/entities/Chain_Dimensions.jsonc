@@ -72,7 +72,7 @@
     },
     "overall_width_in": {
       "type": "number",
-      "description": "Overall width in inches (for multi-strand)"
+      "description": "Overall width in inches"
     },
     "overall_width_mm": {
       "type": "number",
@@ -88,7 +88,7 @@
     },
     "standard": {
       "type": "string",
-      "description": "Dimension standard source \u2014 e.g. ANSI B29.1, ISO 606"
+      "description": "Dimension standard source"
     },
     "source_brand": {
       "type": "string",
@@ -97,6 +97,24 @@
     "notes": {
       "type": "string",
       "description": "Additional dimension notes or tolerances"
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "Pending",
+        "Approved",
+        "Rejected"
+      ],
+      "description": "Admin QA review status"
+    },
+    "needs_review": {
+      "type": "boolean",
+      "default": false,
+      "description": "Flag for engineering review"
+    },
+    "resolution_notes": {
+      "type": "string",
+      "description": "Admin resolution notes"
     }
   },
   "required": [

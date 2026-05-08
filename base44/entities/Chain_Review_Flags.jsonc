@@ -39,11 +39,11 @@
     },
     "affected_field": {
       "type": "string",
-      "description": "Which field or data point is affected \u2014 e.g. tensile_strength_lbs, roller_dia_mm"
+      "description": "Which field or data point is affected"
     },
     "source_a": {
       "type": "string",
-      "description": "First conflicting source (brand or catalog)"
+      "description": "First conflicting source"
     },
     "value_a": {
       "type": "string",
@@ -51,7 +51,7 @@
     },
     "source_b": {
       "type": "string",
-      "description": "Second conflicting source (brand or catalog)"
+      "description": "Second conflicting source"
     },
     "value_b": {
       "type": "string",
@@ -69,6 +69,20 @@
     "assigned_to": {
       "type": "string",
       "description": "Team member assigned to resolve this flag"
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "Pending",
+        "Approved",
+        "Rejected"
+      ],
+      "description": "Admin QA review status"
+    },
+    "needs_review": {
+      "type": "boolean",
+      "default": false,
+      "description": "Flag for engineering review"
     }
   },
   "required": [

@@ -54,7 +54,25 @@
     },
     "notes": {
       "type": "string",
-      "description": "Notes on equivalency \u2014 e.g. different coating, slightly different plate height"
+      "description": "Notes on equivalency"
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "Pending",
+        "Approved",
+        "Rejected"
+      ],
+      "description": "Admin QA review status"
+    },
+    "needs_review": {
+      "type": "boolean",
+      "default": false,
+      "description": "Flag for engineering review"
+    },
+    "resolution_notes": {
+      "type": "string",
+      "description": "Admin resolution notes"
     }
   },
   "required": [
