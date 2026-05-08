@@ -2,7 +2,7 @@
  * ICSessionWorkflow — Full session lifecycle: Upload → Stage → Validate → Review → Commit
  * One session, one entity target (multi-target via multiple sessions or future batching).
  */
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import {
   generateSessionId, parseCSV, parseJSON, parseXLSX,
@@ -47,8 +47,10 @@ function StepBar({ current }) {
 
 export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
   const [step, setStep] = useState(0);
-  const [files, setFiles] = useState([]);           // raw File objects
-  const [parsedFiles, setParsedFiles] = useState([]); // { name, headers, rows }[]
+  const [files, setFiles] = useState([]);
+  const [parsedFiles, setParsedFiles] = useState([]);   // { name, headers, rows, ext, sheets? }[]
+  const [xlsxSheets, setXlsxSheets] = useState(null);  // sheets from XLSX — null when not needed
+  const [xlsxFileName, setXlsxFileName] = useState(""); // which file the sheets came from
   const [entityTarget, setEntityTarget] = useState("Normalized_Chains");
   const [manufacturer, setManufacturer] = useState("");
   const [sourceCatalog, setSourceCatalog] = useState("");
@@ -64,6 +66,7 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
   async function handleFiles(fileList) {
     setFiles(fileList);
     setError(null);
+    setXlsxSheets(null);
     const parsed = [];
     for (const f of fileList) {
       const ext = f.name.split('.').pop().toLowerCase();
@@ -77,7 +80,19 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
           const { headers, rows } = parseCSV(text);
           parsed.push({ name: f.name, headers, rows, ext: 'csv' });
         } else if (ext === 'xlsx' || ext === 'xls') {
-          parsed.push({ name: f.name, headers: [], rows: [], ext: 'xlsx', needsXLSXPackage: true });
+          const buf = await f.arrayBuffer();
+          const sheets = parseXLSX(buf);
+          if (sheets.length === 1) {
+            // Single sheet — use it directly
+            parsed.push({ name: f.name, headers: sheets[0].headers, rows: sheets[0].rows, ext: 'xlsx', sheetName: sheets[0].name });
+          } else {
+            // Multiple sheets — prompt user to pick
+            setXlsxSheets(sheets);
+            setXlsxFileName(f.name);
+            // Don't advance step yet — wait for sheet selection
+            setParsedFiles(parsed);
+            return;
+          }
         }
       } catch (e) {
         setError(`Error parsing ${f.name}: ${e.message}`);
@@ -85,6 +100,15 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
     }
     setParsedFiles(parsed);
     if (parsed.length > 0) setStep(1);
+  }
+
+  function handleSheetSelected(sheet) {
+    const entry = { name: xlsxFileName, headers: sheet.headers, rows: sheet.rows, ext: 'xlsx', sheetName: sheet.name };
+    const updated = [...parsedFiles, entry];
+    setParsedFiles(updated);
+    setXlsxSheets(null);
+    setXlsxFileName("");
+    if (updated.length > 0) setStep(1);
   }
 
   // ── Step 1: Configure & map ───────────────────────────────────────────────
@@ -205,30 +229,53 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
       r.commit_decision === "Include" || (r.record_status === "New" && r.commit_decision !== "Skip")
     );
 
+    // ── Pre-commit: snapshot all Changed/Conflict originals for rollback ──────
+    setProgress("Capturing pre-commit snapshots for rollback…");
+    const rollbackSnapshots = []; // [{ productionId, originalData, stagingRecordId }]
+
+    for (const record of toCommit) {
+      if ((record.record_status === "Changed" || record.record_status === "Conflict") && record.production_record_id) {
+        try {
+          // Fetch current production record in full before we overwrite it
+          const existing = await base44.entities[entityTarget].filter({ id: record.production_record_id });
+          const original = existing?.[0] || null;
+          if (original) {
+            rollbackSnapshots.push({
+              productionId: record.production_record_id,
+              stagingRecordId: record.id,
+              originalData: { ...original },
+            });
+          }
+        } catch {}
+      }
+    }
+
+    // ── Chunked commit ────────────────────────────────────────────────────────
     const chunks = chunkArray(toCommit, CHUNK_SIZE);
     let written = 0;
     let failed = 0;
     let flagsGenerated = 0;
+    // commitLog entries: { chunk, entity, newIds: [...], updatedIds: [...], timestamp }
     const commitLog = [];
-    const writtenIds = [];
 
     for (let ci = 0; ci < chunks.length; ci++) {
       const chunk = chunks[ci];
       setProgress(`Committing chunk ${ci + 1}/${chunks.length} (${written}/${toCommit.length} written)…`);
-      const chunkIds = [];
+      const newIds = [];
+      const updatedIds = [];
 
       for (const record of chunk) {
         try {
           let result;
           if (record.record_status === "New") {
             result = await base44.entities[entityTarget].create(record.mapped_data);
+            if (result?.id) newIds.push(result.id);
           } else if (record.record_status === "Changed" || record.record_status === "Conflict") {
             if (record.production_record_id) {
               result = await base44.entities[entityTarget].update(record.production_record_id, record.mapped_data);
+              updatedIds.push(record.production_record_id);
             }
           }
-
-          if (result?.id) chunkIds.push(result.id);
 
           // Auto-flags
           const flags = generateAutoFlags(record.mapped_data, record.record_status, record.conflict_detail, entityTarget);
@@ -251,8 +298,13 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
         }
       }
 
-      writtenIds.push(...chunkIds);
-      commitLog.push({ chunk: ci + 1, entity: entityTarget, writtenIds: chunkIds, timestamp: new Date().toISOString() });
+      commitLog.push({
+        chunk: ci + 1,
+        entity: entityTarget,
+        newIds,       // created records — delete on rollback
+        updatedIds,   // overwritten records — restore from snapshot on rollback
+        timestamp: new Date().toISOString(),
+      });
     }
 
     const skipped = stagedRecords.filter(r => r.record_status === "Duplicate" || r.commit_decision === "Skip").length;
@@ -265,6 +317,7 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
       flags_generated: flagsGenerated,
       rollback_available: written > 0,
       commit_log: commitLog,
+      rollback_snapshot_ref: JSON.stringify(rollbackSnapshots), // full originals stored here
     });
 
     setCommitResult({ written, failed, skipped, flagsGenerated });
@@ -313,12 +366,51 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
                 placeholder="e.g. Tsubaki ANSI Catalog 2024" style={inputStyle} />
             </div>
           </div>
+
           <ICUploadZone onFilesSelected={handleFiles} />
-          {parsedFiles.length > 0 && (
+
+          {/* XLSX sheet picker — shown when a multi-sheet workbook is detected */}
+          {xlsxSheets && (
+            <div style={{ marginTop: 16, background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "16px 20px" }}>
+              <div style={{ fontSize: 13, fontWeight: 800, color: "#92400e", marginBottom: 4 }}>
+                📊 {xlsxFileName} — {xlsxSheets.length} worksheets detected
+              </div>
+              <div style={{ fontSize: 11, color: "#78350f", marginBottom: 14 }}>
+                Select which worksheet to import:
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {xlsxSheets.map(sheet => (
+                  <button
+                    key={sheet.name}
+                    onClick={() => handleSheetSelected(sheet)}
+                    style={{
+                      display: "flex", alignItems: "center", justifyContent: "space-between",
+                      padding: "10px 16px", background: "#fff", border: "1px solid #fcd34d",
+                      borderRadius: 8, cursor: "pointer", textAlign: "left",
+                    }}
+                  >
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "#1e293b" }}>{sheet.name}</span>
+                    <span style={{ fontSize: 11, color: "#64748b" }}>
+                      {sheet.rows.length.toLocaleString()} rows · {sheet.headers.length} columns
+                      {sheet.rows.length === 0 && <span style={{ color: "#dc2626", marginLeft: 6 }}>(empty)</span>}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => { setXlsxSheets(null); setXlsxFileName(""); }}
+                style={{ marginTop: 12, fontSize: 11, color: "#64748b", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}
+              >
+                Cancel — upload different file
+              </button>
+            </div>
+          )}
+
+          {parsedFiles.length > 0 && !xlsxSheets && (
             <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 6 }}>
               {parsedFiles.map(f => (
                 <div key={f.name} style={{ padding: "8px 14px", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 7, fontSize: 12, color: "#166534", fontWeight: 600 }}>
-                  ✓ {f.name} — {f.rows.length.toLocaleString()} rows, {f.headers.length} columns
+                  ✓ {f.name}{f.sheetName ? ` [${f.sheetName}]` : ''} — {f.rows.length.toLocaleString()} rows, {f.headers.length} columns
                 </div>
               ))}
             </div>

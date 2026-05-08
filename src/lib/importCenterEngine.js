@@ -106,22 +106,38 @@ export function parseJSON(text) {
   return { headers, rows: arr };
 }
 
-// ─── XLSX Parser (using SheetJS via CDN-free approach — reads ArrayBuffer) ────
-// Extension point: wire up SheetJS (xlsx npm package) if installed.
-// Currently returns a structured placeholder indicating worksheet names.
+// ─── XLSX Parser (SheetJS) ────────────────────────────────────────────────────
 
-export async function parseXLSX(arrayBuffer) {
-  // ARCHITECTURE NOTE: When xlsx package is available:
-  //   import * as XLSX from 'xlsx';
-  //   const wb = XLSX.read(arrayBuffer, { type: 'array' });
-  //   const sheets = wb.SheetNames.map(name => ({
-  //     name,
-  //     ...parseXLSXSheet(wb.Sheets[name])
-  //   }));
-  //   return sheets;
+import * as XLSX from 'xlsx';
 
-  // Placeholder — signals to UI that XLSX needs the package installed
-  return { needsXLSXPackage: true };
+/**
+ * Parse an XLSX ArrayBuffer → array of worksheets, each with { name, headers, rows }.
+ * Returns all sheets so the UI can let the user pick one.
+ */
+export function parseXLSX(arrayBuffer) {
+  const wb = XLSX.read(arrayBuffer, { type: 'array', cellDates: true });
+  return wb.SheetNames.map(name => {
+    const ws = wb.Sheets[name];
+    // sheet_to_json with header:1 gives raw 2D array — first row = headers
+    const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+    if (raw.length < 2) return { name, headers: [], rows: [] };
+
+    const headers = raw[0].map(h => String(h).trim()).filter(Boolean);
+    const rows = [];
+    for (let i = 1; i < raw.length; i++) {
+      const rowArr = raw[i];
+      // Skip completely empty rows
+      if (rowArr.every(v => v === '' || v === null || v === undefined)) continue;
+      const obj = {};
+      headers.forEach((h, idx) => {
+        const val = rowArr[idx];
+        // Convert Date objects to ISO string
+        obj[h] = val instanceof Date ? val.toISOString() : (val ?? '');
+      });
+      rows.push(obj);
+    }
+    return { name, headers, rows };
+  });
 }
 
 // ─── Apply Column Mapping ─────────────────────────────────────────────────────
@@ -309,13 +325,17 @@ export function chunkArray(arr, size = CHUNK_SIZE) {
 
 /**
  * Builds a rollback snapshot from the production records that will be overwritten.
- * Returns { entityTarget, records[] } for each entity touched.
+ * Captures full original state — used to restore on rollback.
+ * Structure: { entity, timestamp, snapshots: [{ productionId, originalData }] }
  */
 export function buildRollbackSnapshot(entityTarget, affectedRecords) {
   return {
     entity: entityTarget,
     timestamp: new Date().toISOString(),
-    records: affectedRecords.map(r => ({ ...r })),
+    snapshots: affectedRecords.map(r => ({
+      productionId: r.id,
+      originalData: { ...r },
+    })),
   };
 }
 

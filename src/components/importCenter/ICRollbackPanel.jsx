@@ -19,41 +19,72 @@ export default function ICRollbackPanel({ sessions, onRollbackComplete }) {
     setRolling(session.id);
     setMsg(null);
     try {
-      // 1. Mark all committed staging records for this session as "Skipped"
-      // (Production deletes would require knowing the production IDs stored in commit_log)
-      const stagedRecords = await base44.entities.Staging_Records.filter({
-        session_id: session.session_id || session.id,
-        record_status: "Committed",
-      });
+      const commitLog = session.commit_log || [];
+      // Parse rollback snapshots (stored as JSON string)
+      let rollbackSnapshots = [];
+      if (session.rollback_snapshot_ref) {
+        try { rollbackSnapshots = JSON.parse(session.rollback_snapshot_ref); } catch {}
+      }
 
-      // 2. For each committed record that has a production_record_id, delete from production entity
-      let rolled = 0;
-      const rollbackLog = session.commit_log || [];
+      let deleted = 0;
+      let restored = 0;
+      let stagingMarked = 0;
 
-      // Group by entity
-      const byEntity = {};
-      (rollbackLog).forEach(entry => {
-        if (!byEntity[entry.entity]) byEntity[entry.entity] = [];
-        if (entry.writtenIds) byEntity[entry.entity].push(...entry.writtenIds);
-      });
-
-      for (const [entity, ids] of Object.entries(byEntity)) {
-        for (const id of ids) {
-          try {
-            await base44.entities[entity].delete(id);
-            rolled++;
-          } catch {}
+      // ── 1. Delete all NEW records created by this session ─────────────────
+      for (const entry of commitLog) {
+        const entity = entry.entity;
+        if (!entity || !base44.entities[entity]) continue;
+        for (const id of (entry.newIds || [])) {
+          try { await base44.entities[entity].delete(id); deleted++; } catch {}
         }
       }
 
-      // 3. Mark session as Rolled Back
+      // ── 2. Restore all UPDATED records to their original state ────────────
+      // Group snapshots by entity (commit_log entries carry entity name)
+      const entityByUpdatedId = {};
+      for (const entry of commitLog) {
+        for (const id of (entry.updatedIds || [])) {
+          entityByUpdatedId[id] = entry.entity;
+        }
+      }
+
+      for (const snap of rollbackSnapshots) {
+        const entity = entityByUpdatedId[snap.productionId];
+        if (!entity || !base44.entities[entity]) continue;
+        // Restore: update back to the captured original, stripping platform-managed fields
+        const { id, created_date, updated_date, created_by, ...restorableFields } = snap.originalData;
+        try {
+          await base44.entities[entity].update(snap.productionId, restorableFields);
+          restored++;
+        } catch {}
+      }
+
+      // ── 3. Mark all committed staging records as Rolled Back ──────────────
+      const sessionKey = session.session_id || session.id;
+      // Fetch in batches — staging records can be large
+      let stagingPage = [];
+      try {
+        stagingPage = await base44.entities.Staging_Records.filter(
+          { session_id: sessionKey, record_status: "Committed" },
+          "-created_date", 2000
+        );
+      } catch {}
+      for (const sr of stagingPage) {
+        try {
+          await base44.entities.Staging_Records.update(sr.id, { record_status: "Skipped", conflict_detail: "Rolled back by admin" });
+          stagingMarked++;
+        } catch {}
+      }
+
+      // ── 4. Update session record ──────────────────────────────────────────
+      const auditNote = `\n[ROLLBACK ${new Date().toISOString()}] Deleted ${deleted} new records. Restored ${restored} updated records. Marked ${stagingMarked} staging records.`;
       await base44.entities.Import_Sessions.update(session.id, {
         import_status: "Rolled Back",
         rollback_available: false,
-        notes: (session.notes || '') + `\nRolled back ${rolled} records on ${new Date().toISOString()}`,
+        notes: (session.notes || '') + auditNote,
       });
 
-      setMsg({ type: "success", text: `Rolled back ${rolled} records from session ${session.session_id || session.id.slice(0,8)}.` });
+      setMsg({ type: "success", text: `Rollback complete — ${deleted} deleted, ${restored} restored, ${stagingMarked} staging records marked.` });
       setConfirmId(null);
       onRollbackComplete();
     } catch (e) {
@@ -96,9 +127,22 @@ export default function ICRollbackPanel({ sessions, onRollbackComplete }) {
                 <div style={{ flex: 1 }}>
                   <div style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#0C2340" }}>{s.session_id || s.id?.slice(0,8)}</div>
                   <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
-                    {s.manufacturer} · {s.source_catalog} · {s.rows_written || 0} rows written
+                    {s.manufacturer} · {s.source_catalog}
                   </div>
-                  <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 2 }}>
+                  <div style={{ display: "flex", gap: 12, marginTop: 6, flexWrap: "wrap" }}>
+                    {(() => {
+                      const log = s.commit_log || [];
+                      const newCount = log.reduce((acc, e) => acc + (e.newIds?.length || 0), 0);
+                      const updCount = log.reduce((acc, e) => acc + (e.updatedIds?.length || 0), 0);
+                      let snapCount = 0;
+                      try { snapCount = JSON.parse(s.rollback_snapshot_ref || '[]').length; } catch {}
+                      return <>
+                        <span style={{ fontSize: 10, color: "#dc2626", fontWeight: 700 }}>🗑 {newCount} to delete</span>
+                        <span style={{ fontSize: 10, color: "#1d4ed8", fontWeight: 700 }}>↩ {updCount} to restore ({snapCount} snapshots)</span>
+                      </>;
+                    })()}
+                  </div>
+                  <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 4 }}>
                     Committed: {s.uploaded_at ? new Date(s.uploaded_at).toLocaleString() : "—"}
                   </div>
                 </div>
