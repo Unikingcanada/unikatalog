@@ -1,0 +1,121 @@
+{
+  "name": "Import_Sessions",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Unique session identifier \u2014 e.g. IMP-2026-0001"
+    },
+    "manufacturer": {
+      "type": "string",
+      "description": "Source manufacturer \u2014 e.g. Tsubaki, Donghua, Regina"
+    },
+    "source_catalog": {
+      "type": "string",
+      "description": "Catalog name / version \u2014 e.g. Tsubaki ANSI Catalog 2024"
+    },
+    "uploaded_by": {
+      "type": "string",
+      "description": "Email of the admin who initiated the session"
+    },
+    "uploaded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO timestamp of upload"
+    },
+    "entity_targets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Target entities \u2014 e.g. [Normalized_Chains, Chain_Dimensions]"
+    },
+    "source_files": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Array of {name, size, type, rowCount} for each uploaded file"
+    },
+    "column_mapping_id": {
+      "type": "string",
+      "description": "References a saved Column_Mapping by id"
+    },
+    "total_rows": {
+      "type": "number",
+      "description": "Total input rows across all files",
+      "default": 0
+    },
+    "rows_staged": {
+      "type": "number",
+      "description": "Rows written to staging layer",
+      "default": 0
+    },
+    "rows_written": {
+      "type": "number",
+      "description": "Rows committed to production entities",
+      "default": 0
+    },
+    "duplicates_skipped": {
+      "type": "number",
+      "description": "Rows skipped as duplicates",
+      "default": 0
+    },
+    "flags_generated": {
+      "type": "number",
+      "description": "Review flags auto-generated during validation",
+      "default": 0
+    },
+    "failed_rows": {
+      "type": "number",
+      "description": "Rows that failed validation or commit",
+      "default": 0
+    },
+    "import_status": {
+      "type": "string",
+      "enum": [
+        "Uploading",
+        "Staged",
+        "Validating",
+        "Pending Review",
+        "Committing",
+        "Committed",
+        "Partially Committed",
+        "Rolled Back",
+        "Failed",
+        "Cancelled"
+      ],
+      "default": "Uploading",
+      "description": "Current lifecycle status of this import session"
+    },
+    "validation_report": {
+      "type": "object",
+      "description": "JSON validation summary \u2014 new/duplicate/changed/conflict/fk_fail counts",
+      "additionalProperties": true
+    },
+    "rollback_available": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether a rollback snapshot exists for this session"
+    },
+    "rollback_snapshot_ref": {
+      "type": "string",
+      "description": "Reference key to rollback snapshot data"
+    },
+    "commit_log": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Chunked commit transaction log entries"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Admin notes on this session"
+    }
+  },
+  "required": [
+    "manufacturer",
+    "import_status"
+  ]
+}

@@ -9,6 +9,7 @@ import Catalog from './pages/Catalog';
 import TableTopChains from './pages/TableTopChains';
 import BucketCompare from './pages/BucketCompare';
 import ChainReviewAdmin from './pages/ChainReviewAdmin';
+import ImportCenter from './pages/ImportCenter';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/TableTopChains" element={<TableTopChains />} />
         <Route path="/BucketCompare" element={<BucketCompare />} />
         <Route path="/admin/chain-review" element={<ChainReviewAdmin />} />
+        <Route path="/admin/import-center" element={<ImportCenter />} />
       </Routes>
     </BrowserRouter>
   )

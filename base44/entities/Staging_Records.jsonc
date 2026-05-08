@@ -1,0 +1,82 @@
+{
+  "name": "Staging_Records",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Parent import session ID"
+    },
+    "entity_target": {
+      "type": "string",
+      "description": "Production entity this record will be written to \u2014 e.g. Normalized_Chains"
+    },
+    "row_index": {
+      "type": "number",
+      "description": "Original row index in source file (0-based)"
+    },
+    "source_file": {
+      "type": "string",
+      "description": "Source filename this row came from"
+    },
+    "raw_data": {
+      "type": "object",
+      "description": "Original unmapped row data as parsed from source",
+      "additionalProperties": true
+    },
+    "mapped_data": {
+      "type": "object",
+      "description": "Mapped and transformed data ready for production write",
+      "additionalProperties": true
+    },
+    "record_status": {
+      "type": "string",
+      "enum": [
+        "Pending",
+        "New",
+        "Duplicate",
+        "Changed",
+        "Conflict",
+        "FK_Fail",
+        "Invalid",
+        "Committed",
+        "Skipped",
+        "Failed"
+      ],
+      "default": "Pending",
+      "description": "Validation classification of this staged record"
+    },
+    "diff_summary": {
+      "type": "object",
+      "description": "For Changed records: { field: { old, new } } diff map",
+      "additionalProperties": true
+    },
+    "conflict_detail": {
+      "type": "string",
+      "description": "Human-readable description of conflict or validation failure"
+    },
+    "production_record_id": {
+      "type": "string",
+      "description": "ID of matching production record (for Duplicate/Changed)"
+    },
+    "commit_decision": {
+      "type": "string",
+      "enum": [
+        "Include",
+        "Skip",
+        "Pending"
+      ],
+      "default": "Pending",
+      "description": "Admin decision for this record during diff review"
+    },
+    "committed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when this record was committed to production"
+    }
+  },
+  "required": [
+    "session_id",
+    "entity_target",
+    "record_status"
+  ]
+}

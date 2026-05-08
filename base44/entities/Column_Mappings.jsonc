@@ -1,0 +1,52 @@
+{
+  "name": "Column_Mappings",
+  "type": "object",
+  "properties": {
+    "mapping_name": {
+      "type": "string",
+      "description": "Human-readable label \u2014 e.g. Tsubaki ANSI Mapping, Regina Conveyor Chain Mapping"
+    },
+    "manufacturer": {
+      "type": "string",
+      "description": "Manufacturer this mapping applies to"
+    },
+    "entity_target": {
+      "type": "string",
+      "description": "Target entity \u2014 e.g. Normalized_Chains, Chain_Dimensions"
+    },
+    "source_columns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Column headers as detected in the source file"
+    },
+    "mapping_rules": {
+      "type": "object",
+      "description": "JSON object: { sourceColumn: targetField } \u2014 e.g. { 'Part No.': 'chain_id', 'Pitch (mm)': 'pitch_mm' }",
+      "additionalProperties": true
+    },
+    "transform_rules": {
+      "type": "object",
+      "description": "Optional transform hints per column \u2014 e.g. { 'Pitch (in)': 'parseFloat', 'Chain No': 'toUpperCase' }",
+      "additionalProperties": true
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Admin email who saved this mapping"
+    },
+    "times_used": {
+      "type": "number",
+      "default": 0,
+      "description": "Usage count \u2014 for surfacing popular mappings"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes on this mapping"
+    }
+  },
+  "required": [
+    "mapping_name",
+    "entity_target"
+  ]
+}
