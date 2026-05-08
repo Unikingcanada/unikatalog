@@ -1,6 +1,6 @@
-// Redirects to the current ForgedChain page
+// ForgedChainConfigurator — redirects to the main ForgedChain view via Home
 import { useEffect } from "react";
 export default function ForgedChainConfigurator() {
-  useEffect(() => { window.location.replace("/ForgedChain"); }, []);
+  useEffect(() => { window.location.replace("/Home"); }, []);
   return null;
 }
