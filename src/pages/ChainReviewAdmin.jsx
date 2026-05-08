@@ -7,11 +7,13 @@ import { base44 } from "@/api/base44Client";
 import ReviewTable from "@/components/chainReview/ReviewTable";
 import ReviewFilterBar from "@/components/chainReview/ReviewFilterBar";
 import ReviewStats from "@/components/chainReview/ReviewStats";
+import Wave2ImportPanel from "@/components/chainReview/Wave2ImportPanel";
 
 const TABS = [
   { key: "equivalents", label: "Manufacturer Equivalents", entity: "Manufacturer_Equivalents" },
   { key: "dimensions",  label: "Chain Dimensions",         entity: "Chain_Dimensions" },
   { key: "flags",       label: "Review Flags",             entity: "Chain_Review_Flags" },
+  { key: "import",      label: "⬆ Wave 2 Import",          entity: null },
 ];
 
 export default function ChainReviewAdmin() {
@@ -114,8 +116,8 @@ export default function ChainReviewAdmin() {
         )}
       </div>
 
-      {/* Stats */}
-      <ReviewStats records={records} />
+      {/* Stats — hidden on import tab */}
+      {activeTab !== "import" && <ReviewStats records={records} />}
 
       {/* Tab bar */}
       <div style={S.tabBar}>
@@ -127,17 +129,21 @@ export default function ChainReviewAdmin() {
         ))}
       </div>
 
-      {/* Filter bar */}
-      <ReviewFilterBar filter={filter} onChange={setFilter} counts={{
-        all:      records.length,
-        pending:  records.filter(r => r.review_status === "Pending"  || (!r.review_status && r.needs_review)).length,
-        critical: records.filter(r => r.severity === "Critical"      || r.needs_review === true).length,
-        approved: records.filter(r => r.review_status === "Approved").length,
-        rejected: records.filter(r => r.review_status === "Rejected").length,
-      }} />
+      {/* Filter bar — hidden on import tab */}
+      {activeTab !== "import" && (
+        <ReviewFilterBar filter={filter} onChange={setFilter} counts={{
+          all:      records.length,
+          pending:  records.filter(r => r.review_status === "Pending"  || (!r.review_status && r.needs_review)).length,
+          critical: records.filter(r => r.severity === "Critical"      || r.needs_review === true).length,
+          approved: records.filter(r => r.review_status === "Approved").length,
+          rejected: records.filter(r => r.review_status === "Rejected").length,
+        }} />
+      )}
 
-      {/* Table */}
-      {loading ? (
+      {/* Table / Import Panel */}
+      {activeTab === "import" ? (
+        <Wave2ImportPanel />
+      ) : loading ? (
         <div style={S.center}>Loading records...</div>
       ) : filtered.length === 0 ? (
         <div style={S.center}>No records match this filter.</div>
