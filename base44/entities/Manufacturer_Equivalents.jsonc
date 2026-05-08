@@ -1,0 +1,65 @@
+{
+  "name": "Manufacturer_Equivalents",
+  "type": "object",
+  "properties": {
+    "chain_id": {
+      "type": "string",
+      "description": "Foreign key \u2014 references Normalized_Chains.chain_id"
+    },
+    "brand": {
+      "type": "string",
+      "description": "Manufacturer / brand name \u2014 e.g. Donghua, Allied Locke, Rexnord, Tsubaki"
+    },
+    "brand_part_number": {
+      "type": "string",
+      "description": "Manufacturer's own part number or chain designation"
+    },
+    "brand_series": {
+      "type": "string",
+      "description": "Manufacturer series name \u2014 e.g. Super Series, X-Ring, Lambda"
+    },
+    "equivalency_type": {
+      "type": "string",
+      "enum": [
+        "Direct",
+        "Dimensional",
+        "Functional",
+        "Upgrade",
+        "Downgrade",
+        "Partial"
+      ],
+      "description": "Type of cross-reference equivalency"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "Confirmed",
+        "Needs Review",
+        "Approximate"
+      ],
+      "default": "Confirmed",
+      "description": "Confidence level of this equivalency"
+    },
+    "catalog_url": {
+      "type": "string",
+      "description": "URL to manufacturer catalog page or PDF for this product"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Brand-specific product image URL"
+    },
+    "drawing_url": {
+      "type": "string",
+      "description": "Brand-specific dimensional drawing URL"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notes on equivalency \u2014 e.g. different coating, slightly different plate height"
+    }
+  },
+  "required": [
+    "chain_id",
+    "brand",
+    "brand_part_number"
+  ]
+}

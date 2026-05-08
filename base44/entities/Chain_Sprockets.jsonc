@@ -1,0 +1,86 @@
+{
+  "name": "Chain_Sprockets",
+  "type": "object",
+  "properties": {
+    "chain_id": {
+      "type": "string",
+      "description": "Foreign key \u2014 references Normalized_Chains.chain_id"
+    },
+    "sprocket_code": {
+      "type": "string",
+      "description": "Sprocket part number or catalog code"
+    },
+    "teeth": {
+      "type": "string",
+      "description": "Number of teeth \u2014 may be a range, e.g. 9-114 or specific value 17"
+    },
+    "style": {
+      "type": "string",
+      "enum": [
+        "One-Piece (Type A)",
+        "Hub (Type B)",
+        "Split (Type C)",
+        "Idler",
+        "Custom"
+      ],
+      "description": "Sprocket style / hub type"
+    },
+    "material": {
+      "type": "string",
+      "description": "Sprocket material \u2014 e.g. Carbon Steel, Stainless Steel, Cast Iron, Plastic"
+    },
+    "bore_min_in": {
+      "type": "number",
+      "description": "Minimum bore diameter in inches"
+    },
+    "bore_max_in": {
+      "type": "number",
+      "description": "Maximum bore diameter in inches"
+    },
+    "pitch_dia_in": {
+      "type": "number",
+      "description": "Pitch diameter in inches"
+    },
+    "pitch_dia_mm": {
+      "type": "number",
+      "description": "Pitch diameter in mm"
+    },
+    "outer_dia_in": {
+      "type": "number",
+      "description": "Outer diameter in inches"
+    },
+    "outer_dia_mm": {
+      "type": "number",
+      "description": "Outer diameter in mm"
+    },
+    "hub_width_in": {
+      "type": "number",
+      "description": "Hub width in inches"
+    },
+    "hub_width_mm": {
+      "type": "number",
+      "description": "Hub width in mm"
+    },
+    "keyway": {
+      "type": "boolean",
+      "description": "Whether keyway and setscrew are included",
+      "default": false
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Sprocket image URL"
+    },
+    "source_brand": {
+      "type": "string",
+      "description": "Brand catalog this sprocket data was sourced from"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes on sprocket compatibility or options"
+    }
+  },
+  "required": [
+    "chain_id",
+    "sprocket_code"
+  ]
+}

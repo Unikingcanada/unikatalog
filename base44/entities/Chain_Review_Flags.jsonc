@@ -1,0 +1,78 @@
+{
+  "name": "Chain_Review_Flags",
+  "type": "object",
+  "properties": {
+    "chain_id": {
+      "type": "string",
+      "description": "Foreign key \u2014 references Normalized_Chains.chain_id"
+    },
+    "flag_type": {
+      "type": "string",
+      "enum": [
+        "Missing Dimensions",
+        "Conflicting Specs",
+        "Unverified Equivalency",
+        "Missing Image",
+        "Missing Performance Data",
+        "Missing Sprocket Data",
+        "Missing Attachment Data",
+        "Discontinued \u2014 Needs Confirmation",
+        "Data Entry Error",
+        "Other"
+      ],
+      "description": "Category of review flag"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "Critical",
+        "High",
+        "Medium",
+        "Low"
+      ],
+      "default": "Medium",
+      "description": "Severity of the issue"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the issue"
+    },
+    "affected_field": {
+      "type": "string",
+      "description": "Which field or data point is affected \u2014 e.g. tensile_strength_lbs, roller_dia_mm"
+    },
+    "source_a": {
+      "type": "string",
+      "description": "First conflicting source (brand or catalog)"
+    },
+    "value_a": {
+      "type": "string",
+      "description": "Value from source A"
+    },
+    "source_b": {
+      "type": "string",
+      "description": "Second conflicting source (brand or catalog)"
+    },
+    "value_b": {
+      "type": "string",
+      "description": "Value from source B"
+    },
+    "resolved": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this flag has been resolved"
+    },
+    "resolution_notes": {
+      "type": "string",
+      "description": "Notes on how the issue was resolved"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Team member assigned to resolve this flag"
+    }
+  },
+  "required": [
+    "chain_id",
+    "flag_type"
+  ]
+}

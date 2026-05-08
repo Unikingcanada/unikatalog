@@ -1,0 +1,79 @@
+{
+  "name": "Chain_Attachments",
+  "type": "object",
+  "properties": {
+    "chain_id": {
+      "type": "string",
+      "description": "Foreign key \u2014 references Normalized_Chains.chain_id"
+    },
+    "attachment_code": {
+      "type": "string",
+      "description": "Standard attachment code \u2014 e.g. A1, A2, K1, K2, SA1, SA2"
+    },
+    "attachment_type": {
+      "type": "string",
+      "enum": [
+        "Bent Lug (A Series)",
+        "Straight Lug (SA Series)",
+        "Extended Pin",
+        "Wide Contour",
+        "Double Pitch",
+        "K Attachment",
+        "G Attachment",
+        "D Attachment",
+        "Custom / Special"
+      ],
+      "description": "Attachment type classification"
+    },
+    "side": {
+      "type": "string",
+      "enum": [
+        "One Side",
+        "Both Sides",
+        "N/A"
+      ],
+      "description": "Which side(s) the attachment is on"
+    },
+    "lug_height_in": {
+      "type": "number",
+      "description": "Lug height in inches"
+    },
+    "lug_height_mm": {
+      "type": "number",
+      "description": "Lug height in mm"
+    },
+    "hole_dia_in": {
+      "type": "number",
+      "description": "Attachment hole diameter in inches"
+    },
+    "hole_dia_mm": {
+      "type": "number",
+      "description": "Attachment hole diameter in mm"
+    },
+    "spacing_note": {
+      "type": "string",
+      "description": "Spacing availability note \u2014 e.g. Every link, Every other link, Custom"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Attachment image or diagram URL"
+    },
+    "source_confirmed": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this attachment is confirmed from a source catalog"
+    },
+    "source_brand": {
+      "type": "string",
+      "description": "Brand catalog this attachment was sourced from"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes on availability or custom options"
+    }
+  },
+  "required": [
+    "chain_id",
+    "attachment_code"
+  ]
+}

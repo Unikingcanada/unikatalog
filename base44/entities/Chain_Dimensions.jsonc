@@ -1,0 +1,105 @@
+{
+  "name": "Chain_Dimensions",
+  "type": "object",
+  "properties": {
+    "chain_id": {
+      "type": "string",
+      "description": "Foreign key \u2014 references Normalized_Chains.chain_id"
+    },
+    "pitch_in": {
+      "type": "number",
+      "description": "Pitch in inches"
+    },
+    "pitch_mm": {
+      "type": "number",
+      "description": "Pitch in mm"
+    },
+    "roller_dia_in": {
+      "type": "number",
+      "description": "Roller diameter in inches"
+    },
+    "roller_dia_mm": {
+      "type": "number",
+      "description": "Roller diameter in mm"
+    },
+    "roller_width_in": {
+      "type": "number",
+      "description": "Roller (inner) width in inches"
+    },
+    "roller_width_mm": {
+      "type": "number",
+      "description": "Roller (inner) width in mm"
+    },
+    "pin_dia_in": {
+      "type": "number",
+      "description": "Pin diameter in inches"
+    },
+    "pin_dia_mm": {
+      "type": "number",
+      "description": "Pin diameter in mm"
+    },
+    "pin_length_in": {
+      "type": "number",
+      "description": "Pin length in inches"
+    },
+    "pin_length_mm": {
+      "type": "number",
+      "description": "Pin length in mm"
+    },
+    "plate_height_in": {
+      "type": "number",
+      "description": "Link plate height in inches"
+    },
+    "plate_height_mm": {
+      "type": "number",
+      "description": "Link plate height in mm"
+    },
+    "plate_thickness_in": {
+      "type": "number",
+      "description": "Link plate thickness in inches"
+    },
+    "plate_thickness_mm": {
+      "type": "number",
+      "description": "Link plate thickness in mm"
+    },
+    "transverse_pitch_in": {
+      "type": "number",
+      "description": "Transverse pitch (multi-strand) in inches"
+    },
+    "transverse_pitch_mm": {
+      "type": "number",
+      "description": "Transverse pitch (multi-strand) in mm"
+    },
+    "overall_width_in": {
+      "type": "number",
+      "description": "Overall width in inches (for multi-strand)"
+    },
+    "overall_width_mm": {
+      "type": "number",
+      "description": "Overall width in mm"
+    },
+    "weight_lbs_ft": {
+      "type": "number",
+      "description": "Weight in lbs per foot"
+    },
+    "weight_kg_m": {
+      "type": "number",
+      "description": "Weight in kg per metre"
+    },
+    "standard": {
+      "type": "string",
+      "description": "Dimension standard source \u2014 e.g. ANSI B29.1, ISO 606"
+    },
+    "source_brand": {
+      "type": "string",
+      "description": "Brand this dimension record was sourced from"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional dimension notes or tolerances"
+    }
+  },
+  "required": [
+    "chain_id"
+  ]
+}

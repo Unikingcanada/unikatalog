@@ -1,0 +1,48 @@
+{
+  "name": "Chain_Media",
+  "type": "object",
+  "properties": {
+    "chain_id": {
+      "type": "string",
+      "description": "Foreign key \u2014 references Normalized_Chains.chain_id"
+    },
+    "media_type": {
+      "type": "string",
+      "enum": [
+        "Product Photo",
+        "Dimensional Drawing",
+        "Assembly Diagram",
+        "Application Photo",
+        "Logo",
+        "Other"
+      ],
+      "description": "Type of media asset"
+    },
+    "url": {
+      "type": "string",
+      "description": "URL of the media asset"
+    },
+    "label": {
+      "type": "string",
+      "description": "Human-readable label \u2014 e.g. Front View, ISO Drawing, Attachment Detail"
+    },
+    "source_brand": {
+      "type": "string",
+      "description": "Brand this media asset was sourced from"
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is the primary display image for this chain"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about this media asset"
+    }
+  },
+  "required": [
+    "chain_id",
+    "media_type",
+    "url"
+  ]
+}

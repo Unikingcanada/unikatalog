@@ -1,0 +1,75 @@
+{
+  "name": "Performance_Data",
+  "type": "object",
+  "properties": {
+    "chain_id": {
+      "type": "string",
+      "description": "Foreign key \u2014 references Normalized_Chains.chain_id"
+    },
+    "tier": {
+      "type": "string",
+      "enum": [
+        "Standard Duty",
+        "Performance Duty",
+        "Premium Duty",
+        "Super Duty"
+      ],
+      "description": "Performance tier label"
+    },
+    "tensile_strength_lbs": {
+      "type": "number",
+      "description": "Minimum tensile strength in lbs"
+    },
+    "tensile_strength_kn": {
+      "type": "number",
+      "description": "Minimum tensile strength in kN"
+    },
+    "working_load_lbs": {
+      "type": "number",
+      "description": "Recommended working load in lbs"
+    },
+    "working_load_kn": {
+      "type": "number",
+      "description": "Recommended working load in kN"
+    },
+    "fatigue_strength_lbs": {
+      "type": "number",
+      "description": "Fatigue strength rating in lbs"
+    },
+    "max_speed_ft_min": {
+      "type": "number",
+      "description": "Maximum recommended speed in ft/min"
+    },
+    "max_speed_m_s": {
+      "type": "number",
+      "description": "Maximum recommended speed in m/s"
+    },
+    "temp_min_f": {
+      "type": "number",
+      "description": "Minimum operating temperature in \u00b0F"
+    },
+    "temp_max_f": {
+      "type": "number",
+      "description": "Maximum operating temperature in \u00b0F"
+    },
+    "lubrication": {
+      "type": "string",
+      "description": "Lubrication requirements or type \u2014 e.g. Oil Bath, Self-Lube, Dry"
+    },
+    "source_brand": {
+      "type": "string",
+      "description": "Brand this performance data was sourced from"
+    },
+    "catalog_page": {
+      "type": "string",
+      "description": "Reference catalog page for verification"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional performance notes or conditions"
+    }
+  },
+  "required": [
+    "chain_id"
+  ]
+}

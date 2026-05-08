@@ -1,0 +1,60 @@
+{
+  "name": "Chain_Downloads",
+  "type": "object",
+  "properties": {
+    "chain_id": {
+      "type": "string",
+      "description": "Foreign key \u2014 references Normalized_Chains.chain_id. Use 'ALL' for brand-wide resources."
+    },
+    "label": {
+      "type": "string",
+      "description": "Display label \u2014 e.g. Allied Locke Full Catalog, Donghua Engineering Chain Spec Sheet"
+    },
+    "url": {
+      "type": "string",
+      "description": "URL to the downloadable file (PDF, DXF, etc.)"
+    },
+    "file_type": {
+      "type": "string",
+      "enum": [
+        "PDF",
+        "DXF",
+        "DWG",
+        "Excel",
+        "CAD",
+        "Other"
+      ],
+      "description": "File format type"
+    },
+    "doc_type": {
+      "type": "string",
+      "enum": [
+        "Full Catalog",
+        "Spec Sheet",
+        "Dimensional Drawing",
+        "Installation Guide",
+        "Safety Data Sheet",
+        "Other"
+      ],
+      "description": "Document category"
+    },
+    "brand": {
+      "type": "string",
+      "description": "Brand this document is from \u2014 e.g. Allied Locke, Donghua, Tsubaki"
+    },
+    "language": {
+      "type": "string",
+      "default": "English",
+      "description": "Document language"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about this document"
+    }
+  },
+  "required": [
+    "chain_id",
+    "label",
+    "url"
+  ]
+}

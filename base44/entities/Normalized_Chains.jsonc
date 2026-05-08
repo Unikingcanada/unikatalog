@@ -1,0 +1,117 @@
+{
+  "name": "Normalized_Chains",
+  "type": "object",
+  "properties": {
+    "chain_id": {
+      "type": "string",
+      "description": "Unique normalized chain identifier \u2014 e.g. ANSI-40, WH78, 667-PINTLE"
+    },
+    "chain_family": {
+      "type": "string",
+      "enum": [
+        "Performance Roller Chains",
+        "Conveyor Roller Chains",
+        "Attachment Roller Chains",
+        "Hollow Pin Chains",
+        "Double Pitch Conveyor Chains",
+        "Engineered Class Chains",
+        "Welded Steel Chains",
+        "Steel Pintle Chains",
+        "Steel Bushed Chains",
+        "Agricultural Conveyor Chains",
+        "SharpTop Chains",
+        "Forged Chains",
+        "Drop Forged Rivetless Chains",
+        "Overhead Conveyor Chains",
+        "Drag / Scraper Chains",
+        "Bucket Elevator Chains",
+        "Leaf Chains",
+        "Specialty / Custom Chains"
+      ],
+      "description": "Primary chain family for browsing and filtering"
+    },
+    "chain_number": {
+      "type": "string",
+      "description": "Standard chain number \u2014 e.g. 40, 80H, C2060H, WH78, 667"
+    },
+    "display_name": {
+      "type": "string",
+      "description": "Full normalized display name \u2014 e.g. ANSI 40 Roller Chain"
+    },
+    "standard": {
+      "type": "string",
+      "description": "Applicable standard \u2014 e.g. ANSI B29.1, ISO 606, DIN 8188"
+    },
+    "pitch_in": {
+      "type": "string",
+      "description": "Chain pitch in inches"
+    },
+    "pitch_mm": {
+      "type": "string",
+      "description": "Chain pitch in mm"
+    },
+    "strands": {
+      "type": "number",
+      "description": "Number of strands (1 = simplex, 2 = duplex, 3 = triplex)",
+      "default": 1
+    },
+    "description": {
+      "type": "string",
+      "description": "Short normalized description of the chain"
+    },
+    "application_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Industry and application tags \u2014 e.g. Agriculture, Mining, Food Grade"
+    },
+    "materials_available": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Confirmed available materials / coatings \u2014 e.g. Carbon Steel, Stainless Steel, Nickel Plated"
+    },
+    "options_upgrades": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Available options and upgrade variants \u2014 e.g. O-Ring Sealed, Self-Lube, Heavy Series"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Primary chain product image URL"
+    },
+    "drawing_url": {
+      "type": "string",
+      "description": "Dimensional drawing image URL"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Pending Review",
+        "Discontinued",
+        "On Request"
+      ],
+      "default": "Active",
+      "description": "Catalog status"
+    },
+    "needs_review": {
+      "type": "boolean",
+      "default": false,
+      "description": "Flag for Uniking engineering review"
+    },
+    "uniking_notes": {
+      "type": "string",
+      "description": "Internal Uniking review notes and flags"
+    }
+  },
+  "required": [
+    "chain_id",
+    "chain_family",
+    "chain_number"
+  ]
+}
