@@ -6,6 +6,7 @@ import { useState } from "react";
 import { CHAIN_PRODUCTS, CHAIN_CATEGORIES, CHAIN_TYPES, getProductsByCategory } from "@/lib/tableTopChainData";
 import TTCProductCard from "./TTCProductCard";
 import TTCProductDetail from "./TTCProductDetail";
+import TTCRFQModal from "./TTCRFQModal";
 
 const C = {
   navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
@@ -83,6 +84,8 @@ export default function TableTopChainCatalog({ onBack }) {
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [search, setSearch] = useState("");
   const [toast, setToast] = useState(null);
+  const [rfqProduct, setRfqProduct] = useState(null);
+  const [rfqInitialWidth, setRfqInitialWidth] = useState(null);
 
   const accentColor = activeCategory === "STEEL" ? C.steel : C.plastic;
   const allProducts = getProductsByCategory(activeCategory);
@@ -110,14 +113,18 @@ export default function TableTopChainCatalog({ onBack }) {
   const plasticCount = getProductsByCategory("PLASTIC").length;
   const steelCount = getProductsByCategory("STEEL").length;
 
-  function handleAddRFQ(product, material) {
-    if (!material) {
-      // Quick add without material — open detail
-      setSelectedProduct(product);
-      return;
-    }
-    // Toast feedback
-    setToast({ name: `${product.name} — ${material.name}` });
+  function handleAddRFQ(product, selectedWidth) {
+    setRfqProduct(product);
+    setRfqInitialWidth(selectedWidth || null);
+  }
+
+  function handleRFQConfirm(cartItem) {
+    const cart = JSON.parse(localStorage.getItem("uniking_rfq_cart") || "[]");
+    cart.push(cartItem);
+    localStorage.setItem("uniking_rfq_cart", JSON.stringify(cart));
+    window.dispatchEvent(new Event("rfq_cart_updated"));
+    setToast({ name: cartItem.name });
+    setRfqProduct(null);
     setTimeout(() => setToast(null), 4000);
   }
 
@@ -263,6 +270,15 @@ export default function TableTopChainCatalog({ onBack }) {
       </div>
 
       {toast && <QuickRFQToast item={toast} onDismiss={() => setToast(null)} />}
+
+      {rfqProduct && (
+        <TTCRFQModal
+          product={rfqProduct}
+          initialWidth={rfqInitialWidth}
+          onConfirm={handleRFQConfirm}
+          onClose={() => setRfqProduct(null)}
+        />
+      )}
     </div>
   );
 }

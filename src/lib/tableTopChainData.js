@@ -1449,6 +1449,25 @@ export const CHAIN_PRODUCTS = [
   },
 ];
 
+// ─── Width Dimension Data ─────────────────────────────────────────────────────
+// Keyed by nominal width string → dimensions (pitch 1.0" and 1.5" series)
+// Source: Movex Imperial Catalog dimensional tables
+export const WIDTH_DIMENSIONS = {
+  // 1.0" pitch standard widths
+  '1.50"': { overallWidth: '1.50"', insideWidth: '1.38"', plateHeight: '0.59"', weightLbsFt: "0.24" },
+  '2.00"': { overallWidth: '2.00"', insideWidth: '1.88"', plateHeight: '0.59"', weightLbsFt: "0.30" },
+  '2.50"': { overallWidth: '2.50"', insideWidth: '2.38"', plateHeight: '0.59"', weightLbsFt: "0.36" },
+  '3.25"': { overallWidth: '3.25"', insideWidth: '3.13"', plateHeight: '0.63"', weightLbsFt: "0.46" },
+  '3.30"': { overallWidth: '3.30"', insideWidth: '3.18"', plateHeight: '0.63"', weightLbsFt: "0.47" },
+  '3.50"': { overallWidth: '3.50"', insideWidth: '3.38"', plateHeight: '0.63"', weightLbsFt: "0.50" },
+  '4.00"': { overallWidth: '4.00"', insideWidth: '3.88"', plateHeight: '0.63"', weightLbsFt: "0.55" },
+  '4.50"': { overallWidth: '4.50"', insideWidth: '4.38"', plateHeight: '0.63"', weightLbsFt: "0.62" },
+  '6.00"': { overallWidth: '6.00"', insideWidth: '5.88"', plateHeight: '0.63"', weightLbsFt: "0.80" },
+  '7.50"': { overallWidth: '7.50"', insideWidth: '7.38"', plateHeight: '0.63"', weightLbsFt: "0.98" },
+  '10.00"': { overallWidth: '10.00"', insideWidth: '9.88"', plateHeight: '0.75"', weightLbsFt: "1.32" },
+  '12.00"': { overallWidth: '12.00"', insideWidth: '11.88"', plateHeight: '0.75"', weightLbsFt: "1.58" },
+};
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 export function getProductsByCategory(categoryKey) {
   return CHAIN_PRODUCTS.filter(p => p.category === categoryKey);

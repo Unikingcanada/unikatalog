@@ -4,6 +4,7 @@
  */
 import { useState } from "react";
 import { MATERIALS, getMaterialsForProduct } from "@/lib/tableTopChainData";
+import TTCRFQModal from "./TTCRFQModal";
 
 const C = {
   navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
@@ -17,68 +18,9 @@ const TYPE_LABELS = {
   MICRO: "Micro Pitch", FLUSH_GRID: "Flush Grid / Open",
 };
 
-function RFQModal({ product, material, onConfirm, onClose }) {
-  const [qty, setQty] = useState(1);
-  const [unit, setUnit] = useState("Feet");
-  const [notes, setNotes] = useState("");
 
-  const rfqLabel = `${product.name} Table Top Chain – ${product.category === "STEEL" ? "Steel" : "Plastic"} – ${material.name}${material.brand ? ` (${material.brand})` : ""}`;
 
-  return (
-    <div style={{
-      position: "fixed", inset: 0, background: "rgba(10,20,40,0.6)", zIndex: 1000,
-      display: "flex", alignItems: "center", justifyContent: "center", padding: 20,
-    }}>
-      <div style={{
-        background: "#fff", borderRadius: 14, padding: "24px", maxWidth: 460, width: "100%",
-        boxShadow: "0 24px 80px rgba(0,0,0,0.3)",
-      }}>
-        <div style={{ fontSize: 16, fontWeight: 800, color: C.navyMid, marginBottom: 6 }}>Add to RFQ</div>
-        <div style={{
-          background: "#f0f4f8", borderRadius: 8, padding: "10px 14px",
-          fontSize: 12, color: C.navyMid, fontWeight: 700, marginBottom: 16, lineHeight: 1.5,
-        }}>
-          {rfqLabel}
-        </div>
-
-        <div style={{ marginBottom: 12 }}>
-          <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 4 }}>Quantity</label>
-          <div style={{ display: "flex", gap: 8 }}>
-            <input type="number" value={qty} min={1} onChange={e => setQty(e.target.value)}
-              style={{ flex: 2, padding: "8px 10px", border: `1px solid ${C.border}`, borderRadius: 7, fontSize: 13, outline: "none" }} />
-            <select value={unit} onChange={e => setUnit(e.target.value)}
-              style={{ flex: 1, padding: "8px 10px", border: `1px solid ${C.border}`, borderRadius: 7, fontSize: 12, outline: "none" }}>
-              <option>Feet</option>
-              <option>Meters</option>
-              <option>Links</option>
-              <option>Rolls</option>
-            </select>
-          </div>
-        </div>
-        <div style={{ marginBottom: 16 }}>
-          <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 4 }}>Notes (optional)</label>
-          <textarea value={notes} onChange={e => setNotes(e.target.value)}
-            placeholder="Conveyor width, operating conditions, required widths, etc."
-            rows={3}
-            style={{ width: "100%", padding: "8px 10px", border: `1px solid ${C.border}`, borderRadius: 7, fontSize: 12, outline: "none", resize: "vertical", boxSizing: "border-box" }}
-          />
-        </div>
-        <div style={{ display: "flex", gap: 8 }}>
-          <button onClick={onClose}
-            style={{ flex: 1, padding: "10px", background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 600 }}>
-            Cancel
-          </button>
-          <button onClick={() => onConfirm({ rfqLabel, qty, unit, notes })}
-            style={{ flex: 2, padding: "10px", background: C.green, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 800 }}>
-            ✓ Add to RFQ Cart
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function MaterialRow({ mat, onAddRFQ }) {
+function MaterialRow({ mat, onAddRFQ }) { // onAddRFQ called with no args — opens modal
   const [hovered, setHovered] = useState(false);
   const isExclusive = mat.brand && !mat.brand.includes("multiple");
   const isMulti = mat.brand && mat.brand.includes("multiple");
@@ -134,7 +76,7 @@ function MaterialRow({ mat, onAddRFQ }) {
       </td>
       <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}` }}>
         <button
-          onClick={() => onAddRFQ(mat)}
+          onClick={() => onAddRFQ()}
           style={{
             background: C.navyMid, color: "#fff", border: "none",
             borderRadius: 7, padding: "6px 12px", cursor: "pointer",
@@ -150,51 +92,31 @@ function MaterialRow({ mat, onAddRFQ }) {
 
 export default function TTCProductDetail({ product, onBack, onAddRFQ }) {
   const [imgError, setImgError] = useState(false);
-  const [rfqMaterial, setRfqMaterial] = useState(null);
-  const [addedItems, setAddedItems] = useState([]);
+  const [showRFQModal, setShowRFQModal] = useState(false);
+  const [addedCount, setAddedCount] = useState(0);
 
   const materials = getMaterialsForProduct(product);
   const isSteelCat = product.category === "STEEL";
   const accentColor = isSteelCat ? C.steel : C.plastic;
 
-  function handleAddRFQ(mat) {
-    setRfqMaterial(mat);
-  }
-
-  function handleConfirmRFQ({ rfqLabel, qty, unit, notes }) {
-    const cartItem = {
-      cartId: `ttc_${product.id}_${rfqMaterial.id}_${Date.now()}`,
-      id: `ttc_${product.id}_${rfqMaterial.id}`,
-      _source: "tabletop_chain",
-      name: rfqLabel,
-      series: product.name,
-      type: `Table Top Chain — ${isSteelCat ? "Steel" : "Plastic"}`,
-      category: TYPE_LABELS[product.type] || product.type,
-      materials: rfqMaterial.name,
-      quantity: parseInt(qty) || 1,
-      unit: unit,
-      notes: notes || "",
-      image_url: product.image,
-    };
-
+  function handleConfirmRFQ(cartItem) {
     const cart = JSON.parse(localStorage.getItem("uniking_rfq_cart") || "[]");
     cart.push(cartItem);
     localStorage.setItem("uniking_rfq_cart", JSON.stringify(cart));
     window.dispatchEvent(new Event("rfq_cart_updated"));
-    setAddedItems(prev => [...prev, rfqMaterial.id]);
-    setRfqMaterial(null);
-
+    setAddedCount(c => c + 1);
+    setShowRFQModal(false);
     if (onAddRFQ) onAddRFQ(cartItem);
   }
 
   return (
     <div>
-      {rfqMaterial && (
-        <RFQModal
+      {showRFQModal && (
+        <TTCRFQModal
           product={product}
-          material={rfqMaterial}
+          initialWidth={null}
           onConfirm={handleConfirmRFQ}
-          onClose={() => setRfqMaterial(null)}
+          onClose={() => setShowRFQModal(false)}
         />
       )}
 
@@ -352,12 +274,12 @@ export default function TTCProductDetail({ product, onBack, onAddRFQ }) {
               </thead>
               <tbody>
                 {materials.map((mat, i) => (
-                  <MaterialRow
-                    key={mat.id}
-                    mat={mat}
-                    onAddRFQ={handleAddRFQ}
-                    added={addedItems.includes(mat.id)}
-                  />
+                 <MaterialRow
+                   key={mat.id}
+                   mat={mat}
+                   onAddRFQ={() => setShowRFQModal(true)}
+                   added={false}
+                 />
                 ))}
               </tbody>
             </table>
@@ -371,7 +293,7 @@ export default function TTCProductDetail({ product, onBack, onAddRFQ }) {
         </div>
 
         {/* Added confirmation */}
-        {addedItems.length > 0 && (
+        {addedCount > 0 && (
           <div style={{
             background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 8,
             padding: "12px 16px", display: "flex", alignItems: "center", gap: 10,
@@ -379,7 +301,7 @@ export default function TTCProductDetail({ product, onBack, onAddRFQ }) {
             <span style={{ fontSize: 16 }}>✅</span>
             <div>
               <div style={{ fontSize: 13, fontWeight: 700, color: "#166534" }}>Added to RFQ Cart</div>
-              <div style={{ fontSize: 11, color: "#166534" }}>{addedItems.length} item{addedItems.length > 1 ? "s" : ""} added. Go to RFQ Cart to review and submit.</div>
+              <div style={{ fontSize: 11, color: "#166534" }}>{addedCount} item{addedCount > 1 ? "s" : ""} added. Go to RFQ Cart to review and submit.</div>
             </div>
           </div>
         )}
