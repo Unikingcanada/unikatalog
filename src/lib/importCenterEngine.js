@@ -323,7 +323,7 @@ export function generateAutoFlags(mappedData, status, conflictDetail, entityTarg
     const isHSeries  = isHSeriesChain(chainId);
     const isStandalone = status === 'New'; // no duplicate / merge occurred
 
-    const severity = (isHSeries && sourceBrandTrusted && isStandalone) ? 'Medium' : 'Medium';
+    const severity = (isHSeries && sourceBrandTrusted && isStandalone) ? 'Medium' : 'High';
     const autoNote = (isHSeries && sourceBrandTrusted && isStandalone)
       ? 'Heavy-series chain verified as standalone SKU. Auto-governance: H-suffix + trusted brand + no duplicate detected.'
       : null;
