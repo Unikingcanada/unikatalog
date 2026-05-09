@@ -11,7 +11,7 @@ const ENTITY_FIELDS = {
   Normalized_Chains: ["chain_id","chain_family","chain_number","display_name","standard","pitch_in","pitch_mm","strands","description","application_tags","materials_available","options_upgrades","image_url","drawing_url","uniking_notes","status","needs_review"],
   Chain_Dimensions: ["chain_id","pitch_in","pitch_mm","roller_dia_in","roller_dia_mm","roller_width_in","roller_width_mm","pin_dia_in","pin_dia_mm","plate_height_in","plate_height_mm","plate_thickness_in","plate_thickness_mm","weight_lbs_ft","weight_kg_m","standard","source_brand","notes"],
   Manufacturer_Equivalents: ["chain_id","brand","brand_part_number","brand_series","equivalency_type","confidence","catalog_url","notes"],
-  Performance_Data: ["chain_id","tier","tensile_strength_lbs","tensile_strength_kn","working_load_lbs","working_load_kn","max_speed_ft_min","temp_min_f","temp_max_f","lubrication","source_brand","notes"],
+  Performance_Data: ["chain_id","tier","tensile_strength_lbs","tensile_strength_kn","working_load_lbs","working_load_kn","fatigue_strength_lbs","max_speed_ft_min","max_speed_m_s","temp_min_f","temp_max_f","lubrication","source_brand","catalog_page","notes"],
   Chain_Attachments: ["chain_id","attachment_code","attachment_type","side","lug_height_in","lug_height_mm","hole_dia_in","hole_dia_mm","spacing_note","source_brand","notes"],
   Chain_Sprockets: ["chain_id","sprocket_code","teeth","style","material","bore_min_in","bore_max_in","pitch_dia_in","pitch_dia_mm","keyway","source_brand","notes"],
   Chain_Downloads: ["chain_id","label","url","file_type","doc_type","brand","language","notes"],

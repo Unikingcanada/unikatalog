@@ -33,16 +33,16 @@
       "description": "Recommended working load in kN"
     },
     "fatigue_strength_lbs": {
-      "type": "number",
-      "description": "Fatigue strength rating in lbs"
+      "type": "string",
+      "description": "Fatigue strength in pounds, where available"
     },
     "max_speed_ft_min": {
       "type": "number",
       "description": "Maximum recommended speed in ft/min"
     },
     "max_speed_m_s": {
-      "type": "number",
-      "description": "Maximum recommended speed in m/s"
+      "type": "string",
+      "description": "Maximum chain speed in metres per second, where available"
     },
     "temp_min_f": {
       "type": "number",
@@ -62,7 +62,7 @@
     },
     "catalog_page": {
       "type": "string",
-      "description": "Reference catalog page for verification"
+      "description": "Source catalog page or reference location"
     },
     "notes": {
       "type": "string",
