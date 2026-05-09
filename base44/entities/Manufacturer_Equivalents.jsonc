@@ -46,11 +46,11 @@
     },
     "image_url": {
       "type": "string",
-      "description": "Brand-specific product image URL"
+      "description": "Brand-specific product image or thumbnail URL"
     },
     "drawing_url": {
       "type": "string",
-      "description": "Brand-specific dimensional drawing URL"
+      "description": "Brand-specific technical drawing or PDF URL"
     },
     "notes": {
       "type": "string",
