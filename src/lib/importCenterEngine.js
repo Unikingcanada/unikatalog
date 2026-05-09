@@ -263,6 +263,23 @@ function getDimensionalFields(entityTarget) {
 // ─── Auto-Flag Generator ──────────────────────────────────────────────────────
 
 /**
+ * Trusted source brands whose catalogs are considered authoritative for governance rules.
+ * H-series downgrade rule only applies when source_brand is in this list.
+ */
+const TRUSTED_BRANDS = [
+  'Tsubaki', 'Donghua', 'Regina', 'Allied Locke', 'Renold', 'Rexnord',
+  'Iwis', 'Diamond', 'Drives', 'Ramsey', 'Webster', 'HKK', 'KettenWulf',
+];
+
+/**
+ * Returns true if the chain_id represents a heavy-series (H-suffix) ANSI chain.
+ * Matches patterns like "40H", "80H", "100H", "ANSI-80H", "C2060H" etc.
+ */
+function isHSeriesChain(chainId) {
+  return typeof chainId === 'string' && /H$/i.test(chainId.trim());
+}
+
+/**
  * Given a classified staged record, generate review flags if needed.
  * Returns array of flag objects (or empty).
  */
@@ -296,15 +313,52 @@ export function generateAutoFlags(mappedData, status, conflictDetail, entityTarg
     }
   }
   if (entityTarget === 'Manufacturer_Equivalents' && !mappedData.equivalency_type) {
+    // ── H-series governance rule ──────────────────────────────────────────────
+    // If the chain_id ends with "H", source_brand is trusted, and there was no
+    // duplicate or merge action (status === 'New'), downgrade severity High → Medium
+    // and auto-suggest a resolution note. Flag is still raised for traceability.
+    const sourceBrandTrusted = TRUSTED_BRANDS.some(
+      b => (mappedData.source_brand || mappedData.brand || '').toLowerCase().includes(b.toLowerCase())
+    );
+    const isHSeries  = isHSeriesChain(chainId);
+    const isStandalone = status === 'New'; // no duplicate / merge occurred
+
+    const severity = (isHSeries && sourceBrandTrusted && isStandalone) ? 'Medium' : 'Medium';
+    const autoNote = (isHSeries && sourceBrandTrusted && isStandalone)
+      ? 'Heavy-series chain verified as standalone SKU. Auto-governance: H-suffix + trusted brand + no duplicate detected.'
+      : null;
+
     flags.push({
       chain_id: mappedData.chain_id || chainId,
       flag_type: 'Unverified Equivalency',
-      severity: 'Medium',
+      severity,
       description: 'Equivalency imported without equivalency_type classification.',
+      ...(autoNote ? { resolution_notes: autoNote } : {}),
       needs_review: true,
       review_status: 'Pending',
     });
   }
+
+  // ── H-series rule on Normalized_Chains (Unverified Equivalency context) ──
+  // If a Normalized_Chains record is New, has H-suffix, trusted brand — generate
+  // a lightweight Unverified Equivalency flag at Medium with auto-resolution hint.
+  if (entityTarget === 'Normalized_Chains' && status === 'New') {
+    const sourceBrandTrusted = TRUSTED_BRANDS.some(
+      b => (mappedData.source_brand || '').toLowerCase().includes(b.toLowerCase())
+    );
+    if (isHSeriesChain(chainId) && sourceBrandTrusted) {
+      flags.push({
+        chain_id: chainId,
+        flag_type: 'Unverified Equivalency',
+        severity: 'Medium',  // explicitly Medium — not High — per H-series governance rule
+        description: 'H-series chain imported as standalone SKU. Equivalency to base series not yet classified.',
+        resolution_notes: 'Heavy-series chain verified as standalone SKU. Auto-governance: H-suffix + trusted brand + no duplicate detected.',
+        needs_review: true,
+        review_status: 'Pending',
+      });
+    }
+  }
+
   return flags;
 }
 
