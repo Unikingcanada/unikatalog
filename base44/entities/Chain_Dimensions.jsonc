@@ -39,12 +39,12 @@
       "description": "Pin diameter in mm"
     },
     "pin_length_in": {
-      "type": "number",
-      "description": "Pin length in inches"
+      "type": "string",
+      "description": "Pin overall length in inches"
     },
     "pin_length_mm": {
-      "type": "number",
-      "description": "Pin length in mm"
+      "type": "string",
+      "description": "Pin overall length in millimetres"
     },
     "plate_height_in": {
       "type": "number",
@@ -63,20 +63,20 @@
       "description": "Link plate thickness in mm"
     },
     "transverse_pitch_in": {
-      "type": "number",
-      "description": "Transverse pitch (multi-strand) in inches"
+      "type": "string",
+      "description": "Transverse pitch in inches"
     },
     "transverse_pitch_mm": {
-      "type": "number",
-      "description": "Transverse pitch (multi-strand) in mm"
+      "type": "string",
+      "description": "Transverse pitch in millimetres"
     },
     "overall_width_in": {
-      "type": "number",
-      "description": "Overall width in inches"
+      "type": "string",
+      "description": "Overall chain width in inches"
     },
     "overall_width_mm": {
-      "type": "number",
-      "description": "Overall width in mm"
+      "type": "string",
+      "description": "Overall chain width in millimetres"
     },
     "weight_lbs_ft": {
       "type": "number",
