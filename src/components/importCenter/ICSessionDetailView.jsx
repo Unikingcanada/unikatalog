@@ -273,6 +273,8 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
     let flagsGenerated = 0;
     const commitLog = [...(session.commit_log || [])];
 
+    const delay = (ms) => new Promise(res => setTimeout(res, ms));
+
     for (let ci = 0; ci < chunks.length; ci++) {
       const chunk = chunks[ci];
       setProgress(`Committing chunk ${ci + 1}/${chunks.length} (${written}/${toCommit.length})…`);
@@ -294,6 +296,7 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
           for (const flag of flags) {
             await base44.entities.Chain_Review_Flags.create(flag);
             flagsGenerated++;
+            await delay(120); // avoid rate limit on flag writes
           }
           await base44.entities.Staging_Records.update(record.id, {
             record_status: "Committed",
@@ -307,9 +310,11 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
           });
           failed++;
         }
+        await delay(150); // ~6 writes/sec — stays well under rate limit
       }
 
       commitLog.push({ chunk: ci + 1, entity: entityTarget, newIds, updatedIds, timestamp: new Date().toISOString() });
+      if (ci < chunks.length - 1) await delay(500); // pause between chunks
     }
 
     const totalWritten = (session.rows_written || 0) + written;
