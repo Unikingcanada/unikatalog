@@ -8,6 +8,7 @@ import ReviewTable from "@/components/chainReview/ReviewTable";
 import ReviewFilterBar from "@/components/chainReview/ReviewFilterBar";
 import ReviewStats from "@/components/chainReview/ReviewStats";
 import Wave2ImportPanel from "@/components/chainReview/Wave2ImportPanel";
+import FlagsReviewPanel from "@/components/chainReview/FlagsReviewPanel";
 
 const TABS = [
   { key: "equivalents", label: "Manufacturer Equivalents", entity: "Manufacturer_Equivalents" },
@@ -143,6 +144,14 @@ export default function ChainReviewAdmin() {
       {/* Table / Import Panel */}
       {activeTab === "import" ? (
         <Wave2ImportPanel />
+      ) : activeTab === "flags" ? (
+        loading
+          ? <div style={S.center}>Loading records...</div>
+          : <FlagsReviewPanel
+              records={filtered}
+              onRefresh={load}
+              onActionMsg={msg => { setActionMsg(msg); setTimeout(() => setActionMsg(null), 3000); }}
+            />
       ) : loading ? (
         <div style={S.center}>Loading records...</div>
       ) : filtered.length === 0 ? (
