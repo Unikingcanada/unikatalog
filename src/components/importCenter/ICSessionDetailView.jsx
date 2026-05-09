@@ -4,25 +4,19 @@
  */
 import { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
-import { STATUS_COLORS, SESSION_STATUS_COLORS, chunkArray, CHUNK_SIZE } from "@/lib/importCenterEngine";
-import { delay, withRetry, runCommitLoop } from "@/lib/commitEngine";
+import { STATUS_COLORS, SESSION_STATUS_COLORS, CHUNK_SIZE } from "@/lib/importCenterEngine";
+import { runCommitLoop, withRetry } from "@/lib/commitEngine";
 import ICDiffViewer from "./ICDiffViewer";
 import * as XLSX from "xlsx";
 
 const STATUS_FILTERS = ["All", "Failed", "Conflict", "Duplicate", "Committed", "Skipped", "Invalid", "New", "Changed", "Pending"];
-
-// Statuses where the diff viewer + commit is shown
 const RESUMABLE_STATUSES = ["Pending Review", "Partially Committed", "Failed"];
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 const S = {
   pill: (status) => {
     const c = STATUS_COLORS[status] || STATUS_COLORS.Pending;
-    return {
-      display: "inline-block", padding: "2px 9px", borderRadius: 99,
-      background: c.bg, border: `1px solid ${c.border}`, color: c.text,
-      fontSize: 10, fontWeight: 800, whiteSpace: "nowrap",
-    };
+    return { display: "inline-block", padding: "2px 9px", borderRadius: 99, background: c.bg, border: `1px solid ${c.border}`, color: c.text, fontSize: 10, fontWeight: 800, whiteSpace: "nowrap" };
   },
   mono: { fontFamily: "monospace", fontSize: 11, whiteSpace: "pre-wrap", wordBreak: "break-all" },
 };
@@ -33,8 +27,7 @@ function JsonBlock({ label, data, defaultOpen = false }) {
   if (!data || (typeof data === "object" && Object.keys(data).length === 0)) return null;
   return (
     <div style={{ marginTop: 6 }}>
-      <button
-        onClick={() => setOpen(o => !o)}
+      <button onClick={() => setOpen(o => !o)}
         style={{ background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 5, padding: "3px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "#475569" }}>
         {open ? "▾" : "▸"} {label}
       </button>
@@ -47,18 +40,106 @@ function JsonBlock({ label, data, defaultOpen = false }) {
   );
 }
 
-// ── Single Record Row (debug view) ────────────────────────────────────────────
-function RecordRow({ record, onRetry, onEditRetry, index }) {
+// ── Bulk Retry Progress Panel ─────────────────────────────────────────────────
+function RetryProgressPanel({ progress }) {
+  if (!progress) return null;
+  const isBackoff = progress.msg.includes("retry") || progress.msg.includes("Rate limit");
+  return (
+    <div style={{ background: isBackoff ? "#fffbeb" : "#f0fdf4", border: `1px solid ${isBackoff ? "#fde68a" : "#86efac"}`, borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+        <span style={{ fontSize: 18 }}>{isBackoff ? "⏸" : "⏳"}</span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: isBackoff ? "#92400e" : "#166534" }}>{progress.msg}</span>
+      </div>
+      <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+        {[
+          { label: "Retrying", value: `${progress.current} / ${progress.total}`, color: "#0C2340" },
+          { label: "Written",  value: progress.written,  color: "#22c55e" },
+          { label: "Failed",   value: progress.failed,   color: "#ef4444" },
+        ].map(s => (
+          <div key={s.label} style={{ textAlign: "center" }}>
+            <div style={{ fontSize: 20, fontWeight: 900, color: s.color }}>{s.value}</div>
+            <div style={{ fontSize: 10, color: "#64748b", fontWeight: 600 }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+      {/* Progress bar */}
+      <div style={{ marginTop: 10, height: 6, background: "#e2e8f0", borderRadius: 99, overflow: "hidden" }}>
+        <div style={{ height: "100%", background: isBackoff ? "#fbbf24" : "#22c55e", width: `${Math.round((progress.current / Math.max(progress.total, 1)) * 100)}%`, transition: "width 0.3s ease", borderRadius: 99 }} />
+      </div>
+    </div>
+  );
+}
+
+// ── Bulk Retry Toolbar (shown when failed records exist in debug mode) ─────────
+function BulkRetryToolbar({ failedCount, selectedIds, allFailedIds, onSelectAll, onClearAll, onRetryAll, onRetrySelected, onMarkSkipped, onExportFailed, busy }) {
+  if (failedCount === 0) return null;
+  const hasSelection = selectedIds.size > 0;
+  const allSelected = selectedIds.size === allFailedIds.length && allFailedIds.length > 0;
+
+  return (
+    <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 10, padding: "12px 16px", marginBottom: 14, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+      <span style={{ fontSize: 12, fontWeight: 800, color: "#991b1b", marginRight: 4 }}>
+        ⚠ {failedCount} Failed {failedCount === 1 ? "Record" : "Records"}
+      </span>
+
+      {/* Select all toggle */}
+      <button onClick={allSelected ? onClearAll : onSelectAll} disabled={busy}
+        style={tb("#fff", "#991b1b", "#fca5a5")}>
+        {allSelected ? "☐ Deselect All" : `☑ Select All Failed (${allFailedIds.length})`}
+      </button>
+
+      {/* Retry All Failed */}
+      <button onClick={onRetryAll} disabled={busy}
+        style={tb("#7c3aed", "#fff", "#7c3aed")}>
+        ↺ Retry All Failed
+      </button>
+
+      {/* Retry Selected */}
+      <button onClick={onRetrySelected} disabled={busy || !hasSelection}
+        style={{ ...tb("#0C2340", "#fff", "#0C2340"), opacity: hasSelection ? 1 : 0.4 }}>
+        ↺ Retry Selected ({selectedIds.size})
+      </button>
+
+      {/* Mark Selected as Skipped */}
+      <button onClick={onMarkSkipped} disabled={busy || !hasSelection}
+        style={{ ...tb("#475569", "#fff", "#475569"), opacity: hasSelection ? 1 : 0.4 }}>
+        ✗ Skip Selected
+      </button>
+
+      {/* Export Failed Rows */}
+      <button onClick={onExportFailed} disabled={busy}
+        style={tb("#1d4ed8", "#fff", "#1d4ed8")}>
+        ↓ Export Failed
+      </button>
+    </div>
+  );
+}
+
+function tb(bg, color, border) {
+  return { background: bg, color, border: `1px solid ${border}`, borderRadius: 7, padding: "6px 13px", fontSize: 11, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" };
+}
+
+// ── Single Record Row ─────────────────────────────────────────────────────────
+function RecordRow({ record, onRetry, onEditRetry, index, selectable, selected, onToggleSelect }) {
   const [expanded, setExpanded] = useState(false);
   const chainId = record.mapped_data?.chain_id || record.raw_data?.chain_id || "—";
   const ts = record.committed_at || record.updated_date;
+  const isFailed = record.record_status === "Failed";
 
   return (
-    <div style={{ borderBottom: "1px solid #f1f5f9" }}>
+    <div style={{ borderBottom: "1px solid #f1f5f9", background: selected ? "#fef2f2" : undefined }}>
       <div
-        onClick={() => setExpanded(o => !o)}
-        style={{ display: "grid", gridTemplateColumns: "24px 1fr 80px 80px 1fr 100px 120px", gap: 12, alignItems: "center", padding: "10px 16px", cursor: "pointer", background: expanded ? "#f8fafc" : "#fff" }}>
-        <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 700 }}>{expanded ? "▾" : "▸"}</span>
+        onClick={() => !selectable && setExpanded(o => !o)}
+        style={{ display: "grid", gridTemplateColumns: selectable ? "36px 24px 1fr 80px 80px 1fr 100px 120px" : "24px 1fr 80px 80px 1fr 100px 120px", gap: 10, alignItems: "center", padding: "10px 16px", cursor: "pointer", background: expanded ? "#f8fafc" : undefined }}>
+
+        {/* Checkbox for failed rows */}
+        {selectable && (
+          <input type="checkbox" checked={selected} onChange={e => { e.stopPropagation(); onToggleSelect(record.id); }}
+            onClick={e => e.stopPropagation()}
+            style={{ width: 15, height: 15, cursor: "pointer", accentColor: "#dc2626" }} />
+        )}
+
+        <span onClick={() => setExpanded(o => !o)} style={{ fontSize: 11, color: "#94a3b8", fontWeight: 700 }}>{expanded ? "▾" : "▸"}</span>
         <span style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#0C2340" }}>{chainId}</span>
         <span style={{ fontSize: 11, color: "#64748b" }}>Row {record.row_index ?? index}</span>
         <span style={S.pill(record.record_status)}>{record.record_status}</span>
@@ -82,22 +163,19 @@ function RecordRow({ record, onRetry, onEditRetry, index }) {
           )}
           {record.production_record_id && (
             <div style={{ fontSize: 11, color: "#64748b", marginBottom: 8 }}>
-              <strong>Production Record ID:</strong>{" "}
-              <span style={S.mono}>{record.production_record_id}</span>
+              <strong>Production Record ID:</strong> <span style={S.mono}>{record.production_record_id}</span>
             </div>
           )}
-          <JsonBlock label="mapped_data" data={record.mapped_data} defaultOpen={true} />
+          <JsonBlock label="mapped_data" data={record.mapped_data} defaultOpen />
           <JsonBlock label="raw source row" data={record.raw_data} />
           <JsonBlock label="diff / validation errors" data={record.diff_summary} />
-          {(record.record_status === "Failed" || record.record_status === "Conflict" || record.record_status === "Invalid") && (
+          {(isFailed || record.record_status === "Conflict" || record.record_status === "Invalid") && (
             <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-              <button
-                onClick={(e) => { e.stopPropagation(); onRetry(record); }}
+              <button onClick={e => { e.stopPropagation(); onRetry(record); }}
                 style={{ padding: "5px 14px", borderRadius: 6, border: "1px solid #86efac", background: "#f0fdf4", color: "#166534", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
                 ↺ Retry Record
               </button>
-              <button
-                onClick={(e) => { e.stopPropagation(); onEditRetry(record); }}
+              <button onClick={e => { e.stopPropagation(); onEditRetry(record); }}
                 style={{ padding: "5px 14px", borderRadius: 6, border: "1px solid #93c5fd", background: "#eff6ff", color: "#1d4ed8", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
                 ✏ Edit & Retry
               </button>
@@ -144,11 +222,8 @@ function EditRetryModal({ record, entityTarget, onClose, onSaved }) {
         <div style={{ fontSize: 11, color: "#64748b", marginBottom: 14 }}>
           Chain: <strong>{record.mapped_data?.chain_id || "—"}</strong> · Row {record.row_index}
         </div>
-        <textarea
-          value={editedData}
-          onChange={e => setEditedData(e.target.value)}
-          style={{ width: "100%", height: 320, fontFamily: "monospace", fontSize: 11, padding: 12, border: "1px solid #e2e8f0", borderRadius: 8, resize: "vertical", boxSizing: "border-box", color: "#1e293b" }}
-        />
+        <textarea value={editedData} onChange={e => setEditedData(e.target.value)}
+          style={{ width: "100%", height: 320, fontFamily: "monospace", fontSize: 11, padding: 12, border: "1px solid #e2e8f0", borderRadius: 8, resize: "vertical", boxSizing: "border-box", color: "#1e293b" }} />
         {err && <div style={{ color: "#dc2626", fontSize: 11, fontWeight: 700, marginTop: 6 }}>⚠ {err}</div>}
         <div style={{ display: "flex", gap: 10, marginTop: 14, justifyContent: "flex-end" }}>
           <button onClick={onClose} style={{ padding: "7px 16px", borderRadius: 7, border: "1px solid #e2e8f0", background: "#f8fafc", color: "#475569", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Cancel</button>
@@ -180,20 +255,21 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
   const [statusFilter, setStatusFilter] = useState("All");
   const [editingRecord, setEditingRecord] = useState(null);
   const [actionMsg, setActionMsg] = useState(null);
-  const [mode, setMode] = useState("debug"); // "debug" | "resume"
+  const [mode, setMode] = useState("debug");
   const [committing, setCommitting] = useState(false);
-  const [progress, setProgress] = useState(null);
+  const [commitProgress, setCommitProgress] = useState(null); // for resume commit string
+  const [retryProgress, setRetryProgress] = useState(null);   // { msg, current, total, written, failed }
+  const [selectedFailedIds, setSelectedFailedIds] = useState(new Set());
 
   const entityTarget = session.entity_targets?.[0] || "Normalized_Chains";
   const sessionKey = session.session_id || session.id;
   const isResumable = RESUMABLE_STATUSES.includes(session.import_status);
+  const busy = committing || !!retryProgress;
 
   const loadRecords = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await base44.entities.Staging_Records.filter(
-        { session_id: sessionKey }, "-created_date", 2000
-      );
+      const data = await base44.entities.Staging_Records.filter({ session_id: sessionKey }, "-created_date", 2000);
       setRecords(data || []);
     } catch {
       setRecords([]);
@@ -202,7 +278,6 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
     }
   }, [sessionKey]);
 
-  // Reload session to get latest status
   const reloadSession = useCallback(async () => {
     try {
       const sessions = await base44.entities.Import_Sessions.filter({ session_id: sessionKey });
@@ -212,18 +287,134 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
 
   useEffect(() => { loadRecords(); }, [loadRecords]);
 
-  // Status counts
   const counts = {};
   records.forEach(r => { counts[r.record_status] = (counts[r.record_status] || 0) + 1; });
 
-  const filtered = statusFilter === "All"
-    ? records
-    : records.filter(r => r.record_status === statusFilter);
+  const filtered = statusFilter === "All" ? records : records.filter(r => r.record_status === statusFilter);
+  const failedRecords = records.filter(r => r.record_status === "Failed");
+  const allFailedIds = failedRecords.map(r => r.id);
 
-  // Retry single record
+  function showMsg(text, isError = false) {
+    setActionMsg({ text, isError });
+    setTimeout(() => setActionMsg(null), 5000);
+  }
+
+  // ── Selection helpers ─────────────────────────────────────────────────────
+  function toggleSelect(id) {
+    setSelectedFailedIds(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+  function selectAllFailed() { setSelectedFailedIds(new Set(allFailedIds)); }
+  function clearSelection() { setSelectedFailedIds(new Set()); }
+
+  // ── Core bulk retry runner ────────────────────────────────────────────────
+  async function runBulkRetry(targetRecords) {
+    if (targetRecords.length === 0) return;
+
+    // Reset each targeted record to "New" so runCommitLoop will process it
+    // We do NOT reset already-committed records — the filter below guards that
+    const toRetry = targetRecords.filter(r =>
+      r.record_status === "Failed" // only Failed — never re-commit committed/skipped
+    );
+    if (toRetry.length === 0) { showMsg("No failed records to retry."); return; }
+
+    let written = 0;
+    let failed = 0;
+    const total = toRetry.length;
+
+    setRetryProgress({ msg: "Preparing retry…", current: 0, total, written: 0, failed: 0 });
+
+    // Temporarily mark records as New in staging so runCommitLoop can write them
+    for (const r of toRetry) {
+      await base44.entities.Staging_Records.update(r.id, { record_status: "New", commit_decision: "Include", conflict_detail: "" });
+    }
+
+    // Refresh local records array with updated statuses before commit loop
+    const refreshed = toRetry.map(r => ({ ...r, record_status: "New", commit_decision: "Include" }));
+
+    const { written: w, failed: f, commitLog } = await runCommitLoop({
+      toCommit: refreshed,
+      entityTarget,
+      chunkSize: CHUNK_SIZE,
+      existingLog: session.commit_log || [],
+      base44,
+      onProgress: (msg) => {
+        // Parse written/failed from the message "Chunk X/Y · N written · N failed"
+        const wMatch = msg.match(/(\d+) written/);
+        const fMatch = msg.match(/(\d+) failed/);
+        const cMatch = msg.match(/Chunk (\d+)\/(\d+)/);
+        const current = cMatch ? Math.min(parseInt(cMatch[1]) * CHUNK_SIZE, total) : written;
+        setRetryProgress({
+          msg,
+          current,
+          total,
+          written: wMatch ? parseInt(wMatch[1]) : written,
+          failed: fMatch ? parseInt(fMatch[1]) : failed,
+        });
+      },
+    });
+
+    written = w;
+    failed = f;
+
+    // Update session counters
+    const totalWritten = (session.rows_written || 0) + written;
+    const totalFailed = Math.max(0, (session.failed_rows || 0) - written); // reduce by newly committed
+    await base44.entities.Import_Sessions.update(session.id, {
+      rows_written: totalWritten,
+      failed_rows: totalFailed + failed,
+      import_status: totalFailed + failed === 0 ? "Committed" : "Partially Committed",
+      rollback_available: totalWritten > 0,
+      commit_log: commitLog,
+    });
+
+    setRetryProgress(null);
+    clearSelection();
+    showMsg(`↺ Retry complete — ${written} committed, ${failed} still failed.`, failed > 0);
+    await reloadSession();
+    await loadRecords();
+  }
+
+  // ── Bulk action handlers ──────────────────────────────────────────────────
+  function handleRetryAll() { runBulkRetry(failedRecords); }
+
+  function handleRetrySelected() {
+    const selected = records.filter(r => selectedFailedIds.has(r.id) && r.record_status === "Failed");
+    runBulkRetry(selected);
+  }
+
+  async function handleMarkSkipped() {
+    const toSkip = records.filter(r => selectedFailedIds.has(r.id) && r.record_status === "Failed");
+    for (const r of toSkip) {
+      await base44.entities.Staging_Records.update(r.id, { record_status: "Skipped", commit_decision: "Skip" });
+    }
+    clearSelection();
+    showMsg(`✗ Marked ${toSkip.length} record(s) as Skipped.`);
+    loadRecords();
+  }
+
+  function handleExportFailed() {
+    const rows = failedRecords.map(r => ({
+      chain_id: r.mapped_data?.chain_id || r.raw_data?.chain_id || "",
+      row_index: r.row_index ?? "",
+      record_status: r.record_status,
+      conflict_detail: r.conflict_detail || "",
+      mapped_data_json: JSON.stringify(r.mapped_data || {}),
+      raw_data_json: JSON.stringify(r.raw_data || {}),
+    }));
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "FailedRecords");
+    XLSX.writeFile(wb, `${sessionKey}_failed_records.xlsx`);
+  }
+
+  // ── Single record retry ───────────────────────────────────────────────────
   async function handleRetry(record) {
     try {
-      await base44.entities[entityTarget].create(record.mapped_data);
+      await withRetry(() => base44.entities[entityTarget].create(record.mapped_data));
       await base44.entities.Staging_Records.update(record.id, {
         record_status: "Committed",
         committed_at: new Date().toISOString(),
@@ -236,12 +427,7 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
     }
   }
 
-  function showMsg(text, isError = false) {
-    setActionMsg({ text, isError });
-    setTimeout(() => setActionMsg(null), 4000);
-  }
-
-  // ── Per-record decision (for resume mode) ─────────────────────────────────
+  // ── Per-record decision (resume mode) ─────────────────────────────────────
   async function handleDecision(recordId, decision) {
     setRecords(prev => prev.map(r => r.id === recordId ? { ...r, commit_decision: decision } : r));
     await base44.entities.Staging_Records.update(recordId, { commit_decision: decision });
@@ -255,26 +441,20 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
     }
   }
 
-  // ── Resume commit ─────────────────────────────────────────────────────────
+  // ── Resume commit (full diff review → commit) ─────────────────────────────
   async function handleCommit() {
     setCommitting(true);
-    setProgress("Starting commit…");
-
+    setCommitProgress("Starting commit…");
     await base44.entities.Import_Sessions.update(session.id, { import_status: "Committing" });
 
-    // Only uncommitted records — guarantees resumability (no duplicate writes)
     const toCommit = records.filter(r =>
       r.record_status !== "Committed" && r.record_status !== "Skipped" &&
       (r.commit_decision === "Include" || (r.record_status === "New" && r.commit_decision !== "Skip"))
     );
 
     const { written, failed, flagsGenerated, commitLog } = await runCommitLoop({
-      toCommit,
-      entityTarget,
-      chunkSize: CHUNK_SIZE,
-      existingLog: session.commit_log || [],
-      base44,
-      onProgress: setProgress,
+      toCommit, entityTarget, chunkSize: CHUNK_SIZE, existingLog: session.commit_log || [],
+      base44, onProgress: setCommitProgress,
     });
 
     const totalWritten = (session.rows_written || 0) + written;
@@ -289,7 +469,7 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
       commit_log: commitLog,
     });
 
-    setProgress(null);
+    setCommitProgress(null);
     setCommitting(false);
     showMsg(`✓ Committed ${written} records. ${failed > 0 ? `${failed} failed.` : ""}`);
     await reloadSession();
@@ -297,20 +477,7 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
     setMode("debug");
   }
 
-  // ── Retry all failed ──────────────────────────────────────────────────────
-  async function handleRetryAllFailed() {
-    const failed = records.filter(r => r.record_status === "Failed");
-    if (failed.length === 0) return;
-    // Mark all failed as "Include" then switch to resume mode
-    for (const r of failed) {
-      await base44.entities.Staging_Records.update(r.id, { commit_decision: "Include", record_status: "New" });
-    }
-    await loadRecords();
-    setMode("resume");
-    showMsg(`↺ ${failed.length} failed records reset to New — review and commit.`);
-  }
-
-  // Export to XLSX/CSV
+  // ── Export ────────────────────────────────────────────────────────────────
   function handleExport(format) {
     const rows = filtered.map(r => ({
       chain_id: r.mapped_data?.chain_id || r.raw_data?.chain_id || "",
@@ -330,16 +497,19 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
     XLSX.writeFile(wb, filename, format === "csv" ? { bookType: "csv" } : {});
   }
 
+  // ── Render ────────────────────────────────────────────────────────────────
+  const showFailedTools = mode === "debug" && failedRecords.length > 0;
+  // Show checkboxes only when on Failed filter or there's a selection active
+  const checkboxMode = showFailedTools && (statusFilter === "Failed" || selectedFailedIds.size > 0);
+
   return (
     <div>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
-        <button onClick={onBack} style={backBtn}>← All Sessions</button>
+        <button onClick={onBack} style={css.backBtn}>← All Sessions</button>
         <div style={{ flex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-            <div style={{ fontSize: 18, fontWeight: 900, color: "#0C2340" }}>
-              {sessionKey}
-            </div>
+            <div style={{ fontSize: 18, fontWeight: 900, color: "#0C2340" }}>{sessionKey}</div>
             <SessionStatusPill status={session.import_status} />
           </div>
           <div style={{ fontSize: 11, color: "#64748b", marginTop: 4 }}>
@@ -354,45 +524,55 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
         )}
       </div>
 
-      {/* Action bar for resumable sessions */}
+      {/* Resume session action bar */}
       {isResumable && (
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20, padding: "14px 18px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10 }}>
-          <span style={{ fontSize: 12, fontWeight: 700, color: "#92400e", alignSelf: "center" }}>
-            ⚡ This session can be resumed
-          </span>
-          <button
-            onClick={() => { setMode("resume"); setStatusFilter("All"); }}
-            disabled={mode === "resume"}
-            style={{ ...actionBtn("#0C2340", "#fff"), opacity: mode === "resume" ? 0.5 : 1 }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: "#92400e", alignSelf: "center" }}>⚡ This session can be resumed</span>
+          <button onClick={() => { setMode("resume"); setStatusFilter("All"); }} disabled={mode === "resume" || busy}
+            style={{ ...aBtn("#0C2340", "#fff"), opacity: mode === "resume" ? 0.5 : 1 }}>
             {mode === "resume" ? "✓ In Resume Mode" : "▶ Resume Review & Commit"}
           </button>
-          {counts["Failed"] > 0 && (
-            <button onClick={handleRetryAllFailed} style={actionBtn("#7c3aed", "#fff")}>
-              ↺ Retry All Failed ({counts["Failed"]})
-            </button>
-          )}
-          <button onClick={() => handleExport("xlsx")} style={actionBtn("#1d4ed8", "#fff")}>↓ Export XLSX</button>
-          <button onClick={() => handleExport("csv")} style={actionBtn("#065f46", "#fff")}>↓ Export CSV</button>
+          <button onClick={() => handleExport("xlsx")} disabled={busy} style={aBtn("#1d4ed8", "#fff")}>↓ Export XLSX</button>
+          <button onClick={() => handleExport("csv")} disabled={busy} style={aBtn("#065f46", "#fff")}>↓ Export CSV</button>
         </div>
       )}
 
-      {/* Progress bar during commit */}
-      {progress && (
-        <div style={{ background: progress.includes("retry") ? "#fffbeb" : "#eff6ff", border: `1px solid ${progress.includes("retry") ? "#fde68a" : "#93c5fd"}`, borderRadius: 8, padding: "10px 16px", marginBottom: 16, color: progress.includes("retry") ? "#92400e" : "#1d4ed8", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 16 }}>{progress.includes("retry") ? "⏸" : "⏳"}</span>
-          <span>{progress}</span>
+      {/* Bulk Retry Toolbar */}
+      {showFailedTools && (
+        <BulkRetryToolbar
+          failedCount={failedRecords.length}
+          selectedIds={selectedFailedIds}
+          allFailedIds={allFailedIds}
+          onSelectAll={selectAllFailed}
+          onClearAll={clearSelection}
+          onRetryAll={handleRetryAll}
+          onRetrySelected={handleRetrySelected}
+          onMarkSkipped={handleMarkSkipped}
+          onExportFailed={handleExportFailed}
+          busy={busy}
+        />
+      )}
+
+      {/* Retry progress panel */}
+      <RetryProgressPanel progress={retryProgress} />
+
+      {/* Resume commit progress */}
+      {commitProgress && (
+        <div style={{ background: commitProgress.includes("retry") ? "#fffbeb" : "#eff6ff", border: `1px solid ${commitProgress.includes("retry") ? "#fde68a" : "#93c5fd"}`, borderRadius: 8, padding: "10px 16px", marginBottom: 16, color: commitProgress.includes("retry") ? "#92400e" : "#1d4ed8", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: 16 }}>{commitProgress.includes("retry") ? "⏸" : "⏳"}</span>
+          <span>{commitProgress}</span>
         </div>
       )}
 
       {/* Stats row */}
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20 }}>
         {[
-          { label: "Total Rows",      value: session.total_rows || 0,          color: "#0C2340" },
-          { label: "Written",         value: session.rows_written || 0,        color: "#22c55e" },
-          { label: "Failed",          value: session.failed_rows || 0,         color: "#ef4444" },
-          { label: "Skipped",         value: session.duplicates_skipped || 0,  color: "#94a3b8" },
-          { label: "Staged",          value: records.length,                   color: "#3b82f6" },
-          { label: "Flags",           value: session.flags_generated || 0,     color: "#f59e0b" },
+          { label: "Total Rows", value: session.total_rows || 0, color: "#0C2340" },
+          { label: "Written",    value: session.rows_written || 0, color: "#22c55e" },
+          { label: "Failed",     value: session.failed_rows || 0, color: "#ef4444" },
+          { label: "Skipped",    value: session.duplicates_skipped || 0, color: "#94a3b8" },
+          { label: "Staged",     value: records.length, color: "#3b82f6" },
+          { label: "Flags",      value: session.flags_generated || 0, color: "#f59e0b" },
         ].map(s => (
           <div key={s.label} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "12px 18px", minWidth: 90, flex: 1, textAlign: "center" }}>
             <div style={{ fontSize: 22, fontWeight: 900, color: s.color }}>{s.value.toLocaleString()}</div>
@@ -403,17 +583,17 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
 
       {/* Mode toggle */}
       <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
-        <button onClick={() => setMode("debug")} style={{ ...modeBtn, ...(mode === "debug" ? modeBtnActive : {}) }}>
+        <button onClick={() => setMode("debug")} style={{ ...css.modeBtn, ...(mode === "debug" ? css.modeBtnActive : {}) }}>
           🔍 Debug View
         </button>
         {isResumable && (
-          <button onClick={() => setMode("resume")} style={{ ...modeBtn, ...(mode === "resume" ? modeBtnActive : {}) }}>
+          <button onClick={() => setMode("resume")} style={{ ...css.modeBtn, ...(mode === "resume" ? css.modeBtnActive : {}) }}>
             ▶ Resume & Commit
           </button>
         )}
       </div>
 
-      {/* ── RESUME MODE: DiffViewer + commit ─────────────────────────────────── */}
+      {/* RESUME MODE */}
       {mode === "resume" && (
         <div>
           {loading ? (
@@ -430,10 +610,10 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
         </div>
       )}
 
-      {/* ── DEBUG MODE: per-record inspection ────────────────────────────────── */}
+      {/* DEBUG MODE */}
       {mode === "debug" && (
         <>
-          {/* Filter bar + export */}
+          {/* Filter bar */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 10, marginBottom: 14 }}>
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
               {STATUS_FILTERS.map(f => {
@@ -449,20 +629,22 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
               })}
             </div>
             <div style={{ display: "flex", gap: 8 }}>
-              <button onClick={() => handleExport("xlsx")}
-                style={{ padding: "5px 14px", borderRadius: 7, border: "1px solid #c7d2fe", background: "#eef2ff", color: "#4338ca", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
-                ↓ Export XLSX
-              </button>
-              <button onClick={() => handleExport("csv")}
-                style={{ padding: "5px 14px", borderRadius: 7, border: "1px solid #a7f3d0", background: "#ecfdf5", color: "#065f46", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
-                ↓ Export CSV
-              </button>
+              <button onClick={() => handleExport("xlsx")} style={{ padding: "5px 14px", borderRadius: 7, border: "1px solid #c7d2fe", background: "#eef2ff", color: "#4338ca", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>↓ XLSX</button>
+              <button onClick={() => handleExport("csv")}  style={{ padding: "5px 14px", borderRadius: 7, border: "1px solid #a7f3d0", background: "#ecfdf5", color: "#065f46", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>↓ CSV</button>
             </div>
           </div>
 
+          {/* Checkbox hint when failed rows exist but filter isn't set */}
+          {showFailedTools && statusFilter !== "Failed" && (
+            <div style={{ fontSize: 11, color: "#92400e", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 7, padding: "6px 14px", marginBottom: 10 }}>
+              💡 Switch to <strong>Failed</strong> filter to use checkboxes for bulk retry.
+            </div>
+          )}
+
           {/* Records table */}
           <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", overflow: "hidden" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "24px 1fr 80px 80px 1fr 100px 120px", gap: 12, padding: "8px 16px", background: "#f8fafc", borderBottom: "1px solid #e2e8f0", fontSize: 10, fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>
+            <div style={{ display: "grid", gridTemplateColumns: checkboxMode ? "36px 24px 1fr 80px 80px 1fr 100px 120px" : "24px 1fr 80px 80px 1fr 100px 120px", gap: 10, padding: "8px 16px", background: "#f8fafc", borderBottom: "1px solid #e2e8f0", fontSize: 10, fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>
+              {checkboxMode && <span />}
               <span /><span>Chain ID</span><span>Row #</span><span>Status</span><span>Conflict Detail</span><span>Prod Record</span><span>Timestamp</span>
             </div>
 
@@ -472,7 +654,16 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
               <div style={{ padding: "48px 20px", textAlign: "center", color: "#94a3b8", fontSize: 13 }}>No records match this filter.</div>
             ) : (
               filtered.map((r, i) => (
-                <RecordRow key={r.id} record={r} index={i} onRetry={handleRetry} onEditRetry={setEditingRecord} />
+                <RecordRow
+                  key={r.id}
+                  record={r}
+                  index={i}
+                  onRetry={handleRetry}
+                  onEditRetry={setEditingRecord}
+                  selectable={checkboxMode && r.record_status === "Failed"}
+                  selected={selectedFailedIds.has(r.id)}
+                  onToggleSelect={toggleSelect}
+                />
               ))
             )}
           </div>
@@ -499,9 +690,13 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
   );
 }
 
-const backBtn = { background: "#f1f5f9", border: "1px solid #e2e8f0", color: "#334155", borderRadius: 7, padding: "6px 14px", cursor: "pointer", fontSize: 12, fontWeight: 600, display: "inline-block", whiteSpace: "nowrap" };
-const modeBtn = { padding: "7px 18px", border: "1px solid #e2e8f0", borderRadius: 7, background: "#f8fafc", color: "#64748b", fontSize: 12, fontWeight: 700, cursor: "pointer" };
-const modeBtnActive = { background: "#0C2340", color: "#fff", border: "1px solid #0C2340" };
-function actionBtn(bg, color) {
+// ── Style constants ───────────────────────────────────────────────────────────
+const css = {
+  backBtn: { background: "#f1f5f9", border: "1px solid #e2e8f0", color: "#334155", borderRadius: 7, padding: "6px 14px", cursor: "pointer", fontSize: 12, fontWeight: 600, display: "inline-block", whiteSpace: "nowrap" },
+  modeBtn: { padding: "7px 18px", border: "1px solid #e2e8f0", borderRadius: 7, background: "#f8fafc", color: "#64748b", fontSize: 12, fontWeight: 700, cursor: "pointer" },
+  modeBtnActive: { background: "#0C2340", color: "#fff", border: "1px solid #0C2340" },
+};
+
+function aBtn(bg, color) {
   return { background: bg, color, border: "none", borderRadius: 7, padding: "7px 14px", fontSize: 11, fontWeight: 700, cursor: "pointer" };
 }
