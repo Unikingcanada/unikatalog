@@ -4,7 +4,8 @@
  */
 import { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
-import { STATUS_COLORS, SESSION_STATUS_COLORS, chunkArray, CHUNK_SIZE, generateAutoFlags } from "@/lib/importCenterEngine";
+import { STATUS_COLORS, SESSION_STATUS_COLORS, chunkArray, CHUNK_SIZE } from "@/lib/importCenterEngine";
+import { delay, withRetry, runCommitLoop } from "@/lib/commitEngine";
 import ICDiffViewer from "./ICDiffViewer";
 import * as XLSX from "xlsx";
 
@@ -261,68 +262,26 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
 
     await base44.entities.Import_Sessions.update(session.id, { import_status: "Committing" });
 
-    // Commit: Include decisions + non-committed New records
+    // Only uncommitted records — guarantees resumability (no duplicate writes)
     const toCommit = records.filter(r =>
-      (r.commit_decision === "Include" || (r.record_status === "New" && r.commit_decision !== "Skip")) &&
-      r.record_status !== "Committed"
+      r.record_status !== "Committed" && r.record_status !== "Skipped" &&
+      (r.commit_decision === "Include" || (r.record_status === "New" && r.commit_decision !== "Skip"))
     );
 
-    const chunks = chunkArray(toCommit, CHUNK_SIZE);
-    let written = 0;
-    let failed = 0;
-    let flagsGenerated = 0;
-    const commitLog = [...(session.commit_log || [])];
-
-    const delay = (ms) => new Promise(res => setTimeout(res, ms));
-
-    for (let ci = 0; ci < chunks.length; ci++) {
-      const chunk = chunks[ci];
-      setProgress(`Committing chunk ${ci + 1}/${chunks.length} (${written}/${toCommit.length})…`);
-      const newIds = [];
-      const updatedIds = [];
-
-      for (const record of chunk) {
-        try {
-          if (record.record_status === "New") {
-            const result = await base44.entities[entityTarget].create(record.mapped_data);
-            if (result?.id) newIds.push(result.id);
-          } else if (record.record_status === "Changed" || record.record_status === "Conflict") {
-            if (record.production_record_id) {
-              await base44.entities[entityTarget].update(record.production_record_id, record.mapped_data);
-              updatedIds.push(record.production_record_id);
-            }
-          }
-          const flags = generateAutoFlags(record.mapped_data, record.record_status, record.conflict_detail, entityTarget);
-          for (const flag of flags) {
-            await base44.entities.Chain_Review_Flags.create(flag);
-            flagsGenerated++;
-            await delay(120); // avoid rate limit on flag writes
-          }
-          await base44.entities.Staging_Records.update(record.id, {
-            record_status: "Committed",
-            committed_at: new Date().toISOString(),
-          });
-          written++;
-        } catch (e) {
-          await base44.entities.Staging_Records.update(record.id, {
-            record_status: "Failed",
-            conflict_detail: `Commit error: ${e.message}`,
-          });
-          failed++;
-        }
-        await delay(150); // ~6 writes/sec — stays well under rate limit
-      }
-
-      commitLog.push({ chunk: ci + 1, entity: entityTarget, newIds, updatedIds, timestamp: new Date().toISOString() });
-      if (ci < chunks.length - 1) await delay(500); // pause between chunks
-    }
+    const { written, failed, flagsGenerated, commitLog } = await runCommitLoop({
+      toCommit,
+      entityTarget,
+      chunkSize: CHUNK_SIZE,
+      existingLog: session.commit_log || [],
+      base44,
+      onProgress: setProgress,
+    });
 
     const totalWritten = (session.rows_written || 0) + written;
     const totalFailed = (session.failed_rows || 0) + failed;
-    const newStatus = totalFailed === 0 ? "Committed" : "Partially Committed";
 
     await base44.entities.Import_Sessions.update(session.id, {
-      import_status: newStatus,
+      import_status: totalFailed === 0 ? "Committed" : "Partially Committed",
       rows_written: totalWritten,
       failed_rows: totalFailed,
       flags_generated: (session.flags_generated || 0) + flagsGenerated,
@@ -419,8 +378,9 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
 
       {/* Progress bar during commit */}
       {progress && (
-        <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 8, padding: "10px 16px", marginBottom: 16, color: "#1d4ed8", fontSize: 12, fontWeight: 600 }}>
-          ⏳ {progress}
+        <div style={{ background: progress.includes("retry") ? "#fffbeb" : "#eff6ff", border: `1px solid ${progress.includes("retry") ? "#fde68a" : "#93c5fd"}`, borderRadius: 8, padding: "10px 16px", marginBottom: 16, color: progress.includes("retry") ? "#92400e" : "#1d4ed8", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: 16 }}>{progress.includes("retry") ? "⏸" : "⏳"}</span>
+          <span>{progress}</span>
         </div>
       )}
 

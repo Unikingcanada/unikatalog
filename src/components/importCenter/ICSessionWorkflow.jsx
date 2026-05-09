@@ -6,8 +6,9 @@ import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import {
   generateSessionId, parseCSV, parseJSON, parseXLSX,
-  applyMapping, classifyRecord, generateAutoFlags, chunkArray, CHUNK_SIZE,
+  applyMapping, classifyRecord, chunkArray, CHUNK_SIZE,
 } from "@/lib/importCenterEngine";
+import { delay, withRetry, runCommitLoop } from "@/lib/commitEngine";
 import ICUploadZone from "./ICUploadZone";
 import ICColumnMapper from "./ICColumnMapper";
 import ICDiffViewer from "./ICDiffViewer";
@@ -220,8 +221,6 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
 
   // ── Step 3 → 4: Commit ────────────────────────────────────────────────────
 
-  const delay = (ms) => new Promise(res => setTimeout(res, ms));
-
   async function handleCommit() {
     setCommitting(true);
     setError(null);
@@ -229,90 +228,33 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
 
     await base44.entities.Import_Sessions.update(session.id, { import_status: "Committing" });
 
+    // Only commit records not already committed (resumable safety)
     const toCommit = stagedRecords.filter(r =>
-      r.commit_decision === "Include" || (r.record_status === "New" && r.commit_decision !== "Skip")
+      r.record_status !== "Committed" && r.record_status !== "Skipped" &&
+      (r.commit_decision === "Include" || (r.record_status === "New" && r.commit_decision !== "Skip"))
     );
 
-    // ── Pre-commit: snapshot all Changed/Conflict originals for rollback ──────
-    setProgress("Capturing pre-commit snapshots for rollback…");
-    const rollbackSnapshots = []; // [{ productionId, originalData, stagingRecordId }]
-
+    // ── Pre-commit: snapshot Changed/Conflict originals for rollback ──────────
+    setProgress("Capturing rollback snapshots…");
+    const rollbackSnapshots = [];
     for (const record of toCommit) {
       if ((record.record_status === "Changed" || record.record_status === "Conflict") && record.production_record_id) {
         try {
-          // Fetch current production record in full before we overwrite it
-          const existing = await base44.entities[entityTarget].filter({ id: record.production_record_id });
+          const existing = await withRetry(() => base44.entities[entityTarget].filter({ id: record.production_record_id }));
           const original = existing?.[0] || null;
-          if (original) {
-            rollbackSnapshots.push({
-              productionId: record.production_record_id,
-              stagingRecordId: record.id,
-              originalData: { ...original },
-            });
-          }
+          if (original) rollbackSnapshots.push({ productionId: record.production_record_id, stagingRecordId: record.id, originalData: { ...original } });
         } catch {}
       }
     }
 
-    // ── Chunked commit ────────────────────────────────────────────────────────
-    const chunks = chunkArray(toCommit, CHUNK_SIZE);
-    let written = 0;
-    let failed = 0;
-    let flagsGenerated = 0;
-    // commitLog entries: { chunk, entity, newIds: [...], updatedIds: [...], timestamp }
-    const commitLog = [];
-
-    for (let ci = 0; ci < chunks.length; ci++) {
-      const chunk = chunks[ci];
-      setProgress(`Committing chunk ${ci + 1}/${chunks.length} (${written}/${toCommit.length} written)…`);
-      const newIds = [];
-      const updatedIds = [];
-
-      for (const record of chunk) {
-        try {
-          let result;
-          if (record.record_status === "New") {
-            result = await base44.entities[entityTarget].create(record.mapped_data);
-            if (result?.id) newIds.push(result.id);
-          } else if (record.record_status === "Changed" || record.record_status === "Conflict") {
-            if (record.production_record_id) {
-              result = await base44.entities[entityTarget].update(record.production_record_id, record.mapped_data);
-              updatedIds.push(record.production_record_id);
-            }
-          }
-
-          // Auto-flags
-          const flags = generateAutoFlags(record.mapped_data, record.record_status, record.conflict_detail, entityTarget);
-          for (const flag of flags) {
-            await base44.entities.Chain_Review_Flags.create(flag);
-            flagsGenerated++;
-            await delay(120);
-          }
-
-          await base44.entities.Staging_Records.update(record.id, {
-            record_status: "Committed",
-            committed_at: new Date().toISOString(),
-          });
-          written++;
-        } catch (e) {
-          await base44.entities.Staging_Records.update(record.id, {
-            record_status: "Failed",
-            conflict_detail: `Commit error: ${e.message}`,
-          });
-          failed++;
-        }
-        await delay(150);
-      }
-      if (ci < chunks.length - 1) await delay(500);
-
-      commitLog.push({
-        chunk: ci + 1,
-        entity: entityTarget,
-        newIds,       // created records — delete on rollback
-        updatedIds,   // overwritten records — restore from snapshot on rollback
-        timestamp: new Date().toISOString(),
-      });
-    }
+    const { written, failed, flagsGenerated, commitLog } = await runCommitLoop({
+      toCommit,
+      entityTarget,
+      chunkSize: CHUNK_SIZE,
+      existingLog: [],
+      base44,
+      onProgress: setProgress,
+    });
 
     const skipped = stagedRecords.filter(r => r.record_status === "Duplicate" || r.commit_decision === "Skip").length;
 
@@ -324,7 +266,7 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
       flags_generated: flagsGenerated,
       rollback_available: written > 0,
       commit_log: commitLog,
-      rollback_snapshot_ref: JSON.stringify(rollbackSnapshots), // full originals stored here
+      rollback_snapshot_ref: JSON.stringify(rollbackSnapshots),
     });
 
     setCommitResult({ written, failed, skipped, flagsGenerated });
@@ -353,8 +295,9 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
       )}
 
       {progress && (
-        <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 8, padding: "10px 16px", marginBottom: 16, color: "#1d4ed8", fontSize: 12, fontWeight: 600 }}>
-          ⏳ {progress}
+        <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 8, padding: "10px 16px", marginBottom: 16, color: "#1d4ed8", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: 16 }}>{progress.includes("retry") ? "⏸" : progress.includes("failed") ? "⚠" : "⏳"}</span>
+          <span>{progress}</span>
         </div>
       )}
 
