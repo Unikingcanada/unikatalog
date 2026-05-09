@@ -47,6 +47,11 @@
       "default": "English",
       "description": "Document language"
     },
+    "is_primary": {
+      "type": "boolean",
+      "default": false,
+      "description": "Marks the primary/default downloadable catalog or technical file for this chain"
+    },
     "notes": {
       "type": "string",
       "description": "Additional notes about this document"

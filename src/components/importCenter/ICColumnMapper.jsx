@@ -15,7 +15,7 @@ const ENTITY_FIELDS = {
   Chain_Attachments: ["chain_id","attachment_code","attachment_type","side","lug_height_in","lug_height_mm","hole_dia_in","hole_dia_mm","spacing_note","source_confirmed","source_brand","notes"],
   Chain_Review_Flags: ["chain_id","flag_type","severity","description","affected_field","source_a","value_a","source_b","value_b","resolved","resolution_notes","assigned_to","review_status","needs_review"],
   Chain_Sprockets: ["chain_id","sprocket_code","teeth","style","material","bore_min_in","bore_max_in","pitch_dia_in","pitch_dia_mm","keyway","source_brand","notes"],
-  Chain_Downloads: ["chain_id","label","url","file_type","doc_type","brand","language","notes"],
+  Chain_Downloads: ["chain_id","label","url","file_type","doc_type","brand","language","is_primary","notes"],
 };
 
 const TRANSFORM_OPTIONS = [
