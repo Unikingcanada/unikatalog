@@ -5,7 +5,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { STATUS_COLORS, SESSION_STATUS_COLORS, CHUNK_SIZE } from "@/lib/importCenterEngine";
-import { runCommitLoop, withRetry } from "@/lib/commitEngine";
+import { runCommitLoop, withRetry, delay } from "@/lib/commitEngine";
 import ICDiffViewer from "./ICDiffViewer";
 import * as XLSX from "xlsx";
 
@@ -328,8 +328,10 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
     setRetryProgress({ msg: "Preparing retry…", current: 0, total, written: 0, failed: 0 });
 
     // Temporarily mark records as New in staging so runCommitLoop can write them
+    // Throttled to avoid rate-limiting the pre-reset writes
     for (const r of toRetry) {
-      await base44.entities.Staging_Records.update(r.id, { record_status: "New", commit_decision: "Include", conflict_detail: "" });
+      await withRetry(() => base44.entities.Staging_Records.update(r.id, { record_status: "New", commit_decision: "Include", conflict_detail: "" }));
+      await delay(200);
     }
 
     // Refresh local records array with updated statuses before commit loop

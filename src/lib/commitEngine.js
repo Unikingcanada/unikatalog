@@ -11,10 +11,12 @@ export const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
 const RATE_LIMIT_PATTERNS = [
   /rate.?limit/i,
+  /rate limit exceeded/i,
   /too.?many.?requests/i,
   /429/,
   /timeout/i,
   /network.?error/i,
+  /throttl/i,
 ];
 
 function isRateLimitError(err) {
