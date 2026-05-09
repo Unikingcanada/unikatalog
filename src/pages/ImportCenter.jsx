@@ -4,6 +4,7 @@
  * NOT public. NOT customer-facing. Infrastructure only.
  */
 import { useState, useEffect, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import ICShell from "@/components/importCenter/ICShell";
 import ICSessionList from "@/components/importCenter/ICSessionList";
@@ -19,7 +20,8 @@ const TABS = [
 ];
 
 export default function ImportCenter() {
-  const [activeTab, setActiveTab] = useState("sessions");
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(location.state?.tab || "sessions");
   const [sessions, setSessions] = useState([]);
   const [loadingSessions, setLoadingSessions] = useState(true);
   const [selectedSession, setSelectedSession] = useState(null);

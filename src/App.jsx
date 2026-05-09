@@ -10,7 +10,7 @@ import TableTopChains from './pages/TableTopChains';
 import BucketCompare from './pages/BucketCompare';
 import ChainReviewAdmin from './pages/ChainReviewAdmin';
 import ImportCenter from './pages/ImportCenter';
-import ICSessionPage from './pages/ICSessionPage';
+import ICSessionResumePage from './pages/ICSessionResumePage';
 
 function App() {
   return (
@@ -28,7 +28,7 @@ function App() {
         <Route path="/BucketCompare" element={<BucketCompare />} />
         <Route path="/admin/chain-review" element={<ChainReviewAdmin />} />
         <Route path="/admin/import-center" element={<ImportCenter />} />
-        <Route path="/admin/import-center/session/:sessionId" element={<ICSessionPage />} />
+        <Route path="/admin/import-center/session/:id" element={<ICSessionResumePage />} />
       </Routes>
     </BrowserRouter>
   )

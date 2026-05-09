@@ -30,7 +30,52 @@ function StatusPill({ status }) {
   );
 }
 
+import { useNavigate } from "react-router-dom";
+
+const RESUMABLE = ["Pending Review", "Partially Committed", "Failed"];
+const ROLLBACKABLE = ["Committed", "Partially Committed"];
+
+function ActionButtons({ session, onSelect, navigate }) {
+  const status = session.import_status;
+  const hasFailed = (session.failed_rows || 0) > 0;
+  const isResumable = RESUMABLE.includes(status);
+  const canRollback = ROLLBACKABLE.includes(status) && session.rollback_available;
+
+  if (!isResumable && !hasFailed && !canRollback) return null;
+
+  return (
+    <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+      {isResumable && (
+        <button
+          onClick={e => { e.stopPropagation(); navigate(`/admin/import-center/session/${session.session_id || session.id}`); }}
+          style={aBtn("#0C2340", "#fff", "none")}>
+          {status === "Pending Review" ? "▶ Resume Review" : "▶ Continue Commit"}
+        </button>
+      )}
+      {hasFailed && (
+        <button
+          onClick={e => { e.stopPropagation(); navigate(`/admin/import-center/session/${session.session_id || session.id}`); }}
+          style={aBtn("#fef2f2", "#dc2626", "1px solid #fca5a5")}>
+          ↺ Retry Failed
+        </button>
+      )}
+      {canRollback && (
+        <button
+          onClick={e => { e.stopPropagation(); navigate("/admin/import-center", { state: { tab: "rollback" } }); }}
+          style={aBtn("#fff7ed", "#92400e", "1px solid #fde68a")}>
+          ↩ Rollback
+        </button>
+      )}
+    </div>
+  );
+}
+
+function aBtn(bg, color, border) {
+  return { background: bg, color, border, borderRadius: 6, padding: "4px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" };
+}
+
 export default function ICSessionList({ sessions, loading, onSelect, onNew }) {
+  const navigate = useNavigate();
   return (
     <div>
       {/* Header row */}
