@@ -9,6 +9,7 @@ import ICShell from "@/components/importCenter/ICShell";
 import ICSessionList from "@/components/importCenter/ICSessionList";
 import ICSessionWorkflow from "@/components/importCenter/ICSessionWorkflow";
 import ICRollbackPanel from "@/components/importCenter/ICRollbackPanel";
+import ICSessionDetailView from "@/components/importCenter/ICSessionDetailView";
 
 const TABS = [
   { key: "sessions",  label: "📋 Import Sessions" },
@@ -133,9 +134,9 @@ export default function ImportCenter() {
           />
         )}
 
-        {/* Session detail (stub — shows staged records for existing sessions) */}
+        {/* Session detail — full debug view */}
         {activeTab === "detail" && selectedSession && (
-          <SessionDetailView
+          <ICSessionDetailView
             session={selectedSession}
             onBack={() => { setSelectedSession(null); setActiveTab("sessions"); }}
           />
@@ -162,73 +163,6 @@ export default function ImportCenter() {
         )}
       </div>
     </ICShell>
-  );
-}
-
-// ─── Session Detail View (read-only summary for existing sessions) ─────────────
-
-function SessionDetailView({ session, onBack }) {
-  const [stagedRecords, setStagedRecords] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    base44.entities.Staging_Records.filter({ session_id: session.session_id || session.id }, "-created_date", 1000)
-      .then(r => { setStagedRecords(r || []); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, [session]);
-
-  const counts = {};
-  stagedRecords.forEach(r => { counts[r.record_status] = (counts[r.record_status] || 0) + 1; });
-
-  return (
-    <div>
-      <button onClick={onBack} style={backBtn}>← All Sessions</button>
-      <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 18, fontWeight: 900, color: "#0C2340" }}>Session: {session.session_id || session.id?.slice(0,8)}</div>
-        <div style={{ fontSize: 12, color: "#64748b", marginTop: 2 }}>
-          {session.manufacturer} · {session.source_catalog} · Status: <strong>{session.import_status}</strong>
-        </div>
-      </div>
-
-      {/* Stats grid */}
-      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 20 }}>
-        {[
-          { label: "Total Rows", value: session.total_rows || 0, color: "#0C2340" },
-          { label: "Rows Written", value: session.rows_written || 0, color: "#22c55e" },
-          { label: "Skipped", value: session.duplicates_skipped || 0, color: "#94a3b8" },
-          { label: "Failed", value: session.failed_rows || 0, color: "#ef4444" },
-          { label: "Flags Generated", value: session.flags_generated || 0, color: "#f59e0b" },
-        ].map(s => (
-          <div key={s.label} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "14px 20px", minWidth: 110, flex: 1 }}>
-            <div style={{ fontSize: 24, fontWeight: 900, color: s.color }}>{s.value.toLocaleString()}</div>
-            <div style={{ fontSize: 10, color: "#64748b", fontWeight: 600, marginTop: 2 }}>{s.label}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Staged records summary */}
-      <div style={{ background: "#fff", borderRadius: 10, border: "1px solid #e2e8f0", padding: "16px 20px" }}>
-        <div style={{ fontSize: 13, fontWeight: 800, color: "#0C2340", marginBottom: 12 }}>
-          Staged Record Breakdown — {stagedRecords.length.toLocaleString()} records
-        </div>
-        {loading ? (
-          <div style={{ color: "#64748b", fontSize: 12 }}>Loading staged records…</div>
-        ) : (
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {Object.entries(counts).map(([status, count]) => (
-              <div key={status} style={{ padding: "6px 14px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 12, fontWeight: 700, color: "#334155" }}>
-                {status}: <span style={{ color: "#0C2340" }}>{count}</span>
-              </div>
-            ))}
-          </div>
-        )}
-        {session.notes && (
-          <div style={{ marginTop: 14, fontSize: 11, color: "#64748b", fontFamily: "monospace", background: "#f8fafc", padding: "8px 12px", borderRadius: 6 }}>
-            {session.notes}
-          </div>
-        )}
-      </div>
-    </div>
   );
 }
 
