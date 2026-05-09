@@ -180,8 +180,10 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
       for (const r of chunkRecords) {
         const created = await base44.entities.Staging_Records.create(r);
         staged.push(created);
+        await delay(120);
       }
       setProgress(`Staged ${staged.length} / ${allRows.length} rows…`);
+      await delay(400);
     }
 
     // Compute counts
@@ -217,6 +219,8 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
   }
 
   // ── Step 3 → 4: Commit ────────────────────────────────────────────────────
+
+  const delay = (ms) => new Promise(res => setTimeout(res, ms));
 
   async function handleCommit() {
     setCommitting(true);
@@ -282,6 +286,7 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
           for (const flag of flags) {
             await base44.entities.Chain_Review_Flags.create(flag);
             flagsGenerated++;
+            await delay(120);
           }
 
           await base44.entities.Staging_Records.update(record.id, {
@@ -296,7 +301,9 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
           });
           failed++;
         }
+        await delay(150);
       }
+      if (ci < chunks.length - 1) await delay(500);
 
       commitLog.push({
         chunk: ci + 1,
