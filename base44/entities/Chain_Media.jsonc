@@ -9,11 +9,12 @@
     "media_type": {
       "type": "string",
       "enum": [
+        "Image",
+        "Thumbnail",
+        "Drawing Preview",
+        "Render",
         "Product Photo",
-        "Dimensional Drawing",
-        "Assembly Diagram",
-        "Application Photo",
-        "Logo",
+        "Diagram",
         "Other"
       ],
       "description": "Type of media asset"
@@ -24,25 +25,42 @@
     },
     "label": {
       "type": "string",
-      "description": "Human-readable label \u2014 e.g. Front View, ISO Drawing, Attachment Detail"
+      "description": "Human-readable label for this media asset"
+    },
+    "is_primary": {
+      "type": "boolean",
+      "default": false,
+      "description": "Marks this as the primary/default image for the chain"
+    },
+    "sort_order": {
+      "type": "number",
+      "description": "Display sort order (lower = first)"
     },
     "source_brand": {
       "type": "string",
       "description": "Brand this media asset was sourced from"
     },
-    "is_primary": {
-      "type": "boolean",
-      "default": false,
-      "description": "Whether this is the primary display image for this chain"
-    },
     "notes": {
       "type": "string",
       "description": "Additional notes about this media asset"
+    },
+    "approved": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this media asset has been approved for use"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "Email or name of the person who approved this asset"
+    },
+    "approved_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when this asset was approved"
     }
   },
   "required": [
     "chain_id",
-    "media_type",
     "url"
   ]
 }

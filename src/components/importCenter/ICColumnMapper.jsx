@@ -16,6 +16,7 @@ const ENTITY_FIELDS = {
   Chain_Review_Flags: ["chain_id","flag_type","severity","description","affected_field","source_a","value_a","source_b","value_b","resolved","resolution_notes","assigned_to","review_status","needs_review"],
   Chain_Sprockets: ["chain_id","sprocket_code","teeth","style","material","bore_min_in","bore_max_in","pitch_dia_in","pitch_dia_mm","keyway","source_brand","notes"],
   Chain_Downloads: ["chain_id","label","url","file_type","doc_type","brand","language","is_primary","notes"],
+  Chain_Media: ["chain_id","media_type","url","label","is_primary","sort_order","source_brand","notes","approved","approved_by","approved_date"],
 };
 
 const TRANSFORM_OPTIONS = [

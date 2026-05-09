@@ -20,6 +20,7 @@ export const ENTITY_TARGETS = [
   "Chain_Attachments",
   "Chain_Sprockets",
   "Chain_Downloads",
+  "Chain_Media",
   "Chain_Review_Flags",
 ];
 
@@ -260,6 +261,7 @@ function getPrimaryKey(entityTarget) {
     Chain_Attachments:        'attachment_code',
     Chain_Sprockets:          'sprocket_code',
     Chain_Downloads:          'label',
+    Chain_Media:              'url',
     Chain_Review_Flags:       'chain_id',
   };
   return pkMap[entityTarget] || 'id';
@@ -274,6 +276,7 @@ function getRequiredFields(entityTarget) {
     Chain_Attachments:        ['chain_id', 'attachment_code'],
     Chain_Sprockets:          ['chain_id', 'sprocket_code'],
     Chain_Downloads:          ['chain_id', 'label', 'url'],
+    Chain_Media:              ['chain_id', 'url'],
     Chain_Review_Flags:       ['chain_id', 'flag_type'],
   };
   return reqMap[entityTarget] || [];
