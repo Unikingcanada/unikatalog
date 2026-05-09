@@ -140,6 +140,38 @@ export function parseXLSX(arrayBuffer) {
   });
 }
 
+// ─── Array Fields Registry ────────────────────────────────────────────────────
+// Fields whose entity schema type is array/multi-select.
+// Incoming delimited strings are auto-coerced to arrays before commit.
+
+const ARRAY_FIELDS = new Set([
+  // Normalized_Chains
+  'application_tags', 'materials_available', 'options_upgrades',
+  // NormalizedChain (legacy entity)
+  'attachments_available', 'pins_links_available', 'sprockets_available',
+  'source_data', 'downloads', 'performance_tiers',
+  // ElevatorBucket
+  'materials', 'features',
+  // MacChainProduct
+  'basic_headers', 'more_headers', 'related_sprockets', 'related_pins', 'related_attachments',
+  // Generic catch-all suffixes handled dynamically below
+]);
+
+const ARRAY_FIELD_SUFFIXES = ['_tags', '_list', '_items', '_options', '_materials', '_types'];
+
+/** Returns true if a target field should hold an array value. */
+function isArrayField(fieldName) {
+  if (ARRAY_FIELDS.has(fieldName)) return true;
+  return ARRAY_FIELD_SUFFIXES.some(suffix => fieldName.endsWith(suffix));
+}
+
+/** Split a delimited string into a trimmed, non-empty string array. */
+function splitDelimited(str) {
+  // Prefer | first, then ; then , (comma is last because it appears in normal text)
+  const delimiter = str.includes('|') ? '|' : str.includes(';') ? ';' : ',';
+  return str.split(delimiter).map(s => s.trim()).filter(Boolean);
+}
+
 // ─── Apply Column Mapping ─────────────────────────────────────────────────────
 
 export function applyMapping(row, mappingRules, transformRules = {}) {
@@ -156,6 +188,13 @@ export function applyMapping(row, mappingRules, transformRules = {}) {
     else if (transform === 'toLowerCase') val = String(val).toLowerCase();
     else if (transform === 'trim') val = String(val).trim();
     else if (transform === 'boolean') val = ['true','yes','1','y'].includes(String(val).toLowerCase());
+
+    // ── Array coercion ───────────────────────────────────────────────────────
+    // If the destination field is an array type and the value is still a string,
+    // auto-split on |, ; or , delimiters before committing.
+    if (isArrayField(targetField) && typeof val === 'string') {
+      val = splitDelimited(val);
+    }
 
     mapped[targetField] = val;
   });
