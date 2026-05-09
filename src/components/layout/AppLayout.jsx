@@ -1,5 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import BackButton from "@/components/shared/BackButton";
+import { base44 } from "@/api/base44Client";
+
+const ADMIN_EMAIL = "jsauro@unikingcanada.com";
 
 const C = {
   navy: "#003c5b",
@@ -12,6 +16,24 @@ const C = {
 
 export default function AppLayout({ children, hideHeader = false, onBack = null }) {
   const [cartCount, setCartCount] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminMenuOpen, setAdminMenuOpen] = useState(false);
+  const adminMenuRef = useRef(null);
+
+  useEffect(() => {
+    base44.auth.me().then(u => {
+      if (u?.email === ADMIN_EMAIL) setIsAdmin(true);
+    }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!adminMenuOpen) return;
+    function handleClick(e) {
+      if (adminMenuRef.current && !adminMenuRef.current.contains(e.target)) setAdminMenuOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [adminMenuOpen]);
 
   useEffect(() => {
     function updateCart() {
@@ -53,13 +75,42 @@ export default function AppLayout({ children, hideHeader = false, onBack = null 
       <main style={{ flex: 1, width: "100%" }}>
         {children}
       </main>
-      <footer style={{ borderTop: "1px solid " + C.border, padding: "12px clamp(16px,4vw,40px)", textAlign: "center", fontSize: 11, color: C.muted, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+      <footer style={{ borderTop: "1px solid " + C.border, padding: "12px clamp(16px,4vw,40px)", textAlign: "center", fontSize: 11, color: C.muted, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, position: "relative" }}>
         <img
           src="https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/9544927ac_Kshort.png"
           alt="K"
           style={{ height: 16, width: "auto", opacity: 0.35 }}
         />
         Uniking Canada · Final specifications must be confirmed before supply
+
+        {isAdmin && (
+          <div ref={adminMenuRef} style={{ position: "absolute", right: "clamp(16px,4vw,40px)", bottom: 0, top: 0, display: "flex", alignItems: "center" }}>
+            <button
+              onClick={() => setAdminMenuOpen(o => !o)}
+              title="Admin Tools"
+              style={{ background: "none", border: "1px solid #e2e8f0", borderRadius: 6, padding: "3px 8px", fontSize: 10, fontWeight: 700, color: "#94a3b8", cursor: "pointer", letterSpacing: "0.5px", opacity: 0.6 }}
+            >
+              ⚙ Admin
+            </button>
+            {adminMenuOpen && (
+              <div style={{ position: "absolute", bottom: "calc(100% + 8px)", right: 0, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, boxShadow: "0 4px 16px rgba(0,0,0,0.12)", minWidth: 160, zIndex: 9999, overflow: "hidden" }}>
+                <div style={{ padding: "6px 12px", fontSize: 9, fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8", borderBottom: "1px solid #f1f5f9" }}>
+                  Admin Tools
+                </div>
+                <Link to="/admin/import-center" onClick={() => setAdminMenuOpen(false)} style={{ display: "block", padding: "9px 14px", fontSize: 12, fontWeight: 600, color: "#0C2340", textDecoration: "none" }}
+                  onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
+                  onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                  📥 Import Center
+                </Link>
+                <Link to="/admin/chain-review" onClick={() => setAdminMenuOpen(false)} style={{ display: "block", padding: "9px 14px", fontSize: 12, fontWeight: 600, color: "#0C2340", textDecoration: "none" }}
+                  onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
+                  onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                  🔍 Chain Review
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
       </footer>
     </div>
   );
