@@ -144,25 +144,15 @@ export function parseXLSX(arrayBuffer) {
 // Fields whose entity schema type is array/multi-select.
 // Incoming delimited strings are auto-coerced to arrays before commit.
 
+// Explicit list of fields that should be coerced from delimited strings to arrays.
 const ARRAY_FIELDS = new Set([
-  // Normalized_Chains
-  'application_tags', 'materials_available', 'options_upgrades',
-  // NormalizedChain (legacy entity)
-  'attachments_available', 'pins_links_available', 'sprockets_available',
-  'source_data', 'downloads', 'performance_tiers',
-  // ElevatorBucket
-  'materials', 'features',
-  // MacChainProduct
-  'basic_headers', 'more_headers', 'related_sprockets', 'related_pins', 'related_attachments',
-  // Generic catch-all suffixes handled dynamically below
+  'application_tags',
+  'materials_available',
 ]);
-
-const ARRAY_FIELD_SUFFIXES = ['_tags', '_list', '_items', '_options', '_materials', '_types'];
 
 /** Returns true if a target field should hold an array value. */
 function isArrayField(fieldName) {
-  if (ARRAY_FIELDS.has(fieldName)) return true;
-  return ARRAY_FIELD_SUFFIXES.some(suffix => fieldName.endsWith(suffix));
+  return ARRAY_FIELDS.has(fieldName);
 }
 
 /** Split a delimited string into a trimmed, non-empty string array. */
