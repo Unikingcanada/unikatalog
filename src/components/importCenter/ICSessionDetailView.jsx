@@ -10,7 +10,7 @@ import ICDiffViewer from "./ICDiffViewer";
 import * as XLSX from "xlsx";
 
 const STATUS_FILTERS = ["All", "Failed", "Conflict", "Duplicate", "Committed", "Skipped", "Invalid", "New", "Changed", "Pending"];
-const RESUMABLE_STATUSES = ["Pending Review", "Partially Committed", "Failed"];
+const RESUMABLE_STATUSES = ["Staged", "Pending Review", "Committing", "Partially Committed", "Failed"];
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 const S = {
@@ -526,13 +526,27 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
         )}
       </div>
 
-      {/* Resume session action bar */}
+      {/* Primary action bar — shown for all actionable statuses */}
       {isResumable && (
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20, padding: "14px 18px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10 }}>
-          <span style={{ fontSize: 12, fontWeight: 700, color: "#92400e", alignSelf: "center" }}>⚡ This session can be resumed</span>
-          <button onClick={() => { setMode("resume"); setStatusFilter("All"); }} disabled={mode === "resume" || busy}
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20, padding: "14px 18px", background: session.import_status === "Staged" ? "#eff6ff" : "#fffbeb", border: `1px solid ${session.import_status === "Staged" ? "#93c5fd" : "#fde68a"}`, borderRadius: 10 }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: session.import_status === "Staged" ? "#1d4ed8" : "#92400e", alignSelf: "center" }}>
+            {session.import_status === "Staged" && "📦 Staged records ready to commit"}
+            {session.import_status === "Committing" && "⚡ Commit in progress — can be continued"}
+            {session.import_status === "Pending Review" && "⚡ This session can be resumed"}
+            {session.import_status === "Partially Committed" && "⚠ Partially committed — continue or retry"}
+            {session.import_status === "Failed" && "⚠ This session has failed records"}
+          </span>
+          <button
+            onClick={() => { setMode("resume"); setStatusFilter("All"); }}
+            disabled={mode === "resume" || busy}
             style={{ ...aBtn("#0C2340", "#fff"), opacity: mode === "resume" ? 0.5 : 1 }}>
-            {mode === "resume" ? "✓ In Resume Mode" : "▶ Resume Review & Commit"}
+            {mode === "resume"
+              ? "✓ In Commit Mode"
+              : session.import_status === "Staged"
+                ? "▶ Commit Staged Records"
+                : session.import_status === "Committing"
+                  ? "▶ Continue Commit"
+                  : "▶ Resume Review & Commit"}
           </button>
           <button onClick={() => handleExport("xlsx")} disabled={busy} style={aBtn("#1d4ed8", "#fff")}>↓ Export XLSX</button>
           <button onClick={() => handleExport("csv")} disabled={busy} style={aBtn("#065f46", "#fff")}>↓ Export CSV</button>
@@ -590,7 +604,7 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
         </button>
         {isResumable && (
           <button onClick={() => setMode("resume")} style={{ ...css.modeBtn, ...(mode === "resume" ? css.modeBtnActive : {}) }}>
-            ▶ Resume & Commit
+            {session.import_status === "Staged" ? "▶ Commit Staged Records" : "▶ Resume & Commit"}
           </button>
         )}
       </div>

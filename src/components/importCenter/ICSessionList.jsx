@@ -33,7 +33,7 @@ const SORT_OPTIONS = [
   { value: "activity",    label: "Recent Activity" },
 ];
 
-const RESUMABLE   = ["Pending Review", "Partially Committed", "Failed"];
+const RESUMABLE   = ["Staged", "Pending Review", "Committing", "Partially Committed", "Failed"];
 const ROLLBACKABLE = ["Committed", "Partially Committed"];
 
 // ── Sub-components ────────────────────────────────────────────────────────────
@@ -59,14 +59,19 @@ function QuickActions({ session, onSelect, navigate, onExportFailed }) {
       {/* Open */}
       <button onClick={() => onSelect(session)} style={qBtn("#eff6ff", "#1d4ed8", "#bfdbfe")}>Open →</button>
 
+      {/* Commit Staged */}
+      {status === "Staged" && (
+        <button onClick={() => onSelect(session)} style={qBtn("#0C2340", "#fff", "none")}>▶ Commit</button>
+      )}
+
       {/* Continue Commit */}
       {(status === "Partially Committed" || status === "Committing") && (
-        <button onClick={() => navigate(sessionPath)} style={qBtn("#0C2340", "#fff", "none")}>↺ Continue</button>
+        <button onClick={() => onSelect(session)} style={qBtn("#0C2340", "#fff", "none")}>↺ Continue</button>
       )}
 
       {/* Resume Review */}
       {status === "Pending Review" && (
-        <button onClick={() => navigate(sessionPath)} style={qBtn("#0C2340", "#fff", "none")}>▶ Resume</button>
+        <button onClick={() => onSelect(session)} style={qBtn("#0C2340", "#fff", "none")}>▶ Resume</button>
       )}
 
       {/* Retry Failed */}
