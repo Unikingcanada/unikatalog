@@ -5,13 +5,14 @@
  * Loads session + staged records from DB, restores full review/commit state.
  * Supports: Resume Review, Continue Commit, Retry Failed, Export, Rollback.
  */
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import {
   STATUS_COLORS, SESSION_STATUS_COLORS,
   generateAutoFlags, chunkArray, CHUNK_SIZE,
 } from "@/lib/importCenterEngine";
+import { loadImportPayload, runChunkLoop } from "@/lib/stagingEngine";
 import ICDiffViewer from "@/components/importCenter/ICDiffViewer";
 import ICShell from "@/components/importCenter/ICShell";
 import * as XLSX from "xlsx";
@@ -125,15 +126,18 @@ export default function ICSessionResumePage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [session, setSession]     = useState(null);
-  const [records, setRecords]     = useState([]);
-  const [loading, setLoading]     = useState(true);
-  const [view, setView]           = useState(VIEW_REVIEW);
+  const [session, setSession]         = useState(null);
+  const [records, setRecords]         = useState([]);
+  const [loading, setLoading]         = useState(true);
+  const [view, setView]               = useState(VIEW_REVIEW);
   const [statusFilter, setStatusFilter] = useState("All");
-  const [actionMsg, setActionMsg] = useState(null);
-  const [committing, setCommitting] = useState(false);
-  const [progress, setProgress]   = useState(null);
+  const [actionMsg, setActionMsg]     = useState(null);
+  const [committing, setCommitting]   = useState(false);
+  const [progress, setProgress]       = useState(null);
   const [editingRecord, setEditingRecord] = useState(null);
+  const [stagingProgress, setStagingProgress] = useState(null);
+  const [stagingError, setStagingError]       = useState(null);
+  const cancelStagingRef = useRef(false);
 
   const loadAll = useCallback(async () => {
     setLoading(true);
@@ -181,6 +185,58 @@ export default function ICSessionResumePage() {
     for (const r of toUpdate) {
       await base44.entities.Staging_Records.update(r.id, { commit_decision: decision });
     }
+  }
+
+  // ── Resume incomplete staging from stored payload ─────────────────────────
+  async function handleResumeStaging() {
+    if (!session) return;
+    const sessionKey = session.session_id || id;
+    const totalRows = session.total_rows || 0;
+    const stagedCount = records.length;
+    const missing = totalRows - stagedCount;
+
+    const payload = await loadImportPayload(sessionKey);
+    if (!payload || !payload.allRows?.length) {
+      showMsg("⚠ No stored payload found for this session. Re-upload the original file to continue.", true);
+      return;
+    }
+
+    const lastChunk = session.validation_report?.last_chunk_index ?? -1;
+    const startChunk = lastChunk >= 0 ? lastChunk + 1 : 0;
+    const totalChunks = Math.ceil(payload.allRows.length / (payload.chunkSize || CHUNK_SIZE));
+
+    showMsg(`Resuming from chunk ${startChunk + 1}/${totalChunks} — ${missing} rows to process…`);
+    setStagingProgress({ pct: Math.round((startChunk / totalChunks) * 100), staged: stagedCount, total: totalRows, msg: "Starting…" });
+    setStagingError(null);
+    cancelStagingRef.current = false;
+
+    await base44.entities.Import_Sessions.update(session.id, { import_status: "Staged" });
+    setSession(prev => ({ ...prev, import_status: "Staged" }));
+
+    await runChunkLoop({
+      sessionDbId: session.id,
+      entityTarget: payload.entityTarget || entityTarget,
+      allRows: payload.allRows,
+      mappingRules: payload.mappingRules,
+      transformRules: payload.transformRules,
+      startChunkIndex: startChunk,
+      chunkSize: payload.chunkSize || CHUNK_SIZE,
+      cancelRef: cancelStagingRef,
+      onProgress: (result) => {
+        const pct = result.pct || 0;
+        setStagingProgress({ pct, staged: result.totalStaged || 0, total: totalRows, msg: `Chunk ${(result.chunkIndex || 0) + 1}/${totalChunks} — ${pct}%` });
+      },
+      onError: (msg) => {
+        setStagingError(msg);
+        setStagingProgress(null);
+        showMsg("⚠ Resume failed: " + msg, true);
+      },
+      onDone: async () => {
+        setStagingProgress(null);
+        showMsg("✓ Staging complete. Loading updated records…");
+        await loadAll();
+      },
+    });
   }
 
   // ── Commit (or re-commit) ─────────────────────────────────────────────────
@@ -404,6 +460,51 @@ export default function ICSessionResumePage() {
       {actionMsg && (
         <div style={{ background: actionMsg.isError ? "#fef2f2" : "#f0fdf4", border: `1px solid ${actionMsg.isError ? "#fca5a5" : "#86efac"}`, borderRadius: 8, padding: "9px 16px", marginBottom: 16, fontSize: 12, color: actionMsg.isError ? "#dc2626" : "#166534", fontWeight: 700 }}>
           {actionMsg.text}
+        </div>
+      )}
+
+      {/* Incomplete staging banner — shown when staged < total */}
+      {!stagingProgress && session.total_rows > 0 && records.length < session.total_rows &&
+        !["Committed", "Committing"].includes(session.import_status) && (
+        <div style={{ background: "#fef3c7", border: "1px solid #fbbf24", borderRadius: 10, padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 18 }}>⚠️</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, color: "#92400e" }}>
+              Incomplete — {records.length} of {session.total_rows} rows staged
+            </div>
+            <div style={{ fontSize: 11, color: "#b45309" }}>
+              {session.total_rows - records.length} rows are missing. Resume will reprocess them from the stored payload.
+            </div>
+          </div>
+          <button onClick={handleResumeStaging}
+            style={{ padding: "7px 14px", borderRadius: 7, border: "none", background: "#0C2340", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+            ▶ Resume from Stored Payload
+          </button>
+        </div>
+      )}
+
+      {/* Staging resume progress */}
+      {stagingProgress && (
+        <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+            <div style={{ width: 14, height: 14, border: "2px solid #bfdbfe", borderTopColor: "#1d4ed8", borderRadius: "50%", animation: "spin 0.8s linear infinite", flexShrink: 0 }} />
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#1d4ed8" }}>Resuming — {stagingProgress.msg}</div>
+              <div style={{ fontSize: 11, color: "#3b82f6" }}>{stagingProgress.staged.toLocaleString()} / {stagingProgress.total.toLocaleString()} staged</div>
+            </div>
+            <button onClick={() => { cancelStagingRef.current = true; setStagingProgress(null); showMsg("Resume cancelled."); }}
+              style={{ marginLeft: "auto", padding: "4px 10px", borderRadius: 6, border: "1px solid #93c5fd", background: "#fff", color: "#1d4ed8", fontSize: 10, fontWeight: 700, cursor: "pointer" }}>
+              Cancel
+            </button>
+          </div>
+          <div style={{ background: "#dbeafe", borderRadius: 99, height: 6, overflow: "hidden" }}>
+            <div style={{ height: "100%", background: "linear-gradient(90deg,#3b82f6,#8b5cf6)", width: stagingProgress.pct + "%", transition: "width 0.4s ease", borderRadius: 99 }} />
+          </div>
+        </div>
+      )}
+      {stagingError && (
+        <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8, padding: "9px 16px", marginBottom: 14, fontSize: 11, color: "#dc2626", fontWeight: 700 }}>
+          ⚠ {stagingError}
         </div>
       )}
 

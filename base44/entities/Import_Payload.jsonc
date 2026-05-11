@@ -1,0 +1,48 @@
+{
+  "name": "Import_Payload",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Foreign key \u2014 references Import_Sessions.session_id"
+    },
+    "entity_target": {
+      "type": "string",
+      "description": "Target entity for import \u2014 e.g. Normalized_Chains"
+    },
+    "mapping_rules": {
+      "type": "object",
+      "description": "Column mapping rules: { sourceColumn: targetField }",
+      "additionalProperties": true
+    },
+    "transform_rules": {
+      "type": "object",
+      "description": "Transform rules per column",
+      "additionalProperties": true
+    },
+    "rows_json": {
+      "type": "string",
+      "description": "JSON-stringified array of { row: {}, file: string } \u2014 full original parsed rows"
+    },
+    "total_rows": {
+      "type": "number",
+      "description": "Total row count \u2014 for quick reference without parsing rows_json"
+    },
+    "source_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of source file names"
+    },
+    "chunk_size": {
+      "type": "number",
+      "description": "Chunk size used during staging",
+      "default": 25
+    }
+  },
+  "required": [
+    "session_id",
+    "entity_target"
+  ]
+}

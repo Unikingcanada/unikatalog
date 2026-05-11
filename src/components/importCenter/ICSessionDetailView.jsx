@@ -7,6 +7,7 @@ import { base44 } from "@/api/base44Client";
 import { STATUS_COLORS, SESSION_STATUS_COLORS, CHUNK_SIZE } from "@/lib/importCenterEngine";
 import { runCommitLoop, withRetry, delay } from "@/lib/commitEngine";
 import { importCommitJob } from "@/functions/importCommitJob";
+import { loadImportPayload, runChunkLoop } from "@/lib/stagingEngine";
 import ICDiffViewer from "./ICDiffViewer";
 import * as XLSX from "xlsx";
 
@@ -264,8 +265,11 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
   const [selectedFailedIds, setSelectedFailedIds] = useState(new Set());
   const [stalled, setStalled] = useState(false);
   const [stalledInfo, setStalledInfo] = useState(null);
+  const [stagingProgress, setStagingProgress] = useState(null); // { pct, staged, total, msg }
+  const [stagingError, setStagingError] = useState(null);
   const pollRef = useRef(null);
   const lastProgressRef = useRef({ rows_staged: null, at: Date.now() });
+  const cancelStagingRef = useRef(false);
 
   const entityTarget = session.entity_targets?.[0] || "Normalized_Chains";
   const sessionKey = session.session_id || session.id;
@@ -560,7 +564,7 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
     }
   }
 
-  // "Retry Unprocessed" — rebuilds missing rows from staged raw_data and re-stages them via chunk loop
+  // "Retry Unprocessed" — loads stored payload and re-runs chunk loop from last_chunk_index + 1
   async function handleRetryUnprocessed() {
     const totalRows = session.total_rows || 0;
     const stagedIndices = new Set(records.map(r => r.row_index));
@@ -571,94 +575,89 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
       return;
     }
 
-    // Collect already-staged raw rows to re-feed as "rows" array with correct indices
-    // We rebuild the full array: staged rows supply their raw_data, gaps are logged as Failed
-    const sortedRecords = [...records].sort((a, b) => a.row_index - b.row_index);
-    const syntheticRows = [];
-    for (let i = 0; i < totalRows; i++) {
-      const existing = sortedRecords.find(r => r.row_index === i);
-      if (!existing) {
-        // Missing row — we can't recover the original data without re-upload
-        // Stage it as Failed so the count adds up
-        syntheticRows.push({ row: { _missing_row: true, _row_index: i }, file: session.source_files?.[0]?.name || "" });
-      }
-      // Already staged rows are skipped by the backend (it checks for duplicates by row_index)
-    }
+    // Try to load the persisted payload
+    const payload = await loadImportPayload(sessionKey);
 
-    if (syntheticRows.length === 0) {
-      showMsg("No missing rows to recover.");
+    if (!payload || !payload.allRows?.length) {
+      // No stored payload — fall back to marking missing rows as Failed
+      showMsg("⚠ No stored payload found — marking missing rows as Failed. Re-upload the original file to recover actual data.", true);
+      const sessIdStr = sessionKey;
+      let created = 0;
+      for (let i = 0; i < totalRows; i++) {
+        if (!stagedIndices.has(i)) {
+          try {
+            await base44.entities.Staging_Records.create({
+              session_id: sessIdStr,
+              entity_target: entityTarget,
+              row_index: i,
+              source_file: session.source_files?.[0]?.name || "",
+              raw_data: {},
+              mapped_data: {},
+              record_status: "Failed",
+              conflict_detail: "Row missing — original payload not stored. Re-upload source file to recover.",
+              commit_decision: "Skip",
+            });
+            created++;
+          } catch {}
+        }
+      }
+      await base44.entities.Import_Sessions.update(session.id, {
+        rows_staged: (session.rows_staged || 0) + created,
+        import_status: "Pending Review",
+      });
+      setStalled(false);
+      showMsg(`Marked ${created} missing rows as Failed (no payload). Re-upload to recover original data.`, true);
+      await reloadSession();
+      await loadRecords();
       return;
     }
 
-    showMsg(`Recovering ${syntheticRows.length} missing rows…`);
+    // We have the full original payload — resume the chunk loop from where it left off
+    const lastChunk = session.validation_report?.last_chunk_index ?? -1;
+    const startChunk = lastChunk >= 0 ? lastChunk + 1 : 0;
+    const totalChunks = Math.ceil(payload.allRows.length / (payload.chunkSize || CHUNK_SIZE));
 
-    // Get the mapping rules from session notes or ask user to re-provide
-    // Since we store raw_data on staging records, we can infer mapping from existing staged rows' mapped_data
-    const sampleMapped = sortedRecords.find(r => r.mapped_data && Object.keys(r.mapped_data).length > 0)?.mapped_data || {};
-    const sampleRaw = sortedRecords.find(r => r.raw_data && Object.keys(r.raw_data).length > 0)?.raw_data || {};
+    showMsg(`Resuming from chunk ${startChunk + 1} of ${totalChunks} — reprocessing ${missingCount} missing rows…`);
+    setStalled(false);
+    setStagingProgress({ pct: Math.round((startChunk / totalChunks) * 100), staged: records.length, total: totalRows, msg: "Resuming…" });
+    setStagingError(null);
+    cancelStagingRef.current = false;
 
-    // Build a pass-through mapping from raw field names
-    const inferredMapping = {};
-    for (const key of Object.keys(sampleRaw)) {
-      if (sampleMapped[key] !== undefined) inferredMapping[key] = key;
-    }
+    // Update session to Staged so we can track progress
+    await base44.entities.Import_Sessions.update(session.id, { import_status: "Staged" });
+    setSession(prev => ({ ...prev, import_status: "Staged" }));
 
-    // For missing rows: create Failed staging records directly (no original data available)
-    const sessIdStr = session.session_id || session.id;
-    let created = 0;
-    for (const { row, file } of syntheticRows) {
-      try {
-        await base44.entities.Staging_Records.create({
-          session_id: sessIdStr,
-          entity_target: entityTarget,
-          row_index: row._row_index,
-          source_file: file,
-          raw_data: {},
-          mapped_data: {},
-          record_status: "Failed",
-          conflict_detail: "Row missing from original job run — original data unavailable. Re-upload the source file to recover.",
-          commit_decision: "Skip",
-        });
-        created++;
-      } catch {}
-    }
-
-    // Update session counts
-    await base44.entities.Import_Sessions.update(session.id, {
-      rows_staged: (session.rows_staged || 0) + created,
-      import_status: "Pending Review",
-      validation_report: {
-        ...(session.validation_report || {}),
-        Failed: (session.validation_report?.Failed || 0) + created,
-        total_staged: (session.validation_report?.total_staged || 0) + created,
-        recovery_note: `${created} missing rows marked Failed — re-upload source file to recover original data.`,
+    await runChunkLoop({
+      sessionDbId: session.id,
+      entityTarget: payload.entityTarget || entityTarget,
+      allRows: payload.allRows,
+      mappingRules: payload.mappingRules,
+      transformRules: payload.transformRules,
+      startChunkIndex: startChunk,
+      chunkSize: payload.chunkSize || CHUNK_SIZE,
+      cancelRef: cancelStagingRef,
+      onProgress: (result) => {
+        const pct = result.pct || 0;
+        setStagingProgress({ pct, staged: result.totalStaged || 0, total: totalRows, msg: `Chunk ${result.chunkIndex + 1}/${totalChunks} — ${pct}%` });
+      },
+      onError: (msg) => {
+        setStagingError(msg);
+        setStagingProgress(null);
+        showMsg("⚠ Resume failed: " + msg, true);
+      },
+      onDone: async () => {
+        setStagingProgress(null);
+        showMsg("✓ All rows processed. Refreshing records…");
+        await reloadSession();
+        await loadRecords();
       },
     });
-
-    setStalled(false);
-    showMsg(`${created} missing rows logged as Failed. Session is now complete — ${missingCount > created ? "some rows still missing" : "all rows accounted for"}.`);
-    await reloadSession();
-    await loadRecords();
   }
 
-  // "Unblock & Resume" — moves stalled session to Staged WITHOUT allowing commit of partial data
+  // "Unblock & Resume" — immediately resumes chunk loop using stored payload
   async function handleResumeStalled() {
-    try {
-      await base44.entities.Import_Sessions.update(session.id, {
-        import_status: "Failed", // Mark Failed first, not Staged — admin must explicitly choose path
-        validation_report: {
-          ...(session.validation_report || {}),
-          stall_note: `Stalled at row ${session.validation_report?.last_processed_row || 0}/${session.total_rows || 0}. Use "Retry Unprocessed" to fill gaps, then commit.`,
-        },
-      });
-      setSession(prev => ({ ...prev, import_status: "Failed" }));
-      setStalled(false);
-      showMsg("Session marked Failed. Use 'Retry Unprocessed' to fill gaps, then use debug view to commit partial results.", true);
-      await reloadSession();
-      await loadRecords();
-    } catch (e) {
-      showMsg("⚠ " + e.message, true);
-    }
+    // Same as handleRetryUnprocessed — both drive the chunk loop from stored payload
+    await handleRetryUnprocessed();
   }
 
   // ── Export ────────────────────────────────────────────────────────────────
@@ -720,8 +719,8 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
               Staged: {totalAccountedFor} · Missing: {missingRows} · Committing now will produce a partial import.
             </div>
           </div>
-          <button onClick={handleRetryUnprocessed} style={{ padding: "6px 13px", borderRadius: 7, border: "none", background: "#d97706", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
-            ↺ Fill Missing Rows
+          <button onClick={handleRetryUnprocessed} disabled={!!stagingProgress} style={{ padding: "6px 13px", borderRadius: 7, border: "none", background: "#0C2340", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: stagingProgress ? 0.5 : 1 }}>
+            ▶ Resume from Stored Payload
           </button>
           <button onClick={() => handleCommit(true)} disabled={busy} style={{ padding: "6px 13px", borderRadius: 7, border: "1px solid #ef4444", background: "#fef2f2", color: "#dc2626", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
             Commit Partial Anyway
@@ -753,6 +752,33 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
           </button>
           <button onClick={() => handleExport("xlsx")} disabled={busy} style={aBtn("#1d4ed8", "#fff")}>↓ Export XLSX</button>
           <button onClick={() => handleExport("csv")} disabled={busy} style={aBtn("#065f46", "#fff")}>↓ Export CSV</button>
+        </div>
+      )}
+
+      {/* In-page resume progress panel */}
+      {stagingProgress && (
+        <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+            <div style={{ width: 14, height: 14, border: "2px solid #bfdbfe", borderTopColor: "#1d4ed8", borderRadius: "50%", animation: "spin 0.8s linear infinite", flexShrink: 0 }} />
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#1d4ed8" }}>Resuming Staging — {stagingProgress.msg}</div>
+              <div style={{ fontSize: 11, color: "#3b82f6", marginTop: 2 }}>
+                {stagingProgress.staged.toLocaleString()} / {stagingProgress.total.toLocaleString()} rows staged
+              </div>
+            </div>
+            <button onClick={() => { cancelStagingRef.current = true; setStagingProgress(null); showMsg("Resume cancelled."); }}
+              style={{ marginLeft: "auto", padding: "4px 10px", borderRadius: 6, border: "1px solid #93c5fd", background: "#fff", color: "#1d4ed8", fontSize: 10, fontWeight: 700, cursor: "pointer" }}>
+              Cancel
+            </button>
+          </div>
+          <div style={{ background: "#dbeafe", borderRadius: 99, height: 6, overflow: "hidden" }}>
+            <div style={{ height: "100%", background: "linear-gradient(90deg,#3b82f6,#8b5cf6)", width: stagingProgress.pct + "%", transition: "width 0.4s ease", borderRadius: 99 }} />
+          </div>
+        </div>
+      )}
+      {stagingError && (
+        <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8, padding: "10px 16px", marginBottom: 14, color: "#dc2626", fontSize: 11, fontWeight: 700 }}>
+          ⚠ {stagingError}
         </div>
       )}
 
@@ -793,11 +819,8 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
             </div>
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <button onClick={handleRetryUnprocessed} style={{ padding: "7px 14px", borderRadius: 7, border: "none", background: "#d97706", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
-              ↺ Retry Unprocessed ({stalledInfo.totalRows - stalledInfo.stagedCount})
-            </button>
-            <button onClick={handleResumeStalled} style={{ padding: "7px 14px", borderRadius: 7, border: "none", background: "#0C2340", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
-              ▶ Unblock &amp; Resume
+            <button onClick={handleRetryUnprocessed} disabled={!!stagingProgress} style={{ padding: "7px 14px", borderRadius: 7, border: "none", background: "#0C2340", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: stagingProgress ? 0.5 : 1 }}>
+              ▶ Resume from Stored Payload ({stalledInfo.totalRows - stalledInfo.stagedCount} missing)
             </button>
             <button onClick={handleCancelJob} style={{ padding: "7px 14px", borderRadius: 7, border: "1px solid #ef4444", background: "#fef2f2", color: "#dc2626", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
               ✕ Cancel Job

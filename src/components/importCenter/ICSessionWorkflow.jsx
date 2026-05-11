@@ -10,10 +10,10 @@
 import { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import {
-  generateSessionId, parseCSV, parseJSON, parseXLSX, CHUNK_SIZE,
+  generateSessionId, parseCSV, parseJSON, parseXLSX,
 } from "@/lib/importCenterEngine";
-import { importStageJob } from "@/functions/importStageJob";
 import { importCommitJob } from "@/functions/importCommitJob";
+import { saveImportPayload, runChunkLoop, CHUNK_SIZE } from "@/lib/stagingEngine";
 import ICUploadZone from "./ICUploadZone";
 import ICColumnMapper from "./ICColumnMapper";
 import ICDiffViewer from "./ICDiffViewer";
@@ -105,48 +105,6 @@ function CommitStats({ sess }) {
       ))}
     </div>
   );
-}
-
-// ─── Chunk-loop driver — runs in the browser, one HTTP call per chunk ──────────
-// Each call to importStageJob processes one chunk and returns immediately.
-// This ensures no single serverless call can timeout, regardless of import size.
-// On page reload, resumeFromChunk is passed and the loop continues from there.
-async function runChunkLoop({ sessionDbId, entityTarget, rows, mappingRules, transformRules, startChunkIndex = 0, chunkSize = 25, onProgress, onError, onDone }) {
-  let chunkIndex = startChunkIndex;
-
-  while (true) {
-    let result;
-    try {
-      result = await importStageJob({
-        sessionId: sessionDbId,
-        entityTarget,
-        rows,
-        mappingRules,
-        transformRules: transformRules || {},
-        chunkIndex,
-        chunkSize,
-      });
-    } catch (err) {
-      onError(`Chunk ${chunkIndex} failed: ${err.message}`);
-      return;
-    }
-
-    if (result?.error) {
-      onError(`Chunk ${chunkIndex} server error: ${result.error}`);
-      return;
-    }
-
-    onProgress(result);
-
-    if (result?.done) {
-      onDone(result);
-      return;
-    }
-
-    chunkIndex++;
-    // Small pause between chunks to avoid hammering the API
-    await new Promise(r => setTimeout(r, 150));
-  }
 }
 
 // ─── Processing monitor (shown during step 2 — chunk-loop staging) ─────────────
@@ -386,9 +344,19 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
     setSession(sess);
     if (onSessionCreated) onSessionCreated(sess);
 
-    // Store context so StagingMonitor can drive the chunk loop
+    // Persist full payload to DB so resume after page reload never needs re-upload.
+    // Fire-and-forget — if it fails, staging still works (just can't resume after reload).
+    saveImportPayload({
+      sessionId: sess.session_id,
+      entityTarget,
+      allRows,
+      mappingRules,
+      transformRules: transformRules || {},
+      chunkSize: CHUNK_SIZE,
+    }).catch(e => console.warn("Payload persist failed:", e));
+
+    // Store in React state for immediate use by StagingMonitor
     setStagingContext({ allRows, mappingRules, transformRules: transformRules || {} });
-    // Step 2 UI shows StagingMonitor which drives one-chunk-per-call loop
   }
 
   // ── Step 2 → 3: Session reached "Pending Review" ──────────────────────────
