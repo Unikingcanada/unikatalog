@@ -1,8 +1,10 @@
 /**
  * ChainDetailView.jsx
  * Full chain detail page — top section + tabbed specs.
+ * Fetches Chain_Media and Chain_Sprockets from DB when chain_id is available.
  */
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
 import ChainDetailTabs from "./ChainDetailTabs";
 
 const C = {
@@ -39,9 +41,33 @@ function addToRFQCart(product) {
 
 export default function ChainDetailView({ product, familyLabel, onBack, onConfigure }) {
   const [rfqAdded, setRfqAdded] = useState(() => getRFQCart().some(i => i.id === product.id));
+  const [dbMedia, setDbMedia] = useState([]);
+  const [dbSprockets, setDbSprockets] = useState(null); // null = loading, [] = loaded empty
+
   const chainNumber = product.display_name || product.chain_number || product.part_number || product.series;
   const pitch = product.specs?.pitch_in || product.pitch_in;
   const industries = product.industries || product.application_tags || [];
+
+  // Fetch Chain_Media and Chain_Sprockets from DB when we have a chain_id
+  useEffect(() => {
+    const chainId = product.chain_id;
+    if (!chainId) {
+      setDbSprockets([]);
+      return;
+    }
+    // Fetch media
+    base44.entities.Chain_Media.filter({ chain_id: chainId })
+      .then(records => setDbMedia(records || []))
+      .catch(() => setDbMedia([]));
+    // Fetch sprockets
+    base44.entities.Chain_Sprockets.filter({ chain_id: chainId })
+      .then(records => setDbSprockets(records || []))
+      .catch(() => setDbSprockets([]));
+  }, [product.chain_id]);
+
+  // Resolve primary image: DB media first, then product fields
+  const primaryMedia = dbMedia.find(m => m.is_primary) || dbMedia[0];
+  const resolvedImageUrl = primaryMedia?.url || product.image_url || product.image || null;
 
   function handleAddRFQ() {
     addToRFQCart(product);
@@ -58,10 +84,14 @@ export default function ChainDetailView({ product, familyLabel, onBack, onConfig
       {/* Top section */}
       <div style={{ background: C.navyMid, borderRadius: 12, padding: "clamp(16px,4vw,28px)", marginBottom: 24, color: "#fff" }}>
         <div style={{ display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap" }}>
-          {/* Image */}
-          {(product.image || product.image_url) && (
+          {/* Image — from Chain_Media DB or product fields */}
+          {resolvedImageUrl ? (
             <div style={{ background: "#fff", borderRadius: 8, padding: 8, width: 120, height: 90, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <img src={product.image || product.image_url} alt={chainNumber} style={{ maxWidth: 104, maxHeight: 74, objectFit: "contain" }} onError={e => e.target.parentElement.style.display = "none"} />
+              <img src={resolvedImageUrl} alt={chainNumber} style={{ maxWidth: 104, maxHeight: 74, objectFit: "contain" }} onError={e => e.target.parentElement.style.display = "none"} />
+            </div>
+          ) : (
+            <div style={{ background: "rgba(255,255,255,0.08)", border: "1px dashed rgba(255,255,255,0.2)", borderRadius: 8, width: 120, height: 90, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <span style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", textAlign: "center", lineHeight: 1.4 }}>No image<br/>available</span>
             </div>
           )}
           {/* Info */}
@@ -110,7 +140,12 @@ export default function ChainDetailView({ product, familyLabel, onBack, onConfig
 
       {/* Tabs */}
       <div style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 10, padding: "20px clamp(14px,3vw,24px)" }}>
-        <ChainDetailTabs product={product} onAddRFQ={(p) => { addToRFQCart(p); setRfqAdded(true); }} />
+        <ChainDetailTabs
+          product={product}
+          dbSprockets={dbSprockets}
+          dbMedia={dbMedia}
+          onAddRFQ={(p) => { addToRFQCart(p); setRfqAdded(true); }}
+        />
       </div>
 
       {/* Needs-review banner */}

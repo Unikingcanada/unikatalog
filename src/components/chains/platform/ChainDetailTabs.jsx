@@ -257,23 +257,49 @@ function PinsTab({ product, onAddRFQ }) {
   );
 }
 
-function SprocketsTab({ product, onAddRFQ }) {
-  const sprockets = product.related_sprockets || product.sprockets_available || [];
-  if (!sprockets.length) return (
-    <div style={{ color: C.muted, fontSize: 13, padding: "24px 0" }}>No sprocket data available. Contact Uniking.</div>
+function SprocketsTab({ product, dbSprockets, onAddRFQ }) {
+  const staticSprockets = product.related_sprockets || product.sprockets_available || [];
+  const sprockets = (dbSprockets && dbSprockets.length > 0) ? dbSprockets : staticSprockets;
+  const loading = dbSprockets === null;
+
+  if (loading) return (
+    <div style={{ color: C.muted, fontSize: 13, padding: "24px 0", display: "flex", alignItems: "center", gap: 8 }}>
+      <span style={{ display: "inline-block", width: 14, height: 14, border: "2px solid #e2e8f0", borderTopColor: C.navyMid, borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+      Loading sprocket data…
+    </div>
   );
+
+  if (!sprockets.length) return (
+    <div style={{ padding: "32px 0" }}>
+      <div style={{ fontSize: 13, color: C.muted, marginBottom: 8 }}>No sprockets linked to this chain yet.</div>
+      <div style={{ fontSize: 12, color: C.muted, padding: "10px 14px", background: C.bg, border: "1px solid " + C.border, borderRadius: 6, maxWidth: 420 }}>
+        💡 Sprocket data can be imported via the <strong>Import Center</strong> using the <code>Chain_Sprockets</code> entity target, or contact Uniking for compatible sprocket recommendations.
+      </div>
+    </div>
+  );
+
   return (
     <div>
+      {dbSprockets && dbSprockets.length > 0 && (
+        <div style={{ fontSize: 11, color: C.muted, marginBottom: 12 }}>
+          {dbSprockets.length} sprocket record{dbSprockets.length !== 1 ? "s" : ""} linked to this chain.
+        </div>
+      )}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
         {sprockets.map((sp, i) => (
-          <div key={i} style={{ border: "1px solid " + C.border, borderRadius: 8, padding: "14px", background: C.card }}>
-            {sp.image_url && <img src={sp.image_url} alt={sp.code} style={{ width: "100%", height: 70, objectFit: "contain", marginBottom: 8 }} onError={e => e.target.style.display = "none"} />}
-            <div style={{ fontWeight: 700, fontSize: 13, color: C.text, marginBottom: 4 }}>{sp.code || sp.name}</div>
+          <div key={sp.id || i} style={{ border: "1px solid " + C.border, borderRadius: 8, padding: "14px", background: C.card }}>
+            {sp.image_url && <img src={sp.image_url} alt={sp.sprocket_code || sp.code} style={{ width: "100%", height: 70, objectFit: "contain", marginBottom: 8 }} onError={e => e.target.style.display = "none"} />}
+            <div style={{ fontWeight: 700, fontSize: 13, color: C.text, marginBottom: 4 }}>{sp.sprocket_code || sp.code || sp.name || "—"}</div>
             {sp.teeth && <div style={{ fontSize: 12, color: C.slate }}>Teeth: {sp.teeth}</div>}
-            {(sp.bore || sp.bore_info) && <div style={{ fontSize: 12, color: C.slate }}>Bore: {sp.bore || sp.bore_info}</div>}
-            {sp.material && <div style={{ fontSize: 12, color: C.slate }}>Material: {sp.material}</div>}
             {sp.style && <div style={{ fontSize: 12, color: C.slate }}>Style: {sp.style}</div>}
-            <button onClick={() => onAddRFQ && onAddRFQ({ ...product, series: (product.chain_number || product.part_number) + " Sprocket", notes: "Sprocket: " + (sp.code || sp.name) })}
+            {(sp.bore_min_in || sp.bore_max_in || sp.bore || sp.bore_info) && (
+              <div style={{ fontSize: 12, color: C.slate }}>
+                Bore: {sp.bore_min_in && sp.bore_max_in ? `${sp.bore_min_in}"–${sp.bore_max_in}"` : sp.bore || sp.bore_info}
+              </div>
+            )}
+            {sp.material && <div style={{ fontSize: 12, color: C.slate }}>Material: {sp.material}</div>}
+            {sp.source_brand && <div style={{ fontSize: 10, color: C.muted, marginTop: 4 }}>Source: {sp.source_brand}</div>}
+            <button onClick={() => onAddRFQ && onAddRFQ({ ...product, series: (product.chain_number || product.part_number) + " Sprocket", notes: "Sprocket: " + (sp.sprocket_code || sp.code || sp.name) })}
               style={{ marginTop: 8, width: "100%", padding: "5px 0", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: "1px solid " + C.blue, background: C.blueBg, color: C.blue }}>
               + Add to RFQ
             </button>
@@ -421,7 +447,7 @@ function DownloadsTab({ product }) {
   );
 }
 
-export default function ChainDetailTabs({ product, onAddRFQ }) {
+export default function ChainDetailTabs({ product, dbSprockets, dbMedia, onAddRFQ }) {
   const [activeTab, setActiveTab] = useState("specs");
 
   // Always compute valid attachments for tab visibility
@@ -437,7 +463,8 @@ export default function ChainDetailTabs({ product, onAddRFQ }) {
   const chainNumStr = String(product.chain_number || product.chain_id || "");
   const hasInferrableLinks = /\d/.test(chainNumStr); // has a number = ANSI-style chain
   const hasPins = explicitPins.some(p => !!(p.code || p.name)) || hasInferrableLinks;
-  const hasSprockets = (product.related_sprockets?.length || product.sprockets_available?.length) > 0;
+  // Sprockets tab always shown — uses DB data (loading/empty states handled in tab)
+  const hasSprockets = true;
   const hasMaterials = (product.materials_available?.length || product.options?.length) > 0;
   const hasOptions = (product.options?.length || product.options_upgrades?.length) > 0;
   const hasSource = product.source || (product.source_data?.length > 0) || !!product.chain_id;
@@ -472,7 +499,7 @@ export default function ChainDetailTabs({ product, onAddRFQ }) {
       {currentTab === "specs" && <SpecsTab product={product} />}
       {currentTab === "attachments" && <AttachmentsTab product={product} onAddRFQ={onAddRFQ} />}
       {currentTab === "pins" && <PinsTab product={product} onAddRFQ={onAddRFQ} />}
-      {currentTab === "sprockets" && <SprocketsTab product={product} onAddRFQ={onAddRFQ} />}
+      {currentTab === "sprockets" && <SprocketsTab product={product} dbSprockets={dbSprockets} onAddRFQ={onAddRFQ} />}
       {currentTab === "materials" && <MaterialsTab product={product} />}
       {currentTab === "options" && <OptionsTab product={product} />}
       {currentTab === "source" && <SourceDataTab product={product} />}

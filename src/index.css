@@ -224,6 +224,11 @@ img {
   font-style: italic;
 }
 
+/* Generic spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Floating RFQ cart pulse animation */
 @keyframes rfq-pulse {
   0% { transform: scale(1); }
