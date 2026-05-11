@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 
 const C = {
   navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
@@ -33,7 +33,48 @@ function buildSearchStr(p) {
   parts.push(p.series, p.part_number, p.type, p.style, p.category);
   parts.push(p.brand, p.notes, p.materials, p.material);
   parts.push(p.application, p.duty, p.discharge_type, p.description);
-  parts.push(p._subcategory);
+  parts.push(p._subcategory, p._mac_category);
+
+  // Chain-specific normalized fields
+  parts.push(p.chain_id, p.chain_number, p.chain_family, p.standard);
+  parts.push(p.display_name, p.options_upgrades);
+
+  // Pitch variations — users search "1/2", "0.5", "12.7mm", "80" etc.
+  if (p.pitch_in) parts.push(p.pitch_in, p.pitch_in + "inch", p.pitch_in + '"');
+  if (p.pitch_mm) parts.push(p.pitch_mm, p.pitch_mm + "mm");
+
+  // application_tags array
+  if (Array.isArray(p.application_tags)) {
+    for (const t of p.application_tags) parts.push(t);
+  }
+
+  // materials_available array
+  if (Array.isArray(p.materials_available)) {
+    for (const m of p.materials_available) parts.push(m);
+  }
+
+  // attachments_available — includes codes like A1, K1, SA2
+  if (Array.isArray(p.attachments_available)) {
+    for (const a of p.attachments_available) {
+      parts.push(a.code, a.type, a.description);
+    }
+  }
+
+  // pins_links_available — includes codes like OL-80, CL-80, OL80
+  if (Array.isArray(p.pins_links_available)) {
+    for (const pl of p.pins_links_available) {
+      parts.push(pl.code, pl.type, pl.description);
+      // Also add normalised variant without dash: "OL-80" → "OL80"
+      if (pl.code) parts.push(pl.code.replace(/-/g, ""));
+    }
+  }
+
+  // source_data — manufacturer cross-refs (brand + product_code)
+  if (Array.isArray(p.source_data)) {
+    for (const s of p.source_data) {
+      parts.push(s.brand, s.product_code);
+    }
+  }
 
   // All values from the specs object (key + value both searchable)
   if (p.specs && typeof p.specs === "object") {
@@ -50,10 +91,11 @@ function buildSearchStr(p) {
     for (const f of p.features) parts.push(f);
   }
 
-  // alt numbers / cross-refs (Donghua chain cross-refs are in notes already)
-  // pitch — common search term
-  if (p.pitch_in) parts.push(p.pitch_in + "inch", p.pitch_in + '"');
-  if (p.pitch_mm) parts.push(p.pitch_mm + "mm");
+  // Infer component codes from chain number: chain "80" → "OL-80", "CL-80", "OL80", "CL80"
+  const chainNum = p.chain_number || (p.series || "").replace(/[^\d]/g, "");
+  if (chainNum && /^\d+$/.test(chainNum)) {
+    parts.push(`OL-${chainNum}`, `CL-${chainNum}`, `OL${chainNum}`, `CL${chainNum}`);
+  }
 
   return parts.filter(Boolean).join(" ").toLowerCase();
 }
@@ -120,11 +162,29 @@ function getSubtitle(p) {
 }
 
 export default function HomeGlobalSearch({ allData = [], onSelect }) {
+  const [inputValue, setInputValue] = useState("");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [highlighted, setHighlighted] = useState(0);
+  const [isDebouncing, setIsDebouncing] = useState(false);
   const inputRef = useRef(null);
   const dropRef = useRef(null);
+  const debounceTimer = useRef(null);
+
+  // Debounce: update committed query 250ms after typing stops
+  const handleInputChange = useCallback((val) => {
+    setInputValue(val);
+    setOpen(true);
+    if (val.length < 2) { setQuery(val); setIsDebouncing(false); return; }
+    setIsDebouncing(true);
+    clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+      setQuery(val);
+      setIsDebouncing(false);
+    }, 250);
+  }, []);
+
+  useEffect(() => () => clearTimeout(debounceTimer.current), []);
 
   // Pre-build search strings once when allData changes (perf optimisation)
   const searchIndex = useMemo(() => {
@@ -143,16 +203,19 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
         if (s < 0) { allMatch = false; break; }
         total += s;
       }
-      // Boost exact part-number / series matches
+      // Boost exact part-number / series / chain_id matches
       if (allMatch) {
-        const name = (p.series || p.part_number || "").toLowerCase();
+        const name = (p.series || p.part_number || p.chain_id || "").toLowerCase();
         if (name === q) total += 2000;
         else if (name.startsWith(q)) total += 500;
         scored.push({ p, score: total });
       }
     }
-    return scored.sort((a, b) => b.score - a.score).slice(0, 16).map(s => s.p);
+    return scored.sort((a, b) => b.score - a.score).slice(0, 18).map(s => s.p);
   }, [query, searchIndex]);
+
+  const isSearching = isDebouncing && inputValue.length >= 2;
+  const showNoResults = !isSearching && query.length >= 2 && results.length === 0;
 
   useEffect(() => { setHighlighted(0); }, [results]);
 
@@ -171,16 +234,17 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
     if (e.key === "ArrowDown") { e.preventDefault(); setHighlighted(h => Math.min(h + 1, results.length - 1)); }
     if (e.key === "ArrowUp")   { e.preventDefault(); setHighlighted(h => Math.max(h - 1, 0)); }
     if (e.key === "Enter" && results[highlighted]) { handleSelect(results[highlighted]); }
-    if (e.key === "Escape") { setOpen(false); setQuery(""); }
+    if (e.key === "Escape") { setOpen(false); setInputValue(""); setQuery(""); }
   }
 
   function handleSelect(p) {
     onSelect(p);
+    setInputValue("");
     setQuery("");
     setOpen(false);
   }
 
-  const showDrop = open && query.length >= 2;
+  const showDrop = open && inputValue.length >= 2;
 
   return (
     <div style={{ position: "relative", maxWidth: 600, margin: "0 auto" }}>
@@ -192,26 +256,35 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
 
       <input
         ref={inputRef}
-        value={query}
-        onChange={e => { setQuery(e.target.value); setOpen(true); }}
-        onFocus={() => query.length >= 2 && setOpen(true)}
+        value={inputValue}
+        onChange={e => handleInputChange(e.target.value)}
+        onFocus={() => inputValue.length >= 2 && setOpen(true)}
         onKeyDown={handleKeyDown}
-        placeholder="Search products — part no., spec, material, pitch, type…"
+        placeholder="Search — chain no., SKU, pitch, manufacturer, attachment code…"
         style={{
           width: "100%", boxSizing: "border-box",
           padding: "14px 40px 14px 46px",
           borderRadius: showDrop ? "12px 12px 0 0" : 12,
-          border: `1.5px solid ${showDrop || query ? C.navyMid : C.border}`,
+          border: `1.5px solid ${showDrop || inputValue ? C.navyMid : C.border}`,
           fontSize: 15, outline: "none", background: "#fff",
-          boxShadow: query ? "0 4px 16px rgba(26,58,92,0.10)" : "0 1px 4px rgba(0,0,0,0.05)",
+          boxShadow: inputValue ? "0 4px 16px rgba(26,58,92,0.10)" : "0 1px 4px rgba(0,0,0,0.05)",
           transition: "border 0.15s, box-shadow 0.15s",
           color: C.text,
         }}
       />
 
-      {query && (
+      {/* Spinner while debouncing */}
+      {isSearching && (
+        <div style={{
+          position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
+          width: 16, height: 16, border: "2px solid #e2e8f0", borderTopColor: C.navyMid,
+          borderRadius: "50%", animation: "spin 0.7s linear infinite", zIndex: 1,
+        }} />
+      )}
+
+      {inputValue && !isSearching && (
         <button
-          onClick={() => { setQuery(""); setOpen(false); inputRef.current?.focus(); }}
+          onClick={() => { setInputValue(""); setQuery(""); setOpen(false); inputRef.current?.focus(); }}
           style={{
             position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
             background: "none", border: "none", cursor: "pointer", fontSize: 20,
@@ -230,11 +303,18 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
           boxShadow: "0 8px 32px rgba(15,35,64,0.18)",
           overflow: "hidden",
         }}>
-          {results.length === 0 ? (
-            <div style={{ padding: "20px", textAlign: "center", color: C.muted, fontSize: 14 }}>
-              No products found for "<strong>{query}</strong>"
+          {isSearching ? (
+            <div style={{ padding: "20px", textAlign: "center", color: C.muted, fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
+              <div style={{ width: 14, height: 14, border: "2px solid #e2e8f0", borderTopColor: C.navyMid, borderRadius: "50%", animation: "spin 0.7s linear infinite", flexShrink: 0 }} />
+              Searching…
             </div>
-          ) : (
+          ) : showNoResults ? (
+            <div style={{ padding: "24px 20px", textAlign: "center" }}>
+              <div style={{ fontSize: 28, marginBottom: 8 }}>🔍</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: C.text, marginBottom: 4 }}>No results for "{query}"</div>
+              <div style={{ fontSize: 12, color: C.muted }}>Try a chain number, pitch, manufacturer name, or attachment code.</div>
+            </div>
+          ) : results.length > 0 ? (
             <>
               {/* Header row */}
               <div style={{
@@ -316,7 +396,7 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
                 <span>Esc Close</span>
               </div>
             </>
-          )}
+          ) : null}
         </div>
       )}
     </div>
