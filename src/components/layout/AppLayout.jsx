@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import BackButton from "@/components/shared/BackButton";
 import { base44 } from "@/api/base44Client";
 
-const ADMIN_EMAIL = "jsauro@unikingcanada.com";
+const ADMIN_ROLES = ["admin", "super_admin"];
 
 const C = {
   navy: "#003c5b",
@@ -22,7 +22,7 @@ export default function AppLayout({ children, hideHeader = false, onBack = null 
 
   useEffect(() => {
     base44.auth.me().then(u => {
-      if (u?.email === ADMIN_EMAIL) setIsAdmin(true);
+      if (u && ADMIN_ROLES.includes(u.role)) setIsAdmin(true);
     }).catch(() => {});
   }, []);
 
@@ -106,6 +106,11 @@ export default function AppLayout({ children, hideHeader = false, onBack = null 
                   onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
                   onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
                   🔍 Chain Review
+                </Link>
+                <Link to="/admin/users" onClick={() => setAdminMenuOpen(false)} style={{ display: "block", padding: "9px 14px", fontSize: 12, fontWeight: 600, color: "#0C2340", textDecoration: "none" }}
+                  onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
+                  onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                  👥 User Management
                 </Link>
               </div>
             )}

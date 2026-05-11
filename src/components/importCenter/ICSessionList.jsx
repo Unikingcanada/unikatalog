@@ -238,56 +238,84 @@ export default function ICSessionList({ sessions, loading, onSelect, onNew }) {
             style={{ ...btnPrimary, fontSize: 11, padding: "7px 16px", marginTop: 12 }}>Clear Filters</button>
         </div>
       ) : (
-        <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", overflow: "hidden" }}>
-          {/* Column headers */}
-          <div style={rowGrid(true)}>
-            {["Session ID", "Manufacturer · Catalog", "Target", "Status", "Rows", "Written", "Failed", "Date", "Actions"].map((h, i) => (
-              <div key={i} style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.5px" }}>{h}</div>
-            ))}
+        <>
+          {/* ── Mobile card list (< 768px) ── */}
+          <div style={{ display: "none" }} className="ic-mobile-list">
+            {displayed.map(s => {
+              const hasFailed = (s.failed_rows || 0) > 0;
+              const dateStr = s.uploaded_at
+                ? new Date(s.uploaded_at).toLocaleDateString()
+                : s.created_date ? new Date(s.created_date).toLocaleDateString() : "—";
+              return (
+                <div key={s.id} style={{ background: "#fff", borderRadius: 10, border: "1px solid #e2e8f0", padding: "14px 16px", marginBottom: 10 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+                    <div style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 800, color: "#0C2340" }}>{s.session_id || s.id?.slice(0, 8)}</div>
+                    <StatusPill status={s.import_status || "Uploading"} />
+                  </div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#1e293b" }}>{s.manufacturer || "—"}</div>
+                  {s.source_catalog && <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 4 }}>{s.source_catalog}</div>}
+                  <div style={{ fontSize: 11, color: "#64748b", fontFamily: "monospace", marginBottom: 8 }}>{s.entity_targets?.[0] || "—"}</div>
+                  <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 10, fontSize: 12 }}>
+                    <span><strong style={{ color: "#334155" }}>Rows:</strong> {(s.total_rows || 0).toLocaleString()}</span>
+                    <span><strong style={{ color: "#166534" }}>Written:</strong> {(s.rows_written || 0).toLocaleString()}</span>
+                    <span style={{ color: hasFailed ? "#dc2626" : "#94a3b8", fontWeight: hasFailed ? 800 : 400 }}>
+                      <strong>Failed:</strong> {s.failed_rows || 0}
+                    </span>
+                    <span style={{ color: "#94a3b8" }}>{dateStr}</span>
+                  </div>
+                  <QuickActions session={s} onSelect={onSelect} navigate={navigate} onExportFailed={handleExportFailed} />
+                </div>
+              );
+            })}
           </div>
 
-          {displayed.map((s, i) => {
-            const hasFailed = (s.failed_rows || 0) > 0;
-            const dateStr = s.uploaded_at
-              ? new Date(s.uploaded_at).toLocaleDateString()
-              : s.created_date
-                ? new Date(s.created_date).toLocaleDateString()
-                : "—";
-
-            return (
-              <div key={s.id}
-                style={{ ...rowGrid(false), background: i % 2 === 0 ? "#fff" : "#fafafa", cursor: "pointer", transition: "background 0.1s" }}
-                onClick={() => onSelect(s)}
-                onMouseEnter={e => e.currentTarget.style.background = "#f0f9ff"}
-                onMouseLeave={e => e.currentTarget.style.background = i % 2 === 0 ? "#fff" : "#fafafa"}
-              >
-                <div style={{ fontFamily: "monospace", fontSize: 11, color: "#0C2340", fontWeight: 700 }}>
-                  {s.session_id || s.id?.slice(0, 8)}
-                </div>
-                <div>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "#1e293b" }}>{s.manufacturer || "—"}</div>
-                  {s.source_catalog && <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 1 }}>{s.source_catalog}</div>}
-                </div>
-                <div style={{ fontSize: 11, color: "#64748b", fontFamily: "monospace" }}>{s.entity_targets?.[0] || "—"}</div>
-                <div><StatusPill status={s.import_status || "Uploading"} /></div>
-                <div style={{ fontSize: 12, color: "#334155" }}>{(s.total_rows || 0).toLocaleString()}</div>
-                <div style={{ fontSize: 12, color: "#166534", fontWeight: 700 }}>{(s.rows_written || 0).toLocaleString()}</div>
-                <div style={{ fontSize: 12, color: hasFailed ? "#dc2626" : "#94a3b8", fontWeight: hasFailed ? 800 : 400 }}>
-                  {s.failed_rows || 0}
-                </div>
-                <div style={{ fontSize: 11, color: "#64748b" }}>{dateStr}</div>
-                <div>
-                  <QuickActions
-                    session={s}
-                    onSelect={onSelect}
-                    navigate={navigate}
-                    onExportFailed={handleExportFailed}
-                  />
-                </div>
+          {/* ── Desktop table (>= 768px) ── */}
+          <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }} className="ic-desktop-table">
+            <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", overflow: "hidden", minWidth: 900 }}>
+              {/* Column headers */}
+              <div style={rowGrid(true)}>
+                {["Session ID", "Manufacturer · Catalog", "Target", "Status", "Rows", "Written", "Failed", "Date", "Actions"].map((h, i) => (
+                  <div key={i} style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.5px" }}>{h}</div>
+                ))}
               </div>
-            );
-          })}
-        </div>
+
+              {displayed.map((s, i) => {
+                const hasFailed = (s.failed_rows || 0) > 0;
+                const dateStr = s.uploaded_at
+                  ? new Date(s.uploaded_at).toLocaleDateString()
+                  : s.created_date ? new Date(s.created_date).toLocaleDateString() : "—";
+
+                return (
+                  <div key={s.id}
+                    style={{ ...rowGrid(false), background: i % 2 === 0 ? "#fff" : "#fafafa", cursor: "pointer", transition: "background 0.1s" }}
+                    onClick={() => onSelect(s)}
+                    onMouseEnter={e => e.currentTarget.style.background = "#f0f9ff"}
+                    onMouseLeave={e => e.currentTarget.style.background = i % 2 === 0 ? "#fff" : "#fafafa"}
+                  >
+                    <div style={{ fontFamily: "monospace", fontSize: 11, color: "#0C2340", fontWeight: 700 }}>
+                      {s.session_id || s.id?.slice(0, 8)}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: "#1e293b" }}>{s.manufacturer || "—"}</div>
+                      {s.source_catalog && <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 1 }}>{s.source_catalog}</div>}
+                    </div>
+                    <div style={{ fontSize: 11, color: "#64748b", fontFamily: "monospace" }}>{s.entity_targets?.[0] || "—"}</div>
+                    <div><StatusPill status={s.import_status || "Uploading"} /></div>
+                    <div style={{ fontSize: 12, color: "#334155" }}>{(s.total_rows || 0).toLocaleString()}</div>
+                    <div style={{ fontSize: 12, color: "#166534", fontWeight: 700 }}>{(s.rows_written || 0).toLocaleString()}</div>
+                    <div style={{ fontSize: 12, color: hasFailed ? "#dc2626" : "#94a3b8", fontWeight: hasFailed ? 800 : 400 }}>
+                      {s.failed_rows || 0}
+                    </div>
+                    <div style={{ fontSize: 11, color: "#64748b" }}>{dateStr}</div>
+                    <div>
+                      <QuickActions session={s} onSelect={onSelect} navigate={navigate} onExportFailed={handleExportFailed} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

@@ -5,6 +5,8 @@
 import { useEffect, useState } from "react";
 import { base44 } from "@/api/base44Client";
 
+const ADMIN_ROLES = ["admin", "super_admin"];
+
 export default function ICShell({ children }) {
   const [user, setUser] = useState(null);
   const [checked, setChecked] = useState(false);
@@ -21,13 +23,16 @@ export default function ICShell({ children }) {
     </div>
   );
 
-  if (!user || user.role !== "admin") return (
+  if (!user || !ADMIN_ROLES.includes(user.role)) return (
     <div style={S.page}>
       <div style={S.center}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>🔒</div>
         <div style={{ fontSize: 20, fontWeight: 800, color: S.navy, marginBottom: 8 }}>Admin Access Required</div>
         <div style={{ fontSize: 13, color: S.muted }}>
-          The Import Center is restricted to Uniking admin users only.
+          This page is restricted to Uniking admin users only.
+        </div>
+        <div style={{ marginTop: 16, fontSize: 12, color: "#94a3b8" }}>
+          Signed in as: {user?.email || "unknown"} · Role: {user?.role || "none"}
         </div>
       </div>
     </div>
@@ -46,7 +51,7 @@ export default function ICShell({ children }) {
           </span>
         </div>
         <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontStyle: "italic" }}>
-          {user.email} — Not visible to app users
+          {user.email} · {user.role} — Not visible to app users
         </span>
       </div>
 
