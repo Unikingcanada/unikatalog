@@ -2,15 +2,17 @@
  * ICSessionDetailView — Full session view with resume/retry/commit capabilities.
  * Supports: Pending Review, Partially Committed, Failed, Committed sessions.
  */
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { STATUS_COLORS, SESSION_STATUS_COLORS, CHUNK_SIZE } from "@/lib/importCenterEngine";
 import { runCommitLoop, withRetry, delay } from "@/lib/commitEngine";
+import { importCommitJob } from "@/functions/importCommitJob";
 import ICDiffViewer from "./ICDiffViewer";
 import * as XLSX from "xlsx";
 
 const STATUS_FILTERS = ["All", "Failed", "Conflict", "Duplicate", "Committed", "Skipped", "Invalid", "New", "Changed", "Pending"];
 const RESUMABLE_STATUSES = ["Staged", "Pending Review", "Committing", "Partially Committed", "Failed"];
+const LIVE_POLL_STATUSES = ["Validating", "Committing"]; // statuses where server is actively working
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 const S = {
@@ -257,14 +259,15 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
   const [actionMsg, setActionMsg] = useState(null);
   const [mode, setMode] = useState("debug");
   const [committing, setCommitting] = useState(false);
-  const [commitProgress, setCommitProgress] = useState(null); // for resume commit string
-  const [retryProgress, setRetryProgress] = useState(null);   // { msg, current, total, written, failed }
+  const [retryProgress, setRetryProgress] = useState(null);
   const [selectedFailedIds, setSelectedFailedIds] = useState(new Set());
+  const pollRef = useRef(null);
 
   const entityTarget = session.entity_targets?.[0] || "Normalized_Chains";
   const sessionKey = session.session_id || session.id;
   const isResumable = RESUMABLE_STATUSES.includes(session.import_status);
   const busy = committing || !!retryProgress;
+  const isLive = LIVE_POLL_STATUSES.includes(session.import_status);
 
   const loadRecords = useCallback(async () => {
     setLoading(true);
@@ -286,6 +289,24 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
   }, [sessionKey]);
 
   useEffect(() => { loadRecords(); }, [loadRecords]);
+
+  // Auto-poll while server job is actively running (Validating / Committing)
+  useEffect(() => {
+    if (!isLive) { clearInterval(pollRef.current); return; }
+    pollRef.current = setInterval(async () => {
+      try {
+        const updated = await base44.entities.Import_Sessions.filter({ session_id: sessionKey });
+        if (updated?.[0]) {
+          setSession(updated[0]);
+          if (!LIVE_POLL_STATUSES.includes(updated[0].import_status)) {
+            clearInterval(pollRef.current);
+            loadRecords(); // refresh records once job finishes
+          }
+        }
+      } catch {}
+    }, 3500);
+    return () => clearInterval(pollRef.current);
+  }, [isLive, sessionKey]);
 
   const counts = {};
   records.forEach(r => { counts[r.record_status] = (counts[r.record_status] || 0) + 1; });
@@ -443,40 +464,21 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
     }
   }
 
-  // ── Resume commit (full diff review → commit) ─────────────────────────────
+  // ── Resume commit — dispatches server-side background job ────────────────
   async function handleCommit() {
     setCommitting(true);
-    setCommitProgress("Starting commit…");
-    await base44.entities.Import_Sessions.update(session.id, { import_status: "Committing" });
-
-    const toCommit = records.filter(r =>
-      r.record_status !== "Committed" && r.record_status !== "Skipped" &&
-      (r.commit_decision === "Include" || (r.record_status === "New" && r.commit_decision !== "Skip"))
-    );
-
-    const { written, failed, flagsGenerated, commitLog } = await runCommitLoop({
-      toCommit, entityTarget, chunkSize: CHUNK_SIZE, existingLog: session.commit_log || [],
-      base44, onProgress: setCommitProgress,
-    });
-
-    const totalWritten = (session.rows_written || 0) + written;
-    const totalFailed = (session.failed_rows || 0) + failed;
-
-    await base44.entities.Import_Sessions.update(session.id, {
-      import_status: totalFailed === 0 ? "Committed" : "Partially Committed",
-      rows_written: totalWritten,
-      failed_rows: totalFailed,
-      flags_generated: (session.flags_generated || 0) + flagsGenerated,
-      rollback_available: totalWritten > 0,
-      commit_log: commitLog,
-    });
-
-    setCommitProgress(null);
-    setCommitting(false);
-    showMsg(`✓ Committed ${written} records. ${failed > 0 ? `${failed} failed.` : ""}`);
-    await reloadSession();
-    await loadRecords();
-    setMode("debug");
+    try {
+      await base44.entities.Import_Sessions.update(session.id, { import_status: "Committing" });
+      // Fire the background job — UI will poll via the isLive effect
+      importCommitJob({ sessionDbId: session.id, entityTarget }).catch(() => {});
+      setSession(prev => ({ ...prev, import_status: "Committing" }));
+      showMsg("⚙ Commit dispatched — server is processing. This page will update automatically.");
+      setMode("debug");
+    } catch (e) {
+      showMsg("⚠ Failed to dispatch commit: " + e.message, true);
+    } finally {
+      setCommitting(false);
+    }
   }
 
   // ── Export ────────────────────────────────────────────────────────────────
@@ -572,27 +574,39 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
       {/* Retry progress panel */}
       <RetryProgressPanel progress={retryProgress} />
 
-      {/* Resume commit progress */}
-      {commitProgress && (
-        <div style={{ background: commitProgress.includes("retry") ? "#fffbeb" : "#eff6ff", border: `1px solid ${commitProgress.includes("retry") ? "#fde68a" : "#93c5fd"}`, borderRadius: 8, padding: "10px 16px", marginBottom: 16, color: commitProgress.includes("retry") ? "#92400e" : "#1d4ed8", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 16 }}>{commitProgress.includes("retry") ? "⏸" : "⏳"}</span>
-          <span>{commitProgress}</span>
+      {/* Live server-job banner — shown when staging or committing is running server-side */}
+      {isLive && (
+        <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 8, padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 14, height: 14, border: "2px solid #bfdbfe", borderTopColor: "#1d4ed8", borderRadius: "50%", animation: "spin 0.8s linear infinite", flexShrink: 0 }} />
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "#1d4ed8" }}>
+              Server job running — {session.import_status}
+            </div>
+            <div style={{ fontSize: 11, color: "#3b82f6", marginTop: 2 }}>
+              {session.rows_staged > 0 && `${session.rows_staged.toLocaleString()} staged`}
+              {session.rows_written > 0 && ` · ${session.rows_written.toLocaleString()} committed`}
+              {session.total_rows > 0 && ` of ${session.total_rows.toLocaleString()} total`}
+              {" "}· This page updates automatically every 3-4 seconds. Safe to navigate away and return.
+            </div>
+          </div>
         </div>
       )}
 
       {/* Stats row */}
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20 }}>
         {[
-          { label: "Total Rows", value: session.total_rows || 0, color: "#0C2340" },
-          { label: "Written",    value: session.rows_written || 0, color: "#22c55e" },
-          { label: "Failed",     value: session.failed_rows || 0, color: "#ef4444" },
-          { label: "Skipped",    value: session.duplicates_skipped || 0, color: "#94a3b8" },
-          { label: "Staged",     value: records.length, color: "#3b82f6" },
-          { label: "Flags",      value: session.flags_generated || 0, color: "#f59e0b" },
+          { label: "Detected",   value: session.total_rows || 0,                           color: "#0C2340" },
+          { label: "Staged",     value: session.rows_staged || records.length,              color: "#8b5cf6" },
+          { label: "Written",    value: session.rows_written || 0,                          color: "#22c55e" },
+          { label: "Failed",     value: session.failed_rows || 0,                           color: "#ef4444" },
+          { label: "Skipped",    value: session.duplicates_skipped || 0,                    color: "#94a3b8" },
+          { label: "New",        value: session.validation_report?.New || counts.New || 0,  color: "#16a34a" },
+          { label: "Duplicate",  value: session.validation_report?.Duplicate || counts.Duplicate || 0, color: "#ca8a04" },
+          { label: "Flags",      value: session.flags_generated || 0,                       color: "#f59e0b" },
         ].map(s => (
-          <div key={s.label} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "12px 18px", minWidth: 90, flex: 1, textAlign: "center" }}>
-            <div style={{ fontSize: 22, fontWeight: 900, color: s.color }}>{s.value.toLocaleString()}</div>
-            <div style={{ fontSize: 10, color: "#64748b", fontWeight: 600, marginTop: 2 }}>{s.label}</div>
+          <div key={s.label} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 14px", minWidth: 80, flex: 1, textAlign: "center" }}>
+            <div style={{ fontSize: 20, fontWeight: 900, color: s.color }}>{(s.value || 0).toLocaleString()}</div>
+            <div style={{ fontSize: 9, color: "#64748b", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, marginTop: 2 }}>{s.label}</div>
           </div>
         ))}
       </div>
