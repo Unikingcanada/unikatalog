@@ -13,6 +13,7 @@ import * as XLSX from "xlsx";
 const STATUS_FILTERS = ["All", "Failed", "Conflict", "Duplicate", "Committed", "Skipped", "Invalid", "New", "Changed", "Pending"];
 const RESUMABLE_STATUSES = ["Staged", "Pending Review", "Committing", "Partially Committed", "Failed"];
 const LIVE_POLL_STATUSES = ["Validating", "Committing"]; // statuses where server is actively working
+const STALL_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes with no heartbeat = stalled
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 const S = {
@@ -261,7 +262,10 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
   const [committing, setCommitting] = useState(false);
   const [retryProgress, setRetryProgress] = useState(null);
   const [selectedFailedIds, setSelectedFailedIds] = useState(new Set());
+  const [stalled, setStalled] = useState(false);
+  const [stalledInfo, setStalledInfo] = useState(null);
   const pollRef = useRef(null);
+  const lastProgressRef = useRef({ rows_staged: null, at: Date.now() });
 
   const entityTarget = session.entity_targets?.[0] || "Normalized_Chains";
   const sessionKey = session.session_id || session.id;
@@ -292,15 +296,55 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
 
   // Auto-poll while server job is actively running (Validating / Committing)
   useEffect(() => {
-    if (!isLive) { clearInterval(pollRef.current); return; }
+    if (!isLive) {
+      clearInterval(pollRef.current);
+      setStalled(false);
+      return;
+    }
+    // Reset stall tracking when we start polling
+    lastProgressRef.current = { rows_staged: null, at: Date.now() };
+    setStalled(false);
+
     pollRef.current = setInterval(async () => {
       try {
         const updated = await base44.entities.Import_Sessions.filter({ session_id: sessionKey });
         if (updated?.[0]) {
-          setSession(updated[0]);
-          if (!LIVE_POLL_STATUSES.includes(updated[0].import_status)) {
+          const sess = updated[0];
+          setSession(sess);
+
+          if (!LIVE_POLL_STATUSES.includes(sess.import_status)) {
             clearInterval(pollRef.current);
-            loadRecords(); // refresh records once job finishes
+            setStalled(false);
+            loadRecords();
+            return;
+          }
+
+          // Stall detection: check if rows_staged has changed since last poll
+          const currentStaged = sess.rows_staged || 0;
+          const heartbeatAt = sess.validation_report?.heartbeat_at;
+
+          if (lastProgressRef.current.rows_staged === null) {
+            // First poll — establish baseline
+            lastProgressRef.current = { rows_staged: currentStaged, at: Date.now() };
+          } else if (currentStaged !== lastProgressRef.current.rows_staged) {
+            // Progress detected — reset stall timer
+            lastProgressRef.current = { rows_staged: currentStaged, at: Date.now() };
+            setStalled(false);
+          } else {
+            // No progress — check how long
+            const stalledMs = Date.now() - lastProgressRef.current.at;
+            if (stalledMs > STALL_THRESHOLD_MS) {
+              const lastRow = sess.validation_report?.last_processed_row || 0;
+              const totalRows = sess.total_rows || 0;
+              setStalled(true);
+              setStalledInfo({
+                lastRow,
+                totalRows,
+                stagedCount: currentStaged,
+                stalledFor: Math.round(stalledMs / 60000),
+                heartbeatAt,
+              });
+            }
           }
         }
       } catch {}
@@ -481,6 +525,71 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
     }
   }
 
+  // ── Stall recovery ───────────────────────────────────────────────────────
+  async function handleResumeStalled() {
+    // Resume from last known row, using the original rows from session notes
+    // The workflow component must re-send the rows; here we just unblock the session
+    // and reload so the admin can re-dispatch from ICSessionWorkflow if needed.
+    try {
+      await base44.entities.Import_Sessions.update(session.id, {
+        import_status: "Staged",
+      });
+      setSession(prev => ({ ...prev, import_status: "Staged" }));
+      setStalled(false);
+      showMsg("Session unblocked — use 'Resume & Commit' to continue from where it stopped.");
+      await reloadSession();
+      await loadRecords();
+    } catch (e) {
+      showMsg("⚠ Failed to unblock session: " + e.message, true);
+    }
+  }
+
+  async function handleCancelJob() {
+    if (!confirm("Cancel this job? The session will be marked Failed. Already-staged records are preserved.")) return;
+    try {
+      await base44.entities.Import_Sessions.update(session.id, {
+        import_status: "Failed",
+        validation_report: {
+          ...(session.validation_report || {}),
+          cancelled_at: new Date().toISOString(),
+          cancel_reason: "Manually cancelled by admin after stall detection.",
+        },
+      });
+      setSession(prev => ({ ...prev, import_status: "Failed" }));
+      setStalled(false);
+      showMsg("Job cancelled. Session marked Failed.");
+    } catch (e) {
+      showMsg("⚠ " + e.message, true);
+    }
+  }
+
+  async function handleRetryUnprocessed() {
+    // Count how many rows were never staged at all
+    const totalRows = session.total_rows || 0;
+    const stagedCount = session.rows_staged || 0;
+    const missing = totalRows - stagedCount;
+    if (missing <= 0) {
+      showMsg("All rows are already staged. Use 'Resume & Commit' to proceed.");
+      return;
+    }
+    // Mark session as Staged so it can be retried via the workflow
+    try {
+      await base44.entities.Import_Sessions.update(session.id, {
+        import_status: "Staged",
+        validation_report: {
+          ...(session.validation_report || {}),
+          stall_recovery_note: `Recovered after stall at row ${session.validation_report?.last_processed_row || 0}/${totalRows}. ${missing} rows need re-processing.`,
+        },
+      });
+      setSession(prev => ({ ...prev, import_status: "Staged" }));
+      setStalled(false);
+      showMsg(`Session unblocked — ${missing} unprocessed rows need re-staging. You can re-upload the original file to retry only missing rows.`);
+      await reloadSession();
+    } catch (e) {
+      showMsg("⚠ " + e.message, true);
+    }
+  }
+
   // ── Export ────────────────────────────────────────────────────────────────
   function handleExport(format) {
     const rows = filtered.map(r => ({
@@ -574,8 +683,39 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
       {/* Retry progress panel */}
       <RetryProgressPanel progress={retryProgress} />
 
+      {/* Stalled job banner */}
+      {isLive && stalled && stalledInfo && (
+        <div style={{ background: "#fef3c7", border: "1px solid #fbbf24", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+            <span style={{ fontSize: 20 }}>⚠️</span>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 800, color: "#92400e" }}>
+                Job Stalled — No progress for {stalledInfo.stalledFor}+ minute{stalledInfo.stalledFor !== 1 ? "s" : ""}
+              </div>
+              <div style={{ fontSize: 11, color: "#b45309", marginTop: 2 }}>
+                Last processed row: <strong>{stalledInfo.lastRow}</strong> of <strong>{stalledInfo.totalRows}</strong> ·
+                {" "}{stalledInfo.stagedCount} staged ·
+                {" "}{stalledInfo.totalRows - stalledInfo.stagedCount} unprocessed
+                {stalledInfo.heartbeatAt && <> · Last heartbeat: {new Date(stalledInfo.heartbeatAt).toLocaleTimeString()}</>}
+              </div>
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <button onClick={handleRetryUnprocessed} style={{ padding: "7px 14px", borderRadius: 7, border: "none", background: "#d97706", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+              ↺ Retry Unprocessed ({stalledInfo.totalRows - stalledInfo.stagedCount})
+            </button>
+            <button onClick={handleResumeStalled} style={{ padding: "7px 14px", borderRadius: 7, border: "none", background: "#0C2340", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+              ▶ Unblock &amp; Resume
+            </button>
+            <button onClick={handleCancelJob} style={{ padding: "7px 14px", borderRadius: 7, border: "1px solid #ef4444", background: "#fef2f2", color: "#dc2626", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+              ✕ Cancel Job
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Live server-job banner — shown when staging or committing is running server-side */}
-      {isLive && (
+      {isLive && !stalled && (
         <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 8, padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{ width: 14, height: 14, border: "2px solid #bfdbfe", borderTopColor: "#1d4ed8", borderRadius: "50%", animation: "spin 0.8s linear infinite", flexShrink: 0 }} />
           <div>
@@ -584,9 +724,9 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
             </div>
             <div style={{ fontSize: 11, color: "#3b82f6", marginTop: 2 }}>
               {session.rows_staged > 0 && `${session.rows_staged.toLocaleString()} staged`}
-              {session.rows_written > 0 && ` · ${session.rows_written.toLocaleString()} committed`}
               {session.total_rows > 0 && ` of ${session.total_rows.toLocaleString()} total`}
-              {" "}· This page updates automatically every 3-4 seconds. Safe to navigate away and return.
+              {session.validation_report?.last_processed_row > 0 && ` · last row: ${session.validation_report.last_processed_row}`}
+              {" "}· Updates every 3-4s. Safe to navigate away.
             </div>
           </div>
         </div>

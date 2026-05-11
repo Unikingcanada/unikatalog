@@ -1,27 +1,29 @@
 /**
  * importStageJob — Server-side background staging + validation worker.
  *
- * Called once after session creation. Runs entirely on Deno/server — completely
- * independent of the browser tab. Navigating away does NOT interrupt this.
+ * Supports resuming from a specific row index via `resumeFromIndex`.
+ * Writes heartbeat (last_processed_row + heartbeat_at) after each chunk
+ * so the UI can detect stalls.
  *
  * Payload:
- *   sessionId   — Import_Sessions record id (db id, not session_id string)
+ *   sessionId        — Import_Sessions record db id
  *   entityTarget
- *   rows        — [{ row: {}, file: string }]  (raw parsed rows)
+ *   rows             — [{ row: {}, file: string }]
  *   mappingRules
  *   transformRules
+ *   resumeFromIndex  — (optional) row index to resume from (0-based, exclusive of already-staged rows)
  */
 import { createClientFromRequest } from "npm:@base44/sdk@0.8.25";
 
-const CHUNK_SIZE = 50;
-const WRITE_DELAY = 80;   // ms between individual writes
-const CHUNK_DELAY = 300;  // ms between chunks
+const CHUNK_SIZE = 30;   // smaller chunks → more frequent heartbeats
+const WRITE_DELAY = 60;  // ms between individual writes
+const CHUNK_DELAY = 200; // ms between chunks
 
 function delay(ms) {
   return new Promise(res => setTimeout(res, ms));
 }
 
-// ─── Column mapping ────────────────────────────────────────────────────────────
+// ─── Column mapping ─────────────────────────────────────────────────────────────
 function applyMapping(row, mappingRules, transformRules = {}) {
   const ARRAY_FIELDS = new Set(["application_tags", "materials_available"]);
   const mapped = {};
@@ -45,7 +47,7 @@ function applyMapping(row, mappingRules, transformRules = {}) {
   return mapped;
 }
 
-// ─── Classification ────────────────────────────────────────────────────────────
+// ─── Classification ─────────────────────────────────────────────────────────────
 const COMPONENT_SKU_PATTERNS = [
   /^OL[-\s]?\d/i, /^C\/L[-\s]?\d/i, /^CL[-\s]?\d/i,
   /^offset\s*link/i, /^connecting\s*link/i, /^conn(?:ecting)?\s*link/i,
@@ -170,11 +172,31 @@ async function writeWithRetry(fn, maxAttempts = 4) {
 
 // ─── Append a log entry to the session ────────────────────────────────────────
 async function appendLog(base44, sessionDbId, entry, existingLog) {
-  const logs = [...(existingLog || []), { ...entry, ts: new Date().toISOString() }];
+  const logs = [...(existingLog || []).slice(-50), { ...entry, ts: new Date().toISOString() }]; // keep last 50 entries
   try {
     await base44.asServiceRole.entities.Import_Sessions.update(sessionDbId, { commit_log: logs });
   } catch {}
   return logs;
+}
+
+// ─── Write heartbeat + progress ────────────────────────────────────────────────
+async function writeHeartbeat(base44, sessionDbId, rowIndex, totalRows, stagedCount, counts, sessionIdStr) {
+  try {
+    const pct = Math.round((rowIndex / totalRows) * 100);
+    await base44.asServiceRole.entities.Import_Sessions.update(sessionDbId, {
+      rows_staged: stagedCount,
+      import_status: "Validating",
+      validation_report: {
+        ...counts,
+        total_detected: totalRows,
+        total_processed: rowIndex,
+        pct,
+        last_processed_row: rowIndex,
+        heartbeat_at: new Date().toISOString(),
+        session_id_str: sessionIdStr,
+      },
+    });
+  } catch {}
 }
 
 // ─── Main handler ──────────────────────────────────────────────────────────────
@@ -191,7 +213,7 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json();
-    const { sessionId: sessionDbIdIn, entityTarget, rows, mappingRules, transformRules } = body;
+    const { sessionId: sessionDbIdIn, entityTarget, rows, mappingRules, transformRules, resumeFromIndex = 0 } = body;
     sessionDbId = sessionDbIdIn;
 
     if (!sessionDbId || !entityTarget || !rows || !mappingRules) {
@@ -199,8 +221,12 @@ Deno.serve(async (req) => {
     }
 
     const totalRows = rows.length;
+    const isResume = resumeFromIndex > 0;
 
-    // Mark session as Validating
+    // Mark session as Validating (preserve existing counts if resuming)
+    const existingSession = await base44.asServiceRole.entities.Import_Sessions.get(sessionDbId);
+    const existingReport = existingSession?.validation_report || {};
+
     await base44.asServiceRole.entities.Import_Sessions.update(sessionDbId, {
       import_status: "Validating",
       total_rows: totalRows,
@@ -208,22 +234,54 @@ Deno.serve(async (req) => {
 
     log = await appendLog(base44, sessionDbId, {
       phase: "start",
-      msg: `Starting server-side staging for ${totalRows} rows → ${entityTarget}`,
+      msg: isResume
+        ? `Resuming staging from row ${resumeFromIndex}/${totalRows} → ${entityTarget}`
+        : `Starting server-side staging for ${totalRows} rows → ${entityTarget}`,
+      resumeFromIndex,
     }, log);
 
     // Fetch existing production records for diff
     log = await appendLog(base44, sessionDbId, { phase: "fetch", msg: "Fetching existing production records…" }, log);
     const existingRecords = await fetchAllExisting(base44, entityTarget);
-    log = await appendLog(base44, sessionDbId, { phase: "fetch", msg: `Fetched ${existingRecords.length} existing records` }, log);
+    log = await appendLog(base44, sessionDbId, { phase: "fetch", msg: `Fetched ${existingRecords.length} existing production records` }, log);
 
-    // Load session to get session_id string
-    const sess = await base44.asServiceRole.entities.Import_Sessions.filter({ id: sessionDbId });
-    const sessionIdStr = sess?.[0]?.session_id || sessionDbId;
+    // Fetch existing staging records to know which rows are already staged
+    let alreadyStagedIndices = new Set();
+    if (isResume) {
+      const sessionRec = await base44.asServiceRole.entities.Import_Sessions.filter({ id: sessionDbId });
+      const sessionIdStr = sessionRec?.[0]?.session_id || sessionDbId;
+      let skip = 0;
+      while (true) {
+        const batch = await base44.asServiceRole.entities.Staging_Records.filter(
+          { session_id: sessionIdStr }, "row_index", 2000, skip
+        );
+        if (!batch || !batch.length) break;
+        batch.forEach(r => alreadyStagedIndices.add(r.row_index));
+        if (batch.length < 2000) break;
+        skip += batch.length;
+      }
+      log = await appendLog(base44, sessionDbId, {
+        phase: "resume",
+        msg: `Resume mode: ${alreadyStagedIndices.size} rows already staged. Processing remaining ${totalRows - alreadyStagedIndices.size} rows.`,
+      }, log);
+    }
 
-    // --- Stage all rows in chunks ---
-    const counts = { New: 0, Duplicate: 0, Changed: 0, Conflict: 0, Invalid: 0, Failed: 0 };
+    // Load session string id
+    const sessRec = await base44.asServiceRole.entities.Import_Sessions.filter({ id: sessionDbId });
+    const sessionIdStr = sessRec?.[0]?.session_id || sessionDbId;
+
+    // --- Stage rows in chunks, skipping already-processed indices ---
+    const counts = {
+      New: existingReport.New || 0,
+      Duplicate: existingReport.Duplicate || 0,
+      Changed: existingReport.Changed || 0,
+      Conflict: existingReport.Conflict || 0,
+      Invalid: existingReport.Invalid || 0,
+      Failed: existingReport.Failed || 0,
+    };
     let rowIndex = 0;
-    let stagedCount = 0;
+    let stagedCount = existingReport.total_staged || 0;
+    let lastSuccessfulRow = existingReport.last_processed_row || 0;
 
     const chunks = [];
     for (let i = 0; i < rows.length; i += CHUNK_SIZE) {
@@ -232,9 +290,18 @@ Deno.serve(async (req) => {
 
     for (let ci = 0; ci < chunks.length; ci++) {
       const chunk = chunks[ci];
+      const chunkStartIndex = ci * CHUNK_SIZE;
 
-      for (const { row, file } of chunk) {
-        const currentIndex = rowIndex++;
+      for (let ri = 0; ri < chunk.length; ri++) {
+        const { row, file } = chunk[ri];
+        const currentIndex = chunkStartIndex + ri;
+        rowIndex = currentIndex + 1;
+
+        // Skip already-staged rows (resume mode)
+        if (alreadyStagedIndices.has(currentIndex)) {
+          continue;
+        }
+
         try {
           const mapped = applyMapping(row, mappingRules, transformRules || {});
           const { status, conflictDetail, diffSummary, productionRecordId } = classifyRecord(mapped, entityTarget, existingRecords);
@@ -259,6 +326,7 @@ Deno.serve(async (req) => {
 
           counts[status] = (counts[status] || 0) + 1;
           stagedCount++;
+          lastSuccessfulRow = currentIndex;
         } catch (err) {
           // Record failed to stage — persist the failure
           try {
@@ -270,24 +338,39 @@ Deno.serve(async (req) => {
               raw_data: row,
               mapped_data: {},
               record_status: "Failed",
-              conflict_detail: `Staging error: ${err.message}`,
+              conflict_detail: `Staging error at row ${currentIndex}: ${err.message}`,
               commit_decision: "Skip",
             });
           } catch {}
           counts.Failed = (counts.Failed || 0) + 1;
           stagedCount++;
+          lastSuccessfulRow = currentIndex;
+
+          log = await appendLog(base44, sessionDbId, {
+            phase: "row_error",
+            msg: `Row ${currentIndex} failed to stage`,
+            row_index: currentIndex,
+            error: err.message,
+          }, log);
         }
 
         await delay(WRITE_DELAY);
       }
 
-      // Update progress after each chunk
-      const pct = Math.round((rowIndex / totalRows) * 100);
-      await base44.asServiceRole.entities.Import_Sessions.update(sessionDbId, {
-        rows_staged: stagedCount,
-        import_status: "Validating",
-        validation_report: { ...counts, total_detected: totalRows, total_processed: rowIndex, pct },
-      });
+      // Heartbeat + progress update after each chunk
+      await writeHeartbeat(base44, sessionDbId, rowIndex, totalRows, stagedCount, {
+        ...counts,
+        last_processed_row: lastSuccessfulRow,
+        last_successful_row: lastSuccessfulRow,
+      }, sessionIdStr);
+
+      log = await appendLog(base44, sessionDbId, {
+        phase: "chunk",
+        msg: `Chunk ${ci + 1}/${chunks.length} done — processed up to row ${rowIndex}/${totalRows} (${stagedCount} staged so far)`,
+        last_processed_row: lastSuccessfulRow,
+        staged_so_far: stagedCount,
+        counts: { ...counts },
+      }, log);
 
       if (ci < chunks.length - 1) await delay(CHUNK_DELAY);
     }
@@ -298,7 +381,10 @@ Deno.serve(async (req) => {
       total_detected: totalRows,
       total_processed: rowIndex,
       total_staged: stagedCount,
+      last_processed_row: lastSuccessfulRow,
+      last_successful_row: lastSuccessfulRow,
       pct: 100,
+      completed_at: new Date().toISOString(),
     };
 
     await base44.asServiceRole.entities.Import_Sessions.update(sessionDbId, {
@@ -309,7 +395,8 @@ Deno.serve(async (req) => {
 
     log = await appendLog(base44, sessionDbId, {
       phase: "done",
-      msg: `Staging complete. ${stagedCount}/${totalRows} rows processed. New:${counts.New} Dup:${counts.Duplicate} Changed:${counts.Changed} Conflict:${counts.Conflict} Invalid:${counts.Invalid} Failed:${counts.Failed}`,
+      msg: `Staging complete. ${stagedCount}/${totalRows} rows staged. New:${counts.New} Dup:${counts.Duplicate} Changed:${counts.Changed} Conflict:${counts.Conflict} Invalid:${counts.Invalid} Failed:${counts.Failed}`,
+      last_processed_row: lastSuccessfulRow,
     }, log);
 
     return Response.json({
@@ -320,13 +407,18 @@ Deno.serve(async (req) => {
     });
 
   } catch (err) {
-    // Try to mark session as failed
+    // Try to mark session as Failed with last known position
     if (base44 && sessionDbId) {
       try {
         await base44.asServiceRole.entities.Import_Sessions.update(sessionDbId, {
           import_status: "Failed",
         });
-        await appendLog(base44, sessionDbId, { phase: "error", msg: `Fatal error: ${err.message}` }, log);
+        await appendLog(base44, sessionDbId, {
+          phase: "fatal_error",
+          msg: `Fatal error: ${err.message}`,
+          error: err.message,
+          stack: err.stack?.slice(0, 500),
+        }, log);
       } catch {}
     }
     return Response.json({ error: err.message }, { status: 500 });
