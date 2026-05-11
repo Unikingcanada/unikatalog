@@ -116,7 +116,12 @@ function StagingMonitor({ session, allRows, mappingRules, transformRules, onRead
   const activeRef = useRef(true);
 
   useEffect(() => {
-    if (!session?.id || !allRows?.length) return;
+    if (!session?.id) return;
+    if (!allRows?.length) {
+      console.warn("[StagingMonitor] allRows not ready yet, session.id=", session.id, "allRows=", allRows);
+      return;
+    }
+    console.log("[StagingMonitor] starting chunk loop", { sessionId: session.id, rowsLength: allRows.length, hasMappingRules: !!mappingRules });
     activeRef.current = true;
 
     // Determine resume point from existing session state
@@ -127,7 +132,7 @@ function StagingMonitor({ session, allRows, mappingRules, transformRules, onRead
     runChunkLoop({
       sessionDbId: session.id,
       entityTarget: session.entity_targets?.[0] || "Normalized_Chains",
-      rows: allRows,
+      allRows,
       mappingRules,
       transformRules,
       startChunkIndex: startChunk,
@@ -159,7 +164,7 @@ function StagingMonitor({ session, allRows, mappingRules, transformRules, onRead
     });
 
     return () => { activeRef.current = false; };
-  }, [session?.id]);
+  }, [session?.id, allRows?.length]);
 
   const total = allRows?.length || liveSession?.total_rows || 0;
   const staged = liveSession?.rows_staged || 0;
@@ -341,6 +346,8 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
       return;
     }
 
+    // Set session + stagingContext together so StagingMonitor always gets both in the same render
+    setStagingContext({ allRows, mappingRules, transformRules: transformRules || {} });
     setSession(sess);
     if (onSessionCreated) onSessionCreated(sess);
 
@@ -354,9 +361,6 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
       transformRules: transformRules || {},
       chunkSize: CHUNK_SIZE,
     }).catch(e => console.warn("Payload persist failed:", e));
-
-    // Store in React state for immediate use by StagingMonitor
-    setStagingContext({ allRows, mappingRules, transformRules: transformRules || {} });
   }
 
   // ── Step 2 → 3: Session reached "Pending Review" ──────────────────────────

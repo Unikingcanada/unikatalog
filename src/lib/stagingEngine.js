@@ -105,22 +105,9 @@ export async function runChunkLoop({
         totalRows,
       });
     } catch (err) {
-      // Try to extract the structured error body from a 400/500 response
-      let detail = err.message;
-      try {
-        const errBody = err?.response?.data ?? err?.data;
-        if (errBody?.error) {
-          detail = errBody.error;
-          if (errBody.received_keys) detail += ` (received keys: ${errBody.received_keys})`;
-          if (errBody.hint) detail += ` — ${errBody.hint}`;
-        }
-      } catch {}
-      if (onError) onError(`Chunk ${chunkIndex} failed: ${detail}`);
+      if (onError) onError(`Chunk ${chunkIndex} failed: ${err.message}`);
       return;
     }
-
-    // invoke returns the parsed response body — unwrap .data envelope if present
-    if (result?.data) result = result.data;
 
     if (result?.error) {
       if (onError) onError(`Chunk ${chunkIndex} server error: ${result.error}${result.received_keys ? ` (received: ${result.received_keys})` : ""}`);
