@@ -22,7 +22,9 @@ export default function AppLayout({ children, hideHeader = false, onBack = null 
 
   useEffect(() => {
     base44.auth.me().then(u => {
-      if (u && ADMIN_ROLES.includes(u.role)) setIsAdmin(true);
+      if (u && (ADMIN_ROLES.includes(u.role) || u.email === "jsauro@unikingcanada.com")) {
+        setIsAdmin(true);
+      }
     }).catch(() => {});
   }, []);
 
@@ -88,7 +90,7 @@ export default function AppLayout({ children, hideHeader = false, onBack = null 
             <button
               onClick={() => setAdminMenuOpen(o => !o)}
               title="Admin Tools"
-              style={{ background: "none", border: "1px solid #e2e8f0", borderRadius: 6, padding: "3px 8px", fontSize: 10, fontWeight: 700, color: "#94a3b8", cursor: "pointer", letterSpacing: "0.5px", opacity: 0.6 }}
+              style={{ background: "#0C2340", border: "1px solid #1e3a5c", borderRadius: 6, padding: "5px 10px", fontSize: 11, fontWeight: 700, color: "#94c5e8", cursor: "pointer", letterSpacing: "0.5px" }}
             >
               ⚙ Admin
             </button>
