@@ -107,61 +107,125 @@ function CommitStats({ sess }) {
   );
 }
 
-// ─── Processing monitor (shown during step 2 — server-side staging) ────────────
-function StagingMonitor({ session, onReady }) {
-  const [liveSession, setLiveSession] = useState(session);
-  const pollRef = useRef(null);
+// ─── Chunk-loop driver — runs in the browser, one HTTP call per chunk ──────────
+// Each call to importStageJob processes one chunk and returns immediately.
+// This ensures no single serverless call can timeout, regardless of import size.
+// On page reload, resumeFromChunk is passed and the loop continues from there.
+async function runChunkLoop({ sessionDbId, entityTarget, rows, mappingRules, transformRules, startChunkIndex = 0, chunkSize = 25, onProgress, onError, onDone }) {
+  let chunkIndex = startChunkIndex;
 
-  useEffect(() => {
-    if (!session?.id) return;
-
-    function startPolling() {
-      pollRef.current = setInterval(async () => {
-        try {
-          const sessions = await base44.entities.Import_Sessions.filter({ id: session.id });
-          const updated = sessions?.[0];
-          if (!updated) return;
-          setLiveSession(updated);
-
-          if (updated.import_status === "Pending Review") {
-            clearInterval(pollRef.current);
-            onReady(updated);
-          } else if (updated.import_status === "Failed") {
-            clearInterval(pollRef.current);
-          }
-        } catch {}
-      }, 3000);
+  while (true) {
+    let result;
+    try {
+      result = await importStageJob({
+        sessionId: sessionDbId,
+        entityTarget,
+        rows,
+        mappingRules,
+        transformRules: transformRules || {},
+        chunkIndex,
+        chunkSize,
+      });
+    } catch (err) {
+      onError(`Chunk ${chunkIndex} failed: ${err.message}`);
+      return;
     }
 
-    startPolling();
-    return () => clearInterval(pollRef.current);
+    if (result?.error) {
+      onError(`Chunk ${chunkIndex} server error: ${result.error}`);
+      return;
+    }
+
+    onProgress(result);
+
+    if (result?.done) {
+      onDone(result);
+      return;
+    }
+
+    chunkIndex++;
+    // Small pause between chunks to avoid hammering the API
+    await new Promise(r => setTimeout(r, 150));
+  }
+}
+
+// ─── Processing monitor (shown during step 2 — chunk-loop staging) ─────────────
+function StagingMonitor({ session, allRows, mappingRules, transformRules, onReady }) {
+  const [liveSession, setLiveSession] = useState(session);
+  const [localPct, setLocalPct] = useState(0);
+  const [localReport, setLocalReport] = useState({});
+  const [error, setError] = useState(null);
+  const activeRef = useRef(true);
+
+  useEffect(() => {
+    if (!session?.id || !allRows?.length) return;
+    activeRef.current = true;
+
+    // Determine resume point from existing session state
+    const existingReport = session.validation_report || {};
+    const lastChunk = existingReport.last_chunk_index ?? -1;
+    const startChunk = lastChunk >= 0 ? lastChunk + 1 : 0;
+
+    runChunkLoop({
+      sessionDbId: session.id,
+      entityTarget: session.entity_targets?.[0] || "Normalized_Chains",
+      rows: allRows,
+      mappingRules,
+      transformRules,
+      startChunkIndex: startChunk,
+      chunkSize: 25,
+      onProgress: (result) => {
+        if (!activeRef.current) return;
+        setLocalPct(result.pct || 0);
+        setLocalReport(result.counts || {});
+        setLiveSession(prev => ({
+          ...prev,
+          rows_staged: result.totalStaged || 0,
+          total_rows: allRows.length,
+          validation_report: { ...(prev.validation_report || {}), ...result.counts, pct: result.pct, total_staged: result.totalStaged },
+        }));
+      },
+      onError: (msg) => {
+        if (!activeRef.current) return;
+        setError(msg);
+      },
+      onDone: async (result) => {
+        if (!activeRef.current) return;
+        setLocalPct(100);
+        // Fetch the final session from DB and advance
+        try {
+          const sessions = await base44.entities.Import_Sessions.filter({ id: session.id });
+          if (sessions?.[0]) onReady(sessions[0]);
+        } catch { onReady({ ...session, import_status: "Pending Review" }); }
+      },
+    });
+
+    return () => { activeRef.current = false; };
   }, [session?.id]);
 
-  const report = liveSession?.validation_report || {};
-  const total = liveSession?.total_rows || 0;
+  const total = allRows?.length || liveSession?.total_rows || 0;
   const staged = liveSession?.rows_staged || 0;
-  const pct = total > 0 ? Math.min(100, Math.round((staged / total) * 100)) : 0;
-  const status = liveSession?.import_status || "Validating";
-  const isFailed = status === "Failed";
+  const pct = localPct || (total > 0 ? Math.min(100, Math.round((staged / total) * 100)) : 0);
+  const report = { ...liveSession?.validation_report, ...localReport };
+  const isFailed = !!error;
 
   return (
     <div style={{ padding: "40px 20px" }}>
       <div style={{ textAlign: "center", marginBottom: 28 }}>
         <div style={{ fontSize: 48, marginBottom: 10 }}>{isFailed ? "❌" : "⚙️"}</div>
         <div style={{ fontSize: 18, fontWeight: 800, color: "#0C2340" }}>
-          {isFailed ? "Staging Failed" : "Server-Side Staging & Validation"}
+          {isFailed ? "Staging Failed" : "Staging & Validation"}
         </div>
         <div style={{ fontSize: 12, color: "#64748b", marginTop: 6 }}>
           {isFailed
-            ? "Check session logs for details."
-            : "Running on the server — you can safely navigate away and return. This will continue until complete."}
+            ? error
+            : "Processing one chunk at a time — resilient to timeouts. Safe to leave this page open."}
         </div>
       </div>
 
-      {/* Progress bar */}
       <div style={{ background: "#e2e8f0", borderRadius: 99, height: 10, maxWidth: 500, margin: "0 auto 12px", overflow: "hidden" }}>
         <div style={{
-          height: "100%", borderRadius: 99, transition: "width 0.6s ease",
+          height: "100%", borderRadius: 99, transition: "width 0.4s ease",
           width: pct + "%",
           background: isFailed ? "#ef4444" : "linear-gradient(90deg,#3b82f6,#8b5cf6)",
         }} />
@@ -170,31 +234,7 @@ function StagingMonitor({ session, onReady }) {
         {isFailed ? "Process halted" : `${staged.toLocaleString()} / ${total.toLocaleString()} rows staged (${pct}%)`}
       </div>
 
-      <div style={{ textAlign: "center" }}>
-        <span style={{
-          display: "inline-block", padding: "3px 12px", borderRadius: 20,
-          fontSize: 11, fontWeight: 700,
-          background: isFailed ? "#fef2f2" : "#eff6ff",
-          color: isFailed ? "#dc2626" : "#1d4ed8",
-        }}>
-          Status: {status}
-        </span>
-      </div>
-
       <ProgressStats report={report} totalRows={total} />
-
-      {/* Recent log entries */}
-      {liveSession?.commit_log?.length > 0 && (
-        <div style={{ marginTop: 20, background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, padding: "10px 14px", maxHeight: 160, overflowY: "auto" }}>
-          <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8", marginBottom: 6 }}>Server Log</div>
-          {[...liveSession.commit_log].reverse().slice(0, 8).map((entry, i) => (
-            <div key={i} style={{ fontSize: 11, color: "#475569", padding: "2px 0", borderBottom: "1px solid #f1f5f9" }}>
-              <span style={{ color: "#94a3b8", marginRight: 8 }}>{entry.ts ? new Date(entry.ts).toLocaleTimeString() : ""}</span>
-              {entry.msg}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
@@ -265,6 +305,7 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
   const [committing, setCommitting] = useState(false);
   const [commitSession, setCommitSession] = useState(null);
   const [doneSession, setDoneSession] = useState(null);
+  const [stagingContext, setStagingContext] = useState(null); // { allRows, mappingRules, transformRules }
 
   const allHeaders = [...new Set(parsedFiles.flatMap(p => p.headers))];
   const totalRows = parsedFiles.reduce((s, p) => s + p.rows.length, 0);
@@ -345,19 +386,9 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
     setSession(sess);
     if (onSessionCreated) onSessionCreated(sess);
 
-    // Fire the background staging job — response may arrive after minutes, that's fine
-    // We do NOT await it blocking the UI — we just trigger it and poll the session record
-    importStageJob({
-      sessionId: sess.id,
-      entityTarget,
-      rows: allRows,
-      mappingRules,
-      transformRules: transformRules || {},
-    }).catch(() => {
-      // If the network request itself fails (not the job), we fall back — session stays "Staged"
-      // The StagingMonitor will detect "Staged" stuck state and allow manual resume
-    });
-    // Step 2 UI now shows StagingMonitor which polls independently
+    // Store context so StagingMonitor can drive the chunk loop
+    setStagingContext({ allRows, mappingRules, transformRules: transformRules || {} });
+    // Step 2 UI shows StagingMonitor which drives one-chunk-per-call loop
   }
 
   // ── Step 2 → 3: Session reached "Pending Review" ──────────────────────────
@@ -519,9 +550,15 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
             </div>
           )}
 
-          {/* Step 2: Server-side staging monitor */}
-          {step === 2 && session && (
-            <StagingMonitor session={session} onReady={handleStagingReady} />
+          {/* Step 2: Chunk-loop staging monitor */}
+          {step === 2 && session && stagingContext && (
+            <StagingMonitor
+              session={session}
+              allRows={stagingContext.allRows}
+              mappingRules={stagingContext.mappingRules}
+              transformRules={stagingContext.transformRules}
+              onReady={handleStagingReady}
+            />
           )}
 
           {/* Step 2: Loading staged records after server completes */}

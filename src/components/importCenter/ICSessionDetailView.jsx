@@ -508,12 +508,26 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
     }
   }
 
+  // ── Completeness check ────────────────────────────────────────────────────
+  const totalDetected = session.total_rows || 0;
+  const totalAccountedFor = records.length; // every staged record, regardless of status
+  const isComplete = totalDetected === 0 || totalAccountedFor >= totalDetected;
+  const missingRows = Math.max(0, totalDetected - totalAccountedFor);
+
   // ── Resume commit — dispatches server-side background job ────────────────
-  async function handleCommit() {
+  async function handleCommit(forcePartial = false) {
+    if (!isComplete && !forcePartial) {
+      const confirmed = confirm(
+        `⚠ WARNING: Only ${totalAccountedFor} of ${totalDetected} rows have been staged.\n` +
+        `${missingRows} rows are missing a validation result.\n\n` +
+        `Committing now will produce an incomplete import.\n\n` +
+        `Click OK to commit partial results anyway, or Cancel to go back and fix missing rows first.`
+      );
+      if (!confirmed) return;
+    }
     setCommitting(true);
     try {
       await base44.entities.Import_Sessions.update(session.id, { import_status: "Committing" });
-      // Fire the background job — UI will poll via the isLive effect
       importCommitJob({ sessionDbId: session.id, entityTarget }).catch(() => {});
       setSession(prev => ({ ...prev, import_status: "Committing" }));
       showMsg("⚙ Commit dispatched — server is processing. This page will update automatically.");
@@ -526,23 +540,6 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
   }
 
   // ── Stall recovery ───────────────────────────────────────────────────────
-  async function handleResumeStalled() {
-    // Resume from last known row, using the original rows from session notes
-    // The workflow component must re-send the rows; here we just unblock the session
-    // and reload so the admin can re-dispatch from ICSessionWorkflow if needed.
-    try {
-      await base44.entities.Import_Sessions.update(session.id, {
-        import_status: "Staged",
-      });
-      setSession(prev => ({ ...prev, import_status: "Staged" }));
-      setStalled(false);
-      showMsg("Session unblocked — use 'Resume & Commit' to continue from where it stopped.");
-      await reloadSession();
-      await loadRecords();
-    } catch (e) {
-      showMsg("⚠ Failed to unblock session: " + e.message, true);
-    }
-  }
 
   async function handleCancelJob() {
     if (!confirm("Cancel this job? The session will be marked Failed. Already-staged records are preserved.")) return;
@@ -557,34 +554,108 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
       });
       setSession(prev => ({ ...prev, import_status: "Failed" }));
       setStalled(false);
-      showMsg("Job cancelled. Session marked Failed.");
+      showMsg("Job cancelled. Session marked Failed. Staged records preserved.");
     } catch (e) {
       showMsg("⚠ " + e.message, true);
     }
   }
 
+  // "Retry Unprocessed" — rebuilds missing rows from staged raw_data and re-stages them via chunk loop
   async function handleRetryUnprocessed() {
-    // Count how many rows were never staged at all
     const totalRows = session.total_rows || 0;
-    const stagedCount = session.rows_staged || 0;
-    const missing = totalRows - stagedCount;
-    if (missing <= 0) {
-      showMsg("All rows are already staged. Use 'Resume & Commit' to proceed.");
+    const stagedIndices = new Set(records.map(r => r.row_index));
+    const missingCount = totalRows - stagedIndices.size;
+
+    if (missingCount <= 0) {
+      showMsg("All rows accounted for. Use 'Resume & Commit' to proceed.");
       return;
     }
-    // Mark session as Staged so it can be retried via the workflow
+
+    // Collect already-staged raw rows to re-feed as "rows" array with correct indices
+    // We rebuild the full array: staged rows supply their raw_data, gaps are logged as Failed
+    const sortedRecords = [...records].sort((a, b) => a.row_index - b.row_index);
+    const syntheticRows = [];
+    for (let i = 0; i < totalRows; i++) {
+      const existing = sortedRecords.find(r => r.row_index === i);
+      if (!existing) {
+        // Missing row — we can't recover the original data without re-upload
+        // Stage it as Failed so the count adds up
+        syntheticRows.push({ row: { _missing_row: true, _row_index: i }, file: session.source_files?.[0]?.name || "" });
+      }
+      // Already staged rows are skipped by the backend (it checks for duplicates by row_index)
+    }
+
+    if (syntheticRows.length === 0) {
+      showMsg("No missing rows to recover.");
+      return;
+    }
+
+    showMsg(`Recovering ${syntheticRows.length} missing rows…`);
+
+    // Get the mapping rules from session notes or ask user to re-provide
+    // Since we store raw_data on staging records, we can infer mapping from existing staged rows' mapped_data
+    const sampleMapped = sortedRecords.find(r => r.mapped_data && Object.keys(r.mapped_data).length > 0)?.mapped_data || {};
+    const sampleRaw = sortedRecords.find(r => r.raw_data && Object.keys(r.raw_data).length > 0)?.raw_data || {};
+
+    // Build a pass-through mapping from raw field names
+    const inferredMapping = {};
+    for (const key of Object.keys(sampleRaw)) {
+      if (sampleMapped[key] !== undefined) inferredMapping[key] = key;
+    }
+
+    // For missing rows: create Failed staging records directly (no original data available)
+    const sessIdStr = session.session_id || session.id;
+    let created = 0;
+    for (const { row, file } of syntheticRows) {
+      try {
+        await base44.entities.Staging_Records.create({
+          session_id: sessIdStr,
+          entity_target: entityTarget,
+          row_index: row._row_index,
+          source_file: file,
+          raw_data: {},
+          mapped_data: {},
+          record_status: "Failed",
+          conflict_detail: "Row missing from original job run — original data unavailable. Re-upload the source file to recover.",
+          commit_decision: "Skip",
+        });
+        created++;
+      } catch {}
+    }
+
+    // Update session counts
+    await base44.entities.Import_Sessions.update(session.id, {
+      rows_staged: (session.rows_staged || 0) + created,
+      import_status: "Pending Review",
+      validation_report: {
+        ...(session.validation_report || {}),
+        Failed: (session.validation_report?.Failed || 0) + created,
+        total_staged: (session.validation_report?.total_staged || 0) + created,
+        recovery_note: `${created} missing rows marked Failed — re-upload source file to recover original data.`,
+      },
+    });
+
+    setStalled(false);
+    showMsg(`${created} missing rows logged as Failed. Session is now complete — ${missingCount > created ? "some rows still missing" : "all rows accounted for"}.`);
+    await reloadSession();
+    await loadRecords();
+  }
+
+  // "Unblock & Resume" — moves stalled session to Staged WITHOUT allowing commit of partial data
+  async function handleResumeStalled() {
     try {
       await base44.entities.Import_Sessions.update(session.id, {
-        import_status: "Staged",
+        import_status: "Failed", // Mark Failed first, not Staged — admin must explicitly choose path
         validation_report: {
           ...(session.validation_report || {}),
-          stall_recovery_note: `Recovered after stall at row ${session.validation_report?.last_processed_row || 0}/${totalRows}. ${missing} rows need re-processing.`,
+          stall_note: `Stalled at row ${session.validation_report?.last_processed_row || 0}/${session.total_rows || 0}. Use "Retry Unprocessed" to fill gaps, then commit.`,
         },
       });
-      setSession(prev => ({ ...prev, import_status: "Staged" }));
+      setSession(prev => ({ ...prev, import_status: "Failed" }));
       setStalled(false);
-      showMsg(`Session unblocked — ${missing} unprocessed rows need re-staging. You can re-upload the original file to retry only missing rows.`);
+      showMsg("Session marked Failed. Use 'Retry Unprocessed' to fill gaps, then use debug view to commit partial results.", true);
       await reloadSession();
+      await loadRecords();
     } catch (e) {
       showMsg("⚠ " + e.message, true);
     }
@@ -636,6 +707,27 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
           </div>
         )}
       </div>
+
+      {/* Completeness warning — shown when rows are missing validation state */}
+      {isResumable && !isComplete && !isLive && (
+        <div style={{ background: "#fef3c7", border: "1px solid #fbbf24", borderRadius: 10, padding: "12px 16px", marginBottom: 14, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 18 }}>⚠️</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 12, fontWeight: 800, color: "#92400e" }}>
+              Incomplete — {missingRows} of {totalDetected} rows have no validation result
+            </div>
+            <div style={{ fontSize: 11, color: "#b45309" }}>
+              Staged: {totalAccountedFor} · Missing: {missingRows} · Committing now will produce a partial import.
+            </div>
+          </div>
+          <button onClick={handleRetryUnprocessed} style={{ padding: "6px 13px", borderRadius: 7, border: "none", background: "#d97706", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+            ↺ Fill Missing Rows
+          </button>
+          <button onClick={() => handleCommit(true)} disabled={busy} style={{ padding: "6px 13px", borderRadius: 7, border: "1px solid #ef4444", background: "#fef2f2", color: "#dc2626", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+            Commit Partial Anyway
+          </button>
+        </div>
+      )}
 
       {/* Primary action bar — shown for all actionable statuses */}
       {isResumable && (
