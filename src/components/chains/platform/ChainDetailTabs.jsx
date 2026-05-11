@@ -5,6 +5,7 @@
  */
 import { useState } from "react";
 import ChainEquivalencyPanel from "./ChainEquivalencyPanel";
+import { ATTACHMENT_LIBRARY } from "@/lib/chainAttachmentLibrary";
 
 const C = {
   navy: "#003c5b", navyMid: "#1A3A5C",
@@ -83,18 +84,32 @@ function SpecsTab({ product }) {
 }
 
 function AttachmentsTab({ product, onAddRFQ }) {
-  const atts = product.related_attachments || product.attachments_available || [];
-  if (!atts.length) return (
+  const rawAtts = product.related_attachments || product.attachments_available || [];
+  const chainNumber = product.chain_number || product.chain_id || "";
+
+  // Resolve string codes → full objects from ATTACHMENT_LIBRARY
+  const resolvedAtts = rawAtts.map(att => {
+    if (typeof att === "string") {
+      const lib = ATTACHMENT_LIBRARY[att];
+      return lib ? { ...lib, _resolved: true, compatible_chain: chainNumber } : { code: att, _unresolved: true };
+    }
+    // Already an object — enrich with library data if code matches
+    const code = att.code || att.attachment_code;
+    const lib = code ? ATTACHMENT_LIBRARY[code] : null;
+    return lib ? { ...lib, ...att, _resolved: true, compatible_chain: chainNumber } : { ...att, compatible_chain: chainNumber };
+  });
+
+  if (!resolvedAtts.length) return (
     <div style={{ color: C.muted, fontSize: 13, padding: "24px 0" }}>No confirmed attachment data available. Contact Uniking to discuss attachment options.</div>
   );
 
   // Separate valid attachments from incomplete ones
-  const validAtts = atts.filter(att => {
+  const validAtts = resolvedAtts.filter(att => {
     const displayName = att.code || att.attachment_code || att.name;
     const displayType = att.type || att.attachment_type || att.description;
     return !!(displayName && displayType);
   });
-  const incompleteAtts = atts.filter(att => {
+  const incompleteAtts = resolvedAtts.filter(att => {
     const displayName = att.code || att.attachment_code || att.name;
     const displayType = att.type || att.attachment_type || att.description;
     return !(displayName && displayType);
@@ -110,20 +125,26 @@ function AttachmentsTab({ product, onAddRFQ }) {
           {validAtts.map((att, i) => {
             const displayName = att.code || att.attachment_code || att.name;
             const displayType = att.type || att.attachment_type || att.description;
-            const sourceBrand = att.source_brand;
+            const sourceBrand = att.source_brand || (att._resolved ? "ANSI Standard" : null);
+            const compatChain = att.compatible_chain;
             return (
               <div key={i} style={{ border: "1px solid " + C.border, borderRadius: 8, padding: "14px", background: C.card }}>
                 {att.image_url && <img src={att.image_url} alt={displayName} style={{ width: "100%", height: 70, objectFit: "contain", marginBottom: 8 }} onError={e => e.target.style.display = "none"} />}
-                <div style={{ fontWeight: 700, fontSize: 13, color: C.text, marginBottom: 4 }}>{displayName}</div>
-                <div style={{ fontSize: 12, color: C.muted, marginBottom: 4 }}>{displayType}</div>
+                <div style={{ fontWeight: 700, fontSize: 14, color: C.text, marginBottom: 2 }}>{displayName}</div>
+                <div style={{ fontSize: 12, color: C.blue, fontWeight: 600, marginBottom: 6 }}>{displayType}</div>
+                {att.description && att.description !== displayType && (
+                  <div style={{ fontSize: 11, color: C.slate, marginBottom: 6, lineHeight: 1.5 }}>{att.description}</div>
+                )}
+                {compatChain && <div style={{ fontSize: 11, color: C.muted }}>Chain size: <strong>{compatChain}</strong></div>}
                 {att.side && att.side !== "N/A" && <div style={{ fontSize: 11, color: C.slate }}>Side: {att.side}</div>}
                 {att.spacing_note && <div style={{ fontSize: 11, color: C.slate }}>Spacing: {att.spacing_note}</div>}
-                {sourceBrand && <div style={{ fontSize: 10, color: C.muted, marginTop: 2 }}>Source: {sourceBrand}</div>}
+                {att.notes && <div style={{ fontSize: 10, color: C.muted, marginTop: 4, fontStyle: "italic" }}>{att.notes}</div>}
+                {sourceBrand && <div style={{ fontSize: 10, color: C.muted, marginTop: 4 }}>Source: {sourceBrand}</div>}
                 {att.source_confirmed === false && (
                   <div style={{ fontSize: 10, color: C.amber, marginTop: 4 }}>⚠ Compatibility to be confirmed</div>
                 )}
                 <button onClick={() => onAddRFQ && onAddRFQ({ ...product, series: (product.chain_number || product.part_number) + " + " + displayName, notes: "Attachment: " + displayName })}
-                  style={{ marginTop: 8, width: "100%", padding: "5px 0", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: "1px solid " + C.blue, background: C.blueBg, color: C.blue }}>
+                  style={{ marginTop: 10, width: "100%", padding: "6px 0", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: "1px solid " + C.blue, background: C.blueBg, color: C.blue }}>
                   + Add to RFQ
                 </button>
               </div>
@@ -404,8 +425,13 @@ export default function ChainDetailTabs({ product, onAddRFQ }) {
   const [activeTab, setActiveTab] = useState("specs");
 
   // Always compute valid attachments for tab visibility
+  // String codes in attachments_available are always valid (resolved from ATTACHMENT_LIBRARY)
   const allAtts = product.related_attachments || product.attachments_available || [];
-  const hasAttachments = allAtts.some(att => !!(att.code || att.attachment_code || att.name) && !!(att.type || att.attachment_type || att.description));
+  const hasAttachments = allAtts.length > 0 && allAtts.some(att =>
+    typeof att === "string"
+      ? !!ATTACHMENT_LIBRARY[att]
+      : !!(att.code || att.attachment_code || att.name)
+  );
   // Pins tab always shows for ANSI chains (we infer CL/OL standard links from chain number)
   const explicitPins = product.related_pins || product.pins_links_available || [];
   const chainNumStr = String(product.chain_number || product.chain_id || "");
