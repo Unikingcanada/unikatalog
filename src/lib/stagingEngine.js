@@ -50,8 +50,8 @@ export async function loadImportPayload(sessionId) {
 }
 
 // ── Chunk-loop driver ─────────────────────────────────────────────────────────
-// Runs entirely in the browser. Calls importStageJob once per chunk.
-// Each HTTP call is short (~2-5s), so no serverless timeout risk.
+// Runs entirely in the browser. Slices each chunk client-side and sends only
+// that chunk to importStageJob — keeps payloads small and avoids SDK limits.
 // startChunkIndex: resume from this chunk (0 = fresh start).
 export async function runChunkLoop({
   sessionDbId,
@@ -66,23 +66,43 @@ export async function runChunkLoop({
   onDone,
   cancelRef, // { current: true } → abort the loop
 }) {
+  if (!allRows || !allRows.length) {
+    if (onError) onError("Parsed rows unavailable. Please re-upload.");
+    return;
+  }
+
+  const totalRows = allRows.length;
+  const totalChunks = Math.ceil(totalRows / chunkSize);
   let chunkIndex = startChunkIndex;
 
   while (true) {
     if (cancelRef?.current) return;
 
+    const chunkStart = chunkIndex * chunkSize;
+    const chunkEnd = Math.min(chunkStart + chunkSize, totalRows);
+    const chunkRows = allRows.slice(chunkStart, chunkEnd);
+
+    console.log("[runChunkLoop] dispatching chunk", {
+      chunkIndex,
+      chunkStart,
+      chunkEnd,
+      chunkRowsLength: chunkRows.length,
+      totalRows,
+      totalChunks,
+      hasMappingRules: !!mappingRules,
+    });
+
     let result;
     try {
-      // Use base44.functions.invoke to guarantee clean JSON serialization.
-      // The direct @/functions import may encode arrays as "rows[]" (form-style).
       result = await base44.functions.invoke("importStageJob", {
         sessionId: sessionDbId,
         entityTarget,
-        rows: allRows,
+        rows: chunkRows,
         mappingRules,
         transformRules: transformRules || {},
         chunkIndex,
         chunkSize,
+        totalRows,
       });
     } catch (err) {
       // Try to extract the structured error body from a 400/500 response

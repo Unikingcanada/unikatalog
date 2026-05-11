@@ -185,34 +185,35 @@ Deno.serve(async (req) => {
       chunkIndex = 0,
       chunkSize = DEFAULT_CHUNK_SIZE,
     } = payload;
-    // Fallback: some serializers send arrays as "rows[]" instead of "rows"
+    // rows = pre-sliced chunk from the frontend (only the rows for this chunk)
+    // totalRows = total across all chunks (passed separately for progress tracking)
     const rows = payload.rows || payload["rows[]"];
+    const totalRows = payload.totalRows || (Array.isArray(rows) ? rows.length : 0);
 
     sessionDbId = sessionDbIdIn;
 
     // Detailed validation — report exactly which field is missing
     const missing = [];
-    if (!sessionDbId)   missing.push("sessionId");
-    if (!entityTarget)  missing.push("entityTarget");
-    if (!rows)          missing.push("rows");
-    if (!mappingRules)  missing.push("mappingRules");
+    if (!sessionDbId)              missing.push("sessionId");
+    if (!entityTarget)             missing.push("entityTarget");
+    if (!rows || !rows.length)     missing.push("rows");
+    if (!mappingRules)             missing.push("mappingRules");
     if (missing.length > 0) {
       const receivedKeys = Object.keys(payload).join(", ") || "(none)";
       return Response.json({
         error: `Missing required field(s): ${missing.join(", ")}`,
         received_keys: receivedKeys,
-        hint: "Check that the frontend is passing: sessionId, entityTarget, rows[], mappingRules{}",
+        hint: "Frontend should send: sessionId, entityTarget, rows (current chunk only), mappingRules, totalRows",
       }, { status: 400 });
     }
 
-    const totalRows = rows.length;
-    const totalChunks = Math.ceil(totalRows / chunkSize);
+    // rows is the current chunk — use it directly
+    const chunkRows = rows;
     const chunkStart = chunkIndex * chunkSize;
-    const chunkEnd = Math.min(chunkStart + chunkSize, totalRows);
-    const chunkRows = rows.slice(chunkStart, chunkEnd);
+    const chunkEnd = chunkStart + chunkRows.length;
+    const totalChunks = Math.ceil(totalRows / chunkSize);
 
     if (chunkRows.length === 0) {
-      // Nothing to do — already complete
       return Response.json({ done: true, chunkIndex, totalChunks, staged: 0, counts: {}, lastProcessedRow: totalRows });
     }
 
@@ -307,8 +308,8 @@ Deno.serve(async (req) => {
     // Accumulate totals across all chunks
     const totalStagedSoFar = (existingReport.total_staged || 0) + chunkStaged;
     const totalProcessedSoFar = chunkEnd;
-    const isDone = chunkIndex >= totalChunks - 1;
-    const pct = Math.round((totalProcessedSoFar / totalRows) * 100);
+    const isDone = totalProcessedSoFar >= totalRows;
+    const pct = totalRows > 0 ? Math.round((totalProcessedSoFar / totalRows) * 100) : 100;
 
     const updatedReport = {
       ...counts,
