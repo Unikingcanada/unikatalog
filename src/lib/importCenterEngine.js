@@ -207,6 +207,18 @@ export function classifyRecord(mappedData, entityTarget, existingRecords) {
   const pkField = getPrimaryKey(entityTarget);
   const pkValue = mappedData[pkField];
 
+  // ── Component-SKU pre-check (Normalized_Chains only) ─────────────────────────
+  // Reject component-style SKUs (OL-xx, CL-xx, etc.) before they reach production.
+  if (entityTarget === 'Normalized_Chains' && isComponentSku(mappedData.chain_id, mappedData.chain_number)) {
+    const parentSize = parseParentChainSize(mappedData.chain_id || mappedData.chain_number);
+    return {
+      status: 'Invalid',
+      conflictDetail: `Component/accessory SKU "${mappedData.chain_id || mappedData.chain_number}" cannot be stored as a Normalized_Chain. Likely an Offset Link, Connecting Link, or attachment.${parentSize ? ` Probable parent: ANSI-${parentSize}.` : ''} Use Chain_Attachments entity instead.`,
+      diffSummary: null,
+      productionRecordId: null,
+    };
+  }
+
   // FK validation — check required fields
   const requiredFields = getRequiredFields(entityTarget);
   for (const f of requiredFields) {
@@ -292,6 +304,52 @@ function getDimensionalFields(entityTarget) {
   return dimMap[entityTarget] || [];
 }
 
+// ─── Component-SKU Detection ─────────────────────────────────────────────────
+
+/**
+ * Patterns that identify a SKU as a chain component/accessory rather than a standalone chain.
+ * These should NEVER be imported as Normalized_Chains records.
+ *
+ * Examples:
+ *   OL-80, OL80, C/L 80, CL-80, CL80, A-1 80, K1-80, SA2-80, OFFSET LINK 80,
+ *   CONN LINK 80, CONNECTING LINK 80, 80 COTTER PIN, 80 MASTER LINK
+ */
+const COMPONENT_SKU_PATTERNS = [
+  /^OL[-\s]?\d/i,               // OL-80, OL80, OL 80
+  /^C\/L[-\s]?\d/i,              // C/L-80, C/L 80
+  /^CL[-\s]?\d/i,                // CL-80, CL80
+  /^offset\s*link/i,             // Offset Link 80
+  /^connecting\s*link/i,         // Connecting Link 80
+  /^conn(?:ecting)?\s*link/i,    // Conn Link 80
+  /^master\s*link/i,             // Master Link 80
+  /\boffset\s*link\b/i,          // anything containing "offset link"
+  /\bconn(?:ecting)?\s*link\b/i, // anything containing "connecting link"
+  /^(A|K|SA|WA|SK|HK|WK)-?\d+\s+\d/i,  // A1 80, K-1 80 (attachment code + chain size)
+  /\bcotter\s*pin\b/i,           // Cotter Pin
+  /\bspring\s*clip\b/i,          // Spring Clip
+  /\bmaster\s*link\b/i,          // Master Link
+];
+
+/**
+ * Returns true if the chain_id or chain_number looks like a component/accessory SKU
+ * that should NOT be stored as a standalone Normalized_Chains record.
+ */
+export function isComponentSku(chainId, chainNumber) {
+  const ids = [chainId, chainNumber].filter(Boolean);
+  return ids.some(id => COMPONENT_SKU_PATTERNS.some(pat => pat.test(String(id))));
+}
+
+/**
+ * Parse the parent ANSI chain size from a component SKU.
+ * e.g. "OL-80" → "80", "CL-60" → "60", "A1-80" → "80"
+ * Returns null if not parseable.
+ */
+export function parseParentChainSize(sku) {
+  if (!sku) return null;
+  const m = String(sku).match(/(\d+)$/);
+  return m ? m[1] : null;
+}
+
 // ─── Auto-Flag Generator ──────────────────────────────────────────────────────
 
 /**
@@ -318,6 +376,23 @@ function isHSeriesChain(chainId) {
 export function generateAutoFlags(mappedData, status, conflictDetail, entityTarget) {
   const flags = [];
   const chainId = mappedData.chain_id || mappedData.brand_part_number || '?';
+
+  // ── Component-SKU governance rule ────────────────────────────────────────────
+  // If this looks like a component/link (OL-xx, CL-xx, etc.) being imported into
+  // Normalized_Chains, flag it immediately — it should go to Chain_Attachments or
+  // a component-specific entity instead.
+  if (entityTarget === 'Normalized_Chains' && isComponentSku(mappedData.chain_id, mappedData.chain_number)) {
+    const parentSize = parseParentChainSize(mappedData.chain_id || mappedData.chain_number);
+    flags.push({
+      chain_id: chainId,
+      flag_type: 'Data Entry Error',
+      severity: 'Critical',
+      description: `Component/accessory SKU "${chainId}" imported as a standalone chain record. This appears to be an Offset Link, Connecting Link, or attachment — not a parent chain. ${parentSize ? `Probable parent chain: ANSI-${parentSize}.` : ''} Move to Chain_Attachments or Chain_Downloads, or delete this record.`,
+      affected_field: 'chain_id',
+      needs_review: true,
+      review_status: 'Pending',
+    });
+  }
 
   if (status === 'Conflict') {
     flags.push({

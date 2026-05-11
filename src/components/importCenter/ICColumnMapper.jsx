@@ -156,6 +156,13 @@ export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityCh
         </div>
       </div>
 
+      {/* Governance notice for Normalized_Chains */}
+      {entityTarget === "Normalized_Chains" && (
+        <div style={{ padding: "10px 20px", background: "#fffbeb", borderBottom: "1px solid #fde68a", fontSize: 11, color: "#92400e" }}>
+          <strong>⚠ Governance Rule — Normalized_Chains:</strong> Component/accessory SKUs (e.g. OL-80, CL-80, C/L 80, Offset Link 80, Connecting Link 80) will be automatically flagged as <strong>Invalid</strong> and blocked from commit. These belong in <strong>Chain_Attachments</strong> — not as standalone chain records. A-series, K-series, and SA-series attachment codes with a size suffix are also blocked.
+        </div>
+      )}
+
       {/* Mapping table */}
       <div style={{ overflowX: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>

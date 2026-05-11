@@ -87,50 +87,150 @@ function AttachmentsTab({ product, onAddRFQ }) {
   if (!atts.length) return (
     <div style={{ color: C.muted, fontSize: 13, padding: "24px 0" }}>No confirmed attachment data available. Contact Uniking to discuss attachment options.</div>
   );
+
+  // Separate valid attachments from incomplete ones
+  const validAtts = atts.filter(att => {
+    const displayName = att.code || att.attachment_code || att.name;
+    const displayType = att.type || att.attachment_type || att.description;
+    return !!(displayName && displayType);
+  });
+  const incompleteAtts = atts.filter(att => {
+    const displayName = att.code || att.attachment_code || att.name;
+    const displayType = att.type || att.attachment_type || att.description;
+    return !(displayName && displayType);
+  });
+
   return (
     <div>
       <p style={{ fontSize: 12, color: C.muted, marginBottom: 14 }}>Only source-confirmed attachments are shown. Do not assume compatibility.</p>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
-        {atts.map((att, i) => (
-          <div key={i} style={{ border: "1px solid " + C.border, borderRadius: 8, padding: "14px", background: C.card }}>
-            {att.image_url && <img src={att.image_url} alt={att.code} style={{ width: "100%", height: 70, objectFit: "contain", marginBottom: 8 }} onError={e => e.target.style.display = "none"} />}
-            <div style={{ fontWeight: 700, fontSize: 13, color: C.text, marginBottom: 4 }}>{att.code || att.name}</div>
-            <div style={{ fontSize: 12, color: C.muted, marginBottom: 4 }}>{att.type || att.description}</div>
-            {att.side && <div style={{ fontSize: 11, color: C.slate }}>Side: {att.side}</div>}
-            {att.spacing_note && <div style={{ fontSize: 11, color: C.slate }}>Spacing: {att.spacing_note}</div>}
-            {att.source_confirmed === false && (
-              <div style={{ fontSize: 10, color: C.amber, marginTop: 4 }}>⚠ Compatibility to be confirmed</div>
-            )}
-            <button onClick={() => onAddRFQ && onAddRFQ({ ...product, series: (product.chain_number || product.part_number) + " + " + (att.code || att.name), notes: "Attachment: " + (att.code || att.name) })}
-              style={{ marginTop: 8, width: "100%", padding: "5px 0", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: "1px solid " + C.blue, background: C.blueBg, color: C.blue }}>
-              + Add to RFQ
-            </button>
+
+      {/* Valid attachment cards */}
+      {validAtts.length > 0 && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10, marginBottom: incompleteAtts.length > 0 ? 16 : 0 }}>
+          {validAtts.map((att, i) => {
+            const displayName = att.code || att.attachment_code || att.name;
+            const displayType = att.type || att.attachment_type || att.description;
+            const sourceBrand = att.source_brand;
+            return (
+              <div key={i} style={{ border: "1px solid " + C.border, borderRadius: 8, padding: "14px", background: C.card }}>
+                {att.image_url && <img src={att.image_url} alt={displayName} style={{ width: "100%", height: 70, objectFit: "contain", marginBottom: 8 }} onError={e => e.target.style.display = "none"} />}
+                <div style={{ fontWeight: 700, fontSize: 13, color: C.text, marginBottom: 4 }}>{displayName}</div>
+                <div style={{ fontSize: 12, color: C.muted, marginBottom: 4 }}>{displayType}</div>
+                {att.side && att.side !== "N/A" && <div style={{ fontSize: 11, color: C.slate }}>Side: {att.side}</div>}
+                {att.spacing_note && <div style={{ fontSize: 11, color: C.slate }}>Spacing: {att.spacing_note}</div>}
+                {sourceBrand && <div style={{ fontSize: 10, color: C.muted, marginTop: 2 }}>Source: {sourceBrand}</div>}
+                {att.source_confirmed === false && (
+                  <div style={{ fontSize: 10, color: C.amber, marginTop: 4 }}>⚠ Compatibility to be confirmed</div>
+                )}
+                <button onClick={() => onAddRFQ && onAddRFQ({ ...product, series: (product.chain_number || product.part_number) + " + " + displayName, notes: "Attachment: " + displayName })}
+                  style={{ marginTop: 8, width: "100%", padding: "5px 0", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: "1px solid " + C.blue, background: C.blueBg, color: C.blue }}>
+                  + Add to RFQ
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Debug panel for incomplete records — shown only when data is missing */}
+      {incompleteAtts.length > 0 && (
+        <div style={{ background: "#fffbeb", border: "1px solid #fbbf24", borderRadius: 8, padding: "12px 14px" }}>
+          <div style={{ fontSize: 11, fontWeight: 800, color: C.amber, marginBottom: 6 }}>
+            ⚠ {incompleteAtts.length} attachment record{incompleteAtts.length > 1 ? "s" : ""} with missing display data (not shown to users)
           </div>
-        ))}
-      </div>
+          {incompleteAtts.map((att, i) => (
+            <div key={i} style={{ fontSize: 10, fontFamily: "monospace", color: "#92400e", marginBottom: 3 }}>
+              Attachment data missing: ID {att.id || "(no id)"} — code: "{att.code || att.attachment_code || "(none)"}", type: "{att.type || att.attachment_type || "(none)"}"
+            </div>
+          ))}
+          <div style={{ fontSize: 10, color: "#92400e", marginTop: 6 }}>
+            Fill in attachment_code and attachment_type via the Import Center to display these records.
+          </div>
+        </div>
+      )}
+
+      {validAtts.length === 0 && incompleteAtts.length > 0 && (
+        <div style={{ color: C.muted, fontSize: 13, marginTop: 12 }}>
+          No displayable attachment data. Contact Uniking for attachment options.
+        </div>
+      )}
     </div>
   );
 }
 
+/**
+ * Compute standard ANSI connecting links and offset links for a given chain number.
+ * Returns array of synthetic pin/link objects inferred from the parent chain.
+ */
+function inferStandardLinks(chainNumber) {
+  if (!chainNumber) return [];
+  // Extract the base ANSI number — e.g. "80" from "ANSI-80", "80H", "80SS", etc.
+  const match = String(chainNumber).match(/^(?:ANSI-?)?(\d+)/i);
+  if (!match) return [];
+  const baseNum = match[1];
+  return [
+    {
+      code: `CL-${baseNum}`,
+      type: "Connecting Link",
+      description: `ANSI ${baseNum} Connecting Link (cottered or riveted). Used to join chain ends without a press.`,
+      _inferred: true,
+    },
+    {
+      code: `OL-${baseNum}`,
+      type: "Offset Link",
+      description: `ANSI ${baseNum} Offset Link (half link). Required when an odd number of pitches is needed. Avoid where possible — reduces chain strength by ~20%.`,
+      _inferred: true,
+    },
+  ];
+}
+
 function PinsTab({ product, onAddRFQ }) {
-  const pins = product.related_pins || product.pins_links_available || [];
-  if (!pins.length) return (
+  const explicit = product.related_pins || product.pins_links_available || [];
+
+  // Filter out incomplete records (code/name must exist)
+  const validExplicit = explicit.filter(p => !!(p.code || p.name));
+
+  // Infer standard links from the chain number if not already present
+  const inferred = inferStandardLinks(product.chain_number || product.chain_id);
+  const inferredFiltered = inferred.filter(inf =>
+    !validExplicit.some(p =>
+      (p.code || p.name || "").toLowerCase().replace(/[\s-]/g, "") ===
+      inf.code.toLowerCase().replace(/[\s-]/g, "")
+    )
+  );
+
+  const allPins = [...validExplicit, ...inferredFiltered];
+
+  if (!allPins.length) return (
     <div style={{ color: C.muted, fontSize: 13, padding: "24px 0" }}>No pin / connecting link data available. Contact Uniking.</div>
   );
+
   return (
     <div>
+      {inferredFiltered.length > 0 && (
+        <div style={{ fontSize: 11, color: C.muted, marginBottom: 12, padding: "8px 12px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 6 }}>
+          ℹ Standard connecting links and offset links are inferred from the chain size. Confirm availability with Uniking before ordering.
+        </div>
+      )}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 10 }}>
-        {pins.map((pin, i) => (
-          <div key={i} style={{ border: "1px solid " + C.border, borderRadius: 8, padding: "14px", background: C.card }}>
-            {pin.image_url && <img src={pin.image_url} alt={pin.code} style={{ width: "100%", height: 60, objectFit: "contain", marginBottom: 8 }} onError={e => e.target.style.display = "none"} />}
-            <div style={{ fontWeight: 700, fontSize: 13, color: C.text, marginBottom: 4 }}>{pin.code || pin.name}</div>
-            <div style={{ fontSize: 12, color: C.muted, marginBottom: 8 }}>{pin.type || pin.description || pin.name}</div>
-            <button onClick={() => onAddRFQ && onAddRFQ({ ...product, series: (product.chain_number || product.part_number) + " + " + (pin.code || pin.name), notes: "Pin/Link: " + (pin.code || pin.name) })}
-              style={{ width: "100%", padding: "5px 0", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: "1px solid " + C.blue, background: C.blueBg, color: C.blue }}>
-              + Add to RFQ
-            </button>
-          </div>
-        ))}
+        {allPins.map((pin, i) => {
+          const displayCode = pin.code || pin.name;
+          const displayType = pin.type || pin.description;
+          return (
+            <div key={i} style={{ border: "1px solid " + (pin._inferred ? "#bae6fd" : C.border), borderRadius: 8, padding: "14px", background: pin._inferred ? "#f0f9ff" : C.card }}>
+              {pin.image_url && <img src={pin.image_url} alt={displayCode} style={{ width: "100%", height: 60, objectFit: "contain", marginBottom: 8 }} onError={e => e.target.style.display = "none"} />}
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                <div style={{ fontWeight: 700, fontSize: 13, color: C.text }}>{displayCode}</div>
+                {pin._inferred && <span style={{ fontSize: 9, padding: "1px 5px", background: "#e0f2fe", color: "#0369a1", borderRadius: 4, fontWeight: 700 }}>Standard</span>}
+              </div>
+              <div style={{ fontSize: 12, color: C.muted, marginBottom: 8, lineHeight: 1.5 }}>{displayType}</div>
+              <button onClick={() => onAddRFQ && onAddRFQ({ ...product, series: (product.chain_number || product.part_number) + " + " + displayCode, notes: "Pin/Link: " + displayCode })}
+                style={{ width: "100%", padding: "5px 0", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: "1px solid " + C.blue, background: C.blueBg, color: C.blue }}>
+                + Add to RFQ
+              </button>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -303,8 +403,14 @@ function DownloadsTab({ product }) {
 export default function ChainDetailTabs({ product, onAddRFQ }) {
   const [activeTab, setActiveTab] = useState("specs");
 
-  const hasAttachments = (product.related_attachments?.length || product.attachments_available?.length) > 0;
-  const hasPins = (product.related_pins?.length || product.pins_links_available?.length) > 0;
+  // Always compute valid attachments for tab visibility
+  const allAtts = product.related_attachments || product.attachments_available || [];
+  const hasAttachments = allAtts.some(att => !!(att.code || att.attachment_code || att.name) && !!(att.type || att.attachment_type || att.description));
+  // Pins tab always shows for ANSI chains (we infer CL/OL standard links from chain number)
+  const explicitPins = product.related_pins || product.pins_links_available || [];
+  const chainNumStr = String(product.chain_number || product.chain_id || "");
+  const hasInferrableLinks = /\d/.test(chainNumStr); // has a number = ANSI-style chain
+  const hasPins = explicitPins.some(p => !!(p.code || p.name)) || hasInferrableLinks;
   const hasSprockets = (product.related_sprockets?.length || product.sprockets_available?.length) > 0;
   const hasMaterials = (product.materials_available?.length || product.options?.length) > 0;
   const hasOptions = (product.options?.length || product.options_upgrades?.length) > 0;

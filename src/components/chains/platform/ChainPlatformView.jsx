@@ -8,6 +8,7 @@ import { useState, useMemo } from "react";
 import { CHAIN_FAMILIES } from "@/lib/chainFamilyData";
 import { CHAIN_PRODUCTS } from "@/lib/chainCatalogData";
 import { ALL_NORMALIZED_CHAINS, getChainsByFamily } from "@/lib/chainNormalizedIndex";
+import { isComponentSku } from "@/lib/importCenterEngine";
 import ChainFamilyBrowser from "./ChainFamilyBrowser";
 import NormalizedChainCard from "./NormalizedChainCard";
 import ChainDetailView from "./ChainDetailView";
@@ -161,8 +162,11 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
 
   const familyProducts = useMemo(() => {
     if (!selectedFamily) return [];
-    // Use unified normalized index
-    const normalized = ALL_NORMALIZED_CHAINS.filter(c => c.chain_family === selectedFamily);
+    // Use unified normalized index — filter out component/accessory SKUs (OL-xx, CL-xx, etc.)
+    const normalized = ALL_NORMALIZED_CHAINS.filter(c =>
+      c.chain_family === selectedFamily &&
+      !isComponentSku(c.chain_id, c.chain_number)
+    );
     if (normalized.length > 0) return normalized;
     // Fall back to legacy CHAIN_PRODUCTS (existing catalog data)
     const fam = CHAIN_FAMILIES.find(f => f.key === selectedFamily);
