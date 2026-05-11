@@ -14,6 +14,7 @@ import ComparePanel from "@/components/ComparePanel";
 import { CompareBar } from "@/components/ComparePanel";
 import FourBCatalog from "@/components/fourB/FourBCatalog";
 import { PRODUCTS as FOURB_PRODUCTS } from "@/lib/fourBData";
+import { ALL_NORMALIZED_CHAINS } from "@/lib/chainNormalizedIndex";
 import TypeGrid from "@/components/catalog/TypeGrid";
 import WeldedSeriesView from "@/components/chains/WeldedSeriesView";
 import AppLayout from "@/components/layout/AppLayout";
@@ -380,6 +381,49 @@ function normalizeAllied(r) {
   };
 }
 
+
+function normalizeNormalizedChain(c) {
+  // Map source_refs → source_data shape expected by HomeGlobalSearch
+  const sourceData = (c.source_refs || []).map(r => ({
+    brand: r.manufacturer,
+    product_code: r.code,
+  }));
+  // Infer component codes for search
+  const chainNum = c.chain_number || "";
+  const inferredCodes = chainNum && /\d/.test(chainNum)
+    ? [`OL-${chainNum}`, `CL-${chainNum}`, `OL${chainNum}`, `CL${chainNum}`]
+    : [];
+  return {
+    id: "norm-" + c.chain_id,
+    _source: "normalized_chain",
+    _chain_id: c.chain_id,
+    type: "ANSI/BS Chain",
+    series: c.display_name || c.chain_number || c.chain_id,
+    part_number: c.chain_number || c.chain_id,
+    chain_id: c.chain_id,
+    chain_number: c.chain_number,
+    chain_family: c.chain_family,
+    display_name: c.display_name,
+    standard: c.standard,
+    description: c.description,
+    pitch_in: c.pitch_in,
+    pitch_mm: c.pitch_mm,
+    application_tags: c.application_tags || [],
+    materials_available: c.materials_available || [],
+    attachments_available: c.attachments_available || [],
+    pins_links_available: c.pins_links_available || [],
+    source_data: sourceData,
+    _inferred_codes: inferredCodes,
+    image_url: c.image_url || "",
+    specs: {
+      "Chain Number": c.chain_number || null,
+      "Family": c.chain_family || null,
+      "Standard": c.standard || null,
+      "Pitch (in)": c.pitch_in || null,
+      "Pitch (mm)": c.pitch_mm || null,
+    },
+  };
+}
 
 function normalizeFourBProduct(p){const sp={...(p.specs||{}),...(p.approvals?.length?{Certifications:p.approvals.join(", ")}:{}),...(p.partNumbers?.length?{"Part Numbers":p.partNumbers.join(", ")}:{}),...(p.keyFunction?{"Key Function":p.keyFunction}:{}),...(p.applications?.length?{Applications:p.applications.join(", ")}:{})};return{id:"fourb-"+p.id,_source:"fourb",type:"Monitoring System",brand:"4B Braime™",series:p.name,part_number:p.partNumbers?.[0]||"",style:p.keyFunction||"",category:p.subcategory||"",application:p.applications?.join(", ")||"",materials:"",duty:"",notes:p.description||"",features:p.features||[],image_url:p.image||"",belt_data:null,sprocket_data:null,specs:sp};}
 function getFilterOptions(products, field) {const vals=new Set();for(const p of products){const raw=p[field];if(!raw)continue;String(raw).split(",").map((s)=>s.trim()).filter(Boolean).forEach((v)=>vals.add(v));}return[...vals].sort();}
@@ -1815,7 +1859,8 @@ export default function Home() {
       const s=(p)=>p.catch(()=>[]);
       const [cat,elev,uni,allied,donghua]=await Promise.all([s(fetchAll(CatalogProduct)),s(fetchAll(ElevatorBucket)),s(fetchAll(UniCatalog)),s(fetchAll(MacChainProduct)),s(fetchAll(DonghuaChain))]);
       setRawMacRecords(allied||[]);
-      setAllData([...(cat||[]).map(normalizeCatalogProduct),...(elev||[]).map(normalizeElevatorBucket),...(uni||[]).map(normalizeUniCatalog),...(allied||[]).map(normalizeAllied),...(donghua||[]).map(normalizeDonghuaChain),...FOURB_PRODUCTS.map(normalizeFourBProduct)]);
+      const normalizedChains = ALL_NORMALIZED_CHAINS.map(normalizeNormalizedChain);
+      setAllData([...normalizedChains,...(cat||[]).map(normalizeCatalogProduct),...(elev||[]).map(normalizeElevatorBucket),...(uni||[]).map(normalizeUniCatalog),...(allied||[]).map(normalizeAllied),...(donghua||[]).map(normalizeDonghuaChain),...FOURB_PRODUCTS.map(normalizeFourBProduct)]);
       setLoading(false);
     }
     load();
@@ -1897,7 +1942,20 @@ export default function Home() {
           <div>
               {/* Global Search Bar — improved fuzzy search with instant dropdown */}
               <div style={{ marginBottom: 32 }}>
-                <HomeGlobalSearch allData={allData} onSelect={(p) => setGlobalSelected(p)} />
+                <HomeGlobalSearch allData={allData} onSelect={(p) => {
+                  // Normalized chains → go to ChainCatalog
+                  if (p._source === "normalized_chain") {
+                    setCurrentPage("chainCatalog");
+                    window.scrollTo(0, 0);
+                    return;
+                  }
+                  // Chain types with their own catalog pages
+                  if (p._source === "allied" || p._source === "donghuachain") {
+                    const rawRecord = rawMacRecords.find((r) => r.id === p.id) || null;
+                    if (rawRecord) { setGlobalSelected({ ...p, _rawRecord: rawRecord }); return; }
+                  }
+                  setGlobalSelected(p);
+                }} />
               </div>
 
               <TypeGrid types={availableTypes} counts={typeCounts} onSelect={selectType} />
@@ -1909,6 +1967,7 @@ export default function Home() {
               if (rawRecord) return <MacProductModal record={rawRecord} slugMap={{}} sprocketMap={{}} loadSprockets={() => {}} onSelect={(r) => setGlobalSelected(r)} onClose={() => setGlobalSelected(null)} />;
               return <ProductModal product={globalSelected} showBrand={true} onClose={() => setGlobalSelected(null)} />;
             })()}
+              {/* Placeholder to ensure search sets globalSelected cleanly */}
             </div> :
           view === "chains" ?
           <ChainSubGrid

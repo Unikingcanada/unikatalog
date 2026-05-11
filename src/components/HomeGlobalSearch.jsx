@@ -76,6 +76,18 @@ function buildSearchStr(p) {
     }
   }
 
+  // source_refs — normalized chain format (manufacturer + code)
+  if (Array.isArray(p.source_refs)) {
+    for (const r of p.source_refs) {
+      parts.push(r.manufacturer, r.code);
+    }
+  }
+
+  // Pre-computed inferred component codes (OL-80, CL-80, etc.)
+  if (Array.isArray(p._inferred_codes)) {
+    for (const c of p._inferred_codes) parts.push(c);
+  }
+
   // All values from the specs object (key + value both searchable)
   if (p.specs && typeof p.specs === "object") {
     for (const [k, v] of Object.entries(p.specs)) {
@@ -143,6 +155,13 @@ function TypeBadge({ type }) {
 // ── Result subtitle — pick the most useful secondary line ────────────────────
 function getSubtitle(p) {
   const parts = [];
+  // Normalized chains — show family + pitch
+  if (p._source === "normalized_chain") {
+    if (p.chain_family) parts.push(p.chain_family);
+    if (p.pitch_in) parts.push(p.pitch_in + '" pitch');
+    else if (p.pitch_mm) parts.push(p.pitch_mm + " mm");
+    return parts.slice(0, 2).join(" · ");
+  }
   // Part number if different from series name
   if (p.part_number && p.part_number !== p.series) parts.push(p.part_number);
   // Key spec values — pick up to 2 that are short
@@ -366,7 +385,7 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
                           fontSize: 13, fontWeight: 700, color: C.text,
                           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                         }}>
-                          {p.series || p.part_number || "—"}
+                          {p.display_name || p.series || p.part_number || "—"}
                         </div>
                         {subtitle && (
                           <div style={{
