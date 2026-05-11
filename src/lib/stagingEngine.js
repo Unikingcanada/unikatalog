@@ -74,7 +74,9 @@ export async function runChunkLoop({
 
     let result;
     try {
-      result = await importStageJob({
+      // Build a plain JSON payload and call the function directly to avoid
+      // any SDK serialization that might convert arrays to "rows[]" form-style keys.
+      const payload = {
         sessionId: sessionDbId,
         entityTarget,
         rows: allRows,
@@ -82,7 +84,8 @@ export async function runChunkLoop({
         transformRules: transformRules || {},
         chunkIndex,
         chunkSize,
-      });
+      };
+      result = await importStageJob(payload);
     } catch (err) {
       // Try to extract the structured error body from a 400/500 response
       let detail = err.message;

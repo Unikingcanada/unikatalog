@@ -180,12 +180,13 @@ Deno.serve(async (req) => {
     const {
       sessionId: sessionDbIdIn,
       entityTarget,
-      rows,
       mappingRules,
       transformRules = {},
       chunkIndex = 0,
       chunkSize = DEFAULT_CHUNK_SIZE,
     } = payload;
+    // Fallback: some serializers send arrays as "rows[]" instead of "rows"
+    const rows = payload.rows || payload["rows[]"];
 
     sessionDbId = sessionDbIdIn;
 
