@@ -3,6 +3,7 @@
  * Handles auth guard + layout chrome
  */
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 
 const ADMIN_ROLES = ["admin", "super_admin"];
@@ -50,9 +51,16 @@ export default function ICShell({ children }) {
             INFRASTRUCTURE ONLY
           </span>
         </div>
-        <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontStyle: "italic" }}>
-          {user.email} · {user.role} — Not visible to app users
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <Link to="/Home" style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.55)", textDecoration: "none", border: "1px solid rgba(255,255,255,0.18)", borderRadius: 5, padding: "4px 10px" }}
+            onMouseEnter={e => e.currentTarget.style.color = "#fff"}
+            onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.55)"}>
+            ← Homepage
+          </Link>
+          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontStyle: "italic" }}>
+            {user.email} · {user.role}
+          </span>
+        </div>
       </div>
 
       {/* Content */}
