@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import AuthGate from './components/layout/AuthGate'
 import Home from './pages/Home';
 import ForgedChainConfigurator from './pages/ForgedChainConfigurator';
 import ForgedChain from './pages/ForgedChain';
@@ -15,6 +16,7 @@ import AdminUsers from './pages/AdminUsers';
 
 function App() {
   return (
+    <AuthGate>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/Home" replace />} />
@@ -33,6 +35,7 @@ function App() {
         <Route path="/admin/users" element={<AdminUsers />} />
       </Routes>
     </BrowserRouter>
+    </AuthGate>
   )
 }
 

@@ -18,24 +18,29 @@ export default function AppLayout({ children, hideHeader = false, onBack = null 
   const [cartCount, setCartCount] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const adminMenuRef = useRef(null);
+  const profileRef = useRef(null);
 
   useEffect(() => {
     base44.auth.me().then(u => {
-      if (u && (ADMIN_ROLES.includes(u.role) || u.email === "jsauro@unikingcanada.com")) {
+      if (!u) return;
+      setUser(u);
+      if (ADMIN_ROLES.includes(u.role) || u.email === "jsauro@unikingcanada.com") {
         setIsAdmin(true);
       }
     }).catch(() => {});
   }, []);
 
   useEffect(() => {
-    if (!adminMenuOpen) return;
     function handleClick(e) {
-      if (adminMenuRef.current && !adminMenuRef.current.contains(e.target)) setAdminMenuOpen(false);
+      if (adminMenuOpen && adminMenuRef.current && !adminMenuRef.current.contains(e.target)) setAdminMenuOpen(false);
+      if (profileOpen && profileRef.current && !profileRef.current.contains(e.target)) setProfileOpen(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
-  }, [adminMenuOpen]);
+  }, [adminMenuOpen, profileOpen]);
 
   useEffect(() => {
     function updateCart() {
@@ -66,11 +71,49 @@ export default function AppLayout({ children, hideHeader = false, onBack = null 
               />
               </div>
             </div>
-            {cartCount > 0 && (
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", background: "rgba(37,99,235,0.9)", padding: "4px 10px", borderRadius: 20 }}>
-                RFQ ({cartCount})
-              </div>
-            )}
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              {cartCount > 0 && (
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", background: "rgba(37,99,235,0.9)", padding: "4px 10px", borderRadius: 20 }}>
+                  RFQ ({cartCount})
+                </div>
+              )}
+              {/* Profile widget */}
+              {user && (
+                <div ref={profileRef} style={{ position: "relative" }}>
+                  <button
+                    onClick={() => setProfileOpen(o => !o)}
+                    style={{ display: "flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 8, padding: "5px 10px", cursor: "pointer", color: "#fff" }}
+                  >
+                    <div style={{ width: 24, height: 24, borderRadius: "50%", background: isAdmin ? "#f59e0b" : "#3b82f6", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, color: "#fff", flexShrink: 0 }}>
+                      {(user.full_name || user.email || "?")[0].toUpperCase()}
+                    </div>
+                    <span style={{ fontSize: 11, fontWeight: 600, maxWidth: 120, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {user.full_name || user.email}
+                    </span>
+                    <span style={{ fontSize: 9 }}>▾</span>
+                  </button>
+                  {profileOpen && (
+                    <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, boxShadow: "0 8px 24px rgba(0,0,0,0.14)", minWidth: 200, zIndex: 9999, overflow: "hidden" }}>
+                      <div style={{ padding: "12px 14px", borderBottom: "1px solid #f1f5f9" }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#0C2340", marginBottom: 2 }}>{user.full_name || "—"}</div>
+                        <div style={{ fontSize: 11, color: "#64748b", marginBottom: 6 }}>{user.email}</div>
+                        <span style={{ display: "inline-block", fontSize: 10, fontWeight: 800, textTransform: "uppercase", letterSpacing: 0.5, padding: "2px 8px", borderRadius: 99, background: isAdmin ? "#fef3c7" : "#eff6ff", color: isAdmin ? "#92400e" : "#1d4ed8", border: isAdmin ? "1px solid #fde68a" : "1px solid #bfdbfe" }}>
+                          {user.role || "user"}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => { setProfileOpen(false); base44.auth.logout(window.location.origin); }}
+                        style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", textAlign: "left", fontSize: 12, fontWeight: 600, color: "#dc2626", cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}
+                        onMouseEnter={e => e.currentTarget.style.background = "#fef2f2"}
+                        onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+                      >
+                        ⏏ Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </header>
       )}
