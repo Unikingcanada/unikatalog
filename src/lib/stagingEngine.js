@@ -6,7 +6,6 @@
  * and ICSessionDetailView (resume after reload / stall recovery).
  */
 import { base44 } from "@/api/base44Client";
-import { importStageJob } from "@/functions/importStageJob";
 
 export const CHUNK_SIZE = 25;
 
@@ -74,9 +73,9 @@ export async function runChunkLoop({
 
     let result;
     try {
-      // Build a plain JSON payload and call the function directly to avoid
-      // any SDK serialization that might convert arrays to "rows[]" form-style keys.
-      const payload = {
+      // Use base44.functions.invoke to guarantee clean JSON serialization.
+      // The direct @/functions import may encode arrays as "rows[]" (form-style).
+      result = await base44.functions.invoke("importStageJob", {
         sessionId: sessionDbId,
         entityTarget,
         rows: allRows,
@@ -84,8 +83,7 @@ export async function runChunkLoop({
         transformRules: transformRules || {},
         chunkIndex,
         chunkSize,
-      };
-      result = await importStageJob(payload);
+      });
     } catch (err) {
       // Try to extract the structured error body from a 400/500 response
       let detail = err.message;
@@ -100,6 +98,9 @@ export async function runChunkLoop({
       if (onError) onError(`Chunk ${chunkIndex} failed: ${detail}`);
       return;
     }
+
+    // invoke returns the parsed response body — unwrap .data envelope if present
+    if (result?.data) result = result.data;
 
     if (result?.error) {
       if (onError) onError(`Chunk ${chunkIndex} server error: ${result.error}${result.received_keys ? ` (received: ${result.received_keys})` : ""}`);
