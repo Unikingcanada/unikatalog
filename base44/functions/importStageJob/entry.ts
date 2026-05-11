@@ -175,6 +175,8 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json();
+    // Base44 SDK wraps frontend payloads in a "data" envelope — unwrap if present
+    const payload = body?.data ?? body;
     const {
       sessionId: sessionDbIdIn,
       entityTarget,
@@ -183,12 +185,23 @@ Deno.serve(async (req) => {
       transformRules = {},
       chunkIndex = 0,
       chunkSize = DEFAULT_CHUNK_SIZE,
-    } = body;
+    } = payload;
 
     sessionDbId = sessionDbIdIn;
 
-    if (!sessionDbId || !entityTarget || !rows || !mappingRules) {
-      return Response.json({ error: "Missing required fields" }, { status: 400 });
+    // Detailed validation — report exactly which field is missing
+    const missing = [];
+    if (!sessionDbId)   missing.push("sessionId");
+    if (!entityTarget)  missing.push("entityTarget");
+    if (!rows)          missing.push("rows");
+    if (!mappingRules)  missing.push("mappingRules");
+    if (missing.length > 0) {
+      const receivedKeys = Object.keys(payload).join(", ") || "(none)";
+      return Response.json({
+        error: `Missing required field(s): ${missing.join(", ")}`,
+        received_keys: receivedKeys,
+        hint: "Check that the frontend is passing: sessionId, entityTarget, rows[], mappingRules{}",
+      }, { status: 400 });
     }
 
     const totalRows = rows.length;
