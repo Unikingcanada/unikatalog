@@ -10,6 +10,7 @@ import IntraloxCatalog from "@/components/intralox/IntraloxCatalog";
 import ChainCatalog from "@/components/chains/ChainCatalog";
 import TableTopChainCatalog from "@/components/tableTopChain/TableTopChainCatalog";
 import HomeGlobalSearch from "@/components/HomeGlobalSearch";
+import MacProductModal, { printMacTearSheet as printMacTearSheetFn } from "@/components/catalog/MacProductModal";
 import ComparePanel from "@/components/ComparePanel";
 import { CompareBar } from "@/components/ComparePanel";
 import FourBCatalog from "@/components/fourB/FourBCatalog";
@@ -20,6 +21,7 @@ import WeldedSeriesView from "@/components/chains/WeldedSeriesView";
 import AppLayout from "@/components/layout/AppLayout";
 import FloatingRFQButton from "@/components/shared/FloatingRFQButton";
 import { COLORS, TYPOGRAPHY } from "@/lib/designSystem";
+import { base44 } from "@/api/base44Client";
 function stripVendor(text) {
   if (!text) return text;
   return text.
@@ -1341,326 +1343,7 @@ function AnsiSubGrid({ allProducts, onSelect }) {
 
 // ─── Related Item Card (sprockets, pins, attachments) ────────────────────────
 
-function RelatedCard({ item, full, onClick }) {
-  const [hov, setHov] = useState(false);
-  const [added, setAdded] = useState(() => getRFQCart().some((i) => i.id === (full?.id || item.part_number)));
-  useEffect(() => {
-    const update = () => setAdded(getRFQCart().some((i) => i.id === (full?.id || item.part_number)));
-    window.addEventListener("rfq_cart_updated", update);
-    return () => window.removeEventListener("rfq_cart_updated", update);
-  }, [full, item.part_number]);
-
-  function handleAddRFQ(e) {
-    e.stopPropagation();
-    if (added) {window.dispatchEvent(new CustomEvent("uniking_go_rfq"));return;}
-    addToRFQCart({
-      id: full?.id || item.part_number,
-      _source: "mac",
-      series: item.part_number,
-      type: full?.product_type || item.category || "Related Item",
-      style: item.name || item.category || "",
-      category: item.category || "",
-      image_url: item.image || full?.product_image || "",
-      materials: "", application: ""
-    });
-    setAdded(true);
-  }
-
-  return (
-    <div
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        border: "1px solid " + (hov && full ? C.navyMid : C.border),
-        borderRadius: 8,
-        padding: "12px 14px",
-        background: hov && full ? C.navyMid : C.bg,
-        transition: "all 0.15s",
-        display: "flex", flexDirection: "column"
-      }}>
-      {item.image &&
-      <img src={item.image} alt={item.part_number} onClick={onClick}
-      style={{ width: "100%", height: 65, objectFit: "contain", marginBottom: 8, borderRadius: 4, cursor: full ? "pointer" : "default" }} />
-      }
-      <div onClick={onClick} style={{ fontWeight: 700, fontSize: 13, color: hov && full ? "#fff" : C.text, marginBottom: 2, cursor: full ? "pointer" : "default", flex: 1 }}>
-        {item.part_number}
-      </div>
-      <div onClick={onClick} style={{ fontSize: 12, color: hov && full ? "rgba(255,255,255,0.65)" : C.muted, marginBottom: 8, cursor: full ? "pointer" : "default" }}>
-        {item.name || item.category}
-      </div>
-      <button onClick={handleAddRFQ}
-      style={{ width: "100%", padding: "5px 8px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer",
-        border: added ? "1px solid #16a34a" : "1px solid #2563eb",
-        background: added ? "#f0fdf4" : hov && full ? "rgba(255,255,255,0.15)" : "#eff6ff",
-        color: added ? "#16a34a" : hov && full ? "#fff" : "#2563eb",
-        transition: "all 0.15s" }}>
-        {added ? "✓ In RFQ" : "+ Add to RFQ"}
-      </button>
-    </div>);
-
-}
-
-function RFQButtonMac({ record }) {
-  const [added, setAdded] = useState(() => getRFQCart().some((i) => i.id === record.id));
-  useEffect(() => {
-    const update = () => setAdded(getRFQCart().some((i) => i.id === record.id));
-    window.addEventListener("rfq_cart_updated", update);
-    return () => window.removeEventListener("rfq_cart_updated", update);
-  }, [record.id]);
-  function handle() {
-    if (added) {window.dispatchEvent(new CustomEvent("uniking_go_rfq"));return;}
-    addToRFQCart({
-      id: record.id,
-      _source: "mac",
-      series: record.part_number,
-      type: record.product_type || record.category || "",
-      style: record.subcategory || "",
-      category: record.category || "",
-      image_url: record.product_image || "",
-      materials: "", application: ""
-    });
-    setAdded(true);
-  }
-  return (
-    <button onClick={handle}
-    style={{ padding: "10px 20px", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", letterSpacing: "0.02em",
-      border: "none",
-      background: added ? C.greenBg : C.green,
-      color: added ? C.green : "#fff",
-      whiteSpace: "nowrap", transition: "all 0.15s" }}>
-      {added ? "✓ Added to RFQ" : "Add to RFQ"}
-    </button>);
-
-}
-
-function MacProductModal({ record, slugMap, sprocketMap, loadSprockets, onSelect, onClose }) {
-  const [tab, setTab] = useState("specs");
-  useEffect(() => {setTab("specs");}, [record?.part_number]);
-  if (!record) return null;
-
-  const tabs = [
-  { key: "specs", label: "Specifications" },
-  record.related_sprockets?.length > 0 && { key: "sprockets", label: `Sprockets (${record.related_sprockets.length})` },
-  record.related_pins?.length > 0 && { key: "pins", label: `Pins (${record.related_pins.length})` },
-  record.related_attachments?.length > 0 && { key: "attachments", label: `Attachments (${record.related_attachments.length})` }].
-  filter(Boolean);
-
-  return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.6)", zIndex: 1000, display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "16px 12px", overflowY: "auto" }}
-    onClick={onClose}>
-      <div style={{ background: C.card, borderRadius: 12, maxWidth: 900, width: "100%", minHeight: 0, boxShadow: "0 20px 60px rgba(0,0,0,0.4)", marginTop: "auto", marginBottom: "auto" }}
-      onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div style={{ padding: "20px clamp(14px,4vw,24px) 0", borderBottom: "1px solid " + C.border }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, marginBottom: 12, flexWrap: "wrap" }}>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 20, fontWeight: 800, color: C.text, wordBreak: "break-word" }}>{record._specificPart || record.part_number}</div>
-              <div style={{ fontSize: 13, color: C.muted, marginTop: 3 }}>{record.subcategory} · {record.product_type}</div>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-              <button onClick={() => printMacTearSheet(record)} style={{ background: C.navy, border: "none", color: "#fff", padding: "7px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12, fontWeight: 700, letterSpacing: "0.02em" }}>
-                Print Tear Sheet
-              </button>
-              <button onClick={onClose} style={{ background: "#f1f5f9", border: "none", fontSize: 18, cursor: "pointer", color: C.muted, padding: "6px 10px", borderRadius: 8, lineHeight: 1 }}>×</button>
-            </div>
-          </div>
-          <div style={{ marginBottom: 12 }}>
-            <RFQButtonMac record={record} />
-          </div>
-          {tabs.length > 1 &&
-          <div style={{ display: "flex", gap: 8, marginBottom: 0 }}>
-              {tabs.map((t) =>
-            <button key={t.key} onClick={() => setTab(t.key)}
-            style={{ padding: "8px 16px", background: tab === t.key ? C.navy : "transparent", color: tab === t.key ? "#fff" : C.muted, border: tab === t.key ? "none" : "1px solid " + C.border, borderRadius: "6px 6px 0 0", cursor: "pointer", fontSize: 13, fontWeight: tab === t.key ? 700 : 400, marginBottom: -1 }}>
-                  {t.label}
-                </button>
-            )}
-            </div>
-          }
-        </div>
-
-        {/* Body */}
-        <div style={{ padding: "20px clamp(14px,4vw,24px)" }}>
-          {tab === "specs" &&
-          <div>
-              {/* Image + description */}
-              <div style={{ display: "flex", gap: 20, marginBottom: 20, flexWrap: "wrap" }}>
-                {record.product_image &&
-              <div style={{ background: C.bg, border: "1px solid " + C.border, borderRadius: 10, padding: 10, display: "flex", alignItems: "center", justifyContent: "center", width: 160, height: 130, flexShrink: 0 }}>
-                    <img src={record.product_image} alt={record.part_number}
-                style={{ maxWidth: 144, maxHeight: 114, objectFit: "contain" }} />
-                  </div>
-              }
-                <div style={{ flex: 1, minWidth: 200 }}>
-                  {record.description && <p style={{ fontSize: 14, color: C.text, lineHeight: 1.65, margin: 0 }}>{stripVendor(record.description)}</p>}
-                  {Array.isArray(record.features) && record.features.length > 0 &&
-                <ul style={{ margin: "10px 0 0", paddingLeft: 18 }}>
-                      {record.features.map((f, i) => <li key={i} style={{ fontSize: 13, color: C.muted, marginBottom: 4 }}>{stripVendor(f)}</li>)}
-                    </ul>
-                }
-                </div>
-              </div>
-              {/* Main specs table */}
-              {Array.isArray(record.basic_headers) && record.basic_headers.length > 0 && Array.isArray(record.basic_rows) && record.basic_rows.length > 0 && (() => {
-              const filteredBasic = record._specificPart ?
-              record.basic_rows.filter((row) => row[0] === record._specificPart) :
-              record.basic_rows;
-              const displayRows = filteredBasic.length > 0 ? filteredBasic : record.basic_rows;
-              return (
-                <div style={{ overflowX: "auto", marginBottom: 16 }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Specifications</div>
-                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-                    <thead>
-                      <tr style={{ background: C.navy }}>
-                        {record.basic_headers.map((h, i) => <th key={i} style={{ padding: "8px 10px", color: "#fff", textAlign: "left", fontWeight: 600, whiteSpace: "nowrap" }}>{h}</th>)}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {displayRows.map((row, ri) =>
-                      <tr key={ri} style={{ background: ri % 2 === 0 ? C.bg : C.card, borderBottom: "1px solid " + C.border }}>
-                          {row.map((cell, ci) => <td key={ci} style={{ padding: "7px 10px", color: C.text, whiteSpace: "nowrap" }}>{cell}</td>)}
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>);
-
-            })()}
-              {/* More specs table */}
-              {Array.isArray(record.more_headers) && record.more_headers.length > 0 && Array.isArray(record.more_rows) && record.more_rows.length > 0 && (() => {
-              const filteredMore = record._specificPart ?
-              record.more_rows.filter((row) => row[0] === record._specificPart) :
-              record.more_rows;
-              const displayMoreRows = filteredMore.length > 0 ? filteredMore : record.more_rows;
-              return (
-                <div style={{ overflowX: "auto" }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>Additional Data</div>
-                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-                    <thead>
-                      <tr style={{ background: C.navyMid }}>
-                        {record.more_headers.map((h, i) => <th key={i} style={{ padding: "8px 10px", color: "#fff", textAlign: "left", fontWeight: 600, whiteSpace: "nowrap" }}>{h}</th>)}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {displayMoreRows.map((row, ri) =>
-                      <tr key={ri} style={{ background: ri % 2 === 0 ? C.bg : C.card, borderBottom: "1px solid " + C.border }}>
-                          {row.map((cell, ci) => <td key={ci} style={{ padding: "7px 10px", color: C.text, whiteSpace: "nowrap" }}>{cell}</td>)}
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>);
-
-            })()}
-            </div>
-          }
-
-          {tab === "sprockets" && (() => {loadSprockets();return (
-              <div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>Compatible Sprockets</div>
-              {Object.keys(sprocketMap).length === 0 &&
-                <div style={{ fontSize: 13, color: C.muted, padding: "12px 0" }}>Loading sprocket data...</div>
-                }
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px,1fr))", gap: 10 }}>
-                {(record.related_sprockets || []).map((sp, i) => {
-                    // Strip tooth-count suffix to get parent sprocket slug
-                    const groupSlug = sp.slug?.replace(/-\d+$/, "");
-                    const dbRecord = sprocketMap[sp.slug] || sprocketMap[groupSlug] || sprocketMap[sp.part_number?.toLowerCase()] || null;
-                    const synthetic = dbRecord || {
-                      part_number: sp.part_number,
-                      product_type: "Sprocket",
-                      category: sp.category,
-                      subcategory: sp.name || sp.category,
-                      description: sp.name || sp.category,
-                      product_image: sp.image || "https://macchain.com/uploads/product-images/_subcategoryImage/sprockets_millchain_abc.png",
-                      features: [],
-                      basic_headers: [],
-                      basic_rows: [],
-                      more_headers: [],
-                      more_rows: [],
-                      related_sprockets: [],
-                      related_pins: [],
-                      related_attachments: []
-                    };
-                    return (
-                      <RelatedCard key={i} item={sp} full={synthetic}
-                      onClick={() => onSelect({ ...synthetic, _specificPart: sp.part_number, _parentPart: record.part_number, _parentRecord: record })} />);
-
-                  })}
-              </div>
-            </div>);
-          })()}
-
-          {tab === "pins" &&
-          <div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>Compatible Pins & Connecting Links</div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px,1fr))", gap: 10 }}>
-                {(record.related_pins || []).map((pin, i) => {
-                const dbRecord = slugMap?.[pin.slug] || null;
-                const synthetic = dbRecord || {
-                  part_number: pin.part_number,
-                  product_type: "Pin",
-                  category: pin.category,
-                  subcategory: pin.name || pin.category,
-                  description: pin.name || pin.category,
-                  product_image: pin.image,
-                  features: [],
-                  basic_headers: [],
-                  basic_rows: [],
-                  more_headers: [],
-                  more_rows: [],
-                  related_sprockets: [],
-                  related_pins: [],
-                  related_attachments: []
-                };
-                return (
-                  <RelatedCard key={i} item={pin} full={synthetic}
-                  onClick={() => onSelect({ ...synthetic, _specificPart: pin.part_number, _parentPart: record.part_number, _parentRecord: record })} />);
-
-              })}
-              </div>
-            </div>
-          }
-
-          {tab === "attachments" &&
-          <div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>Available Attachments</div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px,1fr))", gap: 10 }}>
-                {(record.related_attachments || []).map((att, i) => {
-                const dbRecord = slugMap?.[att.slug] || null;
-                const synthetic = dbRecord || {
-                  part_number: att.part_number,
-                  product_type: "Attachment",
-                  category: att.category,
-                  subcategory: att.name || att.category,
-                  description: att.name || att.category,
-                  product_image: att.image,
-                  features: [],
-                  basic_headers: [],
-                  basic_rows: [],
-                  more_headers: [],
-                  more_rows: [],
-                  related_sprockets: [],
-                  related_pins: [],
-                  related_attachments: []
-                };
-                return (
-                  <RelatedCard key={i} item={att} full={synthetic}
-                  onClick={() => onSelect({ ...synthetic, _specificPart: att.part_number, _parentPart: record.part_number, _parentRecord: record })} />);
-
-              })}
-              </div>
-            </div>
-          }
-        </div>
-      </div>
-    </div>);
-
-}
-
-// (WeldedChainCard / WeldedChainRow moved to components/chains/WeldedSeriesView.jsx)
-
-// (WeldedSeriesView extracted to components/chains/WeldedSeriesView.jsx)
+// RelatedCard, RFQButtonMac, MacProductModal: imported from components/catalog/MacProductModal.jsx
 
 // ─── Chain Subcategory Grid ───────────────────────────────────────────────────
 
@@ -1735,6 +1418,7 @@ export default function Home() {
   const [currentPage, setCurrentPage] = useState(null);
   const [allData, setAllData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [catalogStats, setCatalogStats] = useState(null); // { staticCount, dbCount, mergedCount }
 
   // Auto-open section from URL param (e.g. ?section=rollers)
   useEffect(() => {
@@ -1772,6 +1456,8 @@ export default function Home() {
   const [rawMacRecords, setRawMacRecords] = useState([]);
   const [globalSearch, setGlobalSearch] = useState("");
   const [globalSelected, setGlobalSelected] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => { base44.auth.me().then(u => { if (u?.role === "admin" || u?.email === "jsauro@unikingcanada.com") setIsAdmin(true); }).catch(() => {}); }, []);
 
 
   useEffect(() => {
@@ -1857,9 +1543,31 @@ export default function Home() {
     }
     async function load() {
       const s=(p)=>p.catch(()=>[]);
-      const [cat,elev,uni,allied,donghua]=await Promise.all([s(fetchAll(CatalogProduct)),s(fetchAll(ElevatorBucket)),s(fetchAll(UniCatalog)),s(fetchAll(MacChainProduct)),s(fetchAll(DonghuaChain))]);
+      // Fetch DB chains (Active) alongside all other catalog sources
+      const fetchDbChains = async () => {
+        let all = [], skip = 0;
+        while (true) {
+          const batch = await base44.entities.Normalized_Chains.filter({ status: "Active" }, "-created_date", 500, skip);
+          if (!batch?.length) break;
+          all = [...all, ...batch];
+          if (batch.length < 500) break;
+          skip += batch.length;
+        }
+        return all;
+      };
+      const [cat,elev,uni,allied,donghua,dbChains]=await Promise.all([s(fetchAll(CatalogProduct)),s(fetchAll(ElevatorBucket)),s(fetchAll(UniCatalog)),s(fetchAll(MacChainProduct)),s(fetchAll(DonghuaChain)),s(fetchDbChains())]);
       setRawMacRecords(allied||[]);
-      const normalizedChains = ALL_NORMALIZED_CHAINS.map(normalizeNormalizedChain);
+
+      // Merge static + DB: DB takes priority for same chain_id, static is fallback only
+      const staticChains = ALL_NORMALIZED_CHAINS;
+      const validDb = (dbChains||[]).filter(r => !r.status || r.status === "Active");
+      const mergedMap = new Map();
+      for (const r of validDb) { if (r.chain_id) mergedMap.set(r.chain_id, { ...r, _from_db: true }); }
+      for (const c of staticChains) { if (!mergedMap.has(c.chain_id)) mergedMap.set(c.chain_id, c); }
+      const merged = [...mergedMap.values()];
+      setCatalogStats({ staticCount: staticChains.length, dbCount: validDb.length, mergedCount: merged.length });
+
+      const normalizedChains = merged.map(normalizeNormalizedChain);
       setAllData([...normalizedChains,...(cat||[]).map(normalizeCatalogProduct),...(elev||[]).map(normalizeElevatorBucket),...(uni||[]).map(normalizeUniCatalog),...(allied||[]).map(normalizeAllied),...(donghua||[]).map(normalizeDonghuaChain),...FOURB_PRODUCTS.map(normalizeFourBProduct)]);
       setLoading(false);
     }
@@ -1959,6 +1667,16 @@ export default function Home() {
               </div>
 
               <TypeGrid types={availableTypes} counts={typeCounts} onSelect={selectType} />
+
+              {/* Admin-only catalog source debug widget */}
+              {catalogStats && isAdmin && (
+                <div style={{ marginTop: 16, padding: "8px 14px", background: "#0C2340", borderRadius: 8, display: "inline-flex", gap: 16, fontSize: 11, color: "rgba(255,255,255,0.7)", fontFamily: "monospace" }}>
+                  <span>⚙ Catalog Sources:</span>
+                  <span>Static: <strong style={{ color: "#94c5e8" }}>{catalogStats.staticCount}</strong></span>
+                  <span>DB: <strong style={{ color: "#86efac" }}>{catalogStats.dbCount}</strong></span>
+                  <span>Merged: <strong style={{ color: "#fde68a" }}>{catalogStats.mergedCount}</strong></span>
+                </div>
+              )}
 
               {/* Global search result modal */}
               {globalSelected && (() => {
