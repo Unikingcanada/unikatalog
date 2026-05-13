@@ -10,6 +10,7 @@ import { CHAIN_FAMILIES } from "@/lib/chainFamilyData";
 import { CHAIN_PRODUCTS } from "@/lib/chainCatalogData";
 import { ALL_NORMALIZED_CHAINS } from "@/lib/chainNormalizedIndex";
 import { getChainCountByFamily } from "@/lib/chainCountHelpers";
+import { useNavigate } from "react-router-dom";
 
 const C = {
   navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
@@ -53,6 +54,7 @@ function FamilyCard({ family, count, onClick }) {
 
 export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator }) {
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const familyCounts = useMemo(() => {
     const counts = {};
@@ -73,14 +75,41 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator 
     return counts;
   }, []);
 
-  const filtered = useMemo(() => {
-    if (!search.trim()) return CHAIN_FAMILIES;
+  const { familiesFiltered, chainsMatched } = useMemo(() => {
+    if (!search.trim()) return { familiesFiltered: CHAIN_FAMILIES, chainsMatched: [] };
+
     const q = search.toLowerCase();
-    return CHAIN_FAMILIES.filter(f =>
+
+    // Search families by label, description, applications
+    const familiesFiltered = CHAIN_FAMILIES.filter(f =>
       f.label.toLowerCase().includes(q) ||
       f.description?.toLowerCase().includes(q) ||
       f.applications?.some(a => a.toLowerCase().includes(q))
     );
+
+    // Search individual normalized chains
+    const chainsMatched = ALL_NORMALIZED_CHAINS.filter(c => {
+      // Only show Active or blank status chains
+      if (c.status && c.status !== "Active") return false;
+
+      // Search fields: chain_id, chain_number, display_name, standard, chain_family, description, application_tags
+      return (
+        c.chain_id?.toLowerCase?.().includes(q) ||
+        c.chain_number?.toLowerCase?.().includes(q) ||
+        c.display_name?.toLowerCase?.().includes(q) ||
+        c.standard?.toLowerCase?.().includes(q) ||
+        c.chain_family?.toLowerCase?.().includes(q) ||
+        c.description?.toLowerCase?.().includes(q) ||
+        c.application_tags?.some(t => t.toLowerCase().includes(q))
+      );
+    }).sort((a, b) => {
+      // Exact chain_id match first
+      if (a.chain_id === search.toUpperCase() && b.chain_id !== search.toUpperCase()) return -1;
+      if (b.chain_id === search.toUpperCase() && a.chain_id !== search.toUpperCase()) return 1;
+      return 0;
+    });
+
+    return { familiesFiltered, chainsMatched };
   }, [search]);
 
   return (
@@ -109,16 +138,95 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator 
         ℹ Final specifications, availability, and pricing must be confirmed by Uniking before supply. This platform merges data from multiple sources.
       </div>
 
-      {/* Family grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12 }}>
-        {filtered.map(fam => (
-          <FamilyCard key={fam.key} family={fam} count={familyCounts[fam.key] || 0} onClick={onSelectFamily} />
-        ))}
-      </div>
+      {/* Search debug info (admin) */}
+      {search.trim() && (
+        <div style={{ fontSize: 11, color: C.muted, marginBottom: 16 }}>
+          Search source: Normalized_Chains DB · {chainsMatched.length} matching chain record{chainsMatched.length !== 1 ? "s" : ""}
+        </div>
+      )}
 
-      {filtered.length === 0 && (
+      {/* Matching Chains Section */}
+      {chainsMatched.length > 0 && (
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ fontSize: 15, fontWeight: 800, color: C.text, marginBottom: 12 }}>
+            Matching Chains ({chainsMatched.length})
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+            {chainsMatched.slice(0, 12).map(chain => (
+              <div
+                key={chain.chain_id}
+                onClick={() => {
+                  // Navigate to the family view and select this product
+                  onSelectFamily({ key: chain.chain_family });
+                }}
+                style={{
+                  background: C.card,
+                  border: "1px solid " + C.border,
+                  borderRadius: 10,
+                  padding: 14,
+                  cursor: "pointer",
+                  transition: "all 0.18s",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 6,
+                  boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+                  position: "relative",
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.15)";
+                  e.currentTarget.style.borderColor = C.navyMid;
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.05)";
+                  e.currentTarget.style.borderColor = C.border;
+                  e.currentTarget.style.transform = "none";
+                }}
+              >
+                <div style={{ fontSize: 13, fontWeight: 800, color: C.text }}>{chain.chain_id}</div>
+                <div style={{ fontSize: 11, color: C.muted }}>{chain.display_name}</div>
+                <div style={{ fontSize: 10, color: C.muted, display: "flex", gap: 8, flexWrap: "wrap", marginTop: 2 }}>
+                  <span>{chain.chain_family}</span>
+                  {chain.pitch_in && <span>•</span>}
+                  {chain.pitch_in && <span>{chain.pitch_in}"</span>}
+                  {chain.pitch_mm && <span>({chain.pitch_mm}mm)</span>}
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6, paddingTop: 6, borderTop: "1px solid " + C.border }}>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: chain.status === "Active" || !chain.status ? "#16a34a" : C.muted }}>
+                    {chain.status || "Active"}
+                  </span>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: C.navyMid }}>View Details →</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          {chainsMatched.length > 12 && (
+            <div style={{ fontSize: 11, color: C.muted, marginTop: 8 }}>
+              … and {chainsMatched.length - 12} more chain{chainsMatched.length - 12 !== 1 ? "s" : ""}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Matching Families Section */}
+      {familiesFiltered.length > 0 && (
+        <div>
+          {chainsMatched.length > 0 && (
+            <div style={{ fontSize: 15, fontWeight: 800, color: C.text, marginBottom: 12 }}>
+              Matching Families ({familiesFiltered.length})
+            </div>
+          )}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12 }}>
+            {familiesFiltered.map(fam => (
+              <FamilyCard key={fam.key} family={fam} count={familyCounts[fam.key] || 0} onClick={onSelectFamily} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {chainsMatched.length === 0 && familiesFiltered.length === 0 && (
         <div style={{ textAlign: "center", padding: "40px 0", color: C.muted, fontSize: 14 }}>
-          No chain families match your search. Try a different term or use the configurator.
+          No chain families or individual chains match your search. Try a different term or use the configurator.
         </div>
       )}
 
