@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { AlertCircle, CheckCircle2, Database, BarChart3 } from "lucide-react";
+import { AlertCircle, CheckCircle2, Database, BarChart3, Clock, AlertTriangle } from "lucide-react";
 import { getTotalUniqueChainCount, getChainAuditBreakdown } from "@/lib/chainCountHelpers";
 
 export default function ChainsAudit() {
@@ -19,6 +19,7 @@ export default function ChainsAudit() {
     duplicateChainIds: 0,
     mergedChainCount: 0,
   });
+  const [importSessions, setImportSessions] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -37,6 +38,10 @@ export default function ChainsAudit() {
 
         // Fetch raw imports
         const rawImports = await base44.entities.Raw_Chain_Imports.list("-created_at", 10000);
+
+        // Fetch import sessions for dashboard
+        const sessions = await base44.entities.Import_Sessions.list("-created_date", 100);
+        setImportSessions(sessions || []);
 
         // Fetch all related entities and count orphaned records
         const dimensions = await base44.entities.Chain_Dimensions.list("-updated_date", 10000);
@@ -146,6 +151,35 @@ export default function ChainsAudit() {
         </div>
       </div>
 
+      {/* Import Session Dashboard */}
+      {importSessions.length > 0 && (
+        <div style={{ marginTop: 28 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 800, color: "#1e293b", marginBottom: 12 }}>Recent Import Sessions</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+            {importSessions.slice(0, 6).map(sess => (
+              <div key={sess.id} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: 14, display: "flex", flexDirection: "column", gap: 8 }}>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 8, justifyContent: "space-between" }}>
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#0C2340" }}>{sess.session_id}</div>
+                    <div style={{ fontSize: 10, color: "#64748b", marginTop: 2 }}>{sess.manufacturer || "Unknown"}</div>
+                  </div>
+                  <StatusBadge status={sess.import_status} />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 11, color: "#64748b" }}>
+                  <div>📊 Total: {sess.total_rows || 0}</div>
+                  <div>✓ Written: {sess.rows_written || 0}</div>
+                  <div>⚠ Flags: {sess.flags_generated || 0}</div>
+                  {sess.rows_staged && <div>📦 Staged: {sess.rows_staged}</div>}
+                </div>
+                <div style={{ fontSize: 9, color: "#94a3b8", marginTop: 4 }}>
+                  {sess.uploaded_at ? new Date(sess.uploaded_at).toLocaleDateString() : "—"}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Summary */}
       <div style={{ marginTop: 24, padding: "14px 16px", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 8, fontSize: 12, color: "#166534", lineHeight: 1.6 }}>
         <strong>✓ Consolidation Status:</strong>
@@ -193,5 +227,26 @@ function OrphanCard({ entity, count }) {
         Orphaned {entity}
       </div>
     </div>
+  );
+}
+
+function StatusBadge({ status }) {
+  const colors = {
+    "Uploading": { bg: "#eff6ff", color: "#0284c7" },
+    "Staged": { bg: "#f0fdf4", color: "#16a34a" },
+    "Validating": { bg: "#fef3c7", color: "#b45309" },
+    "Pending Review": { bg: "#fef2f2", color: "#dc2626" },
+    "Committing": { bg: "#f3e8ff", color: "#9333ea" },
+    "Committed": { bg: "#dcfce7", color: "#166534" },
+    "Partially Committed": { bg: "#fef3c7", color: "#92400e" },
+    "Rolled Back": { bg: "#fee2e2", color: "#991b1b" },
+    "Failed": { bg: "#fecaca", color: "#7f1d1d" },
+    "Cancelled": { bg: "#f1f5f9", color: "#64748b" },
+  };
+  const style = colors[status] || { bg: "#f1f5f9", color: "#64748b" };
+  return (
+    <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 4, background: style.bg, color: style.color }}>
+      {status || "—"}
+    </span>
   );
 }

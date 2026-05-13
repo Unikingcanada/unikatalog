@@ -29,7 +29,7 @@ const TRANSFORM_OPTIONS = [
   { value: "boolean", label: "→ boolean (yes/1/true)" },
 ];
 
-export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityChange, onMappingReady, initialMapping }) {
+export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityChange, onMappingReady, onDryRun, initialMapping }) {
   const [mapping, setMapping] = useState({});
   const [transforms, setTransforms] = useState({});
   const [savedMappings, setSavedMappings] = useState([]);
@@ -226,11 +226,27 @@ export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityCh
         </table>
       </div>
 
-      {/* Apply button */}
-      <div style={{ padding: "14px 20px", borderTop: "1px solid #e2e8f0", display: "flex", justifyContent: "flex-end", gap: 10 }}>
+      {/* Apply buttons */}
+      <div style={{ padding: "14px 20px", borderTop: "1px solid #e2e8f0", display: "flex", justifyContent: "flex-end", gap: 10, flexWrap: "wrap" }}>
         <span style={{ fontSize: 12, color: "#64748b", alignSelf: "center" }}>
           {mappedCount} of {sourceHeaders.length} columns mapped
         </span>
+        {onDryRun && entityTarget === "Normalized_Chains" && (
+          <button
+            onClick={() => onDryRun(mapping, transforms)}
+            disabled={mappedCount === 0}
+            style={{
+              background: mappedCount === 0 ? "#f1f5f9" : "#fff7ed",
+              color: mappedCount === 0 ? "#94a3b8" : "#c2410c",
+              border: mappedCount === 0 ? "1px solid #e2e8f0" : "1px solid #fed7aa",
+              borderRadius: 8, padding: "9px 22px",
+              fontSize: 12, fontWeight: 700, cursor: mappedCount === 0 ? "default" : "pointer",
+            }}
+            title="Validate chain import without writing to database"
+          >
+            🔍 Dry Run / Validate Only
+          </button>
+        )}
         <button
           onClick={() => onMappingReady(mapping, transforms)}
           disabled={mappedCount === 0}

@@ -14,9 +14,13 @@ import {
 } from "@/lib/importCenterEngine";
 import { importCommitJob } from "@/functions/importCommitJob";
 import { saveImportPayload, runChunkLoop, CHUNK_SIZE } from "@/lib/stagingEngine";
+import {
+  validateChainImport, fetchExistingChains, checkOrphanRisks, generateReviewFlags,
+} from "@/lib/chainImportValidator";
 import ICUploadZone from "./ICUploadZone";
 import ICColumnMapper from "./ICColumnMapper";
 import ICDiffViewer from "./ICDiffViewer";
+import ChainImportSummary from "./ChainImportSummary";
 
 const STEPS = ["Upload", "Configure", "Staging", "Review & Commit", "Done"];
 
@@ -292,6 +296,10 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
   const [doneSession, setDoneSession] = useState(null);
   const [stagingContext, setStagingContext] = useState(null); // { allRows, mappingRules, transformRules }
   const [retryingStaging, setRetryingStaging] = useState(false);
+  const [dryRunMode, setDryRunMode] = useState(false);
+  const [validationResult, setValidationResult] = useState(null);
+  const [orphanRisks, setOrphanRisks] = useState({});
+  const [existingChains, setExistingChains] = useState(new Map());
 
   const allHeaders = [...new Set(parsedFiles.flatMap(p => p.headers))];
   const totalRows = parsedFiles.reduce((s, p) => s + p.rows.length, 0);
@@ -336,6 +344,45 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
     setXlsxSheets(null);
     setXlsxFileName("");
     if (updated.length > 0) setStep(1);
+  }
+
+  // ── DRY RUN: Validate chain import without writing ────────────────────────
+  async function handleDryRun(mappingRules, transformRules) {
+    setError(null);
+    setDryRunMode(true);
+
+    try {
+      // Flatten parsed file rows
+      const allRows = parsedFiles.flatMap(p => p.rows.map(r => ({ row: r, file: p.name })));
+
+      // Fetch existing chains for dedup checking
+      const existing = await fetchExistingChains();
+      setExistingChains(existing);
+
+      // Map rows to chain record shape for validation
+      const chainRecords = allRows.map(({ row, file }, idx) => {
+        const mapped = {};
+        for (const [srcCol, tgtField] of Object.entries(mappingRules)) {
+          if (row.hasOwnProperty(srcCol)) mapped[tgtField] = row[srcCol];
+        }
+        return { ...mapped, _file: file, _rowIndex: idx };
+      });
+
+      // Validate
+      const result = await validateChainImport(chainRecords, { dryRun: true, existingChains: existing });
+      setValidationResult(result);
+
+      // Check orphan risks
+      if (result.valid.length > 0) {
+        const chainIds = result.valid.map(c => c.chain_id);
+        const orphans = await checkOrphanRisks(chainIds);
+        setOrphanRisks(orphans);
+      }
+
+      setStep(3); // Show summary
+    } catch (err) {
+      setError(`Dry run failed: ${err.message}`);
+    }
   }
 
   // ── Step 1 → 2: Create session + fire background job ──────────────────────
@@ -613,6 +660,7 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
                 entityTarget={entityTarget}
                 onEntityChange={setEntityTarget}
                 onMappingReady={handleMappingReady}
+                onDryRun={handleDryRun}
               />
             </div>
           )}
@@ -642,8 +690,45 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
             </div>
           )}
 
-          {/* Step 3: Diff viewer */}
-          {step === 3 && (
+          {/* Step 3: Validation summary (dry-run) or Diff viewer */}
+          {step === 3 && dryRunMode && validationResult && (
+            <ChainImportSummary
+              validationResult={validationResult}
+              orphanRisks={orphanRisks}
+              sessionId={`DRY-RUN-${new Date().getTime()}`}
+              onApprove={async ({ mode, sessionId }) => {
+                // User approved — reset to continue with real import
+                setDryRunMode(false);
+                setValidationResult(null);
+                setOrphanRisks({});
+                setStep(1); // Back to mapping
+              }}
+              onCancel={() => {
+                setDryRunMode(false);
+                setValidationResult(null);
+                setOrphanRisks({});
+                setStep(1);
+              }}
+              onExportIssues={(result) => {
+                // Export CSV of issues
+                const rows = [
+                  ["Chain ID", "Issue Type", "Detail"],
+                  ...result.invalid.map(r => [r.chain_id || "N/A", "Invalid Row", r.reason]),
+                  ...result.duplicates.map(r => [r.chain_id, "Duplicate", "Same chain_id appears multiple times"]),
+                ];
+                const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+                const blob = new Blob([csv], { type: "text/csv" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `chain-import-issues-${new Date().getTime()}.csv`;
+                a.click();
+              }}
+            />
+          )}
+
+          {/* Step 3: Diff viewer (live commit) */}
+          {step === 3 && !dryRunMode && (
             <div>
               <div style={{ marginBottom: 8, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
                 <div style={{ fontSize: 14, fontWeight: 800, color: "#0C2340" }}>
