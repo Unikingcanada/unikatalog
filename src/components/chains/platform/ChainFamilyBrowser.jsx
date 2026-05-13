@@ -9,7 +9,7 @@ import { useState, useMemo } from "react";
 import { CHAIN_FAMILIES } from "@/lib/chainFamilyData";
 import { CHAIN_PRODUCTS } from "@/lib/chainCatalogData";
 import { ALL_NORMALIZED_CHAINS } from "@/lib/chainNormalizedIndex";
-import { getChainCountByFamily } from "@/lib/chainCountHelpers";
+import { getChainCountByFamily, getUniqueActiveChains } from "@/lib/chainCountHelpers";
 import { useNavigate } from "react-router-dom";
 
 const C = {
@@ -75,10 +75,10 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator 
     return counts;
   }, []);
 
-  const { familiesFiltered, chainsMatched } = useMemo(() => {
-    if (!search.trim()) return { familiesFiltered: CHAIN_FAMILIES, chainsMatched: [] };
+  const { familiesFiltered, chainsMatched, debugInfo } = useMemo(() => {
+    if (!search.trim()) return { familiesFiltered: CHAIN_FAMILIES, chainsMatched: [], debugInfo: null };
 
-    const q = search.toLowerCase();
+    const q = search.toLowerCase().trim();
 
     // Search families by label, description, applications
     const familiesFiltered = CHAIN_FAMILIES.filter(f =>
@@ -87,11 +87,13 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator 
       f.applications?.some(a => a.toLowerCase().includes(q))
     );
 
-    // Search individual normalized chains
-    const chainsMatched = ALL_NORMALIZED_CHAINS.filter(c => {
-      // Only show Active or blank status chains
-      if (c.status && c.status !== "Active") return false;
+    // Use AUTHORITATIVE live DB source: getUniqueActiveChains()
+    // This is DB-first, deduped, filtered same as platform display
+    const allSearchableChains = getUniqueActiveChains();
+    const allSearchableCount = allSearchableChains.length;
 
+    // Search individual normalized chains
+    const chainsMatched = allSearchableChains.filter(c => {
       // Search fields: chain_id, chain_number, display_name, standard, chain_family, description, application_tags
       return (
         c.chain_id?.toLowerCase?.().includes(q) ||
@@ -103,13 +105,21 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator 
         c.application_tags?.some(t => t.toLowerCase().includes(q))
       );
     }).sort((a, b) => {
-      // Exact chain_id match first
-      if (a.chain_id === search.toUpperCase() && b.chain_id !== search.toUpperCase()) return -1;
-      if (b.chain_id === search.toUpperCase() && a.chain_id !== search.toUpperCase()) return 1;
+      // Exact chain_id match first (case-insensitive)
+      const exactA = a.chain_id?.toUpperCase() === q.toUpperCase();
+      const exactB = b.chain_id?.toUpperCase() === q.toUpperCase();
+      if (exactA && !exactB) return -1;
+      if (!exactA && exactB) return 1;
       return 0;
     });
 
-    return { familiesFiltered, chainsMatched };
+    // Debug info
+    const debugInfo = {
+      dbRecordsSearched: allSearchableCount,
+      matchesReturned: chainsMatched.length,
+    };
+
+    return { familiesFiltered, chainsMatched, debugInfo };
   }, [search]);
 
   return (
@@ -139,9 +149,12 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator 
       </div>
 
       {/* Search debug info (admin) */}
-      {search.trim() && (
-        <div style={{ fontSize: 11, color: C.muted, marginBottom: 16 }}>
-          Search source: Normalized_Chains DB · {chainsMatched.length} matching chain record{chainsMatched.length !== 1 ? "s" : ""}
+      {search.trim() && debugInfo && (
+        <div style={{ fontSize: 11, color: C.muted, marginBottom: 16, padding: "8px 0" }}>
+          <div>Search source: Normalized_Chains DB ({debugInfo.dbRecordsSearched} live records)</div>
+          <div style={{ marginTop: 2, color: "#16a34a", fontWeight: 600 }}>
+            {debugInfo.matchesReturned} matching chain record{debugInfo.matchesReturned !== 1 ? "s" : ""}
+          </div>
         </div>
       )}
 
@@ -152,12 +165,15 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator 
             Matching Chains ({chainsMatched.length})
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
-            {chainsMatched.slice(0, 12).map(chain => (
+            {chainsMatched.slice(0, 12).map(chain => {
+              // Resolve chain_family (display label) to family key
+              const familyKey = CHAIN_FAMILIES.find(f => f.key === chain.chain_family)?.key || chain.chain_family;
+              return (
               <div
                 key={chain.chain_id}
                 onClick={() => {
-                  // Navigate to the family view and select this product
-                  onSelectFamily({ key: chain.chain_family });
+                  // Navigate to the correct family using the resolved key
+                  onSelectFamily({ key: familyKey });
                 }}
                 style={{
                   background: C.card,
@@ -198,7 +214,8 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator 
                   <span style={{ fontSize: 11, fontWeight: 600, color: C.navyMid }}>View Details →</span>
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
           {chainsMatched.length > 12 && (
             <div style={{ fontSize: 11, color: C.muted, marginTop: 8 }}>
