@@ -8,8 +8,8 @@
 import { useState, useMemo } from "react";
 import { CHAIN_FAMILIES } from "@/lib/chainFamilyData";
 import { CHAIN_PRODUCTS } from "@/lib/chainCatalogData";
-import { ALL_NORMALIZED_CHAINS } from "@/lib/chainNormalizedIndex";
 import { getChainCountByFamily, getUniqueActiveChains } from "@/lib/chainCountHelpers";
+import { getLiveChainsSync } from "@/lib/chainLiveDbSource";
 import { useNavigate } from "react-router-dom";
 
 const C = {
@@ -52,7 +52,7 @@ function FamilyCard({ family, count, onClick }) {
   );
 }
 
-export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator }) {
+export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator, liveChainSource = null }) {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
@@ -87,9 +87,9 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator 
       f.applications?.some(a => a.toLowerCase().includes(q))
     );
 
-    // Use AUTHORITATIVE live DB source: getUniqueActiveChains()
-    // This is DB-first, deduped, filtered same as platform display
-    const allSearchableChains = getUniqueActiveChains();
+    // Use AUTHORITATIVE live DB source passed from ChainPlatformView
+    // Falls back to getUniqueActiveChains() for backward compat
+    const allSearchableChains = liveChainSource?.live || getUniqueActiveChains();
     const allSearchableCount = allSearchableChains.length;
 
     // Search individual normalized chains

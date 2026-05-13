@@ -4,12 +4,14 @@
  * Navigation: Family Browser → Product List → Product Detail
  * Includes Chain Configurator modal.
  */
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
 import { CHAIN_FAMILIES } from "@/lib/chainFamilyData";
 import { CHAIN_PRODUCTS } from "@/lib/chainCatalogData";
-import { ALL_NORMALIZED_CHAINS, getChainsByFamily } from "@/lib/chainNormalizedIndex";
+import { getChainsByFamily } from "@/lib/chainNormalizedIndex";
 import { isComponentSku } from "@/lib/importCenterEngine";
 import { getChainsByFamilyActive as getUniqueActiveChainsByFamily } from "@/lib/chainCountHelpers";
+import { fetchLiveNormalizedChains } from "@/lib/chainLiveDbSource";
 import ChainFamilyBrowser from "./ChainFamilyBrowser";
 import NormalizedChainCard from "./NormalizedChainCard";
 import ChainDetailView from "./ChainDetailView";
@@ -36,7 +38,7 @@ function ViewToggle({ view, onChange }) {
   );
 }
 
-function ProductListView({ family, products, onSelect, onConfigure }) {
+function ProductListView({ family, products, onSelect, onConfigure, liveChainSource = null, isAdmin = false }) {
   const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState("grid");
   const [compareItems, setCompareItems] = useState([]);
@@ -64,6 +66,17 @@ function ProductListView({ family, products, onSelect, onConfigure }) {
 
   return (
     <div>
+      {/* Admin debug output */}
+      {isAdmin && liveChainSource && (
+        <div style={{ fontSize: 10, color: "#0f172a", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 6, padding: "8px 12px", marginBottom: 16 }}>
+          <div style={{ fontWeight: 700, marginBottom: 4 }}>Debug: {family.label}</div>
+          <div>Live DB loaded: {liveChainSource.totalSearchable} chains</div>
+          <div>Active + unfiltered: {products.length} in family</div>
+          <div>After subcategory filter: {filtered.filter(p => subcategory === "all" || p.subcategory === subcategory).length}</div>
+          {search && <div>Search matches: {filtered.length}</div>}
+        </div>
+      )}
+
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
         <div>
@@ -161,6 +174,19 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
   const [showConfigurator, setShowConfigurator] = useState(false);
   const [configFamily, setConfigFamily] = useState(null);
   const [configChain, setConfigChain] = useState(null);
+  const [liveChainSource, setLiveChainSource] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Fetch live DB chains on mount
+  useEffect(() => {
+    fetchLiveNormalizedChains().then(source => {
+      setLiveChainSource(source);
+    });
+    // Check if admin
+    base44.auth.me().then(u => {
+      if (u?.role === "admin" || u?.email === "jsauro@unikingcanada.com") setIsAdmin(true);
+    }).catch(() => {});
+  }, []);
 
   const familyProducts = useMemo(() => {
     if (!selectedFamily) return [];
@@ -247,6 +273,7 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
             <ChainFamilyBrowser
               onSelectFamily={handleSelectFamily}
               onOpenConfigurator={() => handleConfigure(null, null)}
+              liveChainSource={liveChainSource}
             />
             <ChainCountDebugPanel />
           </>
@@ -258,6 +285,8 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
             products={familyProducts}
             onSelect={handleSelectProduct}
             onConfigure={handleConfigure}
+            liveChainSource={liveChainSource}
+            isAdmin={isAdmin}
           />
         )}
 
