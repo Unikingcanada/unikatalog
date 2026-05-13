@@ -122,48 +122,53 @@ export async function fetchExistingChains() {
 }
 
 /**
- * Check for orphan relationships in related entities
- * @param {Array<string>} chainIds - chain_ids to check
- * @returns {Promise<Object>} { orphans: { Dimensions, Performance, etc. } }
+ * Check for orphan risks in CURRENT IMPORT RECORDS ONLY
+ * 
+ * Rules:
+ * 1. Normalized_Chains target always has 0 orphan risks
+ * 2. For related entities (Dimensions, Performance, etc.): only check records in the current import session
+ * 3. A record is an orphan if its chain_id does NOT exist in active Normalized_Chains
+ * 
+ * @param {Array} stagedRecords - records from current import session
+ * @param {string} entityTarget - the entity being imported
+ * @param {Map} activeChains - Map<chain_id, record> of active chains in DB
+ * @returns {Promise<Object>} { Dimensions, Performance, Equivalents, ... } — only current import orphans
  */
-export async function checkOrphanRisks(chainIds) {
-  const chainIdSet = new Set(chainIds);
-  const orphans = {};
-
-  try {
-    // Check Dimensions
-    const dims = await base44.entities.Chain_Dimensions.list("-updated_date", 10000);
-    orphans.Dimensions = dims.filter(d => !chainIdSet.has(d.chain_id));
-
-    // Check Performance
-    const perf = await base44.entities.Performance_Data.list("-updated_date", 10000);
-    orphans.Performance = perf.filter(p => !chainIdSet.has(p.chain_id));
-
-    // Check Equivalents
-    const equiv = await base44.entities.Manufacturer_Equivalents.list("-updated_date", 10000);
-    orphans.Equivalents = equiv.filter(e => !chainIdSet.has(e.chain_id));
-
-    // Check Attachments
-    const attach = await base44.entities.Chain_Attachments.list("-updated_date", 10000);
-    orphans.Attachments = attach.filter(a => !chainIdSet.has(a.chain_id));
-
-    // Check Sprockets
-    const sprocket = await base44.entities.Chain_Sprockets.list("-updated_date", 10000);
-    orphans.Sprockets = sprocket.filter(s => !chainIdSet.has(s.chain_id));
-
-    // Check Media
-    const media = await base44.entities.Chain_Media.list("-updated_date", 10000);
-    orphans.Media = media.filter(m => !chainIdSet.has(m.chain_id));
-
-    // Check Downloads
-    const dl = await base44.entities.Chain_Downloads.list("-updated_date", 10000);
-    orphans.Downloads = dl.filter(d => d.chain_id !== "ALL" && !chainIdSet.has(d.chain_id));
-
-    return orphans;
-  } catch (e) {
-    console.error("Error checking orphan risks:", e);
-    return orphans;
+export async function checkOrphanRisksForImport(stagedRecords, entityTarget, activeChains) {
+  // Rule 1: Normalized_Chains never has orphan risks
+  if (entityTarget === "Normalized_Chains") {
+    return {};
   }
+
+  // Rule 2: For related entities, find records with chain_ids not in the DB
+  const orphans = {};
+  const activeChainIds = new Set(activeChains.keys());
+
+  for (const rec of stagedRecords) {
+    const chainId = rec.chain_id;
+    
+    // If chain_id doesn't exist in DB, it's an orphan risk
+    if (chainId && !activeChainIds.has(chainId)) {
+      const entityName = 
+        entityTarget === "Chain_Dimensions" ? "Dimensions" :
+        entityTarget === "Performance_Data" ? "Performance" :
+        entityTarget === "Manufacturer_Equivalents" ? "Equivalents" :
+        entityTarget === "Chain_Attachments" ? "Attachments" :
+        entityTarget === "Chain_Sprockets" ? "Sprockets" :
+        entityTarget === "Chain_Media" ? "Media" :
+        entityTarget === "Chain_Downloads" ? "Downloads" :
+        "Unknown";
+      
+      if (!orphans[entityName]) orphans[entityName] = [];
+      orphans[entityName].push({
+        chain_id: chainId,
+        reason: `Parent chain_id "${chainId}" not found in active Normalized_Chains`,
+        _record: rec,
+      });
+    }
+  }
+
+  return orphans;
 }
 
 /**

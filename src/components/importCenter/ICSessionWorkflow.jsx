@@ -15,7 +15,7 @@ import {
 import { importCommitJob } from "@/functions/importCommitJob";
 import { saveImportPayload, runChunkLoop, CHUNK_SIZE } from "@/lib/stagingEngine";
 import {
-  validateChainImport, fetchExistingChains, checkOrphanRisks, generateReviewFlags,
+  validateChainImport, fetchExistingChains, checkOrphanRisksForImport, generateReviewFlags,
 } from "@/lib/chainImportValidator";
 import ICUploadZone from "./ICUploadZone";
 import ICColumnMapper from "./ICColumnMapper";
@@ -372,12 +372,9 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
       const result = await validateChainImport(chainRecords, { dryRun: true, existingChains: existing });
       setValidationResult(result);
 
-      // Check orphan risks
-      if (result.valid.length > 0) {
-        const chainIds = result.valid.map(c => c.chain_id);
-        const orphans = await checkOrphanRisks(chainIds);
-        setOrphanRisks(orphans);
-      }
+      // Check orphan risks (only for related entity imports, not for Normalized_Chains)
+      const orphans = await checkOrphanRisksForImport(chainRecords, entityTarget, existing);
+      setOrphanRisks(orphans);
 
       setStep(3); // Show summary
     } catch (err) {
