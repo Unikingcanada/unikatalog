@@ -15,79 +15,8 @@ const CATEGORY_COLORS = Object.fromEntries(
 );
 
 export default function ChainCatalog({ onBack, onGoRFQ }) {
-  const [view, setView] = useState("home"); // home | category | detail | sharptop | platform
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-
-  function handleSelectCategory(category) {
-    if (category.key === "sharptop") {
-      setView("sharptop");
-      window.scrollTo(0, 0);
-      return;
-    }
-    if (category.key === "__platform__") {
-      setView("platform");
-      window.scrollTo(0, 0);
-      return;
-    }
-    setSelectedCategory(category);
-    setView("category");
-    window.scrollTo(0, 0);
-  }
-
-  function handleSelectProduct(product) {
-    setSelectedProduct(product);
-    setView("detail");
-    window.scrollTo(0, 0);
-  }
-
-  function handleBackFromCategory() {
-    setSelectedCategory(null);
-    setView("home");
-    window.scrollTo(0, 0);
-  }
-
-  function handleBackFromDetail() {
-    setView(selectedCategory ? "category" : "home");
-    window.scrollTo(0, 0);
-  }
-
-  const accentColor = selectedCategory ? selectedCategory.color : "#0C2340";
-
-  if (view === "sharptop") {
-    return <SharpTopCatalog onBack={() => { setView("home"); window.scrollTo(0,0); }} onGoRFQ={onGoRFQ} />;
-  }
-
-  if (view === "platform") {
-    return <ChainPlatformView onBack={() => { setView("home"); window.scrollTo(0,0); }} onGoRFQ={onGoRFQ} />;
-  }
-
-  if (view === "detail" && selectedProduct) {
-    return (
-      <ChainProductDetail
-        product={selectedProduct}
-        accentColor={CATEGORY_COLORS[selectedProduct.category] || "#0C2340"}
-        onBack={handleBackFromDetail}
-        onGoRFQ={onGoRFQ}
-      />
-    );
-  }
-
-  if (view === "category" && selectedCategory) {
-    return (
-      <ChainCategoryView
-        category={selectedCategory}
-        onBack={handleBackFromCategory}
-        onSelectProduct={handleSelectProduct}
-      />
-    );
-  }
-
-  return (
-    <ChainCatalogHome
-      onSelectCategory={handleSelectCategory}
-      onSelectProduct={handleSelectProduct}
-      onBack={onBack}
-    />
-  );
+  // NORMALIZED CHAIN PLATFORM ONLY
+  // Direct entry point — no intermediate category/product selection
+  // Legacy Allied/Mac/Donghua platforms archived in ARCHIVE_LEGACY_CHAIN_PLATFORMS.md
+  return <ChainPlatformView onBack={onBack} onGoRFQ={onGoRFQ} />;
 }
