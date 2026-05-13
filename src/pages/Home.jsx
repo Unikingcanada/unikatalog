@@ -22,6 +22,8 @@ import AppLayout from "@/components/layout/AppLayout";
 import FloatingRFQButton from "@/components/shared/FloatingRFQButton";
 import { COLORS, TYPOGRAPHY } from "@/lib/designSystem";
 import { base44 } from "@/api/base44Client";
+import { getTotalUniqueChainCount, getAllFamilyCounts } from "@/lib/chainCountHelpers";
+
 function stripVendor(text) {
   if (!text) return text;
   return text.
@@ -1574,7 +1576,13 @@ export default function Home() {
     load();
   }, []);
 
-  const typeCounts = useMemo(() => {const c = {};for (const p of allData) c[p.type] = (c[p.type] || 0) + 1;return c;}, [allData]);
+  const typeCounts = useMemo(() => {
+    const c = {};
+    for (const p of allData) c[p.type] = (c[p.type] || 0) + 1;
+    // Override Chain count to use unique, active chains only
+    c["__chain__"] = getTotalUniqueChainCount();
+    return c;
+  }, [allData]);
 
   // globalSearch/globalSelected still used for modal display only; search UI uses HomeGlobalSearch
   const availableTypes = useMemo(() => PRODUCT_TYPES, []);

@@ -9,11 +9,13 @@ import { CHAIN_FAMILIES } from "@/lib/chainFamilyData";
 import { CHAIN_PRODUCTS } from "@/lib/chainCatalogData";
 import { ALL_NORMALIZED_CHAINS, getChainsByFamily } from "@/lib/chainNormalizedIndex";
 import { isComponentSku } from "@/lib/importCenterEngine";
+import { getChainsByFamilyActive as getUniqueActiveChainsByFamily } from "@/lib/chainCountHelpers";
 import ChainFamilyBrowser from "./ChainFamilyBrowser";
 import NormalizedChainCard from "./NormalizedChainCard";
 import ChainDetailView from "./ChainDetailView";
 import ChainConfigurator from "./ChainConfigurator";
 import ChainImportPanel from "./ChainImportPanel";
+import ChainCountDebugPanel from "./ChainCountDebugPanel";
 
 const C = {
   navy: "#003c5b", navyMid: "#1A3A5C",
@@ -162,13 +164,11 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
 
   const familyProducts = useMemo(() => {
     if (!selectedFamily) return [];
-    // Use unified normalized index — filter out component/accessory SKUs (OL-xx, CL-xx, etc.)
-    const normalized = ALL_NORMALIZED_CHAINS.filter(c =>
-      c.chain_family === selectedFamily &&
-      !isComponentSku(c.chain_id, c.chain_number)
-    );
+    // Use AUTHORITATIVE source: unique, active chains for this family only
+    // No component SKUs, no non-Active status, no duplicates
+    const normalized = getUniqueActiveChainsByFamily(selectedFamily);
     if (normalized.length > 0) return normalized;
-    // Fall back to legacy CHAIN_PRODUCTS (existing catalog data)
+    // Fall back to legacy CHAIN_PRODUCTS only if no normalized chains exist for this family
     const fam = CHAIN_FAMILIES.find(f => f.key === selectedFamily);
     if (!fam) return [];
     return CHAIN_PRODUCTS.filter(p => {
@@ -243,10 +243,13 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
         )}
 
         {view === "families" && (
-          <ChainFamilyBrowser
-            onSelectFamily={handleSelectFamily}
-            onOpenConfigurator={() => handleConfigure(null, null)}
-          />
+          <>
+            <ChainFamilyBrowser
+              onSelectFamily={handleSelectFamily}
+              onOpenConfigurator={() => handleConfigure(null, null)}
+            />
+            <ChainCountDebugPanel />
+          </>
         )}
 
         {view === "products" && selectedFamily && (

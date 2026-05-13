@@ -2,11 +2,14 @@
  * ChainFamilyBrowser.jsx
  * Landing grid for the normalized chain procurement platform.
  * Shows 18 chain families. Brand-neutral.
+ *
+ * AUTHORITATIVE: Uses getChainCountByFamily() for unique, active chains only.
  */
 import { useState, useMemo } from "react";
 import { CHAIN_FAMILIES } from "@/lib/chainFamilyData";
 import { CHAIN_PRODUCTS } from "@/lib/chainCatalogData";
 import { ALL_NORMALIZED_CHAINS } from "@/lib/chainNormalizedIndex";
+import { getChainCountByFamily } from "@/lib/chainCountHelpers";
 
 const C = {
   navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
@@ -54,11 +57,12 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator 
   const familyCounts = useMemo(() => {
     const counts = {};
     CHAIN_FAMILIES.forEach(fam => {
-      // Count normalized chains first, fall back to legacy
-      const normalized = ALL_NORMALIZED_CHAINS.filter(c => c.chain_family === fam.key).length;
+      // Use authoritative count: unique, active chains only
+      const normalized = getChainCountByFamily(fam.key);
       if (normalized > 0) {
         counts[fam.key] = normalized;
       } else {
+        // Fall back to legacy CHAIN_PRODUCTS only if no normalized chains found
         counts[fam.key] = CHAIN_PRODUCTS.filter(p => {
           if (p.category !== fam.catalog_key) return false;
           if (fam.subcategory_filter?.length && !fam.subcategory_filter.includes(p.subcategory)) return false;

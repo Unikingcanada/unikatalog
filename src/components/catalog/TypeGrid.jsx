@@ -43,8 +43,8 @@ export default function TypeGrid({ types, counts, onSelect, allData }) {
 
   const chainTypes = types.filter((t) => CHAIN_SUBTYPE_KEYS.has(t.key));
   const nonChainTypes = types.filter((t) => !CHAIN_SUBTYPE_KEYS.has(t.key));
-  // DB-first: count only normalized_chain source for home card display
-  const totalChainProducts = (allData || []).filter((p) => p._source === "normalized_chain").length;
+  // Use __chain__ count from counts prop (set to unique active chains via chainCountHelpers)
+  const totalChainProducts = counts["__chain__"] || (allData || []).filter((p) => p._source === "normalized_chain").length;
 
   const displayItems = [
     { key: "__chain__", label: "Chain", description: "Roller chain, engineered, welded steel, pintle and specialty chains for all industrial applications", _isChain: true },

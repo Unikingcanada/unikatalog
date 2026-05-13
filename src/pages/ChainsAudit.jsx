@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { AlertCircle, CheckCircle2, Database, BarChart3 } from "lucide-react";
+import { getTotalUniqueChainCount, getChainAuditBreakdown } from "@/lib/chainCountHelpers";
 
 export default function ChainsAudit() {
   const [loading, setLoading] = useState(true);
@@ -110,8 +111,8 @@ export default function ChainsAudit() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 24 }}>
         <StatCard icon={<Database className="w-5 h-5" />} label="DB Normalized Chains" value={stats.normalizedChainsCount} color="#0C2340" />
         <StatCard icon={<Database className="w-5 h-5" />} label="Unique Chain IDs" value={stats.mergedChainCount} color="#2563eb" />
-        <StatCard icon={<BarChart3 className="w-5 h-5" />} label="Raw Imports (all)" value={stats.rawImportsCount} color="#8b5cf6" />
-        <StatCard icon={<AlertCircle className="w-5 h-5" />} label="Duplicate Chain IDs" value={stats.duplicateChainIds} color={stats.duplicateChainIds > 0 ? "#dc2626" : "#22c55e"} />
+        <StatCard icon={<CheckCircle2 className="w-5 h-5" />} label="Visible Active Chains" value={getTotalUniqueChainCount()} color="#16a34a" />
+        <StatCard icon={<AlertCircle className="w-5 h-5" />} label="Duplicate DB Records" value={stats.duplicateChainIds} color={stats.duplicateChainIds > 0 ? "#dc2626" : "#22c55e"} />
       </div>
 
       {/* Orphaned records grid */}
@@ -146,8 +147,14 @@ export default function ChainsAudit() {
       </div>
 
       {/* Summary */}
-      <div style={{ marginTop: 24, padding: "14px 16px", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 8, fontSize: 12, color: "#166534" }}>
-        <strong>✓ Consolidation Status:</strong> {stats.normalizedChainsCount} chains in DB · {stats.mergedChainCount} unique IDs · {stats.rawImportsCount} raw imports tracked · {stats.duplicateChainIds > 0 ? `⚠ ${stats.duplicateChainIds} duplicates detected` : "No duplicates"}
+      <div style={{ marginTop: 24, padding: "14px 16px", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 8, fontSize: 12, color: "#166534", lineHeight: 1.6 }}>
+        <strong>✓ Consolidation Status:</strong>
+        <div style={{ marginTop: 6 }}>
+          {stats.normalizedChainsCount} total DB records · {stats.mergedChainCount} unique IDs · <strong style={{ color: "#16a34a" }}>{getTotalUniqueChainCount()} visible active chains</strong>
+        </div>
+        <div style={{ marginTop: 6 }}>
+          {stats.rawImportsCount} raw imports tracked · {stats.duplicateChainIds > 0 ? `⚠ ${stats.duplicateChainIds} duplicate records ignored` : "✓ No duplicate records"}
+        </div>
       </div>
     </div>
   );
