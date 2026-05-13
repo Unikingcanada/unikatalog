@@ -1574,16 +1574,7 @@ export default function Home() {
     load();
   }, []);
 
-  const typeCounts = useMemo(() => {
-    const c = {};
-    for (const p of allData) {
-      // For chain types: only count from normalized_chain source (DB-first)
-      const isChainType = ["ANSI/BS Chain", "Engineered Chain", "Welded Steel Chain", "Forged Chain", "Sharptop Chain", "Conveyor Chain", "Pintle Chain", "Long Link Chain", "Special Application Chain"].includes(p.type);
-      if (isChainType && p._source !== "normalized_chain") continue;
-      c[p.type] = (c[p.type] || 0) + 1;
-    }
-    return c;
-  }, [allData]);
+  const typeCounts = useMemo(() => {const c = {};for (const p of allData) c[p.type] = (c[p.type] || 0) + 1;return c;}, [allData]);
 
   // globalSearch/globalSelected still used for modal display only; search UI uses HomeGlobalSearch
   const availableTypes = useMemo(() => PRODUCT_TYPES, []);
@@ -1601,12 +1592,7 @@ export default function Home() {
   const showBrand = selectedType && SHOW_BRAND.has(selectedType) && !selectedBrand;
 
   function selectType(typeKey) {
-    // Chains-only: direct to normalized platform (not intermediate page)
-    if (typeKey === "ANSI/BS Chain" || typeKey === "Engineered Chain" || typeKey === "Welded Steel Chain" || typeKey === "Forged Chain" || typeKey === "Sharptop Chain" || typeKey === "Conveyor Chain" || typeKey === "Pintle Chain" || typeKey === "Long Link Chain" || typeKey === "Special Application Chain" || typeKey === "__chain__") {
-      setCurrentPage("chainCatalog");
-      window.scrollTo(0,0);
-      return;
-    }
+    if (typeKey === "__chain__") {setCurrentPage("chainCatalog");window.scrollTo(0,0);return;}
     if (typeKey === "Elevator Bucket") {setCurrentPage("elevatorBuckets");window.scrollTo(0, 0);return;}
     if (typeKey==="Conveyor Rollers") {setCurrentPage("rollerConfig");window.scrollTo(0,0);return;}
     if (typeKey==="Wire Mesh Belt") {setCurrentPage("wireMesh");window.scrollTo(0,0);return;}if(typeKey==="Monitoring System"){setCurrentPage("fourBCatalog");window.scrollTo(0,0);return;}
@@ -1680,7 +1666,7 @@ export default function Home() {
                 }} />
               </div>
 
-              <TypeGrid types={availableTypes} counts={typeCounts} onSelect={selectType} />
+              <TypeGrid types={availableTypes} counts={typeCounts} onSelect={selectType} allData={allData} />
 
               {/* Admin-only catalog source debug widget */}
               {catalogStats && isAdmin && (

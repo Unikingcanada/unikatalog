@@ -38,12 +38,13 @@ const CATEGORY_IMAGES = {
   "Special Application Chain": "https://chains.alliedlocke.com/ImgMedium/MXS881.jpg",
 };
 
-export default function TypeGrid({ types, counts, onSelect }) {
+export default function TypeGrid({ types, counts, onSelect, allData }) {
   const [hovered, setHovered] = useState(null);
 
   const chainTypes = types.filter((t) => CHAIN_SUBTYPE_KEYS.has(t.key));
   const nonChainTypes = types.filter((t) => !CHAIN_SUBTYPE_KEYS.has(t.key));
-  const totalChainProducts = chainTypes.reduce((sum, t) => sum + (counts[t.key] || 0), 0);
+  // DB-first: count only normalized_chain source for home card display
+  const totalChainProducts = (allData || []).filter((p) => p._source === "normalized_chain").length;
 
   const displayItems = [
     { key: "__chain__", label: "Chain", description: "Roller chain, engineered, welded steel, pintle and specialty chains for all industrial applications", _isChain: true },
