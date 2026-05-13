@@ -12,6 +12,7 @@ import BucketCompare from './pages/BucketCompare';
 import ChainReviewAdmin from './pages/ChainReviewAdmin';
 import ImportCenter from './pages/ImportCenter';
 import ICSessionResumePage from './pages/ICSessionResumePage';
+import ChainsAudit from './pages/ChainsAudit';
 import AdminUsers from './pages/AdminUsers';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/TableTopChains" element={<TableTopChains />} />
         <Route path="/BucketCompare" element={<BucketCompare />} />
         <Route path="/admin/chain-review" element={<ChainReviewAdmin />} />
+        <Route path="/admin/chains-audit" element={<ChainsAudit />} />
         <Route path="/admin/import-center" element={<ImportCenter />} />
         <Route path="/admin/import-center/session/:id" element={<ICSessionResumePage />} />
         <Route path="/admin/users" element={<AdminUsers />} />

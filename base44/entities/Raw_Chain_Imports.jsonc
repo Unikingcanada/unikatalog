@@ -1,0 +1,95 @@
+{
+  "name": "Raw_Chain_Imports",
+  "type": "object",
+  "properties": {
+    "import_session_id": {
+      "type": "string",
+      "description": "Reference to Import_Sessions.session_id"
+    },
+    "source_brand": {
+      "type": "string",
+      "description": "Source manufacturer/brand (e.g. Tsubaki, Donghua, Regina)"
+    },
+    "source_catalog": {
+      "type": "string",
+      "description": "Source catalog name/version"
+    },
+    "target_entity": {
+      "type": "string",
+      "enum": [
+        "Normalized_Chains",
+        "Chain_Dimensions",
+        "Chain_Sprockets",
+        "Chain_Attachments",
+        "Chain_Media",
+        "Chain_Downloads",
+        "Performance_Data",
+        "Manufacturer_Equivalents",
+        "Chain_Review_Flags"
+      ],
+      "description": "Target chain entity"
+    },
+    "row_number": {
+      "type": "number",
+      "description": "Row index in source file"
+    },
+    "raw_json": {
+      "type": "object",
+      "description": "Original unmodified row data as parsed from source",
+      "additionalProperties": true
+    },
+    "raw_columns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Column headers from source file"
+    },
+    "mapped_json": {
+      "type": "object",
+      "description": "Mapped and transformed data after applying rules",
+      "additionalProperties": true
+    },
+    "normalized_chain_id": {
+      "type": "string",
+      "description": "Resolved chain_id after normalization (if applicable)"
+    },
+    "processing_status": {
+      "type": "string",
+      "enum": [
+        "Received",
+        "Mapped",
+        "Normalized",
+        "Validated",
+        "Staged",
+        "Committed",
+        "Failed",
+        "Skipped",
+        "Pending Review"
+      ],
+      "default": "Received",
+      "description": "Current processing state"
+    },
+    "error_log": {
+      "type": "string",
+      "description": "Detailed error messages if processing failed"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this raw record was ingested"
+    },
+    "processed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this raw record was last processed"
+    }
+  },
+  "required": [
+    "import_session_id",
+    "source_brand",
+    "target_entity",
+    "row_number",
+    "raw_json"
+  ]
+}
