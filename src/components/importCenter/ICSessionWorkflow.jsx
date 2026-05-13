@@ -112,19 +112,20 @@ function StagingMonitor({ session, allRows, mappingRules, transformRules, onRead
   const [liveSession, setLiveSession] = useState(session);
   const [localPct, setLocalPct] = useState(0);
   const [localReport, setLocalReport] = useState({});
-  const [error, setError] = useState(null);
+  const [chunkErrors, setChunkErrors] = useState([]); // non-fatal per-chunk errors
+  const [done, setDone] = useState(false);
   const activeRef = useRef(true);
 
   useEffect(() => {
     if (!session?.id) return;
     if (!allRows?.length) {
-      console.warn("[StagingMonitor] allRows not ready yet, session.id=", session.id, "allRows=", allRows);
+      console.warn("[StagingMonitor] allRows not ready yet");
       return;
     }
-    console.log("[StagingMonitor] starting chunk loop", { sessionId: session.id, rowsLength: allRows.length, hasMappingRules: !!mappingRules });
     activeRef.current = true;
+    setChunkErrors([]);
+    setDone(false);
 
-    // Determine resume point from existing session state
     const existingReport = session.validation_report || {};
     const lastChunk = existingReport.last_chunk_index ?? -1;
     const startChunk = lastChunk >= 0 ? lastChunk + 1 : 0;
@@ -136,7 +137,7 @@ function StagingMonitor({ session, allRows, mappingRules, transformRules, onRead
       mappingRules,
       transformRules,
       startChunkIndex: startChunk,
-      chunkSize: 25,
+      chunkSize: CHUNK_SIZE,
       onProgress: (result) => {
         if (!activeRef.current) return;
         setLocalPct(result.pct || 0);
@@ -148,14 +149,15 @@ function StagingMonitor({ session, allRows, mappingRules, transformRules, onRead
           validation_report: { ...(prev.validation_report || {}), ...result.counts, pct: result.pct, total_staged: result.totalStaged },
         }));
       },
-      onError: (msg) => {
+      onError: (msg, meta) => {
+        // Non-fatal: record the chunk error but keep going
         if (!activeRef.current) return;
-        setError(msg);
+        setChunkErrors(prev => [...prev, { msg, ...meta }]);
       },
       onDone: async (result) => {
         if (!activeRef.current) return;
         setLocalPct(100);
-        // Fetch the final session from DB and advance
+        setDone(true);
         try {
           const sessions = await base44.entities.Import_Sessions.filter({ id: session.id });
           if (sessions?.[0]) onReady(sessions[0]);
@@ -170,19 +172,17 @@ function StagingMonitor({ session, allRows, mappingRules, transformRules, onRead
   const staged = liveSession?.rows_staged || 0;
   const pct = localPct || (total > 0 ? Math.min(100, Math.round((staged / total) * 100)) : 0);
   const report = { ...liveSession?.validation_report, ...localReport };
-  const isFailed = !!error;
+  const hasErrors = chunkErrors.length > 0;
 
   return (
     <div style={{ padding: "40px 20px" }}>
       <div style={{ textAlign: "center", marginBottom: 28 }}>
-        <div style={{ fontSize: 48, marginBottom: 10 }}>{isFailed ? "❌" : "⚙️"}</div>
-        <div style={{ fontSize: 18, fontWeight: 800, color: "#0C2340" }}>
-          {isFailed ? "Staging Failed" : "Staging & Validation"}
-        </div>
+        <div style={{ fontSize: 48, marginBottom: 10 }}>⚙️</div>
+        <div style={{ fontSize: 18, fontWeight: 800, color: "#0C2340" }}>Staging & Validation</div>
         <div style={{ fontSize: 12, color: "#64748b", marginTop: 6 }}>
-          {isFailed
-            ? error
-            : "Processing one chunk at a time — resilient to timeouts. Safe to leave this page open."}
+          {done
+            ? "Staging complete — loading review…"
+            : "Safe mode: 10 records/chunk · 200ms delay · continues on row failures"}
         </div>
       </div>
 
@@ -190,14 +190,36 @@ function StagingMonitor({ session, allRows, mappingRules, transformRules, onRead
         <div style={{
           height: "100%", borderRadius: 99, transition: "width 0.4s ease",
           width: pct + "%",
-          background: isFailed ? "#ef4444" : "linear-gradient(90deg,#3b82f6,#8b5cf6)",
+          background: hasErrors
+            ? "linear-gradient(90deg,#f59e0b,#ef4444)"
+            : "linear-gradient(90deg,#3b82f6,#8b5cf6)",
         }} />
       </div>
       <div style={{ textAlign: "center", fontSize: 12, color: "#64748b", marginBottom: 8 }}>
-        {isFailed ? "Process halted" : `${staged.toLocaleString()} / ${total.toLocaleString()} rows staged (${pct}%)`}
+        {`${staged.toLocaleString()} / ${total.toLocaleString()} rows staged (${pct}%)`}
+        {hasErrors && <span style={{ marginLeft: 10, color: "#ef4444", fontWeight: 700 }}> · {chunkErrors.length} chunk error{chunkErrors.length > 1 ? "s" : ""}</span>}
       </div>
 
       <ProgressStats report={report} totalRows={total} />
+
+      {/* Per-chunk error log — non-fatal, shown inline */}
+      {hasErrors && (
+        <div style={{ marginTop: 20, background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 8, padding: "12px 16px" }}>
+          <div style={{ fontSize: 11, fontWeight: 800, color: "#9a3412", textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>
+            ⚠ Chunk Errors (staging continued past these)
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 180, overflowY: "auto" }}>
+            {chunkErrors.map((e, i) => (
+              <div key={i} style={{ fontSize: 11, color: "#7c2d12", background: "#fff", border: "1px solid #fed7aa", borderRadius: 6, padding: "6px 10px", fontFamily: "monospace", wordBreak: "break-all" }}>
+                {e.msg}
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: 11, color: "#9a3412", marginTop: 8 }}>
+            Rows in failed chunks are marked <strong>Failed</strong> in the review step. Use "Retry Staging Failed" after staging completes to attempt those rows again.
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -269,6 +291,7 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
   const [commitSession, setCommitSession] = useState(null);
   const [doneSession, setDoneSession] = useState(null);
   const [stagingContext, setStagingContext] = useState(null); // { allRows, mappingRules, transformRules }
+  const [retryingStaging, setRetryingStaging] = useState(false);
 
   const allHeaders = [...new Set(parsedFiles.flatMap(p => p.headers))];
   const totalRows = parsedFiles.reduce((s, p) => s + p.rows.length, 0);
@@ -419,6 +442,78 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
     setStep(4); // show CommitMonitor
   }
 
+  // ── Retry staging failed rows ─────────────────────────────────────────────
+  // Finds all Failed staged records, re-stages them from the saved allRows.
+  async function handleRetryStagingFailed() {
+    if (!stagingContext || !session) return;
+    setRetryingStaging(true);
+    setError(null);
+
+    // Find which row indices failed
+    const failedRecords = stagedRecords.filter(r => r.record_status === "Failed");
+    if (!failedRecords.length) { setRetryingStaging(false); return; }
+
+    const failedIndices = new Set(failedRecords.map(r => r.row_index));
+    const retryRows = stagingContext.allRows.filter((_, idx) => failedIndices.has(idx));
+
+    if (!retryRows.length) { setRetryingStaging(false); return; }
+
+    // Delete the old Failed staging records for these rows
+    for (const r of failedRecords) {
+      try { await base44.entities.Staging_Records.delete(r.id); } catch {}
+    }
+
+    // Re-run staging for only the failed rows, injecting their original global row indices
+    // We pass them as a fresh mini-batch; chunkIndex=0 with totalRows=retryRows.length
+    const RETRY_CHUNK = 5;
+    const entityTarget = session.entity_targets?.[0] || "Normalized_Chains";
+    const sessRec = await base44.entities.Import_Sessions.get(session.id).catch(() => null);
+    const existingReport = sessRec?.validation_report || {};
+
+    // Update counts: subtract failed, will be re-added by the retry loop
+    const prevFailed = existingReport.Failed || 0;
+    await base44.entities.Import_Sessions.update(session.id, {
+      import_status: "Validating",
+      validation_report: { ...existingReport, Failed: Math.max(0, prevFailed - failedRecords.length) },
+    }).catch(() => {});
+
+    for (let i = 0; i < retryRows.length; i += RETRY_CHUNK) {
+      const chunk = retryRows.slice(i, i + RETRY_CHUNK);
+      try {
+        await base44.functions.invoke("importStageJob", {
+          sessionId: session.id,
+          entityTarget,
+          rows: chunk,
+          mappingRules: stagingContext.mappingRules,
+          transformRules: stagingContext.transformRules || {},
+          chunkIndex: Math.floor(i / RETRY_CHUNK),
+          chunkSize: RETRY_CHUNK,
+          totalRows: retryRows.length,
+        });
+      } catch (err) {
+        console.warn("[retryStagingFailed] chunk error:", err.message);
+      }
+      await new Promise(r => setTimeout(r, 300));
+    }
+
+    // Reload staged records
+    setLoadingRecords(true);
+    let all = [], skip = 0;
+    while (true) {
+      const batch = await base44.entities.Staging_Records.filter(
+        { session_id: session.session_id, entity_target: entityTarget },
+        "row_index", 1000, skip
+      );
+      if (!batch?.length) break;
+      all = [...all, ...batch];
+      if (batch.length < 1000) break;
+      skip += batch.length;
+    }
+    setStagedRecords(all);
+    setLoadingRecords(false);
+    setRetryingStaging(false);
+  }
+
   // ── Done ──────────────────────────────────────────────────────────────────
   function handleCommitDone(updated) {
     setDoneSession(updated);
@@ -554,8 +649,20 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
                 <div style={{ fontSize: 14, fontWeight: 800, color: "#0C2340" }}>
                   Review Staged Records — {session?.session_id}
                 </div>
-                <div style={{ fontSize: 12, color: "#64748b" }}>
-                  {stagedRecords.length.toLocaleString()} records · {session?.validation_report?.total_detected?.toLocaleString() || totalRows.toLocaleString()} detected
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                  <div style={{ fontSize: 12, color: "#64748b" }}>
+                    {stagedRecords.length.toLocaleString()} records · {session?.validation_report?.total_detected?.toLocaleString() || totalRows.toLocaleString()} detected
+                  </div>
+                  {/* Retry button — only shown when there are Failed records AND we have the original rows */}
+                  {stagedRecords.some(r => r.record_status === "Failed") && stagingContext && (
+                    <button
+                      onClick={handleRetryStagingFailed}
+                      disabled={retryingStaging}
+                      style={{ padding: "5px 12px", background: retryingStaging ? "#f1f5f9" : "#fff7ed", border: "1px solid #fed7aa", borderRadius: 6, fontSize: 11, fontWeight: 700, color: retryingStaging ? "#94a3b8" : "#c2410c", cursor: retryingStaging ? "default" : "pointer" }}
+                    >
+                      {retryingStaging ? "⏳ Retrying…" : `🔄 Retry Staging Failed (${stagedRecords.filter(r => r.record_status === "Failed").length})`}
+                    </button>
+                  )}
                 </div>
               </div>
 
