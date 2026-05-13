@@ -28,6 +28,120 @@ function delay(ms) {
   return new Promise(res => setTimeout(res, ms));
 }
 
+// ── Schema type inference ─────────────────────────────────────────────────────
+// Maps entity field names to their expected JSON schema types.
+// Used to produce "Expected: array  Received: string" diagnostics.
+const FIELD_TYPE_MAP = {
+  Normalized_Chains: {
+    application_tags: "array", materials_available: "array",
+    strands: "number", needs_review: "boolean",
+    chain_id: "string", chain_family: "string", chain_number: "string",
+    display_name: "string", standard: "string", pitch_in: "string",
+    pitch_mm: "string", description: "string", options_upgrades: "string",
+    image_url: "string", drawing_url: "string", uniking_notes: "string",
+    status: "string",
+  },
+  Chain_Dimensions: {
+    chain_id: "string", pitch_in: "number", pitch_mm: "number",
+    roller_dia_in: "number", roller_dia_mm: "number",
+    roller_width_in: "number", roller_width_mm: "number",
+    pin_dia_in: "number", pin_dia_mm: "number",
+    plate_height_in: "number", plate_height_mm: "number",
+    plate_thickness_in: "number", plate_thickness_mm: "number",
+    weight_lbs_ft: "number", weight_kg_m: "number",
+    needs_review: "boolean",
+  },
+  Chain_Sprockets: {
+    chain_id: "string", sprocket_code: "string", teeth: "string",
+    style: "string", material: "string", source_brand: "string",
+    notes: "string", image_url: "string",
+    bore_min_in: "number", bore_max_in: "number",
+    pitch_dia_in: "number", pitch_dia_mm: "number",
+    outer_dia_in: "number", outer_dia_mm: "number",
+    hub_width_in: "number", hub_width_mm: "number",
+    keyway: "boolean",
+  },
+};
+
+/**
+ * Parse a 400 API error into a structured diagnostic object.
+ * Tries to extract field name, expected type, received type from the error body.
+ * Falls back gracefully to raw message.
+ */
+function parseApiError(err, mapped, entityTarget, globalRowIndex) {
+  // Try to get the raw response body — Base44 SDK may attach it under several keys
+  let rawBody = null;
+  try {
+    rawBody =
+      err?.response?.data ||   // axios-style
+      err?.body ||              // fetch-style
+      err?.detail ||
+      null;
+    if (typeof rawBody === "string") rawBody = JSON.parse(rawBody);
+  } catch {}
+
+  const lines = [];
+  lines.push(`Row ${globalRowIndex + 1} failed:`);
+  lines.push(`Entity: ${entityTarget}`);
+
+  // ── Field-level type mismatch detection ───────────────────────────────────
+  const fieldTypes = FIELD_TYPE_MAP[entityTarget] || {};
+  const mismatches = [];
+
+  for (const [field, value] of Object.entries(mapped || {})) {
+    if (value === null || value === undefined) continue;
+    const expected = fieldTypes[field];
+    if (!expected) continue;
+    const received = Array.isArray(value) ? "array" : typeof value;
+    if (received !== expected) {
+      mismatches.push({ field, expected, received, value });
+    }
+  }
+
+  // ── Also scan raw error body for field hints ───────────────────────────────
+  // Base44 often returns { message: "...", detail: { field: "...", ... } }
+  let apiFieldHint = null;
+  if (rawBody) {
+    const bodyStr = JSON.stringify(rawBody);
+    // Look for any key that matches a known field name in the mapped data
+    for (const field of Object.keys(mapped || {})) {
+      if (bodyStr.includes(`"${field}"`)) {
+        apiFieldHint = field;
+        break;
+      }
+    }
+  }
+
+  if (mismatches.length > 0) {
+    for (const m of mismatches) {
+      lines.push(`Field: ${m.field}`);
+      lines.push(`Expected: ${m.expected}`);
+      lines.push(`Received: ${m.received}`);
+      const valStr = JSON.stringify(m.value);
+      lines.push(`Value: ${valStr.length > 120 ? valStr.slice(0, 120) + "…" : valStr}`);
+    }
+  } else if (apiFieldHint) {
+    lines.push(`Field hint from API: ${apiFieldHint}`);
+  }
+
+  // ── Error message ──────────────────────────────────────────────────────────
+  const errMsg =
+    rawBody?.message || rawBody?.detail || rawBody?.error ||
+    err?.message || String(err);
+  lines.push(`Error: ${errMsg}`);
+
+  if (rawBody && mismatches.length === 0) {
+    // Include full raw body for deeper inspection
+    lines.push(`API body: ${JSON.stringify(rawBody).slice(0, 400)}`);
+  }
+
+  return {
+    conflict_detail: lines.join("\n"),
+    // Structured copy for the fallback Staging_Records write
+    diagnostics: { mismatches, apiFieldHint, rawBody, errMsg, rowIndex: globalRowIndex, entityTarget },
+  };
+}
+
 function applyMapping(row, mappingRules, transformRules = {}) {
   const ARRAY_FIELDS = new Set(["application_tags", "materials_available"]);
   const mapped = {};
@@ -147,6 +261,92 @@ async function fetchAllExisting(base44, entityTarget) {
   return all;
 }
 
+/**
+ * Parses an API error (from Base44 entity create/update) into a structured
+ * diagnostics object for schema mismatch debugging.
+ *
+ * Returns a string formatted as:
+ *   Row N failed:\nEntity: X\nField: Y\nExpected: Z\nReceived: W\nValue: V\nError: ...
+ */
+function buildValidationDiagnostics({ globalRowIndex, entityTarget, mappedData, err }) {
+  const lines = [`Row ${globalRowIndex + 1} failed:`, `Entity: ${entityTarget}`];
+
+  // Try to pull a structured body from the error
+  let body = null;
+  const rawMsg = String(err?.message || err || "");
+
+  // Base44 SDK wraps API errors as JSON in the message or as err.response.data
+  const jsonMatch = rawMsg.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    try { body = JSON.parse(jsonMatch[0]); } catch {}
+  }
+  if (!body && err?.response?.data) body = err.response.data;
+  if (!body && err?.data) body = err.data;
+
+  // Extract field-level info from common Base44 / Pydantic error shapes
+  // Shape 1: { detail: [ { loc: ["body","field"], msg: "...", type: "..." } ] }
+  // Shape 2: { message: "...", detail: "..." }
+  // Shape 3: { errors: { fieldName: ["msg"] } }
+  let fieldDiagnostics = [];
+
+  if (body?.detail && Array.isArray(body.detail)) {
+    for (const d of body.detail) {
+      const loc = Array.isArray(d.loc) ? d.loc.filter(l => l !== "body" && l !== "__root__") : [];
+      const field = loc.join(".") || "unknown";
+      const msg = d.msg || d.message || "";
+      const type = d.type || "";
+
+      // Infer expected vs received from the mapped_data and the error type
+      const actualVal = field !== "unknown" ? mappedData[field] : undefined;
+      const receivedType = actualVal === null ? "null"
+        : Array.isArray(actualVal) ? "array"
+        : typeof actualVal;
+
+      // Guess expected type from error message
+      let expectedType = "unknown";
+      if (/str|string/i.test(msg + type)) expectedType = "string";
+      else if (/int|integer/i.test(msg + type)) expectedType = "integer";
+      else if (/float|number/i.test(msg + type)) expectedType = "number";
+      else if (/bool/i.test(msg + type)) expectedType = "boolean";
+      else if (/list|array/i.test(msg + type)) expectedType = "array";
+      else if (/enum/i.test(msg + type)) expectedType = "enum value";
+
+      fieldDiagnostics.push({ field, expectedType, receivedType, actualVal, msg });
+    }
+  } else if (body?.errors && typeof body.errors === "object") {
+    for (const [field, msgs] of Object.entries(body.errors)) {
+      const actualVal = mappedData[field];
+      const receivedType = actualVal === null ? "null" : Array.isArray(actualVal) ? "array" : typeof actualVal;
+      fieldDiagnostics.push({ field, expectedType: "unknown", receivedType, actualVal, msg: Array.isArray(msgs) ? msgs.join("; ") : String(msgs) });
+    }
+  }
+
+  if (fieldDiagnostics.length > 0) {
+    for (const d of fieldDiagnostics) {
+      lines.push(`Field: ${d.field}`);
+      if (d.expectedType !== "unknown") lines.push(`Expected: ${d.expectedType}`);
+      lines.push(`Received: ${d.receivedType}`);
+      if (d.actualVal !== undefined) {
+        const valStr = typeof d.actualVal === "object"
+          ? JSON.stringify(d.actualVal)
+          : String(d.actualVal);
+        lines.push(`Value: ${valStr.slice(0, 120)}`);
+      }
+      if (d.msg) lines.push(`Error: ${d.msg}`);
+      lines.push("---");
+    }
+  } else {
+    // No structured detail — fall back to raw message but include mapped_data snapshot
+    lines.push(`Error: ${rawMsg.slice(0, 300)}`);
+  }
+
+  // Always append a compact mapped_data snapshot for context
+  const snapshot = JSON.stringify(mappedData, null, 2);
+  lines.push(`\nMapped Data:\n${snapshot.slice(0, 800)}${snapshot.length > 800 ? "\n…(truncated)" : ""}`);
+
+  return lines.join("\n");
+}
+
 async function writeWithRetry(fn, maxAttempts = 3) {
   const backoff = [500, 1500, 3000];
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
@@ -259,9 +459,10 @@ Deno.serve(async (req) => {
     for (let ri = 0; ri < chunkRows.length; ri++) {
       const { row, file } = chunkRows[ri];
       const globalRowIndex = chunkStart + ri;
+      let mapped = null; // declared outside try so catch can reference it
 
       try {
-        const mapped = applyMapping(row, mappingRules, transformRules);
+        mapped = applyMapping(row, mappingRules, transformRules);
         const { status, conflictDetail, diffSummary, productionRecordId } = classifyRecord(mapped, entityTarget, existingRecords);
 
         await writeWithRetry(() =>
@@ -283,7 +484,9 @@ Deno.serve(async (req) => {
         counts[status] = (counts[status] || 0) + 1;
         chunkStaged++;
       } catch (err) {
-        // Persist the failure so this row has a final state
+        // Build full diagnostic message
+        const { conflict_detail } = parseApiError(err, mapped, entityTarget, globalRowIndex);
+        // Persist the failure — store mapped_data so the UI can show the payload
         try {
           await base44.asServiceRole.entities.Staging_Records.create({
             session_id: sessionIdStr,
@@ -291,12 +494,15 @@ Deno.serve(async (req) => {
             row_index: globalRowIndex,
             source_file: file || "",
             raw_data: row,
-            mapped_data: {},
+            mapped_data: mapped || {},
             record_status: "Failed",
-            conflict_detail: `Staging error at row ${globalRowIndex}: ${err.message}`,
+            conflict_detail,
             commit_decision: "Skip",
           });
-        } catch {}
+        } catch (innerErr) {
+          // If even the failure record can't be written, log it server-side
+          console.error(`[importStageJob] row ${globalRowIndex} fallback write failed:`, innerErr?.message);
+        }
         counts.Failed = (counts.Failed || 0) + 1;
         chunkStaged++;
       }

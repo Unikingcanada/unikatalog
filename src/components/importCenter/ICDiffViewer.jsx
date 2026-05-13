@@ -32,6 +32,113 @@ function DiffCell({ field, oldVal, newVal }) {
   );
 }
 
+/**
+ * Parses the multi-line conflict_detail string written by buildValidationDiagnostics()
+ * and renders a structured schema-mismatch debug panel.
+ */
+function FailedDiagnosticsPanel({ detail, mappedData, rowIndex, entityTarget }) {
+  const [showRaw, setShowRaw] = useState(false);
+
+  // Split on "---" separator to get per-field blocks
+  const sections = (detail || "").split(/\n---\n?/).map(s => s.trim()).filter(Boolean);
+
+  // Parse header block (Row N, Entity)
+  const headerBlock = sections[0] || "";
+  const rowMatch = headerBlock.match(/Row (\d+) failed/);
+  const entityMatch = headerBlock.match(/Entity: (\S+)/);
+
+  // Parse field blocks
+  const fieldBlocks = [];
+  for (const sec of sections) {
+    const fieldMatch = sec.match(/^Field: (.+)/m);
+    if (!fieldMatch) continue;
+    const expected = (sec.match(/^Expected: (.+)/m) || [])[1];
+    const received = (sec.match(/^Received: (.+)/m) || [])[1];
+    const value = (sec.match(/^Value: (.+)/m) || [])[1];
+    const error = (sec.match(/^Error: (.+)/m) || [])[1];
+    fieldBlocks.push({ field: fieldMatch[1], expected, received, value, error });
+  }
+
+  // Extract mapped_data snapshot from the last section if present
+  const mappedDataSection = (detail || "").match(/Mapped Data:\n([\s\S]+?)(?:\n…\(truncated\))?$/);
+  let parsedSnapshot = mappedData;
+  if (mappedDataSection) {
+    try { parsedSnapshot = JSON.parse(mappedDataSection[1]); } catch {}
+  }
+
+  const TYPE_COLORS = {
+    string: "#0369a1", array: "#7c3aed", integer: "#047857",
+    number: "#047857", boolean: "#b45309", null: "#dc2626", unknown: "#64748b",
+  };
+
+  return (
+    <div style={{ marginBottom: 14 }}>
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+        <span style={{ fontSize: 10, fontWeight: 800, color: "#9a3412", textTransform: "uppercase", letterSpacing: 0.5 }}>
+          ⚠ Validation Diagnostics
+        </span>
+        <span style={{ fontSize: 10, color: "#64748b" }}>
+          Row {rowMatch?.[1] ?? (rowIndex != null ? rowIndex + 1 : "?")} · {entityMatch?.[1] ?? entityTarget ?? "—"}
+        </span>
+        <button onClick={() => setShowRaw(p => !p)}
+          style={{ marginLeft: "auto", fontSize: 10, color: "#64748b", background: "none", border: "1px solid #e2e8f0", borderRadius: 4, padding: "2px 7px", cursor: "pointer" }}>
+          {showRaw ? "Parsed" : "Raw"}
+        </button>
+      </div>
+
+      {showRaw ? (
+        <pre style={{ fontSize: 10, color: "#334155", background: "#f8fafc", padding: "8px 12px", borderRadius: 6, overflow: "auto", maxHeight: 260, margin: "0 0 10px", whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
+          {detail}
+        </pre>
+      ) : (
+        <>
+          {fieldBlocks.length > 0 ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 10 }}>
+              {fieldBlocks.map((fb, i) => (
+                <div key={i} style={{ background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 6, padding: "8px 12px", fontFamily: "monospace" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 11, fontWeight: 800, color: "#7c2d12" }}>{fb.field}</span>
+                    {fb.expected && (
+                      <span style={{ fontSize: 10, background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 4, padding: "1px 6px", color: "#166534" }}>
+                        expected: <strong>{fb.expected}</strong>
+                      </span>
+                    )}
+                    {fb.received && (
+                      <span style={{ fontSize: 10, background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 4, padding: "1px 6px", color: "#dc2626" }}>
+                        received: <strong style={{ color: TYPE_COLORS[fb.received] || "#dc2626" }}>{fb.received}</strong>
+                      </span>
+                    )}
+                  </div>
+                  {fb.value !== undefined && (
+                    <div style={{ fontSize: 10, color: "#78350f", marginBottom: 2 }}>
+                      Value: <code style={{ background: "#fef3c7", padding: "1px 5px", borderRadius: 3 }}>{fb.value}</code>
+                    </div>
+                  )}
+                  {fb.error && (
+                    <div style={{ fontSize: 10, color: "#9a3412" }}>Error: {fb.error}</div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            // No structured field blocks — show the raw error text but no mapped dump
+            <div style={{ fontSize: 10, color: "#7c2d12", background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 6, padding: "8px 12px", marginBottom: 10, whiteSpace: "pre-wrap", wordBreak: "break-all" }}>
+              {(detail || "").replace(/\nMapped Data:[\s\S]*$/, "").trim()}
+            </div>
+          )}
+
+          {/* Mapped data snapshot */}
+          <div style={{ fontSize: 10, fontWeight: 800, color: "#64748b", marginBottom: 4, textTransform: "uppercase", letterSpacing: 0.5 }}>Mapped Data</div>
+          <pre style={{ fontSize: 10, color: "#334155", background: "#f8fafc", padding: "8px 12px", borderRadius: 6, overflow: "auto", maxHeight: 200, margin: 0 }}>
+            {JSON.stringify(parsedSnapshot, null, 2)}
+          </pre>
+        </>
+      )}
+    </div>
+  );
+}
+
 function RecordRow({ record, index, onDecision }) {
   const [expanded, setExpanded] = useState(false);
   const c = STATUS_COLORS[record.record_status] || STATUS_COLORS.Pending;
@@ -52,9 +159,25 @@ function RecordRow({ record, index, onDecision }) {
               {record.mapped_data.chain_id || record.mapped_data.brand_part_number || record.mapped_data.sprocket_code || JSON.stringify(record.mapped_data).slice(0, 60)}
             </span>
           )}
-          {record.conflict_detail && (
-            <span style={{ fontSize: 10, color: "#dc2626", marginLeft: 8 }}>⚠ {record.conflict_detail}</span>
+          {record.conflict_detail && record.record_status !== "Failed" && (
+            <span style={{ fontSize: 10, color: "#dc2626", marginLeft: 8 }}>⚠ {record.conflict_detail.slice(0, 80)}</span>
           )}
+          {record.record_status === "Failed" && record.conflict_detail && (() => {
+            const fieldMatch = record.conflict_detail.match(/^Field: (.+)/m);
+            const expectedMatch = record.conflict_detail.match(/^Expected: (.+)/m);
+            const receivedMatch = record.conflict_detail.match(/^Received: (.+)/m);
+            if (fieldMatch) {
+              return (
+                <span style={{ fontSize: 10, color: "#9a3412", marginLeft: 8, fontFamily: "monospace" }}>
+                  ⚠ <strong>{fieldMatch[1]}</strong>
+                  {expectedMatch && receivedMatch && (
+                    <span style={{ color: "#64748b" }}> · expected {expectedMatch[1]}, got {receivedMatch[1]}</span>
+                  )}
+                </span>
+              );
+            }
+            return <span style={{ fontSize: 10, color: "#dc2626", marginLeft: 8 }}>⚠ {record.conflict_detail.slice(0, 60)}</span>;
+          })()}
         </div>
         <div style={{ display: "flex", gap: 5 }}>
           {["Include", "Skip"].map(d => (
@@ -75,6 +198,12 @@ function RecordRow({ record, index, onDecision }) {
       {/* Expanded detail */}
       {expanded && (
         <div style={{ padding: "10px 20px 14px 58px", background: "#fff", borderTop: "1px solid #f1f5f9" }}>
+
+          {/* Failed row: parse diagnostics out of conflict_detail */}
+          {record.record_status === "Failed" && record.conflict_detail && (
+            <FailedDiagnosticsPanel detail={record.conflict_detail} mappedData={record.mapped_data} rowIndex={record.row_index} entityTarget={record.entity_target} />
+          )}
+
           {hasDiff && (
             <div style={{ marginBottom: 10 }}>
               <div style={{ fontSize: 10, fontWeight: 800, color: "#64748b", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>Changes</div>
@@ -83,10 +212,15 @@ function RecordRow({ record, index, onDecision }) {
               ))}
             </div>
           )}
-          <div style={{ fontSize: 10, fontWeight: 800, color: "#64748b", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>Mapped Data</div>
-          <pre style={{ fontSize: 10, color: "#334155", background: "#f8fafc", padding: "8px 12px", borderRadius: 6, overflow: "auto", maxHeight: 160, margin: 0 }}>
-            {JSON.stringify(record.mapped_data, null, 2)}
-          </pre>
+
+          {record.record_status !== "Failed" && (
+            <>
+              <div style={{ fontSize: 10, fontWeight: 800, color: "#64748b", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>Mapped Data</div>
+              <pre style={{ fontSize: 10, color: "#334155", background: "#f8fafc", padding: "8px 12px", borderRadius: 6, overflow: "auto", maxHeight: 160, margin: 0 }}>
+                {JSON.stringify(record.mapped_data, null, 2)}
+              </pre>
+            </>
+          )}
         </div>
       )}
     </div>
