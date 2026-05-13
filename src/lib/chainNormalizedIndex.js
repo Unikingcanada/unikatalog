@@ -4,6 +4,13 @@
  * UNIFIED EXPORT — merges the base dictionary + expansion into one array.
  * All consumers should import from here, not from individual files.
  *
+ * ARCHITECTURAL RULE — STRICT EXACT-MATCH MERGING ONLY:
+ *   NO fuzzy merge, NO AI merge, NO inferred equivalency merge, NO automatic family collapsing.
+ *   All chain records are deduplicated by exact chain_id match ONLY.
+ *   Source refs (manufacturer equivalencies) are patched onto existing chains by exact chain_id lookup.
+ *   All uncertain normalization relationships remain reviewable and traceable in Raw_Chain_Imports.
+ *   Reason: We are still defining canonical normalization structure. Data integrity > aggressive dedup.
+ *
  * Usage:
  *   import { ALL_NORMALIZED_CHAINS, getChainById, getChainsByFamily } from "@/lib/chainNormalizedIndex";
  *
