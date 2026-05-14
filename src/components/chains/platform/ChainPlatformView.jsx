@@ -279,7 +279,7 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
           </>
         )}
 
-        {view === "products" && selectedFamily && (
+        {view === "products" && selectedFamily && CHAIN_FAMILIES.find(f => f.key === selectedFamily) && (
           <ProductListView
             family={CHAIN_FAMILIES.find(f => f.key === selectedFamily)}
             products={familyProducts}
