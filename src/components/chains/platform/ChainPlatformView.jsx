@@ -68,12 +68,24 @@ function ProductListView({ family, products, onSelect, onConfigure, liveChainSou
     <div>
       {/* Admin debug output */}
       {isAdmin && liveChainSource && (
-        <div style={{ fontSize: 10, color: "#0f172a", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 6, padding: "8px 12px", marginBottom: 16 }}>
-          <div style={{ fontWeight: 700, marginBottom: 4 }}>Debug: {family.label}</div>
-          <div>Live DB loaded: {liveChainSource.totalSearchable} chains</div>
-          <div>Active + unfiltered: {products.length} in family</div>
-          <div>After subcategory filter: {filtered.filter(p => subcategory === "all" || p.subcategory === subcategory).length}</div>
-          {search && <div>Search matches: {filtered.length}</div>}
+        <div style={{ fontSize: 10, color: "#0f172a", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 6, padding: "10px 14px", marginBottom: 16, fontFamily: "monospace" }}>
+          <div style={{ fontWeight: 700, fontSize: 11, marginBottom: 6 }}>🔍 Debug: {family.label}</div>
+          <div>Total chains in merged source: <b>{liveChainSource.totalSearchable}</b></div>
+          <div>DB records loaded: <b>{liveChainSource.dbRecords}</b></div>
+          <div>Active chains in this family: <b>{products.length}</b></div>
+          <div>After subcategory/search filter: <b>{filtered.length}</b></div>
+          <div style={{ marginTop: 6 }}>
+            Search "dryrun-test-001": <b style={{ color: liveChainSource.live?.some(c => c.chain_id?.toLowerCase() === "dryrun-test-001") ? "#16a34a" : "#dc2626" }}>
+              {liveChainSource.live?.some(c => c.chain_id?.toLowerCase() === "dryrun-test-001") ? "✓ FOUND in merged source" : "✗ NOT in merged source"}
+            </b>
+          </div>
+          <div>
+            In this family: <b style={{ color: products.some(c => c.chain_id?.toLowerCase() === "dryrun-test-001") ? "#16a34a" : "#dc2626" }}>
+              {products.some(c => c.chain_id?.toLowerCase() === "dryrun-test-001") ? "✓ FOUND" : "✗ NOT FOUND"}
+            </b>
+          </div>
+          <div style={{ marginTop: 6, color: "#475569" }}>First 10 chain IDs in family:</div>
+          <div style={{ color: "#334155" }}>{products.slice(0, 10).map(c => c.chain_id || c.chain_number).join(", ") || "(none)"}</div>
         </div>
       )}
 
@@ -190,11 +202,22 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
 
   const familyProducts = useMemo(() => {
     if (!selectedFamily) return [];
-    // Use AUTHORITATIVE source: unique, active chains for this family only
-    // No component SKUs, no non-Active status, no duplicates
+    const familyKeyNorm = selectedFamily.trim().toLowerCase();
+
+    // If we have a live DB source, use it (DB-first, case-insensitive match)
+    if (liveChainSource?.live?.length) {
+      const fromLive = liveChainSource.live.filter(c => {
+        const cf = (c.chain_family || "").trim().toLowerCase();
+        return cf === familyKeyNorm;
+      });
+      if (fromLive.length > 0) return fromLive;
+    }
+
+    // Fall back to static authoritative source
     const normalized = getUniqueActiveChainsByFamily(selectedFamily);
     if (normalized.length > 0) return normalized;
-    // Fall back to legacy CHAIN_PRODUCTS only if no normalized chains exist for this family
+
+    // Last resort: legacy CHAIN_PRODUCTS
     const fam = CHAIN_FAMILIES.find(f => f.key === selectedFamily);
     if (!fam) return [];
     return CHAIN_PRODUCTS.filter(p => {
@@ -202,7 +225,7 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
       if (fam.subcategory_filter?.length && !fam.subcategory_filter.includes(p.subcategory)) return false;
       return true;
     });
-  }, [selectedFamily]);
+  }, [selectedFamily, liveChainSource]);
 
   function handleSelectFamily(family) {
     setSelectedFamily(family.key);
@@ -274,6 +297,7 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
               onSelectFamily={handleSelectFamily}
               onOpenConfigurator={() => handleConfigure(null, null)}
               liveChainSource={liveChainSource}
+              onSelectChain={handleSelectProduct}
             />
             <ChainCountDebugPanel />
           </>

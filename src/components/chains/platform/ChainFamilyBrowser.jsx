@@ -52,7 +52,7 @@ function FamilyCard({ family, count, onClick }) {
   );
 }
 
-export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator, liveChainSource = null }) {
+export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator, liveChainSource = null, onSelectChain = null }) {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
@@ -122,6 +122,28 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator,
     return { familiesFiltered, chainsMatched, debugInfo };
   }, [search]);
 
+  // ── Live DB family counts (override static counts when liveChainSource is available) ──
+  const liveFamilyCounts = useMemo(() => {
+    if (!liveChainSource?.live) return null;
+    const counts = {};
+    for (const chain of liveChainSource.live) {
+      const fk = chain.chain_family?.trim();
+      if (fk) counts[fk] = (counts[fk] || 0) + 1;
+    }
+    return counts;
+  }, [liveChainSource]);
+
+  const resolvedFamilyCounts = useMemo(() => {
+    if (!liveFamilyCounts) return familyCounts;
+    const merged = { ...familyCounts };
+    CHAIN_FAMILIES.forEach(fam => {
+      if (liveFamilyCounts[fam.key] != null) {
+        merged[fam.key] = liveFamilyCounts[fam.key];
+      }
+    });
+    return merged;
+  }, [familyCounts, liveFamilyCounts]);
+
   return (
     <div>
       {/* Header */}
@@ -172,8 +194,12 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator,
               <div
                 key={chain.chain_id}
                 onClick={() => {
-                  // Navigate to the correct family using the resolved key
-                  onSelectFamily({ key: familyKey });
+                  // If onSelectChain prop available, go direct to detail; else go to family
+                  if (onSelectChain) {
+                    onSelectChain(chain);
+                  } else {
+                    onSelectFamily({ key: familyKey });
+                  }
                 }}
                 style={{
                   background: C.card,
@@ -235,7 +261,7 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator,
           )}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 12 }}>
             {familiesFiltered.map(fam => (
-              <FamilyCard key={fam.key} family={fam} count={familyCounts[fam.key] || 0} onClick={onSelectFamily} />
+              <FamilyCard key={fam.key} family={fam} count={resolvedFamilyCounts[fam.key] || 0} onClick={onSelectFamily} />
             ))}
           </div>
         </div>

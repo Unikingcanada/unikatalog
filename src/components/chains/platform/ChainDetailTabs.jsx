@@ -37,7 +37,15 @@ function SpecRow({ label, value, flagged }) {
 }
 
 function SpecsTab({ product }) {
-  const specs = product.specs || {};
+  // Normalize specs: DB records store pitch_in/pitch_mm etc. at top level, not under .specs
+  const specs = product.specs && Object.keys(product.specs).length > 0
+    ? product.specs
+    : {
+        ...(product.pitch_in ? { pitch_in: product.pitch_in } : {}),
+        ...(product.pitch_mm ? { pitch_mm: product.pitch_mm } : {}),
+        ...(product.standard ? { standard: product.standard } : {}),
+        ...(product.strands && product.strands !== 1 ? { strands: product.strands } : {}),
+      };
   const entries = Object.entries(specs).filter(([, v]) => v != null && v !== "");
 
   const SPEC_LABELS = {
@@ -336,7 +344,11 @@ function MaterialsTab({ product }) {
 }
 
 function OptionsTab({ product }) {
-  const opts = product.options || product.options_upgrades || [];
+  // options_upgrades can be a string (DB) or array (static)
+  const rawOpts = product.options || product.options_upgrades || [];
+  const opts = typeof rawOpts === "string"
+    ? rawOpts.split(/[,;|\n]+/).map(s => s.trim()).filter(Boolean)
+    : Array.isArray(rawOpts) ? rawOpts : [];
   if (!opts.length) return (
     <div style={{ color: C.muted, fontSize: 13, padding: "24px 0" }}>No option / upgrade data available. Contact Uniking.</div>
   );
@@ -466,7 +478,8 @@ export default function ChainDetailTabs({ product, dbSprockets, dbMedia, onAddRF
   // Sprockets tab always shown — uses DB data (loading/empty states handled in tab)
   const hasSprockets = true;
   const hasMaterials = (product.materials_available?.length || product.options?.length) > 0;
-  const hasOptions = (product.options?.length || product.options_upgrades?.length) > 0;
+  const hasOptions = !!(product.options?.length || product.options_upgrades?.length ||
+    (typeof product.options_upgrades === "string" && product.options_upgrades.trim()));
   const hasSource = product.source || (product.source_data?.length > 0) || !!product.chain_id;
   const hasDownloads = (product.downloads?.length > 0) || product.diagram_image || product.drawing_url;
 
