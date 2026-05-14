@@ -10,6 +10,7 @@ import { CHAIN_FAMILIES } from "@/lib/chainFamilyData";
 import { CHAIN_PRODUCTS } from "@/lib/chainCatalogData";
 import { getChainCountByFamily, getUniqueActiveChains } from "@/lib/chainCountHelpers";
 import { getLiveChainsSync } from "@/lib/chainLiveDbSource";
+import { familyLabelToKey } from "@/lib/chainFamilyNormalizer";
 import { useNavigate } from "react-router-dom";
 
 const C = {
@@ -120,7 +121,7 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator,
     };
 
     return { familiesFiltered, chainsMatched, debugInfo };
-  }, [search]);
+  }, [search, liveChainSource]);
 
   // ── Live DB family counts (override static counts when liveChainSource is available) ──
   const liveFamilyCounts = useMemo(() => {
@@ -188,8 +189,11 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator,
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
             {chainsMatched.slice(0, 12).map(chain => {
-              // Resolve chain_family (display label) to family key
-              const familyKey = CHAIN_FAMILIES.find(f => f.key === chain.chain_family)?.key || chain.chain_family;
+              // chain.chain_family is already the normalized canonical label (from chainLiveDbSource normalizer)
+              // Convert label → family key for navigation
+              const familyKey = familyLabelToKey(chain.chain_family) ||
+                CHAIN_FAMILIES.find(f => f.label === chain.chain_family)?.key ||
+                chain.chain_family;
               return (
               <div
                 key={chain.chain_id}

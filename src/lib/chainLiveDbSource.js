@@ -8,6 +8,7 @@
 
 import { base44 } from "@/api/base44Client";
 import { ALL_NORMALIZED_CHAINS } from "./chainNormalizedIndex";
+import { normalizeChainFamily } from "./chainFamilyNormalizer";
 
 /**
  * Fetch live DB chains (Active status) and merge with static fallback.
@@ -40,7 +41,15 @@ export async function fetchLiveNormalizedChains() {
   const mergedMap = new Map();
 
   for (const r of validDb) {
-    if (r.chain_id) mergedMap.set(r.chain_id, { ...r, _from_db: true });
+    if (r.chain_id) {
+      // Normalize chain_family at ingestion so all consumers get canonical labels
+      mergedMap.set(r.chain_id, {
+        ...r,
+        chain_family: normalizeChainFamily(r.chain_family),
+        _from_db: true,
+        _raw_chain_family: r.chain_family, // preserve original for debug
+      });
+    }
   }
   for (const c of staticChains) {
     if (!mergedMap.has(c.chain_id)) mergedMap.set(c.chain_id, c);

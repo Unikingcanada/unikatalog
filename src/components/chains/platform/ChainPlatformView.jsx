@@ -11,6 +11,7 @@ import { CHAIN_PRODUCTS } from "@/lib/chainCatalogData";
 import { getChainsByFamily } from "@/lib/chainNormalizedIndex";
 import { isComponentSku } from "@/lib/importCenterEngine";
 import { getChainsByFamilyActive as getUniqueActiveChainsByFamily } from "@/lib/chainCountHelpers";
+import { normalizeChainFamily, familyKeyToLabel } from "@/lib/chainFamilyNormalizer";
 import { fetchLiveNormalizedChains } from "@/lib/chainLiveDbSource";
 import ChainFamilyBrowser from "./ChainFamilyBrowser";
 import NormalizedChainCard from "./NormalizedChainCard";
@@ -67,27 +68,45 @@ function ProductListView({ family, products, onSelect, onConfigure, liveChainSou
   return (
     <div>
       {/* Admin debug output */}
-      {isAdmin && liveChainSource && (
-        <div style={{ fontSize: 10, color: "#0f172a", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 6, padding: "10px 14px", marginBottom: 16, fontFamily: "monospace" }}>
-          <div style={{ fontWeight: 700, fontSize: 11, marginBottom: 6 }}>🔍 Debug: {family.label}</div>
-          <div>Total chains in merged source: <b>{liveChainSource.totalSearchable}</b></div>
-          <div>DB records loaded: <b>{liveChainSource.dbRecords}</b></div>
-          <div>Active chains in this family: <b>{products.length}</b></div>
-          <div>After subcategory/search filter: <b>{filtered.length}</b></div>
-          <div style={{ marginTop: 6 }}>
-            Search "dryrun-test-001": <b style={{ color: liveChainSource.live?.some(c => c.chain_id?.toLowerCase() === "dryrun-test-001") ? "#16a34a" : "#dc2626" }}>
-              {liveChainSource.live?.some(c => c.chain_id?.toLowerCase() === "dryrun-test-001") ? "✓ FOUND in merged source" : "✗ NOT in merged source"}
-            </b>
+      {isAdmin && liveChainSource && (() => {
+        const testRecord = liveChainSource.live?.find(c => c.chain_id?.toLowerCase() === "dryrun-test-001");
+        const inFamily = products.some(c => c.chain_id?.toLowerCase() === "dryrun-test-001");
+        const canonicalLabel = familyKeyToLabel(family.key);
+        return (
+          <div style={{ fontSize: 10, color: "#0f172a", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 6, padding: "10px 14px", marginBottom: 16, fontFamily: "monospace" }}>
+            <div style={{ fontWeight: 700, fontSize: 11, marginBottom: 6 }}>🔍 Debug: {family.label}</div>
+            <div>Selected family key: <b>"{family.key}"</b></div>
+            <div>Canonical label (for DB filter): <b>"{canonicalLabel}"</b></div>
+            <div>Total in merged source: <b>{liveChainSource.totalSearchable}</b> &nbsp;|&nbsp; DB: <b>{liveChainSource.dbRecords}</b></div>
+            <div>Active chains in this family: <b>{products.length}</b> &nbsp;|&nbsp; After filter: <b>{filtered.length}</b></div>
+
+            <div style={{ marginTop: 8, borderTop: "1px solid #bbf7d0", paddingTop: 8 }}>
+              <div style={{ fontWeight: 700, marginBottom: 4 }}>DRYRUN-TEST-001 inspection:</div>
+              {testRecord ? (
+                <>
+                  <div>chain_id: <b>{testRecord.chain_id}</b></div>
+                  <div>chain_family (raw): <b style={{ color: "#dc2626" }}>"{testRecord.chain_family}"</b></div>
+                  <div>chain_family (normalized): <b style={{ color: "#16a34a" }}>"{normalizeChainFamily(testRecord.chain_family)}"</b></div>
+                  <div>status: <b>{testRecord.status || "(none)"}</b></div>
+                  <div>chain_number: <b>{testRecord.chain_number}</b></div>
+                  <div>display_name: <b>{testRecord.display_name}</b></div>
+                  <div>_from_db: <b>{testRecord._from_db ? "YES" : "no"}</b></div>
+                  <div style={{ marginTop: 4 }}>
+                    In merged source: <b style={{ color: "#16a34a" }}>✓ YES</b> &nbsp;|&nbsp;
+                    In this family: <b style={{ color: inFamily ? "#16a34a" : "#dc2626" }}>{inFamily ? "✓ YES" : "✗ NO — family key/label mismatch"}</b>
+                  </div>
+                  <div style={{ marginTop: 4, color: "#475569" }}>
+                    Filter: normalizeChainFamily("{testRecord.chain_family}").toLowerCase() === "{canonicalLabel.toLowerCase()}" → <b style={{ color: normalizeChainFamily(testRecord.chain_family).toLowerCase() === canonicalLabel.toLowerCase() ? "#16a34a" : "#dc2626" }}>{normalizeChainFamily(testRecord.chain_family).toLowerCase() === canonicalLabel.toLowerCase() ? "✓ MATCH" : "✗ NO MATCH"}</b>
+                  </div>
+                </>
+              ) : (
+                <div style={{ color: "#dc2626" }}>✗ DRYRUN-TEST-001 NOT in merged source</div>
+              )}
+            </div>
+            <div style={{ marginTop: 6, color: "#475569" }}>First 10 chain IDs in family: {products.slice(0, 10).map(c => c.chain_id || c.chain_number).join(", ") || "(none)"}</div>
           </div>
-          <div>
-            In this family: <b style={{ color: products.some(c => c.chain_id?.toLowerCase() === "dryrun-test-001") ? "#16a34a" : "#dc2626" }}>
-              {products.some(c => c.chain_id?.toLowerCase() === "dryrun-test-001") ? "✓ FOUND" : "✗ NOT FOUND"}
-            </b>
-          </div>
-          <div style={{ marginTop: 6, color: "#475569" }}>First 10 chain IDs in family:</div>
-          <div style={{ color: "#334155" }}>{products.slice(0, 10).map(c => c.chain_id || c.chain_number).join(", ") || "(none)"}</div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
@@ -202,18 +221,24 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
 
   const familyProducts = useMemo(() => {
     if (!selectedFamily) return [];
-    const familyKeyNorm = selectedFamily.trim().toLowerCase();
 
-    // If we have a live DB source, use it (DB-first, case-insensitive match)
+    // selectedFamily is a short KEY (e.g. "performance_roller")
+    // DB stores chain_family as LABEL (e.g. "Performance Roller Chains")
+    // Resolve key → canonical label for comparison
+    const canonicalLabel = familyKeyToLabel(selectedFamily); // e.g. "Performance Roller Chains"
+    const canonicalLabelLower = canonicalLabel.trim().toLowerCase();
+
+    // If we have a live DB source, use it (DB-first, label-based match)
     if (liveChainSource?.live?.length) {
       const fromLive = liveChainSource.live.filter(c => {
-        const cf = (c.chain_family || "").trim().toLowerCase();
-        return cf === familyKeyNorm;
+        // Normalize the stored value to handle any import aliases
+        const storedFamily = normalizeChainFamily(c.chain_family || "");
+        return storedFamily.trim().toLowerCase() === canonicalLabelLower;
       });
       if (fromLive.length > 0) return fromLive;
     }
 
-    // Fall back to static authoritative source
+    // Fall back to static authoritative source (static uses the KEY directly)
     const normalized = getUniqueActiveChainsByFamily(selectedFamily);
     if (normalized.length > 0) return normalized;
 

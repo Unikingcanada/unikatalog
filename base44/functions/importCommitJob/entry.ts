@@ -34,6 +34,104 @@ async function writeWithRetry(fn, maxAttempts = 4) {
   }
 }
 
+// ── Chain family normalization (alias → canonical label) ─────────────────────
+const CHAIN_FAMILY_ALIAS_MAP = {
+  "ansi roller chain":               "Performance Roller Chains",
+  "ansi/bs roller chain":            "Performance Roller Chains",
+  "ansi/bs chain":                   "Performance Roller Chains",
+  "roller chain":                    "Performance Roller Chains",
+  "power transmission chain":        "Performance Roller Chains",
+  "standard roller chain":           "Performance Roller Chains",
+  "precision roller chain":          "Performance Roller Chains",
+  "bs roller chain":                 "Performance Roller Chains",
+  "iso roller chain":                "Performance Roller Chains",
+  "performance roller chain":        "Performance Roller Chains",
+  "performance roller chains":       "Performance Roller Chains",
+  "performance_roller":              "Performance Roller Chains",
+  "high-end roller chain":           "Performance Roller Chains",
+  "short pitch roller chain":        "Performance Roller Chains",
+  "short pitch precision roller chain": "Performance Roller Chains",
+  "conveyor roller chain":           "Conveyor Roller Chains",
+  "conveyor_roller":                 "Conveyor Roller Chains",
+  "attachment roller chain":         "Attachment Roller Chains",
+  "attachment_roller":               "Attachment Roller Chains",
+  "hollow pin chain":                "Hollow Pin Chains",
+  "hollow_pin":                      "Hollow Pin Chains",
+  "double pitch chain":              "Double Pitch Conveyor Chains",
+  "double pitch conveyor chain":     "Double Pitch Conveyor Chains",
+  "double_pitch_conveyor":           "Double Pitch Conveyor Chains",
+  "engineered chain":                "Engineered Class Chains",
+  "engineered chains":               "Engineered Class Chains",
+  "engineered class chain":          "Engineered Class Chains",
+  "engineered_class":                "Engineered Class Chains",
+  "welded steel chain":              "Welded Steel Chains",
+  "welded steel chains":             "Welded Steel Chains",
+  "welded_steel":                    "Welded Steel Chains",
+  "mill chain":                      "Welded Steel Chains",
+  "steel pintle chain":              "Steel Pintle Chains",
+  "pintle chain":                    "Steel Pintle Chains",
+  "steel_pintle":                    "Steel Pintle Chains",
+  "steel bushed chain":              "Steel Bushed Chains",
+  "steel_bushed":                    "Steel Bushed Chains",
+  "agricultural chain":              "Agricultural Conveyor Chains",
+  "agricultural conveyor chain":     "Agricultural Conveyor Chains",
+  "agricultural_conveyor":           "Agricultural Conveyor Chains",
+  "sharptop chain":                  "SharpTop Chains",
+  "sharp top chain":                 "SharpTop Chains",
+  "sharptop":                        "SharpTop Chains",
+  "forged chain":                    "Forged Chains",
+  "forged chains":                   "Forged Chains",
+  "forged":                          "Forged Chains",
+  "drop forged rivetless chain":     "Drop Forged Rivetless Chains",
+  "rivetless chain":                 "Drop Forged Rivetless Chains",
+  "drop_forged_rivetless":           "Drop Forged Rivetless Chains",
+  "overhead conveyor chain":         "Overhead Conveyor Chains",
+  "overhead_conveyor":               "Overhead Conveyor Chains",
+  "drag chain":                      "Drag / Scraper Chains",
+  "scraper chain":                   "Drag / Scraper Chains",
+  "drag_scraper":                    "Drag / Scraper Chains",
+  "bucket elevator chain":           "Bucket Elevator Chains",
+  "elevator chain":                  "Bucket Elevator Chains",
+  "bucket_elevator":                 "Bucket Elevator Chains",
+  "leaf chain":                      "Leaf Chains",
+  "leaf chains":                     "Leaf Chains",
+  "leaf_chain":                      "Leaf Chains",
+  "specialty chain":                 "Specialty / Custom Chains",
+  "specialty_custom":                "Specialty / Custom Chains",
+  "custom chain":                    "Specialty / Custom Chains",
+};
+
+const VALID_CHAIN_FAMILIES = new Set([
+  "Performance Roller Chains", "Conveyor Roller Chains", "Attachment Roller Chains",
+  "Hollow Pin Chains", "Double Pitch Conveyor Chains", "Engineered Class Chains",
+  "Welded Steel Chains", "Steel Pintle Chains", "Steel Bushed Chains",
+  "Agricultural Conveyor Chains", "SharpTop Chains", "Forged Chains",
+  "Drop Forged Rivetless Chains", "Overhead Conveyor Chains", "Drag / Scraper Chains",
+  "Bucket Elevator Chains", "Leaf Chains", "Specialty / Custom Chains",
+]);
+
+function normalizeChainFamilyValue(raw) {
+  if (!raw) return raw;
+  const key = raw.trim().toLowerCase();
+  if (CHAIN_FAMILY_ALIAS_MAP[key]) return CHAIN_FAMILY_ALIAS_MAP[key];
+  // Already canonical
+  if (VALID_CHAIN_FAMILIES.has(raw.trim())) return raw.trim();
+  return raw;
+}
+
+/**
+ * Normalize mapped_data before writing to Normalized_Chains.
+ * Ensures chain_family is always a valid canonical label.
+ */
+function normalizeNormalizedChainRecord(data) {
+  if (!data || typeof data !== "object") return data;
+  const result = { ...data };
+  if (result.chain_family != null) {
+    result.chain_family = normalizeChainFamilyValue(result.chain_family);
+  }
+  return result;
+}
+
 const TRUSTED_BRANDS = [
   "Tsubaki", "Donghua", "Regina", "Allied Locke", "Renold", "Rexnord",
   "Iwis", "Diamond", "Drives", "Ramsey", "Webster", "HKK", "KettenWulf",
@@ -232,15 +330,20 @@ Deno.serve(async (req) => {
 
       for (const record of chunk) {
         try {
+          // Normalize chain_family before writing to Normalized_Chains
+          const writeData = entityTarget === "Normalized_Chains"
+            ? normalizeNormalizedChainRecord(record.mapped_data)
+            : record.mapped_data;
+
           if (record.record_status === "New") {
             const result = await writeWithRetry(() =>
-              base44.asServiceRole.entities[entityTarget].create(record.mapped_data)
+              base44.asServiceRole.entities[entityTarget].create(writeData)
             );
             if (result?.id) newIds.push(result.id);
           } else if (record.record_status === "Changed" || record.record_status === "Conflict") {
             if (record.production_record_id) {
               await writeWithRetry(() =>
-                base44.asServiceRole.entities[entityTarget].update(record.production_record_id, record.mapped_data)
+                base44.asServiceRole.entities[entityTarget].update(record.production_record_id, writeData)
               );
               updatedIds.push(record.production_record_id);
             }
