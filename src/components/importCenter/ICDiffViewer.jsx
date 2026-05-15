@@ -5,6 +5,7 @@
  */
 import { useState } from "react";
 import { STATUS_COLORS } from "@/lib/importCenterEngine";
+import AIResolveButton from "./AIResolveButton";
 
 const STATUS_ORDER = ["New", "Changed", "Conflict", "FK_Fail", "Invalid", "Duplicate", "Skipped", "Pending"];
 
@@ -139,6 +140,8 @@ function FailedDiagnosticsPanel({ detail, mappedData, rowIndex, entityTarget }) 
   );
 }
 
+const AI_RESOLVE_STATUSES = new Set(["Conflict", "FK_Fail"]);
+
 function RecordRow({ record, index, onDecision }) {
   const [expanded, setExpanded] = useState(false);
   const c = STATUS_COLORS[record.record_status] || STATUS_COLORS.Pending;
@@ -220,6 +223,11 @@ function RecordRow({ record, index, onDecision }) {
                 {JSON.stringify(record.mapped_data, null, 2)}
               </pre>
             </>
+          )}
+
+          {/* AI Resolve — only for Conflict and FK_Fail */}
+          {AI_RESOLVE_STATUSES.has(record.record_status) && (
+            <AIResolveButton record={record} onApplyDecision={onDecision} />
           )}
         </div>
       )}
