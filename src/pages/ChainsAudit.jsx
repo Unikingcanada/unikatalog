@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { AlertCircle, CheckCircle2, Database, BarChart3, Clock, AlertTriangle } from "lucide-react";
 import { getTotalUniqueChainCount, getChainAuditBreakdown } from "@/lib/chainCountHelpers";
+import { computeCatalogAudit } from "@/lib/chainCatalogAudit";
+import { fetchLiveNormalizedChains } from "@/lib/chainLiveDbSource";
 
 export default function ChainsAudit() {
   const [loading, setLoading] = useState(true);
@@ -21,6 +23,26 @@ export default function ChainsAudit() {
   });
   const [importSessions, setImportSessions] = useState([]);
   const [error, setError] = useState(null);
+
+  // Catalog completeness audit — computed from the static normalized index by
+  // default (instant, no DB), then re-computed against live DB chains if available.
+  const [auditChains, setAuditChains] = useState(null); // null => use static
+  const [auditSource, setAuditSource] = useState("static");
+  const audit = useMemo(
+    () => computeCatalogAudit(auditChains || undefined),
+    [auditChains]
+  );
+
+  useEffect(() => {
+    fetchLiveNormalizedChains()
+      .then(source => {
+        if (source?.live?.length) {
+          setAuditChains(source.live);
+          setAuditSource("live");
+        }
+      })
+      .catch(() => {}); // static audit already rendered
+  }, []);
 
   useEffect(() => {
     const fetchAuditData = async () => {
@@ -105,6 +127,8 @@ export default function ChainsAudit() {
           Real-time health check for normalized chain ecosystem. All counts auto-refresh.
         </p>
       </div>
+
+      <CompletenessSection audit={audit} source={auditSource} />
 
       {error && (
         <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8, padding: "12px 16px", marginBottom: 20, color: "#dc2626", fontSize: 12 }}>
@@ -191,6 +215,129 @@ export default function ChainsAudit() {
         </div>
       </div>
     </div>
+  );
+}
+
+function barColor(p) {
+  if (p >= 90) return "#16a34a";
+  if (p >= 60) return "#65a30d";
+  if (p >= 30) return "#f59e0b";
+  return "#dc2626";
+}
+
+function PctBar({ label, value, count, total }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <div style={{ width: 130, fontSize: 11, fontWeight: 700, color: "#475569" }}>{label}</div>
+      <div style={{ flex: 1, height: 16, background: "#f1f5f9", borderRadius: 4, overflow: "hidden" }}>
+        <div style={{ width: `${value}%`, height: "100%", background: barColor(value), transition: "width .3s" }} />
+      </div>
+      <div style={{ width: 96, fontSize: 11, fontWeight: 700, color: "#0f172a", textAlign: "right" }}>
+        {value}% <span style={{ color: "#94a3b8", fontWeight: 500 }}>({count}/{total})</span>
+      </div>
+    </div>
+  );
+}
+
+function CompletenessSection({ audit, source }) {
+  if (!audit) return null;
+  const o = audit.overall;
+  const dims = [
+    ["Product image", o.pctImage, o.withImage],
+    ["Attachments", o.pctAttachments, o.withAttachments],
+    ["Sprockets", o.pctSprockets, o.withSprockets],
+    ["Pins / links", o.pctPins, o.withPins],
+    ["Ratings", o.pctRatings, o.withRatings],
+    ["Materials", o.pctMaterials, o.withMaterials],
+    ["Confirmed source", o.pctConfirmedSource, o.withConfirmedSource],
+  ];
+  return (
+    <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "20px 22px", marginBottom: 28 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
+        <h2 style={{ fontSize: 18, fontWeight: 900, color: "#0C2340", display: "flex", alignItems: "center", gap: 8 }}>
+          <BarChart3 className="w-5 h-5" /> Catalog Completeness
+        </h2>
+        <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 20, background: source === "live" ? "#dcfce7" : "#eff6ff", color: source === "live" ? "#166534" : "#0284c7" }}>
+          {source === "live" ? "● Live DB" : "○ Static index"} · {o.total} chains
+        </span>
+      </div>
+
+      {/* Headline: catalog-ready */}
+      <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 18, padding: "12px 16px", background: "#f8fafc", borderRadius: 8, borderLeft: `4px solid ${barColor(o.pctReady)}` }}>
+        <div style={{ fontSize: 34, fontWeight: 900, color: barColor(o.pctReady) }}>{o.pctReady}%</div>
+        <div style={{ fontSize: 12, color: "#475569", lineHeight: 1.5 }}>
+          <strong>Catalog-ready</strong> ({o.ready}/{o.total}) — chains with image + attachments + sprockets + ratings all present.
+        </div>
+      </div>
+
+      {/* Dimension bars */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 7, marginBottom: 22 }}>
+        {dims.map(([label, v, c]) => (
+          <PctBar key={label} label={label} value={v} count={c} total={o.total} />
+        ))}
+      </div>
+
+      {/* Per-family table */}
+      <h3 style={{ fontSize: 13, fontWeight: 800, color: "#1e293b", marginBottom: 8 }}>By Family</h3>
+      <div style={{ overflowX: "auto", marginBottom: 22 }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11 }}>
+          <thead>
+            <tr style={{ textAlign: "left", color: "#64748b", borderBottom: "2px solid #e2e8f0" }}>
+              <th style={{ padding: "6px 8px" }}>Family</th>
+              <th style={{ padding: "6px 8px", textAlign: "right" }}>Chains</th>
+              <th style={{ padding: "6px 8px", textAlign: "right" }}>Img</th>
+              <th style={{ padding: "6px 8px", textAlign: "right" }}>Attach</th>
+              <th style={{ padding: "6px 8px", textAlign: "right" }}>Sprkt</th>
+              <th style={{ padding: "6px 8px", textAlign: "right" }}>Rate</th>
+              <th style={{ padding: "6px 8px", textAlign: "right" }}>Ready</th>
+            </tr>
+          </thead>
+          <tbody>
+            {audit.byFamily.map(f => {
+              const empty = f.total === 0;
+              return (
+                <tr key={f.key} style={{ borderBottom: "1px solid #f1f5f9", color: empty ? "#cbd5e1" : "#0f172a", background: empty ? "#fafafa" : "transparent" }}>
+                  <td style={{ padding: "6px 8px", fontWeight: 700 }}>{f.label}</td>
+                  <td style={{ padding: "6px 8px", textAlign: "right", fontWeight: 700 }}>{f.total}</td>
+                  <PctCell v={f.pctImage} empty={empty} />
+                  <PctCell v={f.pctAttachments} empty={empty} />
+                  <PctCell v={f.pctSprockets} empty={empty} />
+                  <PctCell v={f.pctRatings} empty={empty} />
+                  <PctCell v={f.pctReady} empty={empty} bold />
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Source-brand sourcing scorecard */}
+      <h3 style={{ fontSize: 13, fontWeight: 800, color: "#1e293b", marginBottom: 4 }}>Source-Brand Coverage</h3>
+      <div style={{ fontSize: 10, color: "#94a3b8", marginBottom: 10 }}>
+        Internal sourcing scorecard only — brands are never shown to customers. Confirmed equivalency references per target source.
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 8 }}>
+        {audit.bySourceBrand.map(b => (
+          <div key={b.brand} style={{ border: `1px solid ${b.present ? "#bbf7d0" : "#fecaca"}`, background: b.present ? "#f0fdf4" : "#fef2f2", borderRadius: 8, padding: "9px 11px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 12, fontWeight: 800, color: "#0f172a" }}>{b.brand}</span>
+              <span style={{ fontSize: 13 }}>{b.present ? "✓" : "✗"}</span>
+            </div>
+            <div style={{ fontSize: 10, color: b.present ? "#166534" : "#dc2626", fontWeight: 600, marginTop: 2 }}>
+              {b.present ? `${b.confirmed} confirmed` : "Not in catalog"}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PctCell({ v, empty, bold }) {
+  return (
+    <td style={{ padding: "6px 8px", textAlign: "right", fontWeight: bold ? 800 : 600, color: empty ? "#cbd5e1" : barColor(v) }}>
+      {empty ? "—" : `${v}%`}
+    </td>
   );
 }
 
