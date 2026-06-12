@@ -1,0 +1,208 @@
+{
+  "source": "Uniking Canada \u2014 Engineered Class Chains Catalog 2023",
+  "manufacturer": "Uniking",
+  "year": 2023,
+  "book_pages": "99-103",
+  "extracted_with": "PyMuPDF + manual column reconciliation",
+  "notes": "Engineered class steel bushed chains. Dimensions exactly as printed (inches). All construction: Fully heat-treated superior alloy steel; Solid bushings and rollers; Quad staked rivet design.",
+  "construction": [
+    "Fully heat-treated superior alloy steel",
+    "Solid bushings and rollers",
+    "Quad staked rivet design"
+  ],
+  "chains": [
+    {
+      "part_number": "MS188",
+      "section": "Steel Bushed",
+      "catalog_page": 100,
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "avg_ultimate_strength_lbs": 25000,
+      "links_per_foot": "4.6",
+      "avg_weight_per_foot_lbs": "3.8",
+      "dimensions_in": {
+        "outer_sidebar_thickness": "1/4",
+        "inner_sidebar_thickness": "1/4",
+        "rivet_diameter": "1/2",
+        "overall_width": "2 11/16",
+        "max_sprocket_thickness": "1",
+        "length_of_bearing": "1 9/16"
+      },
+      "disposition": "new"
+    },
+    {
+      "part_number": "MS131",
+      "section": "Steel Bushed",
+      "catalog_page": 100,
+      "pitch_in": "3.075",
+      "pitch_mm": "78.11",
+      "avg_ultimate_strength_lbs": 40000,
+      "links_per_foot": "3.9",
+      "avg_weight_per_foot_lbs": "8.3",
+      "dimensions_in": {
+        "sidebar_height": "1 1/2",
+        "overall_width": "3 9/16",
+        "length_of_bearing": "2",
+        "bushing_diameter": "1 1/4"
+      },
+      "disposition": "new"
+    },
+    {
+      "part_number": "MS102B",
+      "section": "Steel Bushed",
+      "catalog_page": 100,
+      "pitch_in": "4.000",
+      "pitch_mm": "101.60",
+      "avg_ultimate_strength_lbs": 40000,
+      "links_per_foot": "3.0",
+      "avg_weight_per_foot_lbs": "6.9",
+      "dimensions_in": {
+        "sidebar_height": "1 1/2",
+        "overall_width": "4 11/32",
+        "max_sprocket_thickness": "2",
+        "bushing_diameter": "1"
+      },
+      "disposition": "new"
+    },
+    {
+      "part_number": "MS110",
+      "section": "Steel Bushed",
+      "catalog_page": 100,
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "avg_ultimate_strength_lbs": 40000,
+      "links_per_foot": "2.0",
+      "avg_weight_per_foot_lbs": "6.3",
+      "dimensions_in": {
+        "sidebar_height": "1 1/2",
+        "overall_width": "4 11/32",
+        "max_sprocket_thickness": "2",
+        "bushing_diameter": "1 1/4"
+      },
+      "disposition": "new"
+    },
+    {
+      "part_number": "LXS882",
+      "section": "Steel, Bushed, Roller \u2014 Offset Sidebar",
+      "catalog_page": 101,
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "avg_ultimate_strength_lbs": 29000,
+      "links_per_foot": "4.6",
+      "avg_weight_per_foot_lbs": "3.6",
+      "dimensions_in": {
+        "sidebar_thickness": "1/4",
+        "rivet_diameter": "7/16",
+        "overall_width": "2 1/2",
+        "length_of_bearing": "1 21/32"
+      },
+      "disposition": "new"
+    },
+    {
+      "part_number": "81X",
+      "section": "Steel, Bushed, Roller \u2014 Straight Sidebar",
+      "catalog_page": 101,
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "avg_ultimate_strength_lbs": 24000,
+      "links_per_foot": "4.6",
+      "avg_weight_per_foot_lbs": "2.6",
+      "dimensions_in": {
+        "outer_sidebar_thickness": "5/32",
+        "inner_sidebar_thickness": "5/32",
+        "rivet_diameter": "7/16",
+        "roller_diameter": "29/32"
+      },
+      "disposition": "enrich:81X (existing pitch 3.000 is WRONG -> 2.609)"
+    },
+    {
+      "part_number": "81X-HD",
+      "section": "Steel, Bushed, Roller \u2014 Straight Sidebar",
+      "catalog_page": 101,
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "avg_ultimate_strength_lbs": 42800,
+      "links_per_foot": "4.6",
+      "avg_weight_per_foot_lbs": "4.0",
+      "dimensions_in": {
+        "sidebar_height": "1 1/4",
+        "outer_sidebar_thickness": "7/32",
+        "inner_sidebar_thickness": "5/16",
+        "rivet_diameter": "7/16",
+        "overall_width": "2 9/16",
+        "length_of_bearing": "1 11/16",
+        "roller_diameter": "29/32"
+      },
+      "disposition": "enrich:81XH"
+    },
+    {
+      "part_number": "81X-XHD",
+      "section": "Steel, Bushed, Roller \u2014 Straight Sidebar",
+      "catalog_page": 101,
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "avg_ultimate_strength_lbs": 42800,
+      "links_per_foot": "4.6",
+      "avg_weight_per_foot_lbs": "4.5",
+      "dimensions_in": {
+        "sidebar_height": "1 1/4",
+        "outer_sidebar_thickness": "5/16",
+        "inner_sidebar_thickness": "5/16",
+        "rivet_diameter": "7/16",
+        "overall_width": "2 3/4",
+        "roller_diameter": "29/32"
+      },
+      "disposition": "enrich:81XHH"
+    }
+  ],
+  "attachments": [
+    {
+      "code": "A1",
+      "style": "Lug one side",
+      "holes": 1,
+      "for": [
+        "MS188",
+        "MS131",
+        "MS102B",
+        "MS110"
+      ],
+      "page": 103
+    },
+    {
+      "code": "A2",
+      "style": "Lug one side",
+      "holes": 2,
+      "for": [
+        "MS188",
+        "MS131",
+        "MS102B",
+        "MS110"
+      ],
+      "page": 103
+    },
+    {
+      "code": "K1",
+      "style": "Lugs both sides",
+      "holes": 1,
+      "for": [
+        "MS188",
+        "MS131",
+        "MS102B",
+        "MS110"
+      ],
+      "page": 103
+    },
+    {
+      "code": "K2",
+      "style": "Lugs both sides",
+      "holes": 2,
+      "for": [
+        "MS188",
+        "MS131",
+        "MS102B",
+        "MS110"
+      ],
+      "page": 103
+    }
+  ]
+}

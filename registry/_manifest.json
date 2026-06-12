@@ -1,7 +1,7 @@
 {
   "generated_at": "2026-06-12T02:10:41.023Z",
   "generator": "registry/extract_static.mjs",
-  "total_chains": 304,
+  "total_chains": 309,
   "source_collisions_dropped": 0,
   "unmapped_family_count": 0,
   "families": {
@@ -69,8 +69,10 @@
     },
     "Steel Bushed Chains": {
       "file": "steel-bushed-chains.json",
-      "count": 0,
-      "provenance": {}
+      "count": 5,
+      "provenance": {
+        "catalog-verified": 5
+      }
     },
     "Agricultural Conveyor Chains": {
       "file": "agricultural-conveyor-chains.json",
@@ -139,10 +141,29 @@
     }
   },
   "empty_families": [
-    "Steel Bushed Chains",
     "SharpTop Chains",
     "Forged Chains"
   ],
   "unmapped": [],
-  "collisions": []
+  "collisions": [],
+  "imports": [
+    {
+      "source": "Uniking Canada — Engineered Class Chains Catalog 2023",
+      "added": 5,
+      "family": "Steel Bushed Chains",
+      "new_chains": [
+        "LXS882",
+        "MS102B",
+        "MS110",
+        "MS131",
+        "MS188"
+      ],
+      "enrichment_pending": [
+        "81X",
+        "81X-HD",
+        "81X-XHD"
+      ],
+      "date": "2026-06-12"
+    }
+  ]
 }

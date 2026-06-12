@@ -1,6 +1,324 @@
 {
   "family": "Steel Bushed Chains",
   "slug": "steel-bushed-chains",
-  "count": 0,
-  "chains": []
+  "count": 5,
+  "chains": [
+    {
+      "chain_id": "LXS882",
+      "chain_family": "Steel Bushed Chains",
+      "chain_number": "LXS882",
+      "display_name": "LXS882 Steel Bushed Engineered Class Chain",
+      "standard": "",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "strands": 1,
+      "description": "Engineered class steel bushed chain (Steel, Bushed, Roller \u2014 Offset Sidebar). 2.609\" pitch, 29,000 lb avg ultimate strength. Fully heat-treated superior alloy steel; Solid bushings and rollers; Quad staked rivet design.",
+      "application_tags": [
+        "Engineered Class",
+        "Steel Bushed",
+        "Heavy Duty"
+      ],
+      "materials_available": [
+        "alloy_steel"
+      ],
+      "options_upgrades": "",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "Source: Uniking Canada \u2014 Engineered Class Chains Catalog 2023, book p.101. Standard not specified in catalog.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "avg_ultimate_lbs": "29000",
+        "links_per_foot": "4.6",
+        "avg_weight_per_foot_lbs": "3.6",
+        "sidebar_thickness": "1/4",
+        "rivet_diameter": "7/16",
+        "overall_width": "2 1/2",
+        "length_of_bearing": "1 21/32"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "29000",
+          "source": "Uniking Canada \u2014 Engineered Class Chains Catalog 2023 p.101"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "LXS882",
+          "confidence": "Confirmed",
+          "catalog_page": "101",
+          "notes": "Uniking Canada \u2014 Engineered Class Chains Catalog 2023"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "LXS882",
+      "image_strategy": "family",
+      "_origin": "uniking_eng_class_2023_pdf",
+      "_family_key": "steel_bushed",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified"
+    },
+    {
+      "chain_id": "MS102B",
+      "chain_family": "Steel Bushed Chains",
+      "chain_number": "MS102B",
+      "display_name": "MS102B Steel Bushed Engineered Class Chain",
+      "standard": "",
+      "pitch_in": "4.000",
+      "pitch_mm": "101.60",
+      "strands": 1,
+      "description": "Engineered class steel bushed chain (Steel Bushed). 4.000\" pitch, 40,000 lb avg ultimate strength. Fully heat-treated superior alloy steel; Solid bushings and rollers; Quad staked rivet design.",
+      "application_tags": [
+        "Engineered Class",
+        "Steel Bushed",
+        "Heavy Duty"
+      ],
+      "materials_available": [
+        "alloy_steel"
+      ],
+      "options_upgrades": "Attachments: A1, A2, K1, K2",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "Source: Uniking Canada \u2014 Engineered Class Chains Catalog 2023, book p.100. Standard not specified in catalog.",
+      "specs": {
+        "pitch_in": "4.000",
+        "pitch_mm": "101.60",
+        "avg_ultimate_lbs": "40000",
+        "links_per_foot": "3.0",
+        "avg_weight_per_foot_lbs": "6.9",
+        "sidebar_height": "1 1/2",
+        "overall_width": "4 11/32",
+        "max_sprocket_thickness": "2",
+        "bushing_diameter": "1"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "40000",
+          "source": "Uniking Canada \u2014 Engineered Class Chains Catalog 2023 p.100"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "MS102B",
+          "confidence": "Confirmed",
+          "catalog_page": "100",
+          "notes": "Uniking Canada \u2014 Engineered Class Chains Catalog 2023"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2"
+      ],
+      "sprocket_series": "MS102B",
+      "image_strategy": "family",
+      "_origin": "uniking_eng_class_2023_pdf",
+      "_family_key": "steel_bushed",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified"
+    },
+    {
+      "chain_id": "MS110",
+      "chain_family": "Steel Bushed Chains",
+      "chain_number": "MS110",
+      "display_name": "MS110 Steel Bushed Engineered Class Chain",
+      "standard": "",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "strands": 1,
+      "description": "Engineered class steel bushed chain (Steel Bushed). 6.000\" pitch, 40,000 lb avg ultimate strength. Fully heat-treated superior alloy steel; Solid bushings and rollers; Quad staked rivet design.",
+      "application_tags": [
+        "Engineered Class",
+        "Steel Bushed",
+        "Heavy Duty"
+      ],
+      "materials_available": [
+        "alloy_steel"
+      ],
+      "options_upgrades": "Attachments: A1, A2, K1, K2",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "Source: Uniking Canada \u2014 Engineered Class Chains Catalog 2023, book p.100. Standard not specified in catalog.",
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "avg_ultimate_lbs": "40000",
+        "links_per_foot": "2.0",
+        "avg_weight_per_foot_lbs": "6.3",
+        "sidebar_height": "1 1/2",
+        "overall_width": "4 11/32",
+        "max_sprocket_thickness": "2",
+        "bushing_diameter": "1 1/4"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "40000",
+          "source": "Uniking Canada \u2014 Engineered Class Chains Catalog 2023 p.100"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "MS110",
+          "confidence": "Confirmed",
+          "catalog_page": "100",
+          "notes": "Uniking Canada \u2014 Engineered Class Chains Catalog 2023"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2"
+      ],
+      "sprocket_series": "MS110",
+      "image_strategy": "family",
+      "_origin": "uniking_eng_class_2023_pdf",
+      "_family_key": "steel_bushed",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified"
+    },
+    {
+      "chain_id": "MS131",
+      "chain_family": "Steel Bushed Chains",
+      "chain_number": "MS131",
+      "display_name": "MS131 Steel Bushed Engineered Class Chain",
+      "standard": "",
+      "pitch_in": "3.075",
+      "pitch_mm": "78.11",
+      "strands": 1,
+      "description": "Engineered class steel bushed chain (Steel Bushed). 3.075\" pitch, 40,000 lb avg ultimate strength. Fully heat-treated superior alloy steel; Solid bushings and rollers; Quad staked rivet design.",
+      "application_tags": [
+        "Engineered Class",
+        "Steel Bushed",
+        "Heavy Duty"
+      ],
+      "materials_available": [
+        "alloy_steel"
+      ],
+      "options_upgrades": "Attachments: A1, A2, K1, K2",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "Source: Uniking Canada \u2014 Engineered Class Chains Catalog 2023, book p.100. Standard not specified in catalog.",
+      "specs": {
+        "pitch_in": "3.075",
+        "pitch_mm": "78.11",
+        "avg_ultimate_lbs": "40000",
+        "links_per_foot": "3.9",
+        "avg_weight_per_foot_lbs": "8.3",
+        "sidebar_height": "1 1/2",
+        "overall_width": "3 9/16",
+        "length_of_bearing": "2",
+        "bushing_diameter": "1 1/4"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "40000",
+          "source": "Uniking Canada \u2014 Engineered Class Chains Catalog 2023 p.100"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "MS131",
+          "confidence": "Confirmed",
+          "catalog_page": "100",
+          "notes": "Uniking Canada \u2014 Engineered Class Chains Catalog 2023"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2"
+      ],
+      "sprocket_series": "MS131",
+      "image_strategy": "family",
+      "_origin": "uniking_eng_class_2023_pdf",
+      "_family_key": "steel_bushed",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified"
+    },
+    {
+      "chain_id": "MS188",
+      "chain_family": "Steel Bushed Chains",
+      "chain_number": "MS188",
+      "display_name": "MS188 Steel Bushed Engineered Class Chain",
+      "standard": "",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "strands": 1,
+      "description": "Engineered class steel bushed chain (Steel Bushed). 2.609\" pitch, 25,000 lb avg ultimate strength. Fully heat-treated superior alloy steel; Solid bushings and rollers; Quad staked rivet design.",
+      "application_tags": [
+        "Engineered Class",
+        "Steel Bushed",
+        "Heavy Duty"
+      ],
+      "materials_available": [
+        "alloy_steel"
+      ],
+      "options_upgrades": "Attachments: A1, A2, K1, K2",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "Source: Uniking Canada \u2014 Engineered Class Chains Catalog 2023, book p.100. Standard not specified in catalog.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "avg_ultimate_lbs": "25000",
+        "links_per_foot": "4.6",
+        "avg_weight_per_foot_lbs": "3.8",
+        "outer_sidebar_thickness": "1/4",
+        "inner_sidebar_thickness": "1/4",
+        "rivet_diameter": "1/2",
+        "overall_width": "2 11/16",
+        "max_sprocket_thickness": "1",
+        "length_of_bearing": "1 9/16"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "25000",
+          "source": "Uniking Canada \u2014 Engineered Class Chains Catalog 2023 p.100"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "MS188",
+          "confidence": "Confirmed",
+          "catalog_page": "100",
+          "notes": "Uniking Canada \u2014 Engineered Class Chains Catalog 2023"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2"
+      ],
+      "sprocket_series": "MS188",
+      "image_strategy": "family",
+      "_origin": "uniking_eng_class_2023_pdf",
+      "_family_key": "steel_bushed",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified"
+    }
+  ]
 }
