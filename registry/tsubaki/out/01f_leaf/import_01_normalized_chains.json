@@ -1,0 +1,702 @@
+[
+ {
+  "chain_id": "LF-BL422",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL422",
+  "display_name": "BL422 Leaf Chain (2x2 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.5",
+  "pitch_mm": "12.7",
+  "strands": 1,
+  "description": "BL422 heavy-series leaf chain, 12.7 mm (0.5 in) pitch, 2x2 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion: forklift masts, hoists, counterweights.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 5300 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL423",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL423",
+  "display_name": "BL423 Leaf Chain (2x3 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.5",
+  "pitch_mm": "12.7",
+  "strands": 1,
+  "description": "BL423 heavy-series leaf chain, 12.7 mm (0.5 in) pitch, 2x3 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 5300 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL434",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL434",
+  "display_name": "BL434 Leaf Chain (3x4 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.5",
+  "pitch_mm": "12.7",
+  "strands": 1,
+  "description": "BL434 heavy-series leaf chain, 12.7 mm (0.5 in) pitch, 3x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 7900 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL444",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL444",
+  "display_name": "BL444 Leaf Chain (4x4 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.5",
+  "pitch_mm": "12.7",
+  "strands": 1,
+  "description": "BL444 heavy-series leaf chain, 12.7 mm (0.5 in) pitch, 4x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 10600 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL446",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL446",
+  "display_name": "BL446 Leaf Chain (4x6 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.5",
+  "pitch_mm": "12.7",
+  "strands": 1,
+  "description": "BL446 heavy-series leaf chain, 12.7 mm (0.5 in) pitch, 4x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 10600 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL466",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL466",
+  "display_name": "BL466 Leaf Chain (6x6 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.5",
+  "pitch_mm": "12.7",
+  "strands": 1,
+  "description": "BL466 heavy-series leaf chain, 12.7 mm (0.5 in) pitch, 6x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 15600 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL522",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL522",
+  "display_name": "BL522 Leaf Chain (2x2 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.625",
+  "pitch_mm": "15.875",
+  "strands": 1,
+  "description": "BL522 heavy-series leaf chain, 15.875 mm (0.625 in) pitch, 2x2 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 8800 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL523",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL523",
+  "display_name": "BL523 Leaf Chain (2x3 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.625",
+  "pitch_mm": "15.875",
+  "strands": 1,
+  "description": "BL523 heavy-series leaf chain, 15.875 mm (0.625 in) pitch, 2x3 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 8800 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL534",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL534",
+  "display_name": "BL534 Leaf Chain (3x4 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.625",
+  "pitch_mm": "15.875",
+  "strands": 1,
+  "description": "BL534 heavy-series leaf chain, 15.875 mm (0.625 in) pitch, 3x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 13200 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL544",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL544",
+  "display_name": "BL544 Leaf Chain (4x4 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.625",
+  "pitch_mm": "15.875",
+  "strands": 1,
+  "description": "BL544 heavy-series leaf chain, 15.875 mm (0.625 in) pitch, 4x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 17600 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL546",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL546",
+  "display_name": "BL546 Leaf Chain (4x6 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.625",
+  "pitch_mm": "15.875",
+  "strands": 1,
+  "description": "BL546 heavy-series leaf chain, 15.875 mm (0.625 in) pitch, 4x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 17600 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL566",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL566",
+  "display_name": "BL566 Leaf Chain (6x6 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.625",
+  "pitch_mm": "15.875",
+  "strands": 1,
+  "description": "BL566 heavy-series leaf chain, 15.875 mm (0.625 in) pitch, 6x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 26400 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL622",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL622",
+  "display_name": "BL622 Leaf Chain (2x2 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.75",
+  "pitch_mm": "19.05",
+  "strands": 1,
+  "description": "BL622 heavy-series leaf chain, 19.05 mm (0.75 in) pitch, 2x2 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 14300 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL623",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL623",
+  "display_name": "BL623 Leaf Chain (2x3 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.75",
+  "pitch_mm": "19.05",
+  "strands": 1,
+  "description": "BL623 heavy-series leaf chain, 19.05 mm (0.75 in) pitch, 2x3 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 14300 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL634",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL634",
+  "display_name": "BL634 Leaf Chain (3x4 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.75",
+  "pitch_mm": "19.05",
+  "strands": 1,
+  "description": "BL634 heavy-series leaf chain, 19.05 mm (0.75 in) pitch, 3x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 21500 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL644",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL644",
+  "display_name": "BL644 Leaf Chain (4x4 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.75",
+  "pitch_mm": "19.05",
+  "strands": 1,
+  "description": "BL644 heavy-series leaf chain, 19.05 mm (0.75 in) pitch, 4x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 28500 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL646",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL646",
+  "display_name": "BL646 Leaf Chain (4x6 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.75",
+  "pitch_mm": "19.05",
+  "strands": 1,
+  "description": "BL646 heavy-series leaf chain, 19.05 mm (0.75 in) pitch, 4x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 28500 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL666",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL666",
+  "display_name": "BL666 Leaf Chain (6x6 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "0.75",
+  "pitch_mm": "19.05",
+  "strands": 1,
+  "description": "BL666 heavy-series leaf chain, 19.05 mm (0.75 in) pitch, 6x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 43000 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL822",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL822",
+  "display_name": "BL822 Leaf Chain (2x2 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "1",
+  "pitch_mm": "25.4",
+  "strands": 1,
+  "description": "BL822 heavy-series leaf chain, 25.4 mm (1 in) pitch, 2x2 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 23100 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL823",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL823",
+  "display_name": "BL823 Leaf Chain (2x3 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "1",
+  "pitch_mm": "25.4",
+  "strands": 1,
+  "description": "BL823 heavy-series leaf chain, 25.4 mm (1 in) pitch, 2x3 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 23100 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL834",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL834",
+  "display_name": "BL834 Leaf Chain (3x4 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "1",
+  "pitch_mm": "25.4",
+  "strands": 1,
+  "description": "BL834 heavy-series leaf chain, 25.4 mm (1 in) pitch, 3x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 34800 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL844",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL844",
+  "display_name": "BL844 Leaf Chain (4x4 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "1",
+  "pitch_mm": "25.4",
+  "strands": 1,
+  "description": "BL844 heavy-series leaf chain, 25.4 mm (1 in) pitch, 4x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 46200 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL846",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL846",
+  "display_name": "BL846 Leaf Chain (4x6 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "1",
+  "pitch_mm": "25.4",
+  "strands": 1,
+  "description": "BL846 heavy-series leaf chain, 25.4 mm (1 in) pitch, 4x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 46200 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL866",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL866",
+  "display_name": "BL866 Leaf Chain (6x6 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "1",
+  "pitch_mm": "25.4",
+  "strands": 1,
+  "description": "BL866 heavy-series leaf chain, 25.4 mm (1 in) pitch, 6x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 69500 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "LF-BL1022",
+  "chain_family": "Leaf Chains",
+  "chain_number": "BL1022",
+  "display_name": "BL1022 Leaf Chain (2x2 lacing)",
+  "standard": "ASME/ANSI B29.8",
+  "pitch_in": "1.25",
+  "pitch_mm": "31.75",
+  "strands": 1,
+  "description": "BL1022 heavy-series leaf chain, 31.75 mm (1.25 in) pitch, 2x2 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+  "application_tags": [
+   "leaf chain",
+   "forklift mast",
+   "lifting",
+   "hoist",
+   "counterweight",
+   "balancing"
+  ],
+  "materials_available": [
+   "Carbon Steel (heat treated)"
+  ],
+  "options_upgrades": "clevis terminals|sheaves|custom lacing",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 31700 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]"
+ }
+]

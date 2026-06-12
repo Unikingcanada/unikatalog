@@ -1,0 +1,114 @@
+[
+ {
+  "chain_id": "DP-C2040",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2040S",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "DP-C2042",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2040R",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "DP-C2050",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2050S",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "DP-C2052",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2050R",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "DP-C2060",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2060S",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "DP-C2062",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2060R",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "DP-C2080",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2080S",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "DP-C2082",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2080R",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "DP-C2100",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2100S",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "DP-C2102",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2100R",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "DP-C2120",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2120S",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "DP-C2122",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2120R",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "DP-C2160",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2160S",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "DP-C2162",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2160R",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ }
+]

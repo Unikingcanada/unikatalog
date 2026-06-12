@@ -1,0 +1,98 @@
+[
+ {
+  "chain_id": "HP-40HP",
+  "brand": "Tsubaki",
+  "brand_part_number": "RS40-HP",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "HP-50HP",
+  "brand": "Tsubaki",
+  "brand_part_number": "RS50-HP",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "HP-60HP",
+  "brand": "Tsubaki",
+  "brand_part_number": "RS60-HP",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "HP-80HP",
+  "brand": "Tsubaki",
+  "brand_part_number": "RS80-HP",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "HP-C2040HP",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2040S-HP",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "HP-C2042HP",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2040R-HP",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "HP-C2050HP",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2050S-HP",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "HP-C2052HP",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2050R-HP",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "HP-C2060HP",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2060S-HP",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "HP-C2062HP",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2060R-HP",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "HP-C2080HP",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2080S-HP",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "HP-C2082HP",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF2080R-HP",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ }
+]

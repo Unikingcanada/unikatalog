@@ -1,0 +1,436 @@
+[
+ {
+  "chain_id": "DP-C2040",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2040",
+  "display_name": "C2040 Double Pitch Conveyor Chain (S roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "1",
+  "pitch_mm": "25.4",
+  "strands": 1,
+  "description": "C2040 double pitch conveyor chain, 25.4 mm (1 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "DP-C2042",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2042",
+  "display_name": "C2042 Double Pitch Conveyor Chain (R roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "1",
+  "pitch_mm": "25.4",
+  "strands": 1,
+  "description": "C2042 double pitch conveyor chain, 25.4 mm (1 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "DP-C2050",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2050",
+  "display_name": "C2050 Double Pitch Conveyor Chain (S roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "1.25",
+  "pitch_mm": "31.75",
+  "strands": 1,
+  "description": "C2050 double pitch conveyor chain, 31.75 mm (1.25 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "DP-C2052",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2052",
+  "display_name": "C2052 Double Pitch Conveyor Chain (R roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "1.25",
+  "pitch_mm": "31.75",
+  "strands": 1,
+  "description": "C2052 double pitch conveyor chain, 31.75 mm (1.25 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "DP-C2060",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2060",
+  "display_name": "C2060 Double Pitch Conveyor Chain (S roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "1.5",
+  "pitch_mm": "38.1",
+  "strands": 1,
+  "description": "C2060 double pitch conveyor chain, 38.1 mm (1.5 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "DP-C2062",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2062",
+  "display_name": "C2062 Double Pitch Conveyor Chain (R roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "1.5",
+  "pitch_mm": "38.1",
+  "strands": 1,
+  "description": "C2062 double pitch conveyor chain, 38.1 mm (1.5 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "DP-C2080",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2080",
+  "display_name": "C2080 Double Pitch Conveyor Chain (S roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "2",
+  "pitch_mm": "50.8",
+  "strands": 1,
+  "description": "C2080 double pitch conveyor chain, 50.8 mm (2 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "DP-C2082",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2082",
+  "display_name": "C2082 Double Pitch Conveyor Chain (R roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "2",
+  "pitch_mm": "50.8",
+  "strands": 1,
+  "description": "C2082 double pitch conveyor chain, 50.8 mm (2 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "DP-C2100",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2100",
+  "display_name": "C2100 Double Pitch Conveyor Chain (S roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "2.5",
+  "pitch_mm": "63.5",
+  "strands": 1,
+  "description": "C2100 double pitch conveyor chain, 63.5 mm (2.5 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "DP-C2102",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2102",
+  "display_name": "C2102 Double Pitch Conveyor Chain (R roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "2.5",
+  "pitch_mm": "63.5",
+  "strands": 1,
+  "description": "C2102 double pitch conveyor chain, 63.5 mm (2.5 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "DP-C2120",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2120",
+  "display_name": "C2120 Double Pitch Conveyor Chain (S roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "3",
+  "pitch_mm": "76.2",
+  "strands": 1,
+  "description": "C2120 double pitch conveyor chain, 76.2 mm (3 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "DP-C2122",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2122",
+  "display_name": "C2122 Double Pitch Conveyor Chain (R roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "3",
+  "pitch_mm": "76.2",
+  "strands": 1,
+  "description": "C2122 double pitch conveyor chain, 76.2 mm (3 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "DP-C2160",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2160",
+  "display_name": "C2160 Double Pitch Conveyor Chain (S roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "4",
+  "pitch_mm": "101.6",
+  "strands": 1,
+  "description": "C2160 double pitch conveyor chain, 101.6 mm (4 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "DP-C2162",
+  "chain_family": "Double Pitch Conveyor Chains",
+  "chain_number": "C2162",
+  "display_name": "C2162 Double Pitch Conveyor Chain (R roller)",
+  "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+  "pitch_in": "4",
+  "pitch_mm": "101.6",
+  "strands": 1,
+  "description": "C2162 double pitch conveyor chain, 101.6 mm (4 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
+  "application_tags": [
+   "double pitch",
+   "conveyor",
+   "flat plate",
+   "long span",
+   "low speed",
+   "attachment chain"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated",
+   "Engineering Plastic Rollers"
+  ],
+  "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]"
+ }
+]

@@ -1,0 +1,350 @@
+[
+ {
+  "chain_id": "HP-40HP",
+  "chain_family": "Hollow Pin Chains",
+  "chain_number": "40HP",
+  "display_name": "40HP Hollow Pin Chain (single pitch)",
+  "standard": "ANSI B29.1 derived / Tsubaki HP",
+  "pitch_in": "0.5",
+  "pitch_mm": "12.7",
+  "strands": 1,
+  "description": "40HP single pitch hollow pin chain, 12.7 mm pitch, rollerless (bush only). 4 mm hollow pin bore accepts cross rods and attachment pins without welding or bolting.",
+  "application_tags": [
+   "hollow pin",
+   "cross rod",
+   "attachment mounting",
+   "conveyor",
+   "rollerless"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated"
+  ],
+  "options_upgrades": "stainless SS|nickel NP|extended cross rods|custom bore",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01d. Dims catalog-verified (tsubaki.eu). Tensile mfr-specific for hollow pin (reduced vs solid pin) \u2014 fill via cross-supplier normalization. Possible overlap with Wave C HP records: dedupe by chain_number on merge. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "HP-50HP",
+  "chain_family": "Hollow Pin Chains",
+  "chain_number": "50HP",
+  "display_name": "50HP Hollow Pin Chain (single pitch)",
+  "standard": "ANSI B29.1 derived / Tsubaki HP",
+  "pitch_in": "0.625",
+  "pitch_mm": "15.875",
+  "strands": 1,
+  "description": "50HP single pitch hollow pin chain, 15.875 mm pitch, rollerless (bush only). 5.12 mm hollow pin bore accepts cross rods and attachment pins without welding or bolting.",
+  "application_tags": [
+   "hollow pin",
+   "cross rod",
+   "attachment mounting",
+   "conveyor",
+   "rollerless"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated"
+  ],
+  "options_upgrades": "stainless SS|nickel NP|extended cross rods|custom bore",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01d. Dims catalog-verified (tsubaki.eu). Tensile mfr-specific for hollow pin (reduced vs solid pin) \u2014 fill via cross-supplier normalization. Possible overlap with Wave C HP records: dedupe by chain_number on merge. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "HP-60HP",
+  "chain_family": "Hollow Pin Chains",
+  "chain_number": "60HP",
+  "display_name": "60HP Hollow Pin Chain (single pitch)",
+  "standard": "ANSI B29.1 derived / Tsubaki HP",
+  "pitch_in": "0.75",
+  "pitch_mm": "19.05",
+  "strands": 1,
+  "description": "60HP single pitch hollow pin chain, 19.05 mm pitch, rollerless (bush only). 5.99 mm hollow pin bore accepts cross rods and attachment pins without welding or bolting.",
+  "application_tags": [
+   "hollow pin",
+   "cross rod",
+   "attachment mounting",
+   "conveyor",
+   "rollerless"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated"
+  ],
+  "options_upgrades": "stainless SS|nickel NP|extended cross rods|custom bore",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01d. Dims catalog-verified (tsubaki.eu). Tensile mfr-specific for hollow pin (reduced vs solid pin) \u2014 fill via cross-supplier normalization. Possible overlap with Wave C HP records: dedupe by chain_number on merge. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "HP-80HP",
+  "chain_family": "Hollow Pin Chains",
+  "chain_number": "80HP",
+  "display_name": "80HP Hollow Pin Chain (single pitch)",
+  "standard": "ANSI B29.1 derived / Tsubaki HP",
+  "pitch_in": "1",
+  "pitch_mm": "25.4",
+  "strands": 1,
+  "description": "80HP single pitch hollow pin chain, 25.4 mm pitch, rollerless (bush only). 8.02 mm hollow pin bore accepts cross rods and attachment pins without welding or bolting.",
+  "application_tags": [
+   "hollow pin",
+   "cross rod",
+   "attachment mounting",
+   "conveyor",
+   "rollerless"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated"
+  ],
+  "options_upgrades": "stainless SS|nickel NP|extended cross rods|custom bore",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01d. Dims catalog-verified (tsubaki.eu). Tensile mfr-specific for hollow pin (reduced vs solid pin) \u2014 fill via cross-supplier normalization. Possible overlap with Wave C HP records: dedupe by chain_number on merge. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "HP-C2040HP",
+  "chain_family": "Hollow Pin Chains",
+  "chain_number": "C2040HP",
+  "display_name": "C2040HP Double Pitch Hollow Pin Chain (S bush, rollerless)",
+  "standard": "ASME B29.100 derived / Tsubaki HP",
+  "pitch_in": "1",
+  "pitch_mm": "25.4",
+  "strands": 1,
+  "description": "C2040HP double pitch hollow pin chain, 25.4 mm pitch, S bush (rollerless). 4 mm hollow pin bore accepts cross rods and attachment pins; flat double pitch plates for long-span conveyance.",
+  "application_tags": [
+   "hollow pin",
+   "double pitch",
+   "cross rod",
+   "attachment mounting",
+   "conveyor"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated"
+  ],
+  "options_upgrades": "stainless SS|nickel NP|extended cross rods|custom bore",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01d. Dims catalog-verified (tsubaki.eu). Tensile mfr-specific for hollow pin \u2014 fill via cross-supplier normalization. Possible overlap with Wave C HP records: dedupe by chain_number on merge. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "HP-C2042HP",
+  "chain_family": "Hollow Pin Chains",
+  "chain_number": "C2042HP",
+  "display_name": "C2042HP Double Pitch Hollow Pin Chain (R roller)",
+  "standard": "ASME B29.100 derived / Tsubaki HP",
+  "pitch_in": "1",
+  "pitch_mm": "25.4",
+  "strands": 1,
+  "description": "C2042HP double pitch hollow pin chain, 25.4 mm pitch, R roller. 4 mm hollow pin bore accepts cross rods and attachment pins; flat double pitch plates for long-span conveyance.",
+  "application_tags": [
+   "hollow pin",
+   "double pitch",
+   "cross rod",
+   "attachment mounting",
+   "conveyor"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated"
+  ],
+  "options_upgrades": "stainless SS|nickel NP|extended cross rods|custom bore",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01d. Dims catalog-verified (tsubaki.eu). Tensile mfr-specific for hollow pin \u2014 fill via cross-supplier normalization. Possible overlap with Wave C HP records: dedupe by chain_number on merge. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "HP-C2050HP",
+  "chain_family": "Hollow Pin Chains",
+  "chain_number": "C2050HP",
+  "display_name": "C2050HP Double Pitch Hollow Pin Chain (S bush, rollerless)",
+  "standard": "ASME B29.100 derived / Tsubaki HP",
+  "pitch_in": "1.25",
+  "pitch_mm": "31.75",
+  "strands": 1,
+  "description": "C2050HP double pitch hollow pin chain, 31.75 mm pitch, S bush (rollerless). 5.12 mm hollow pin bore accepts cross rods and attachment pins; flat double pitch plates for long-span conveyance.",
+  "application_tags": [
+   "hollow pin",
+   "double pitch",
+   "cross rod",
+   "attachment mounting",
+   "conveyor"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated"
+  ],
+  "options_upgrades": "stainless SS|nickel NP|extended cross rods|custom bore",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01d. Dims catalog-verified (tsubaki.eu). Tensile mfr-specific for hollow pin \u2014 fill via cross-supplier normalization. Possible overlap with Wave C HP records: dedupe by chain_number on merge. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "HP-C2052HP",
+  "chain_family": "Hollow Pin Chains",
+  "chain_number": "C2052HP",
+  "display_name": "C2052HP Double Pitch Hollow Pin Chain (R roller)",
+  "standard": "ASME B29.100 derived / Tsubaki HP",
+  "pitch_in": "1.25",
+  "pitch_mm": "31.75",
+  "strands": 1,
+  "description": "C2052HP double pitch hollow pin chain, 31.75 mm pitch, R roller. 5.12 mm hollow pin bore accepts cross rods and attachment pins; flat double pitch plates for long-span conveyance.",
+  "application_tags": [
+   "hollow pin",
+   "double pitch",
+   "cross rod",
+   "attachment mounting",
+   "conveyor"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated"
+  ],
+  "options_upgrades": "stainless SS|nickel NP|extended cross rods|custom bore",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01d. Dims catalog-verified (tsubaki.eu). Tensile mfr-specific for hollow pin \u2014 fill via cross-supplier normalization. Possible overlap with Wave C HP records: dedupe by chain_number on merge. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "HP-C2060HP",
+  "chain_family": "Hollow Pin Chains",
+  "chain_number": "C2060HP",
+  "display_name": "C2060HP Double Pitch Hollow Pin Chain (S bush, rollerless)",
+  "standard": "ASME B29.100 derived / Tsubaki HP",
+  "pitch_in": "1.5",
+  "pitch_mm": "38.1",
+  "strands": 1,
+  "description": "C2060HP double pitch hollow pin chain, 38.1 mm pitch, S bush (rollerless). 5.99 mm hollow pin bore accepts cross rods and attachment pins; flat double pitch plates for long-span conveyance.",
+  "application_tags": [
+   "hollow pin",
+   "double pitch",
+   "cross rod",
+   "attachment mounting",
+   "conveyor"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated"
+  ],
+  "options_upgrades": "stainless SS|nickel NP|extended cross rods|custom bore",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01d. Dims catalog-verified (tsubaki.eu). Tensile mfr-specific for hollow pin \u2014 fill via cross-supplier normalization. Possible overlap with Wave C HP records: dedupe by chain_number on merge. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "HP-C2062HP",
+  "chain_family": "Hollow Pin Chains",
+  "chain_number": "C2062HP",
+  "display_name": "C2062HP Double Pitch Hollow Pin Chain (R roller)",
+  "standard": "ASME B29.100 derived / Tsubaki HP",
+  "pitch_in": "1.5",
+  "pitch_mm": "38.1",
+  "strands": 1,
+  "description": "C2062HP double pitch hollow pin chain, 38.1 mm pitch, R roller. 5.99 mm hollow pin bore accepts cross rods and attachment pins; flat double pitch plates for long-span conveyance.",
+  "application_tags": [
+   "hollow pin",
+   "double pitch",
+   "cross rod",
+   "attachment mounting",
+   "conveyor"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated"
+  ],
+  "options_upgrades": "stainless SS|nickel NP|extended cross rods|custom bore",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01d. Dims catalog-verified (tsubaki.eu). Tensile mfr-specific for hollow pin \u2014 fill via cross-supplier normalization. Possible overlap with Wave C HP records: dedupe by chain_number on merge. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "HP-C2080HP",
+  "chain_family": "Hollow Pin Chains",
+  "chain_number": "C2080HP",
+  "display_name": "C2080HP Double Pitch Hollow Pin Chain (S bush, rollerless)",
+  "standard": "ASME B29.100 derived / Tsubaki HP",
+  "pitch_in": "2",
+  "pitch_mm": "50.8",
+  "strands": 1,
+  "description": "C2080HP double pitch hollow pin chain, 50.8 mm pitch, S bush (rollerless). 8.02 mm hollow pin bore accepts cross rods and attachment pins; flat double pitch plates for long-span conveyance.",
+  "application_tags": [
+   "hollow pin",
+   "double pitch",
+   "cross rod",
+   "attachment mounting",
+   "conveyor"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated"
+  ],
+  "options_upgrades": "stainless SS|nickel NP|extended cross rods|custom bore",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01d. Dims catalog-verified (tsubaki.eu). Tensile mfr-specific for hollow pin \u2014 fill via cross-supplier normalization. Possible overlap with Wave C HP records: dedupe by chain_number on merge. [provenance: catalog-verified]"
+ },
+ {
+  "chain_id": "HP-C2082HP",
+  "chain_family": "Hollow Pin Chains",
+  "chain_number": "C2082HP",
+  "display_name": "C2082HP Double Pitch Hollow Pin Chain (R roller)",
+  "standard": "ASME B29.100 derived / Tsubaki HP",
+  "pitch_in": "2",
+  "pitch_mm": "50.8",
+  "strands": 1,
+  "description": "C2082HP double pitch hollow pin chain, 50.8 mm pitch, R roller. 8.02 mm hollow pin bore accepts cross rods and attachment pins; flat double pitch plates for long-span conveyance.",
+  "application_tags": [
+   "hollow pin",
+   "double pitch",
+   "cross rod",
+   "attachment mounting",
+   "conveyor"
+  ],
+  "materials_available": [
+   "Carbon Steel",
+   "Stainless Steel 304",
+   "Nickel Plated"
+  ],
+  "options_upgrades": "stainless SS|nickel NP|extended cross rods|custom bore",
+  "image_url": "",
+  "drawing_url": "",
+  "status": "Active",
+  "needs_review": false,
+  "uniking_notes": "PKG-01d. Dims catalog-verified (tsubaki.eu). Tensile mfr-specific for hollow pin \u2014 fill via cross-supplier normalization. Possible overlap with Wave C HP records: dedupe by chain_number on merge. [provenance: catalog-verified]"
+ }
+]

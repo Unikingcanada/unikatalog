@@ -1,0 +1,394 @@
+[
+ {
+  "chain_id": "TSU-RF03075",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF03075",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF03100",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF03100",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF05075",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF05075",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF05100",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF05100",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF05125",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF05125",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF05150",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF05150",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF08125",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF08125",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF08150",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF08150",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF10100",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF10100",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF10125",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF10125",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF10150",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF10150",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF12200",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF12200",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF12250",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF12250",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF17200",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF17200",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF17250",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF17250",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF17300",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF17300",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF26200",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF26200",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF26250",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF26250",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF26300",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF26300",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF26450",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF26450",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF36250",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF36250",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF36300",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF36300",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF36450",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF36450",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF36600",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF36600",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF52300",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF52300",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF52450",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF52450",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF52600",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF52600",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF60300",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF60300",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF60350",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF60350",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF60400",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF60400",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF90350",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF90350",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF90400",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF90400",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF90500",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF90500",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF120400",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF120400",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF120600",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF120600",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF280400",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF280400",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF280600",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF280600",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF360400",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF360400",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF360600",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF360600",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF440400",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF440400",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF440600",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF440600",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF430",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF430",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF204",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF204",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF450",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF450",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF650",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF650",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF214",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF214",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF205",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF205",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF6205",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF6205",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ },
+ {
+  "chain_id": "TSU-RF212",
+  "brand": "Tsubaki",
+  "brand_part_number": "RF212",
+  "brand_series": "",
+  "equivalency_type": "Direct",
+  "confidence": "High"
+ }
+]
