@@ -1,7 +1,7 @@
 {
   "family": "Leaf Chains",
   "slug": "leaf-chains",
-  "count": 14,
+  "count": 38,
   "chains": [
     {
       "chain_id": "AL0622",
@@ -11,11 +11,11 @@
       "standard": "ANSI/ASME B29.8",
       "pitch_in": "0.375",
       "pitch_mm": "9.525",
-      "description": "AL series 3/8\" pitch leaf chain, 6 plates wide × 22 lacing. Light forklift mast and hoist applications.",
+      "description": "AL series 3/8\" pitch leaf chain, 6 plates wide \u00d7 22 lacing. Light forklift mast and hoist applications.",
       "specs": {
         "pitch_in": "0.375",
         "pitch_mm": "9.525",
-        "lacing": "2×2",
+        "lacing": "2\u00d72",
         "avg_ultimate_lbs": "8000",
         "max_working_load_lbs": "1600"
       },
@@ -63,11 +63,11 @@
       "standard": "ANSI/ASME B29.8",
       "pitch_in": "0.500",
       "pitch_mm": "12.70",
-      "description": "AL series 1/2\" pitch leaf chain, 8-wide × 44 lacing. Forklift mast applications.",
+      "description": "AL series 1/2\" pitch leaf chain, 8-wide \u00d7 44 lacing. Forklift mast applications.",
       "specs": {
         "pitch_in": "0.500",
         "pitch_mm": "12.70",
-        "lacing": "4×4",
+        "lacing": "4\u00d74",
         "avg_ultimate_lbs": "18200",
         "max_working_load_lbs": "3640"
       },
@@ -133,7 +133,7 @@
       "specs": {
         "pitch_in": "1.000",
         "pitch_mm": "25.40",
-        "lacing": "2×2",
+        "lacing": "2\u00d72",
         "avg_ultimate_lbs": "42900",
         "max_working_load_lbs": "8580"
       },
@@ -184,11 +184,11 @@
       "standard": "ANSI/ASME B29.8",
       "pitch_in": "1.000",
       "pitch_mm": "25.40",
-      "description": "AL series 1\" pitch leaf chain, 10 plates wide × 44 lacing. Heavy forklift mast applications.",
+      "description": "AL series 1\" pitch leaf chain, 10 plates wide \u00d7 44 lacing. Heavy forklift mast applications.",
       "specs": {
         "pitch_in": "1.000",
         "pitch_mm": "25.40",
-        "lacing": "2×2",
+        "lacing": "2\u00d72",
         "avg_ultimate_lbs": "53900",
         "max_working_load_lbs": "10780"
       },
@@ -244,11 +244,11 @@
       "standard": "ANSI/ASME B29.8",
       "pitch_in": "0.750",
       "pitch_mm": "19.05",
-      "description": "AL series 3/4\" pitch leaf chain, 12-wide × 66 lacing. Heavy-duty forklift mast applications.",
+      "description": "AL series 3/4\" pitch leaf chain, 12-wide \u00d7 66 lacing. Heavy-duty forklift mast applications.",
       "specs": {
         "pitch_in": "0.750",
         "pitch_mm": "19.05",
-        "lacing": "6×6",
+        "lacing": "6\u00d76",
         "avg_ultimate_lbs": "86000",
         "max_working_load_lbs": "17200"
       },
@@ -302,7 +302,7 @@
       "specs": {
         "pitch_in": "0.375",
         "pitch_mm": "9.525",
-        "lacing": "2×2",
+        "lacing": "2\u00d72",
         "avg_ultimate_lbs": "9500",
         "max_working_load_lbs": "1900"
       },
@@ -349,7 +349,7 @@
       "specs": {
         "pitch_in": "0.375",
         "pitch_mm": "9.525",
-        "lacing": "4×4",
+        "lacing": "4\u00d74",
         "avg_ultimate_lbs": "19000",
         "max_working_load_lbs": "3800"
       },
@@ -392,11 +392,11 @@
       "standard": "ANSI/ASME B29.8",
       "pitch_in": "0.500",
       "pitch_mm": "12.70",
-      "description": "BL series 1/2\" pitch, 8-wide × 46 lacing leaf chain for medium-duty forklift mast.",
+      "description": "BL series 1/2\" pitch, 8-wide \u00d7 46 lacing leaf chain for medium-duty forklift mast.",
       "specs": {
         "pitch_in": "0.500",
         "pitch_mm": "12.70",
-        "lacing": "4×6",
+        "lacing": "4\u00d76",
         "avg_ultimate_lbs": "28000",
         "max_working_load_lbs": "5600"
       },
@@ -435,24 +435,28 @@
       "chain_id": "BL1022",
       "chain_family": "Leaf Chains",
       "chain_number": "BL1022",
-      "display_name": "BL1022 Leaf Chain",
-      "standard": "ANSI/ASME B29.8",
-      "pitch_in": "1.000",
-      "pitch_mm": "25.40",
-      "description": "BL series 1\" pitch leaf chain. BL series uses thicker plates than AL series for higher loads.",
+      "display_name": "BL1022 Leaf Chain (2x2 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "1.25",
+      "pitch_mm": "31.75",
+      "description": "BL1022 heavy-series leaf chain, 31.75 mm (1.25 in) pitch, 2x2 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
       "specs": {
-        "pitch_in": "1.000",
-        "pitch_mm": "25.40",
-        "lacing": "2×2",
+        "pitch_in": "1.25",
+        "pitch_mm": "31.75",
+        "lacing": "2x2",
         "avg_ultimate_lbs": "31000",
-        "max_working_load_lbs": "6200"
+        "max_working_load_lbs": "6200",
+        "pin_dia_in": "0.437",
+        "pin_dia_mm": "11.1",
+        "overall_pin_length_in": 0.944,
+        "overall_pin_length_mm": 23.98
       },
       "performance_tiers": [
         {
-          "tier": "standard",
-          "tensile_strength_lbs": "31000",
-          "working_load_lbs": "6200",
-          "source": "ANSI/ASME B29.8"
+          "tier": "Standard",
+          "tensile_strength_lbs": "26000",
+          "tensile_strength_kn": "115.7",
+          "lubrication": "Periodic oiling of pin joints"
         }
       ],
       "source_refs": [
@@ -472,22 +476,37 @@
           "confidence": "Confirmed",
           "catalog_page": "226",
           "notes": "BL series leaf chain"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL1022",
+          "confidence": "High"
         }
       ],
       "attachments_available": [],
-      "sprocket_series": null,
+      "sprocket_series": "BL1022",
       "materials_available": [
-        "carbon_steel",
-        "stainless_304"
+        "Carbon Steel (heat treated)"
       ],
-      "options_upgrades": [],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
       "image_strategy": "family",
       "status": "Active",
-      "_origin": "expansion",
+      "_origin": "tsubaki_pkg01",
       "_family_key": "leaf_chain",
       "_family_unmapped": false,
       "provenance": "catalog-verified",
-      "needs_review": false
+      "needs_review": false,
+      "strands": 1,
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 31700 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "_superseded_by": "tsubaki_pkg01 (richer data merged; original chain_id kept)"
     },
     {
       "chain_id": "BL1044",
@@ -501,7 +520,7 @@
       "specs": {
         "pitch_in": "1.000",
         "pitch_mm": "25.40",
-        "lacing": "4×4",
+        "lacing": "4\u00d74",
         "avg_ultimate_lbs": "62000",
         "max_working_load_lbs": "12400"
       },
@@ -565,7 +584,7 @@
       "specs": {
         "pitch_in": "0.750",
         "pitch_mm": "19.05",
-        "lacing": "4×6",
+        "lacing": "4\u00d76",
         "avg_ultimate_lbs": "66000",
         "max_working_load_lbs": "13200"
       },
@@ -608,11 +627,11 @@
       "standard": "ANSI/ASME B29.8",
       "pitch_in": "1.000",
       "pitch_mm": "25.40",
-      "description": "BL series 1\" pitch leaf chain, 16 plates wide × 34 lacing for heavy industrial hoist applications.",
+      "description": "BL series 1\" pitch leaf chain, 16 plates wide \u00d7 34 lacing for heavy industrial hoist applications.",
       "specs": {
         "pitch_in": "1.000",
         "pitch_mm": "25.40",
-        "lacing": "8×34",
+        "lacing": "8\u00d734",
         "avg_ultimate_lbs": "120000",
         "max_working_load_lbs": "24000"
       },
@@ -655,11 +674,11 @@
       "standard": "ANSI/ASME B29.8",
       "pitch_in": "1.250",
       "pitch_mm": "31.75",
-      "description": "BL series 1-1/4\" pitch leaf chain, 20-wide × 34 lacing for very heavy industrial hoists.",
+      "description": "BL series 1-1/4\" pitch leaf chain, 20-wide \u00d7 34 lacing for very heavy industrial hoists.",
       "specs": {
         "pitch_in": "1.250",
         "pitch_mm": "31.75",
-        "lacing": "10×34",
+        "lacing": "10\u00d734",
         "avg_ultimate_lbs": "190000",
         "max_working_load_lbs": "38000"
       },
@@ -702,11 +721,11 @@
       "standard": "ANSI/ASME B29.8",
       "pitch_in": "1.250",
       "pitch_mm": "31.75",
-      "description": "BL series 1-1/4\" pitch heavy leaf chain, 20-wide × 46 lacing. Maximum load heavy industrial hoist.",
+      "description": "BL series 1-1/4\" pitch heavy leaf chain, 20-wide \u00d7 46 lacing. Maximum load heavy industrial hoist.",
       "specs": {
         "pitch_in": "1.250",
         "pitch_mm": "31.75",
-        "lacing": "10×46",
+        "lacing": "10\u00d746",
         "avg_ultimate_lbs": "250000",
         "max_working_load_lbs": "50000"
       },
@@ -740,6 +759,1326 @@
       "_family_unmapped": false,
       "provenance": "catalog-verified",
       "needs_review": false
+    },
+    {
+      "chain_id": "LF-BL422",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL422",
+      "display_name": "BL422 Leaf Chain (2x2 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.5",
+      "pitch_mm": "12.7",
+      "strands": 1,
+      "description": "BL422 heavy-series leaf chain, 12.7 mm (0.5 in) pitch, 2x2 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion: forklift masts, hoists, counterweights.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 5300 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.5",
+        "pitch_mm": "12.7",
+        "pin_dia_in": "0.200",
+        "pin_dia_mm": "5.08",
+        "lacing": "2x2",
+        "overall_pin_length_in": 0.427,
+        "overall_pin_length_mm": 10.85
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "5000",
+          "tensile_strength_kn": "22.2",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL422",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL422",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL423",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL423",
+      "display_name": "BL423 Leaf Chain (2x3 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.5",
+      "pitch_mm": "12.7",
+      "strands": 1,
+      "description": "BL423 heavy-series leaf chain, 12.7 mm (0.5 in) pitch, 2x3 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 5300 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.5",
+        "pitch_mm": "12.7",
+        "pin_dia_in": "0.200",
+        "pin_dia_mm": "5.08",
+        "lacing": "2x3",
+        "overall_pin_length_in": 0.51,
+        "overall_pin_length_mm": 12.95
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "5000",
+          "tensile_strength_kn": "22.2",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL423",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL423",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL434",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL434",
+      "display_name": "BL434 Leaf Chain (3x4 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.5",
+      "pitch_mm": "12.7",
+      "strands": 1,
+      "description": "BL434 heavy-series leaf chain, 12.7 mm (0.5 in) pitch, 3x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 7900 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.5",
+        "pitch_mm": "12.7",
+        "pin_dia_in": "0.200",
+        "pin_dia_mm": "5.08",
+        "lacing": "3x4",
+        "overall_pin_length_in": 0.677,
+        "overall_pin_length_mm": 17.2
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "7500",
+          "tensile_strength_kn": "33.4",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL434",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL434",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL444",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL444",
+      "display_name": "BL444 Leaf Chain (4x4 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.5",
+      "pitch_mm": "12.7",
+      "strands": 1,
+      "description": "BL444 heavy-series leaf chain, 12.7 mm (0.5 in) pitch, 4x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 10600 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.5",
+        "pitch_mm": "12.7",
+        "pin_dia_in": "0.200",
+        "pin_dia_mm": "5.08",
+        "lacing": "4x4",
+        "overall_pin_length_in": 0.764,
+        "overall_pin_length_mm": 19.41
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "10000",
+          "tensile_strength_kn": "44.5",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL444",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL444",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL446",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL446",
+      "display_name": "BL446 Leaf Chain (4x6 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.5",
+      "pitch_mm": "12.7",
+      "strands": 1,
+      "description": "BL446 heavy-series leaf chain, 12.7 mm (0.5 in) pitch, 4x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 10600 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.5",
+        "pitch_mm": "12.7",
+        "pin_dia_in": "0.200",
+        "pin_dia_mm": "5.08",
+        "lacing": "4x6",
+        "overall_pin_length_in": 0.929,
+        "overall_pin_length_mm": 23.6
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "10000",
+          "tensile_strength_kn": "44.5",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL446",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL446",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL466",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL466",
+      "display_name": "BL466 Leaf Chain (6x6 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.5",
+      "pitch_mm": "12.7",
+      "strands": 1,
+      "description": "BL466 heavy-series leaf chain, 12.7 mm (0.5 in) pitch, 6x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 15600 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.5",
+        "pitch_mm": "12.7",
+        "pin_dia_in": "0.200",
+        "pin_dia_mm": "5.08",
+        "lacing": "6x6",
+        "overall_pin_length_in": 1.094,
+        "overall_pin_length_mm": 27.79
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "15000",
+          "tensile_strength_kn": "66.7",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL466",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL466",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL522",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL522",
+      "display_name": "BL522 Leaf Chain (2x2 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.625",
+      "pitch_mm": "15.875",
+      "strands": 1,
+      "description": "BL522 heavy-series leaf chain, 15.875 mm (0.625 in) pitch, 2x2 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 8800 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.625",
+        "pitch_mm": "15.875",
+        "pin_dia_in": "0.234",
+        "pin_dia_mm": "5.94",
+        "lacing": "2x2",
+        "overall_pin_length_in": 0.498,
+        "overall_pin_length_mm": 12.65
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "7500",
+          "tensile_strength_kn": "33.4",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL522",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL522",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL523",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL523",
+      "display_name": "BL523 Leaf Chain (2x3 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.625",
+      "pitch_mm": "15.875",
+      "strands": 1,
+      "description": "BL523 heavy-series leaf chain, 15.875 mm (0.625 in) pitch, 2x3 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 8800 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.625",
+        "pitch_mm": "15.875",
+        "pin_dia_in": "0.234",
+        "pin_dia_mm": "5.94",
+        "lacing": "2x3",
+        "overall_pin_length_in": 0.594,
+        "overall_pin_length_mm": 15.09
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "7500",
+          "tensile_strength_kn": "33.4",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL523",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL523",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL534",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL534",
+      "display_name": "BL534 Leaf Chain (3x4 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.625",
+      "pitch_mm": "15.875",
+      "strands": 1,
+      "description": "BL534 heavy-series leaf chain, 15.875 mm (0.625 in) pitch, 3x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 13200 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.625",
+        "pitch_mm": "15.875",
+        "pin_dia_in": "0.234",
+        "pin_dia_mm": "5.94",
+        "lacing": "3x4",
+        "overall_pin_length_in": 0.791,
+        "overall_pin_length_mm": 20.09
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "11000",
+          "tensile_strength_kn": "48.9",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL534",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL534",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL544",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL544",
+      "display_name": "BL544 Leaf Chain (4x4 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.625",
+      "pitch_mm": "15.875",
+      "strands": 1,
+      "description": "BL544 heavy-series leaf chain, 15.875 mm (0.625 in) pitch, 4x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 17600 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.625",
+        "pitch_mm": "15.875",
+        "pin_dia_in": "0.234",
+        "pin_dia_mm": "5.94",
+        "lacing": "4x4",
+        "overall_pin_length_in": 0.888,
+        "overall_pin_length_mm": 22.56
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "15000",
+          "tensile_strength_kn": "66.7",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL544",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL544",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL546",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL546",
+      "display_name": "BL546 Leaf Chain (4x6 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.625",
+      "pitch_mm": "15.875",
+      "strands": 1,
+      "description": "BL546 heavy-series leaf chain, 15.875 mm (0.625 in) pitch, 4x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 17600 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.625",
+        "pitch_mm": "15.875",
+        "pin_dia_in": "0.234",
+        "pin_dia_mm": "5.94",
+        "lacing": "4x6",
+        "overall_pin_length_in": 1.083,
+        "overall_pin_length_mm": 27.51
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "15000",
+          "tensile_strength_kn": "66.7",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL546",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL546",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL566",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL566",
+      "display_name": "BL566 Leaf Chain (6x6 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.625",
+      "pitch_mm": "15.875",
+      "strands": 1,
+      "description": "BL566 heavy-series leaf chain, 15.875 mm (0.625 in) pitch, 6x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 26400 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.625",
+        "pitch_mm": "15.875",
+        "pin_dia_in": "0.234",
+        "pin_dia_mm": "5.94",
+        "lacing": "6x6",
+        "overall_pin_length_in": 1.278,
+        "overall_pin_length_mm": 32.46
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "22500",
+          "tensile_strength_kn": "100.1",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL566",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL566",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL622",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL622",
+      "display_name": "BL622 Leaf Chain (2x2 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.75",
+      "pitch_mm": "19.05",
+      "strands": 1,
+      "description": "BL622 heavy-series leaf chain, 19.05 mm (0.75 in) pitch, 2x2 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 14300 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.75",
+        "pitch_mm": "19.05",
+        "pin_dia_in": "0.312",
+        "pin_dia_mm": "7.92",
+        "lacing": "2x2",
+        "overall_pin_length_in": 0.645,
+        "overall_pin_length_mm": 16.38
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "11000",
+          "tensile_strength_kn": "48.9",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL622",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL622",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL623",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL623",
+      "display_name": "BL623 Leaf Chain (2x3 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.75",
+      "pitch_mm": "19.05",
+      "strands": 1,
+      "description": "BL623 heavy-series leaf chain, 19.05 mm (0.75 in) pitch, 2x3 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 14300 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.75",
+        "pitch_mm": "19.05",
+        "pin_dia_in": "0.312",
+        "pin_dia_mm": "7.92",
+        "lacing": "2x3",
+        "overall_pin_length_in": 0.778,
+        "overall_pin_length_mm": 19.76
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "11000",
+          "tensile_strength_kn": "48.9",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL623",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL623",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL634",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL634",
+      "display_name": "BL634 Leaf Chain (3x4 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.75",
+      "pitch_mm": "19.05",
+      "strands": 1,
+      "description": "BL634 heavy-series leaf chain, 19.05 mm (0.75 in) pitch, 3x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 21500 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.75",
+        "pitch_mm": "19.05",
+        "pin_dia_in": "0.312",
+        "pin_dia_mm": "7.92",
+        "lacing": "3x4",
+        "overall_pin_length_in": 1.041,
+        "overall_pin_length_mm": 26.44
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "17000",
+          "tensile_strength_kn": "75.6",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL634",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL634",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL644",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL644",
+      "display_name": "BL644 Leaf Chain (4x4 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.75",
+      "pitch_mm": "19.05",
+      "strands": 1,
+      "description": "BL644 heavy-series leaf chain, 19.05 mm (0.75 in) pitch, 4x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 28500 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.75",
+        "pitch_mm": "19.05",
+        "pin_dia_in": "0.312",
+        "pin_dia_mm": "7.92",
+        "lacing": "4x4",
+        "overall_pin_length_in": 1.173,
+        "overall_pin_length_mm": 29.79
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "22000",
+          "tensile_strength_kn": "97.9",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL644",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL644",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL646",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL646",
+      "display_name": "BL646 Leaf Chain (4x6 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.75",
+      "pitch_mm": "19.05",
+      "strands": 1,
+      "description": "BL646 heavy-series leaf chain, 19.05 mm (0.75 in) pitch, 4x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 28500 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.75",
+        "pitch_mm": "19.05",
+        "pin_dia_in": "0.312",
+        "pin_dia_mm": "7.92",
+        "lacing": "4x6",
+        "overall_pin_length_in": 1.437,
+        "overall_pin_length_mm": 36.5
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "22000",
+          "tensile_strength_kn": "97.9",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL646",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL646",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL666",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL666",
+      "display_name": "BL666 Leaf Chain (6x6 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "0.75",
+      "pitch_mm": "19.05",
+      "strands": 1,
+      "description": "BL666 heavy-series leaf chain, 19.05 mm (0.75 in) pitch, 6x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 43000 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "0.75",
+        "pitch_mm": "19.05",
+        "pin_dia_in": "0.312",
+        "pin_dia_mm": "7.92",
+        "lacing": "6x6",
+        "overall_pin_length_in": 1.701,
+        "overall_pin_length_mm": 43.21
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "33000",
+          "tensile_strength_kn": "146.8",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL666",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL666",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL822",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL822",
+      "display_name": "BL822 Leaf Chain (2x2 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "1",
+      "pitch_mm": "25.4",
+      "strands": 1,
+      "description": "BL822 heavy-series leaf chain, 25.4 mm (1 in) pitch, 2x2 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 23100 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "1",
+        "pitch_mm": "25.4",
+        "pin_dia_in": "0.375",
+        "pin_dia_mm": "9.53",
+        "lacing": "2x2",
+        "overall_pin_length_in": 0.794,
+        "overall_pin_length_mm": 20.17
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "19000",
+          "tensile_strength_kn": "84.5",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL822",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL822",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL823",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL823",
+      "display_name": "BL823 Leaf Chain (2x3 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "1",
+      "pitch_mm": "25.4",
+      "strands": 1,
+      "description": "BL823 heavy-series leaf chain, 25.4 mm (1 in) pitch, 2x3 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 23100 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "1",
+        "pitch_mm": "25.4",
+        "pin_dia_in": "0.375",
+        "pin_dia_mm": "9.53",
+        "lacing": "2x3",
+        "overall_pin_length_in": 0.953,
+        "overall_pin_length_mm": 24.21
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "19000",
+          "tensile_strength_kn": "84.5",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL823",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL823",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL834",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL834",
+      "display_name": "BL834 Leaf Chain (3x4 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "1",
+      "pitch_mm": "25.4",
+      "strands": 1,
+      "description": "BL834 heavy-series leaf chain, 25.4 mm (1 in) pitch, 3x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 34800 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "1",
+        "pitch_mm": "25.4",
+        "pin_dia_in": "0.375",
+        "pin_dia_mm": "9.53",
+        "lacing": "3x4",
+        "overall_pin_length_in": 1.281,
+        "overall_pin_length_mm": 32.54
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "29000",
+          "tensile_strength_kn": "129.0",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL834",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL834",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL844",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL844",
+      "display_name": "BL844 Leaf Chain (4x4 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "1",
+      "pitch_mm": "25.4",
+      "strands": 1,
+      "description": "BL844 heavy-series leaf chain, 25.4 mm (1 in) pitch, 4x4 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 46200 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "1",
+        "pitch_mm": "25.4",
+        "pin_dia_in": "0.375",
+        "pin_dia_mm": "9.53",
+        "lacing": "4x4",
+        "overall_pin_length_in": 1.453,
+        "overall_pin_length_mm": 36.91
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "38000",
+          "tensile_strength_kn": "169.0",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL844",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL844",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL846",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL846",
+      "display_name": "BL846 Leaf Chain (4x6 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "1",
+      "pitch_mm": "25.4",
+      "strands": 1,
+      "description": "BL846 heavy-series leaf chain, 25.4 mm (1 in) pitch, 4x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 46200 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "1",
+        "pitch_mm": "25.4",
+        "pin_dia_in": "0.375",
+        "pin_dia_mm": "9.53",
+        "lacing": "4x6",
+        "overall_pin_length_in": 1.772,
+        "overall_pin_length_mm": 45.01
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "38000",
+          "tensile_strength_kn": "169.0",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL846",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL846",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "LF-BL866",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL866",
+      "display_name": "BL866 Leaf Chain (6x6 lacing)",
+      "standard": "ASME/ANSI B29.8",
+      "pitch_in": "1",
+      "pitch_mm": "25.4",
+      "strands": 1,
+      "description": "BL866 heavy-series leaf chain, 25.4 mm (1 in) pitch, 6x6 lacing. Link plates and pins only \u2014 runs over sheaves, not sprockets. For lifting, balancing and linear motion applications.",
+      "application_tags": [
+        "leaf chain",
+        "forklift mast",
+        "lifting",
+        "hoist",
+        "counterweight",
+        "balancing"
+      ],
+      "materials_available": [
+        "Carbon Steel (heat treated)"
+      ],
+      "options_upgrades": "clevis terminals|sheaves|custom lacing",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01f. Catalog-verified. Tsubaki published min tensile 69500 lb exceeds ANSI min. Plate height + weight via 01f addendum (Code). [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "1",
+        "pitch_mm": "25.4",
+        "pin_dia_in": "0.375",
+        "pin_dia_mm": "9.53",
+        "lacing": "6x6",
+        "overall_pin_length_in": 2.098,
+        "overall_pin_length_mm": 53.29
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "57000",
+          "tensile_strength_kn": "253.5",
+          "lubrication": "Periodic oiling of pin joints"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "BL866",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "BL866",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
     }
   ]
 }

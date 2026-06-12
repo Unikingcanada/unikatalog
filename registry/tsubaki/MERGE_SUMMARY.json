@@ -1,0 +1,30 @@
+{
+  "new": 84,
+  "updated": 16,
+  "by_family": {
+    "Conveyor Roller Chains": {
+      "file": "conveyor-roller-chains.json",
+      "total_now": 51,
+      "new": 49,
+      "updated": 0
+    },
+    "Double Pitch Conveyor Chains": {
+      "file": "double-pitch-conveyor-chains.json",
+      "total_now": 17,
+      "new": 5,
+      "updated": 9
+    },
+    "Hollow Pin Chains": {
+      "file": "hollow-pin-chains.json",
+      "total_now": 14,
+      "new": 6,
+      "updated": 6
+    },
+    "Leaf Chains": {
+      "file": "leaf-chains.json",
+      "total_now": 38,
+      "new": 24,
+      "updated": 1
+    }
+  }
+}

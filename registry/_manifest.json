@@ -1,7 +1,7 @@
 {
   "generated_at": "2026-06-12T02:10:41.023Z",
   "generator": "registry/extract_static.mjs",
-  "total_chains": 309,
+  "total_chains": 393,
   "source_collisions_dropped": 0,
   "unmapped_family_count": 0,
   "families": {
@@ -15,10 +15,7 @@
     },
     "Conveyor Roller Chains": {
       "file": "conveyor-roller-chains.json",
-      "count": 2,
-      "provenance": {
-        "catalog-verified": 2
-      }
+      "count": 51
     },
     "Attachment Roller Chains": {
       "file": "attachment-roller-chains.json",
@@ -29,19 +26,11 @@
     },
     "Hollow Pin Chains": {
       "file": "hollow-pin-chains.json",
-      "count": 8,
-      "provenance": {
-        "catalog-verified": 7,
-        "standard-nominal": 1
-      }
+      "count": 14
     },
     "Double Pitch Conveyor Chains": {
       "file": "double-pitch-conveyor-chains.json",
-      "count": 12,
-      "provenance": {
-        "catalog-verified": 9,
-        "standard-nominal": 3
-      }
+      "count": 17
     },
     "Engineered Class Chains": {
       "file": "engineered-class-chains.json",
@@ -125,10 +114,7 @@
     },
     "Leaf Chains": {
       "file": "leaf-chains.json",
-      "count": 14,
-      "provenance": {
-        "catalog-verified": 14
-      }
+      "count": 38
     },
     "Specialty / Custom Chains": {
       "file": "specialty-custom-chains.json",
@@ -164,6 +150,19 @@
         "81X-XHD"
       ],
       "date": "2026-06-12"
+    },
+    {
+      "source": "Tsubaki PKG-01/01b/01c/01d/01f (compiled via compile_workbook.py, 0 errors)",
+      "added": 84,
+      "superseded": 16,
+      "families": [
+        "Conveyor Roller Chains",
+        "Double Pitch Conveyor Chains",
+        "Hollow Pin Chains",
+        "Leaf Chains"
+      ],
+      "date": "2026-06-12",
+      "note": "Live Base44 staging import still pending (egress blocked); packs in registry/tsubaki/out/"
     }
   ]
 }

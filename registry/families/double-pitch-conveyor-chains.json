@@ -1,31 +1,44 @@
 {
   "family": "Double Pitch Conveyor Chains",
   "slug": "double-pitch-conveyor-chains",
-  "count": 12,
+  "count": 17,
   "chains": [
     {
       "chain_id": "C2040",
       "chain_family": "Double Pitch Conveyor Chains",
       "chain_number": "C2040",
-      "display_name": "C2040 Double Pitch Roller Chain",
-      "standard": "ANSI B29.4",
-      "pitch_in": "1.000",
-      "pitch_mm": "25.40",
-      "description": "1\" double pitch conveyor chain. Uses #40 components at double pitch — economy conveyor chain.",
+      "display_name": "C2040 Double Pitch Conveyor Chain (S roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "1",
+      "pitch_mm": "25.4",
+      "description": "C2040 double pitch conveyor chain, 25.4 mm (1 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
       "specs": {
-        "pitch_in": "1.000",
-        "pitch_mm": "25.40",
+        "pitch_in": "1",
+        "pitch_mm": "25.4",
         "roller_dia_in": "0.312",
         "roller_width_in": "0.312",
         "avg_ultimate_lbs": "3700",
-        "max_working_load_lbs": "810"
+        "max_working_load_lbs": "810",
+        "roller_dia_mm": "7.92",
+        "inner_width_in": "0.313",
+        "inner_width_mm": "7.95",
+        "pin_dia_in": "0.156",
+        "pin_dia_mm": "3.97",
+        "plate_height_in": "0.472",
+        "plate_height_mm": "12",
+        "weight_lbs_ft": "0.343",
+        "weight_kg_m": "0.51",
+        "plate_thickness_mm": 1.5
       },
       "performance_tiers": [
         {
-          "tier": "standard",
-          "tensile_strength_lbs": "3700",
-          "working_load_lbs": "810",
-          "source": "ANSI B29.4"
+          "tier": "Standard",
+          "tensile_strength_lbs": "3125",
+          "tensile_strength_kn": "13.9",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile (12500 x pitch^2); double pitch equals base chain per B29.100. Provenance: standard-nominal. Tsubaki published averages run higher."
         }
       ],
       "source_refs": [
@@ -50,6 +63,11 @@
           "confidence": "Confirmed",
           "catalog_page": "90",
           "notes": "Double pitch heavy C2040 series"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2040S",
+          "confidence": "High"
         }
       ],
       "attachments_available": [
@@ -62,44 +80,65 @@
       ],
       "sprocket_series": "C2040",
       "materials_available": [
-        "carbon_steel",
-        "stainless_304",
-        "nickel_plated"
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
       ],
-      "options_upgrades": [
-        "Large roller (C2042 LR)",
-        "Small roller (C2040 SR)",
-        "Walk-on-Rail"
-      ],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
       "image_strategy": "family",
       "status": "Active",
-      "_origin": "dictionary",
+      "_origin": "tsubaki_pkg01",
       "_family_key": "double_pitch_conveyor",
       "_family_unmapped": false,
       "provenance": "catalog-verified",
-      "needs_review": false
+      "needs_review": false,
+      "strands": 1,
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "_superseded_by": "tsubaki_pkg01 (richer data merged; original chain_id kept)"
     },
     {
       "chain_id": "C2042",
       "chain_family": "Double Pitch Conveyor Chains",
       "chain_number": "C2042",
-      "display_name": "C2042 Double Pitch Large Roller Chain",
-      "standard": "ANSI B29.4",
-      "pitch_in": "1.000",
-      "pitch_mm": "25.40",
-      "description": "C2042 — double pitch chain using #40 components with large roller (R2) for smoother running on guide rails.",
+      "display_name": "C2042 Double Pitch Conveyor Chain (R roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "1",
+      "pitch_mm": "25.4",
+      "description": "C2042 double pitch conveyor chain, 25.4 mm (1 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
       "specs": {
-        "pitch_in": "1.000",
-        "pitch_mm": "25.40",
-        "roller_dia_in": "0.440",
-        "roller_width_in": "0.312"
+        "pitch_in": "1",
+        "pitch_mm": "25.4",
+        "roller_dia_in": "0.625",
+        "roller_width_in": "0.312",
+        "roller_dia_mm": "15.88",
+        "inner_width_in": "0.313",
+        "inner_width_mm": "7.95",
+        "pin_dia_in": "0.156",
+        "pin_dia_mm": "3.97",
+        "plate_height_in": "0.472",
+        "plate_height_mm": "12",
+        "weight_lbs_ft": "0.585",
+        "weight_kg_m": "0.87",
+        "plate_thickness_mm": 1.5
       },
       "performance_tiers": [
         {
-          "tier": "standard",
-          "tensile_strength_lbs": "3700",
-          "working_load_lbs": "810",
-          "source": "Donghua catalog p.90, ANSI B29.4"
+          "tier": "Standard",
+          "tensile_strength_lbs": "3125",
+          "tensile_strength_kn": "13.9",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile. Provenance: standard-nominal."
         }
       ],
       "source_refs": [
@@ -114,6 +153,11 @@
           "manufacturer": "Tsubaki",
           "code": "C2042",
           "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2040R",
+          "confidence": "High"
         }
       ],
       "attachments_available": [
@@ -122,43 +166,69 @@
         "SK1",
         "SK2"
       ],
-      "sprocket_series": "C2040",
+      "sprocket_series": "C2042",
       "materials_available": [
-        "carbon_steel",
-        "stainless_304"
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
       ],
-      "options_upgrades": [],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
       "image_strategy": "family",
       "status": "Active",
-      "_origin": "donghua",
+      "_origin": "tsubaki_pkg01",
       "_family_key": "double_pitch_conveyor",
       "_family_unmapped": false,
       "provenance": "catalog-verified",
-      "needs_review": false
+      "needs_review": false,
+      "strands": 1,
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "_superseded_by": "tsubaki_pkg01 (richer data merged; original chain_id kept)"
     },
     {
       "chain_id": "C2050",
       "chain_family": "Double Pitch Conveyor Chains",
       "chain_number": "C2050",
-      "display_name": "C2050 Double Pitch Roller Chain",
-      "standard": "ANSI B29.4",
-      "pitch_in": "1.250",
+      "display_name": "C2050 Double Pitch Conveyor Chain (S roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "1.25",
       "pitch_mm": "31.75",
-      "description": "1-1/4\" double pitch chain using #50 components. Economy conveyor chain for light loads.",
+      "description": "C2050 double pitch conveyor chain, 31.75 mm (1.25 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
       "specs": {
-        "pitch_in": "1.250",
+        "pitch_in": "1.25",
         "pitch_mm": "31.75",
         "roller_dia_in": "0.400",
         "roller_width_in": "0.375",
         "avg_ultimate_lbs": "6100",
-        "max_working_load_lbs": "1330"
+        "max_working_load_lbs": "1330",
+        "roller_dia_mm": "10.16",
+        "inner_width_in": "0.375",
+        "inner_width_mm": "9.53",
+        "pin_dia_in": "0.200",
+        "pin_dia_mm": "5.09",
+        "plate_height_in": "0.591",
+        "plate_height_mm": "15",
+        "weight_lbs_ft": "0.564",
+        "weight_kg_m": "0.84",
+        "plate_thickness_mm": 2.0
       },
       "performance_tiers": [
         {
-          "tier": "standard",
-          "tensile_strength_lbs": "6100",
-          "working_load_lbs": "1330",
-          "source": "ANSI B29.4"
+          "tier": "Standard",
+          "tensile_strength_lbs": "4882",
+          "tensile_strength_kn": "21.7",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile. Provenance: standard-nominal."
         }
       ],
       "source_refs": [
@@ -176,6 +246,11 @@
           "manufacturer": "Donghua",
           "code": "C2050",
           "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2050S",
+          "confidence": "High"
         }
       ],
       "attachments_available": [
@@ -186,43 +261,65 @@
       ],
       "sprocket_series": "C2050",
       "materials_available": [
-        "carbon_steel",
-        "stainless_304",
-        "nickel_plated"
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
       ],
-      "options_upgrades": [
-        "Large roller (LR)",
-        "Small roller (SR)"
-      ],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
       "image_strategy": "family",
       "status": "Active",
-      "_origin": "expansion",
+      "_origin": "tsubaki_pkg01",
       "_family_key": "double_pitch_conveyor",
       "_family_unmapped": false,
-      "provenance": "standard-nominal",
-      "needs_review": false
+      "provenance": "catalog-verified",
+      "needs_review": false,
+      "strands": 1,
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "_superseded_by": "tsubaki_pkg01 (richer data merged; original chain_id kept)"
     },
     {
       "chain_id": "C2052",
       "chain_family": "Double Pitch Conveyor Chains",
       "chain_number": "C2052",
-      "display_name": "C2052 Double Pitch Large Roller Chain",
-      "standard": "ANSI B29.4",
-      "pitch_in": "1.250",
+      "display_name": "C2052 Double Pitch Conveyor Chain (R roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "1.25",
       "pitch_mm": "31.75",
-      "description": "C2052 — double pitch chain using #50 components with large roller (R2).",
+      "description": "C2052 double pitch conveyor chain, 31.75 mm (1.25 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
       "specs": {
-        "pitch_in": "1.250",
+        "pitch_in": "1.25",
         "pitch_mm": "31.75",
-        "roller_dia_in": "0.563",
-        "roller_width_in": "0.375"
+        "roller_dia_in": "0.750",
+        "roller_width_in": "0.375",
+        "roller_dia_mm": "19.05",
+        "inner_width_in": "0.375",
+        "inner_width_mm": "9.53",
+        "pin_dia_in": "0.200",
+        "pin_dia_mm": "5.09",
+        "plate_height_in": "0.591",
+        "plate_height_mm": "15",
+        "weight_lbs_ft": "0.874",
+        "weight_kg_m": "1.3",
+        "plate_thickness_mm": 2.0
       },
       "performance_tiers": [
         {
-          "tier": "standard",
-          "tensile_strength_lbs": "6100",
-          "working_load_lbs": "1330",
-          "source": "Donghua catalog p.90, ANSI B29.4"
+          "tier": "Standard",
+          "tensile_strength_lbs": "4882",
+          "tensile_strength_kn": "21.7",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile. Provenance: standard-nominal."
         }
       ],
       "source_refs": [
@@ -232,6 +329,11 @@
           "confidence": "Confirmed",
           "catalog_page": "90",
           "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2050R",
+          "confidence": "High"
         }
       ],
       "attachments_available": [
@@ -240,43 +342,69 @@
         "SK1",
         "SK2"
       ],
-      "sprocket_series": "C2050",
+      "sprocket_series": "C2052",
       "materials_available": [
-        "carbon_steel",
-        "stainless_304"
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
       ],
-      "options_upgrades": [],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
       "image_strategy": "family",
       "status": "Active",
-      "_origin": "donghua",
+      "_origin": "tsubaki_pkg01",
       "_family_key": "double_pitch_conveyor",
       "_family_unmapped": false,
       "provenance": "catalog-verified",
-      "needs_review": false
+      "needs_review": false,
+      "strands": 1,
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "_superseded_by": "tsubaki_pkg01 (richer data merged; original chain_id kept)"
     },
     {
       "chain_id": "C2060",
       "chain_family": "Double Pitch Conveyor Chains",
       "chain_number": "C2060",
-      "display_name": "C2060 Double Pitch Roller Chain",
-      "standard": "ANSI B29.4",
-      "pitch_in": "1.500",
-      "pitch_mm": "38.10",
-      "description": "1-1/2\" double pitch chain using #60 components. Standard bore conveyor chain.",
+      "display_name": "C2060 Double Pitch Conveyor Chain (S roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "1.5",
+      "pitch_mm": "38.1",
+      "description": "C2060 double pitch conveyor chain, 38.1 mm (1.5 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
       "specs": {
-        "pitch_in": "1.500",
-        "pitch_mm": "38.10",
+        "pitch_in": "1.5",
+        "pitch_mm": "38.1",
         "roller_dia_in": "0.469",
         "roller_width_in": "0.500",
         "avg_ultimate_lbs": "8500",
-        "max_working_load_lbs": "1950"
+        "max_working_load_lbs": "1950",
+        "roller_dia_mm": "11.91",
+        "inner_width_in": "0.500",
+        "inner_width_mm": "12.7",
+        "pin_dia_in": "0.235",
+        "pin_dia_mm": "5.96",
+        "plate_height_in": "0.677",
+        "plate_height_mm": "17.2",
+        "weight_lbs_ft": "1.015",
+        "weight_kg_m": "1.51",
+        "plate_thickness_mm": 3.2
       },
       "performance_tiers": [
         {
-          "tier": "standard",
-          "tensile_strength_lbs": "8500",
-          "working_load_lbs": "1950",
-          "source": "ANSI B29.4"
+          "tier": "Standard",
+          "tensile_strength_lbs": "7031",
+          "tensile_strength_kn": "31.3",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile. Provenance: standard-nominal."
         }
       ],
       "source_refs": [
@@ -313,6 +441,11 @@
           "confidence": "Confirmed",
           "catalog_page": "94",
           "notes": "K1 attachment double pitch"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2060S",
+          "confidence": "High"
         }
       ],
       "attachments_available": [
@@ -325,23 +458,30 @@
       ],
       "sprocket_series": "C2060",
       "materials_available": [
-        "carbon_steel",
-        "stainless_304",
-        "nickel_plated"
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
       ],
-      "options_upgrades": [
-        "C2060H Heavy Series",
-        "Large Roller",
-        "Small Roller",
-        "Walk-on-Rail"
-      ],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
       "image_strategy": "family",
       "status": "Active",
-      "_origin": "expansion",
+      "_origin": "tsubaki_pkg01",
       "_family_key": "double_pitch_conveyor",
       "_family_unmapped": false,
       "provenance": "catalog-verified",
-      "needs_review": false
+      "needs_review": false,
+      "strands": 1,
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "_superseded_by": "tsubaki_pkg01 (richer data merged; original chain_id kept)"
     },
     {
       "chain_id": "C2060H",
@@ -423,23 +563,36 @@
       "chain_id": "C2062",
       "chain_family": "Double Pitch Conveyor Chains",
       "chain_number": "C2062",
-      "display_name": "C2062 Double Pitch Large Roller Chain",
-      "standard": "ANSI B29.4",
-      "pitch_in": "1.500",
-      "pitch_mm": "38.10",
-      "description": "C2062 — double pitch chain with large roller, #60 components.",
+      "display_name": "C2062 Double Pitch Conveyor Chain (R roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "1.5",
+      "pitch_mm": "38.1",
+      "description": "C2062 double pitch conveyor chain, 38.1 mm (1.5 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
       "specs": {
-        "pitch_in": "1.500",
-        "pitch_mm": "38.10",
-        "roller_dia_in": "0.625",
-        "roller_width_in": "0.500"
+        "pitch_in": "1.5",
+        "pitch_mm": "38.1",
+        "roller_dia_in": "0.875",
+        "roller_width_in": "0.500",
+        "roller_dia_mm": "22.23",
+        "inner_width_in": "0.500",
+        "inner_width_mm": "12.7",
+        "pin_dia_in": "0.235",
+        "pin_dia_mm": "5.96",
+        "plate_height_in": "0.677",
+        "plate_height_mm": "17.2",
+        "weight_lbs_ft": "1.472",
+        "weight_kg_m": "2.19",
+        "plate_thickness_mm": 3.2
       },
       "performance_tiers": [
         {
-          "tier": "standard",
-          "tensile_strength_lbs": "8500",
-          "working_load_lbs": "1950",
-          "source": "Donghua catalog p.91, ANSI B29.4"
+          "tier": "Standard",
+          "tensile_strength_lbs": "7031",
+          "tensile_strength_kn": "31.3",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile. Provenance: standard-nominal."
         }
       ],
       "source_refs": [
@@ -449,6 +602,11 @@
           "confidence": "Confirmed",
           "catalog_page": "91",
           "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2060R",
+          "confidence": "High"
         }
       ],
       "attachments_available": [
@@ -457,43 +615,69 @@
         "SK1",
         "SK2"
       ],
-      "sprocket_series": "C2060",
+      "sprocket_series": "C2062",
       "materials_available": [
-        "carbon_steel",
-        "stainless_304"
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
       ],
-      "options_upgrades": [],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
       "image_strategy": "family",
       "status": "Active",
-      "_origin": "donghua",
+      "_origin": "tsubaki_pkg01",
       "_family_key": "double_pitch_conveyor",
       "_family_unmapped": false,
       "provenance": "catalog-verified",
-      "needs_review": false
+      "needs_review": false,
+      "strands": 1,
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "_superseded_by": "tsubaki_pkg01 (richer data merged; original chain_id kept)"
     },
     {
       "chain_id": "C2080",
       "chain_family": "Double Pitch Conveyor Chains",
       "chain_number": "C2080",
-      "display_name": "C2080 Double Pitch Roller Chain",
-      "standard": "ANSI B29.4",
-      "pitch_in": "2.000",
-      "pitch_mm": "50.80",
-      "description": "2\" double pitch conveyor chain using #80 components.",
+      "display_name": "C2080 Double Pitch Conveyor Chain (S roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "2",
+      "pitch_mm": "50.8",
+      "description": "C2080 double pitch conveyor chain, 50.8 mm (2 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
       "specs": {
-        "pitch_in": "2.000",
-        "pitch_mm": "50.80",
+        "pitch_in": "2",
+        "pitch_mm": "50.8",
         "roller_dia_in": "0.625",
         "roller_width_in": "0.625",
         "avg_ultimate_lbs": "14500",
-        "max_working_load_lbs": "3500"
+        "max_working_load_lbs": "3500",
+        "roller_dia_mm": "15.88",
+        "inner_width_in": "0.625",
+        "inner_width_mm": "15.88",
+        "pin_dia_in": "0.313",
+        "pin_dia_mm": "7.94",
+        "plate_height_in": "0.906",
+        "plate_height_mm": "23",
+        "weight_lbs_ft": "1.620",
+        "weight_kg_m": "2.41",
+        "plate_thickness_mm": 4.0
       },
       "performance_tiers": [
         {
-          "tier": "standard",
-          "tensile_strength_lbs": "14500",
-          "working_load_lbs": "3500",
-          "source": "ANSI B29.4"
+          "tier": "Standard",
+          "tensile_strength_lbs": "12500",
+          "tensile_strength_kn": "55.6",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile. Provenance: standard-nominal."
         }
       ],
       "source_refs": [
@@ -518,6 +702,11 @@
           "confidence": "Confirmed",
           "catalog_page": "95",
           "notes": "A1 attachment double pitch"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2080S",
+          "confidence": "High"
         }
       ],
       "attachments_available": [
@@ -528,21 +717,30 @@
       ],
       "sprocket_series": "C2080",
       "materials_available": [
-        "carbon_steel",
-        "stainless_304"
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
       ],
-      "options_upgrades": [
-        "C2080H Heavy Series",
-        "Large Roller",
-        "Walk-on-Rail"
-      ],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
       "image_strategy": "family",
       "status": "Active",
-      "_origin": "expansion",
+      "_origin": "tsubaki_pkg01",
       "_family_key": "double_pitch_conveyor",
       "_family_unmapped": false,
       "provenance": "catalog-verified",
-      "needs_review": false
+      "needs_review": false,
+      "strands": 1,
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "_superseded_by": "tsubaki_pkg01 (richer data merged; original chain_id kept)"
     },
     {
       "chain_id": "C2080H",
@@ -613,23 +811,36 @@
       "chain_id": "C2082",
       "chain_family": "Double Pitch Conveyor Chains",
       "chain_number": "C2082",
-      "display_name": "C2082 Double Pitch Large Roller Chain",
-      "standard": "ANSI B29.4",
-      "pitch_in": "2.000",
-      "pitch_mm": "50.80",
-      "description": "C2082 — double pitch chain with large roller, #80 components.",
+      "display_name": "C2082 Double Pitch Conveyor Chain (R roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "2",
+      "pitch_mm": "50.8",
+      "description": "C2082 double pitch conveyor chain, 50.8 mm (2 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
       "specs": {
-        "pitch_in": "2.000",
-        "pitch_mm": "50.80",
-        "roller_dia_in": "0.812",
-        "roller_width_in": "0.625"
+        "pitch_in": "2",
+        "pitch_mm": "50.8",
+        "roller_dia_in": "1.125",
+        "roller_width_in": "0.625",
+        "roller_dia_mm": "28.58",
+        "inner_width_in": "0.625",
+        "inner_width_mm": "15.88",
+        "pin_dia_in": "0.313",
+        "pin_dia_mm": "7.94",
+        "plate_height_in": "0.906",
+        "plate_height_mm": "23",
+        "weight_lbs_ft": "2.365",
+        "weight_kg_m": "3.52",
+        "plate_thickness_mm": 4.0
       },
       "performance_tiers": [
         {
-          "tier": "standard",
-          "tensile_strength_lbs": "14500",
-          "working_load_lbs": "3500",
-          "source": "Donghua catalog p.92, ANSI B29.4"
+          "tier": "Standard",
+          "tensile_strength_lbs": "12500",
+          "tensile_strength_kn": "55.6",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile. Provenance: standard-nominal."
         }
       ],
       "source_refs": [
@@ -639,6 +850,11 @@
           "confidence": "Confirmed",
           "catalog_page": "92",
           "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2080R",
+          "confidence": "High"
         }
       ],
       "attachments_available": [
@@ -647,42 +863,69 @@
         "SK1",
         "SK2"
       ],
-      "sprocket_series": "C2080",
+      "sprocket_series": "C2082",
       "materials_available": [
-        "carbon_steel"
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
       ],
-      "options_upgrades": [],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
       "image_strategy": "family",
       "status": "Active",
-      "_origin": "donghua",
+      "_origin": "tsubaki_pkg01",
       "_family_key": "double_pitch_conveyor",
       "_family_unmapped": false,
       "provenance": "catalog-verified",
-      "needs_review": false
+      "needs_review": false,
+      "strands": 1,
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "_superseded_by": "tsubaki_pkg01 (richer data merged; original chain_id kept)"
     },
     {
       "chain_id": "C2100",
       "chain_family": "Double Pitch Conveyor Chains",
       "chain_number": "C2100",
-      "display_name": "C2100 Double Pitch Roller Chain",
-      "standard": "ANSI B29.4",
-      "pitch_in": "2.500",
-      "pitch_mm": "63.50",
-      "description": "2-1/2\" double pitch conveyor chain for heavy load conveying.",
+      "display_name": "C2100 Double Pitch Conveyor Chain (S roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "2.5",
+      "pitch_mm": "63.5",
+      "description": "C2100 double pitch conveyor chain, 63.5 mm (2.5 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
       "specs": {
-        "pitch_in": "2.500",
-        "pitch_mm": "63.50",
+        "pitch_in": "2.5",
+        "pitch_mm": "63.5",
         "roller_dia_in": "0.750",
         "roller_width_in": "0.750",
         "avg_ultimate_lbs": "24000",
-        "max_working_load_lbs": "5500"
+        "max_working_load_lbs": "5500",
+        "roller_dia_mm": "19.05",
+        "inner_width_in": "0.750",
+        "inner_width_mm": "19.05",
+        "pin_dia_in": "0.376",
+        "pin_dia_mm": "9.54",
+        "plate_height_in": "1.126",
+        "plate_height_mm": "28.6",
+        "weight_lbs_ft": "2.379",
+        "weight_kg_m": "3.54",
+        "plate_thickness_mm": 4.8
       },
       "performance_tiers": [
         {
-          "tier": "standard",
-          "tensile_strength_lbs": "24000",
-          "working_load_lbs": "5500",
-          "source": "ANSI B29.4"
+          "tier": "Standard",
+          "tensile_strength_lbs": "19531",
+          "tensile_strength_kn": "86.9",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile. Provenance: standard-nominal."
         }
       ],
       "source_refs": [
@@ -709,6 +952,11 @@
           "confidence": "Confirmed",
           "catalog_page": "93",
           "notes": "Double pitch heavy C2100 series"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2100S",
+          "confidence": "High"
         }
       ],
       "attachments_available": [
@@ -719,19 +967,30 @@
       ],
       "sprocket_series": "C2100",
       "materials_available": [
-        "carbon_steel"
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
       ],
-      "options_upgrades": [
-        "C2100H Heavy",
-        "Large Roller"
-      ],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
       "image_strategy": "family",
       "status": "Active",
-      "_origin": "expansion",
+      "_origin": "tsubaki_pkg01",
       "_family_key": "double_pitch_conveyor",
       "_family_unmapped": false,
       "provenance": "catalog-verified",
-      "needs_review": false
+      "needs_review": false,
+      "strands": 1,
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "_superseded_by": "tsubaki_pkg01 (richer data merged; original chain_id kept)"
     },
     {
       "chain_id": "C2102H",
@@ -741,7 +1000,7 @@
       "standard": "ANSI B29.4",
       "pitch_in": "2.500",
       "pitch_mm": "63.50",
-      "description": "C2102H heavy double pitch chain — #100 components, heavy sidebar, for high-load package handling and assembly conveyors.",
+      "description": "C2102H heavy double pitch chain \u2014 #100 components, heavy sidebar, for high-load package handling and assembly conveyors.",
       "specs": {
         "pitch_in": "2.500",
         "pitch_mm": "63.50",
@@ -788,6 +1047,341 @@
       "_family_unmapped": false,
       "provenance": "catalog-verified",
       "needs_review": false
+    },
+    {
+      "chain_id": "DP-C2102",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2102",
+      "display_name": "C2102 Double Pitch Conveyor Chain (R roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "2.5",
+      "pitch_mm": "63.5",
+      "strands": 1,
+      "description": "C2102 double pitch conveyor chain, 63.5 mm (2.5 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "materials_available": [
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
+      ],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "2.5",
+        "pitch_mm": "63.5",
+        "roller_dia_in": "1.563",
+        "roller_dia_mm": "39.69",
+        "inner_width_in": "0.750",
+        "inner_width_mm": "19.05",
+        "pin_dia_in": "0.376",
+        "pin_dia_mm": "9.54",
+        "plate_height_in": "1.126",
+        "plate_height_mm": "28.6",
+        "weight_lbs_ft": "3.898",
+        "weight_kg_m": "5.8",
+        "plate_thickness_mm": 4.8
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "19531",
+          "tensile_strength_kn": "86.9",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile. Provenance: standard-nominal."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2100R",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "C2102",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "DP-C2120",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2120",
+      "display_name": "C2120 Double Pitch Conveyor Chain (S roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "3",
+      "pitch_mm": "76.2",
+      "strands": 1,
+      "description": "C2120 double pitch conveyor chain, 76.2 mm (3 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "materials_available": [
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
+      ],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "3",
+        "pitch_mm": "76.2",
+        "roller_dia_in": "0.875",
+        "roller_dia_mm": "22.23",
+        "inner_width_in": "1.000",
+        "inner_width_mm": "25.4",
+        "pin_dia_in": "0.437",
+        "pin_dia_mm": "11.11",
+        "plate_height_in": "1.354",
+        "plate_height_mm": "34.4",
+        "weight_lbs_ft": "3.414",
+        "weight_kg_m": "5.08",
+        "plate_thickness_mm": 5.6
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "28125",
+          "tensile_strength_kn": "125.1",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile. Provenance: standard-nominal."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2120S",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "C2120",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "DP-C2122",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2122",
+      "display_name": "C2122 Double Pitch Conveyor Chain (R roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "3",
+      "pitch_mm": "76.2",
+      "strands": 1,
+      "description": "C2122 double pitch conveyor chain, 76.2 mm (3 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "materials_available": [
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
+      ],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "3",
+        "pitch_mm": "76.2",
+        "roller_dia_in": "1.750",
+        "roller_dia_mm": "44.45",
+        "inner_width_in": "1.000",
+        "inner_width_mm": "25.4",
+        "pin_dia_in": "0.437",
+        "pin_dia_mm": "11.11",
+        "plate_height_in": "1.354",
+        "plate_height_mm": "34.4",
+        "weight_lbs_ft": "5.463",
+        "weight_kg_m": "8.13",
+        "plate_thickness_mm": 5.6
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "28125",
+          "tensile_strength_kn": "125.1",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile. Provenance: standard-nominal."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2120R",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "C2122",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "DP-C2160",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2160",
+      "display_name": "C2160 Double Pitch Conveyor Chain (S roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "4",
+      "pitch_mm": "101.6",
+      "strands": 1,
+      "description": "C2160 double pitch conveyor chain, 101.6 mm (4 in) pitch, standard (S) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance. RS sprockets usable with S rollers at 30+ teeth.",
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "materials_available": [
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
+      ],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "4",
+        "pitch_mm": "101.6",
+        "roller_dia_in": "1.125",
+        "roller_dia_mm": "28.58",
+        "inner_width_in": "1.250",
+        "inner_width_mm": "31.75",
+        "pin_dia_in": "0.563",
+        "pin_dia_mm": "14.29",
+        "plate_height_in": "1.898",
+        "plate_height_mm": "48.2",
+        "weight_lbs_ft": "6.021",
+        "weight_kg_m": "8.96",
+        "plate_thickness_mm": 7.15
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "50000",
+          "tensile_strength_kn": "222.4",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile. Provenance: standard-nominal."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2160S",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "C2160",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
+    },
+    {
+      "chain_id": "DP-C2162",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2162",
+      "display_name": "C2162 Double Pitch Conveyor Chain (R roller)",
+      "standard": "ISO 1275-A / ASME B29.100 / JIS B1803",
+      "pitch_in": "4",
+      "pitch_mm": "101.6",
+      "strands": 1,
+      "description": "C2162 double pitch conveyor chain, 101.6 mm (4 in) pitch, oversized (R) roller. Flat link plate contour, twice the pitch of the corresponding base roller chain. Ideal for long-span, low-speed conveyance.",
+      "application_tags": [
+        "double pitch",
+        "conveyor",
+        "flat plate",
+        "long span",
+        "low speed",
+        "attachment chain"
+      ],
+      "materials_available": [
+        "Carbon Steel",
+        "Stainless Steel 304",
+        "Nickel Plated",
+        "Engineering Plastic Rollers"
+      ],
+      "options_upgrades": "A1|A2|K1|K2|SA1|SA2|SK1|SK2|GNK1|EP extended pin|hollow pin|plastic roller|stainless SS|nickel NP|NEP coated|low-noise SNP",
+      "image_url": "",
+      "drawing_url": "",
+      "status": "Active",
+      "needs_review": false,
+      "uniking_notes": "PKG-01b. Dims catalog-verified from official Tsubaki PDF. Tensile equals corresponding base roller chain \u2014 pull from Tsubaki strength tables pp.91-92 in 01c patch; left blank rather than derived. [provenance: catalog-verified]",
+      "specs": {
+        "pitch_in": "4",
+        "pitch_mm": "101.6",
+        "roller_dia_in": "2.250",
+        "roller_dia_mm": "57.15",
+        "inner_width_in": "1.250",
+        "inner_width_mm": "31.75",
+        "pin_dia_in": "0.563",
+        "pin_dia_mm": "14.29",
+        "plate_height_in": "1.898",
+        "plate_height_mm": "48.2",
+        "weight_lbs_ft": "9.206",
+        "weight_kg_m": "13.7",
+        "plate_thickness_mm": 7.15
+      },
+      "performance_tiers": [
+        {
+          "tier": "Standard",
+          "tensile_strength_lbs": "50000",
+          "tensile_strength_kn": "222.4",
+          "temp_min_c": "-10",
+          "temp_max_c": "150",
+          "lubrication": "Standard lubrication; lube-free variants available",
+          "source": "ANSI B29.1/B29.100 minimum ultimate tensile. Provenance: standard-nominal."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Tsubaki",
+          "code": "RF2160R",
+          "confidence": "High"
+        }
+      ],
+      "sprocket_series": "C2162",
+      "provenance": "catalog-verified",
+      "_origin": "tsubaki_pkg01"
     }
   ]
 }
