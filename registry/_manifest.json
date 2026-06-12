@@ -1,0 +1,148 @@
+{
+  "generated_at": "2026-06-12T02:10:41.023Z",
+  "generator": "registry/extract_static.mjs",
+  "total_chains": 304,
+  "source_collisions_dropped": 0,
+  "unmapped_family_count": 0,
+  "families": {
+    "Performance Roller Chains": {
+      "file": "performance-roller-chains.json",
+      "count": 105,
+      "provenance": {
+        "catalog-verified": 63,
+        "standard-nominal": 42
+      }
+    },
+    "Conveyor Roller Chains": {
+      "file": "conveyor-roller-chains.json",
+      "count": 2,
+      "provenance": {
+        "catalog-verified": 2
+      }
+    },
+    "Attachment Roller Chains": {
+      "file": "attachment-roller-chains.json",
+      "count": 9,
+      "provenance": {
+        "catalog-verified": 9
+      }
+    },
+    "Hollow Pin Chains": {
+      "file": "hollow-pin-chains.json",
+      "count": 8,
+      "provenance": {
+        "catalog-verified": 7,
+        "standard-nominal": 1
+      }
+    },
+    "Double Pitch Conveyor Chains": {
+      "file": "double-pitch-conveyor-chains.json",
+      "count": 12,
+      "provenance": {
+        "catalog-verified": 9,
+        "standard-nominal": 3
+      }
+    },
+    "Engineered Class Chains": {
+      "file": "engineered-class-chains.json",
+      "count": 39,
+      "provenance": {
+        "catalog-verified": 36,
+        "derived": 3
+      }
+    },
+    "Welded Steel Chains": {
+      "file": "welded-steel-chains.json",
+      "count": 31,
+      "provenance": {
+        "catalog-verified": 26,
+        "derived": 5
+      }
+    },
+    "Steel Pintle Chains": {
+      "file": "steel-pintle-chains.json",
+      "count": 12,
+      "provenance": {
+        "derived": 8,
+        "catalog-verified": 4
+      }
+    },
+    "Steel Bushed Chains": {
+      "file": "steel-bushed-chains.json",
+      "count": 0,
+      "provenance": {}
+    },
+    "Agricultural Conveyor Chains": {
+      "file": "agricultural-conveyor-chains.json",
+      "count": 18,
+      "provenance": {
+        "catalog-verified": 13,
+        "derived": 5
+      }
+    },
+    "SharpTop Chains": {
+      "file": "sharptop-chains.json",
+      "count": 0,
+      "provenance": {}
+    },
+    "Forged Chains": {
+      "file": "forged-chains.json",
+      "count": 0,
+      "provenance": {}
+    },
+    "Drop Forged Rivetless Chains": {
+      "file": "drop-forged-rivetless-chains.json",
+      "count": 6,
+      "provenance": {
+        "derived": 3,
+        "catalog-verified": 3
+      }
+    },
+    "Overhead Conveyor Chains": {
+      "file": "overhead-conveyor-chains.json",
+      "count": 4,
+      "provenance": {
+        "catalog-verified": 2,
+        "derived": 2
+      }
+    },
+    "Drag / Scraper Chains": {
+      "file": "drag-scraper-chains.json",
+      "count": 6,
+      "provenance": {
+        "catalog-verified": 6
+      }
+    },
+    "Bucket Elevator Chains": {
+      "file": "bucket-elevator-chains.json",
+      "count": 6,
+      "provenance": {
+        "derived": 3,
+        "catalog-verified": 3
+      }
+    },
+    "Leaf Chains": {
+      "file": "leaf-chains.json",
+      "count": 14,
+      "provenance": {
+        "catalog-verified": 14
+      }
+    },
+    "Specialty / Custom Chains": {
+      "file": "specialty-custom-chains.json",
+      "count": 32,
+      "provenance": {
+        "derived": 6,
+        "standard-nominal": 1,
+        "catalog-verified": 25
+      }
+    }
+  },
+  "empty_families": [
+    "Steel Bushed Chains",
+    "SharpTop Chains",
+    "Forged Chains"
+  ],
+  "unmapped": [],
+  "collisions": []
+}

@@ -1,0 +1,745 @@
+{
+  "family": "Leaf Chains",
+  "slug": "leaf-chains",
+  "count": 14,
+  "chains": [
+    {
+      "chain_id": "AL0622",
+      "chain_family": "Leaf Chains",
+      "chain_number": "AL0622",
+      "display_name": "AL0622 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "0.375",
+      "pitch_mm": "9.525",
+      "description": "AL series 3/8\" pitch leaf chain, 6 plates wide × 22 lacing. Light forklift mast and hoist applications.",
+      "specs": {
+        "pitch_in": "0.375",
+        "pitch_mm": "9.525",
+        "lacing": "2×2",
+        "avg_ultimate_lbs": "8000",
+        "max_working_load_lbs": "1600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "8000",
+          "working_load_lbs": "1600",
+          "source": "Donghua catalog p.222, ANSI B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "LH0622",
+          "confidence": "Confirmed",
+          "catalog_page": "222",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        },
+        {
+          "manufacturer": "Iwis",
+          "code": "LH0622",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "AL0844",
+      "chain_family": "Leaf Chains",
+      "chain_number": "AL0844",
+      "display_name": "AL0844 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "0.500",
+      "pitch_mm": "12.70",
+      "description": "AL series 1/2\" pitch leaf chain, 8-wide × 44 lacing. Forklift mast applications.",
+      "specs": {
+        "pitch_in": "0.500",
+        "pitch_mm": "12.70",
+        "lacing": "4×4",
+        "avg_ultimate_lbs": "18200",
+        "max_working_load_lbs": "3640"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "18200",
+          "working_load_lbs": "3640",
+          "source": "ANSI/ASME B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "AL0844",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Iwis",
+          "code": "LH0844",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "LH0844",
+          "confidence": "Confirmed",
+          "catalog_page": "222",
+          "notes": "Leaf chain 1/2\" pitch"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "LH0844F",
+          "confidence": "Confirmed",
+          "catalog_page": "223",
+          "notes": "AL0844 with clevis fitting"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Shot peened"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "AL1022",
+      "chain_family": "Leaf Chains",
+      "chain_number": "AL1022",
+      "display_name": "AL1022 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "1.000",
+      "pitch_mm": "25.40",
+      "description": "AL series leaf chain for forklift mast applications. 10 plates wide, 22 lacing.",
+      "specs": {
+        "pitch_in": "1.000",
+        "pitch_mm": "25.40",
+        "lacing": "2×2",
+        "avg_ultimate_lbs": "42900",
+        "max_working_load_lbs": "8580"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "42900",
+          "working_load_lbs": "8580",
+          "source": "ANSI/ASME B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "AL1022",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "LH1022",
+          "confidence": "Confirmed",
+          "catalog_page": "222",
+          "notes": "Leaf chain, Donghua LH designation"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "Shot peened version"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "AL1044",
+      "chain_family": "Leaf Chains",
+      "chain_number": "AL1044",
+      "display_name": "AL1044 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "1.000",
+      "pitch_mm": "25.40",
+      "description": "AL series 1\" pitch leaf chain, 10 plates wide × 44 lacing. Heavy forklift mast applications.",
+      "specs": {
+        "pitch_in": "1.000",
+        "pitch_mm": "25.40",
+        "lacing": "2×2",
+        "avg_ultimate_lbs": "53900",
+        "max_working_load_lbs": "10780"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "53900",
+          "working_load_lbs": "10780",
+          "source": "ANSI/ASME B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "AL1044",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Iwis",
+          "code": "LH1044",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "LH1044",
+          "confidence": "Confirmed",
+          "catalog_page": "224",
+          "notes": "Leaf chain, Donghua LH designation"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "Shot peened"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "AL1266",
+      "chain_family": "Leaf Chains",
+      "chain_number": "AL1266",
+      "display_name": "AL1266 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "0.750",
+      "pitch_mm": "19.05",
+      "description": "AL series 3/4\" pitch leaf chain, 12-wide × 66 lacing. Heavy-duty forklift mast applications.",
+      "specs": {
+        "pitch_in": "0.750",
+        "pitch_mm": "19.05",
+        "lacing": "6×6",
+        "avg_ultimate_lbs": "86000",
+        "max_working_load_lbs": "17200"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "86000",
+          "working_load_lbs": "17200",
+          "source": "Donghua catalog p.225, ANSI B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "LH1266",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "225"
+        },
+        {
+          "manufacturer": "Iwis",
+          "code": "LH1266",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Shot peened"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "BL0622",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL0622",
+      "display_name": "BL0622 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "0.375",
+      "pitch_mm": "9.525",
+      "description": "BL series 3/8\" pitch leaf chain. Thicker plates than AL for higher working loads.",
+      "specs": {
+        "pitch_in": "0.375",
+        "pitch_mm": "9.525",
+        "lacing": "2×2",
+        "avg_ultimate_lbs": "9500",
+        "max_working_load_lbs": "1900"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "9500",
+          "working_load_lbs": "1900",
+          "source": "Donghua catalog p.226, ANSI B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "BL0622",
+          "confidence": "Confirmed",
+          "catalog_page": "226",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "BL0644",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL0644",
+      "display_name": "BL0644 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "0.375",
+      "pitch_mm": "9.525",
+      "description": "BL series 3/8\" pitch leaf chain, heavy lacing (44) for high working load forklift mast applications.",
+      "specs": {
+        "pitch_in": "0.375",
+        "pitch_mm": "9.525",
+        "lacing": "4×4",
+        "avg_ultimate_lbs": "19000",
+        "max_working_load_lbs": "3800"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "19000",
+          "working_load_lbs": "3800",
+          "source": "Donghua catalog p.227, ANSI B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "BL0644",
+          "confidence": "Confirmed",
+          "catalog_page": "227",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "BL0846",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL0846",
+      "display_name": "BL0846 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "0.500",
+      "pitch_mm": "12.70",
+      "description": "BL series 1/2\" pitch, 8-wide × 46 lacing leaf chain for medium-duty forklift mast.",
+      "specs": {
+        "pitch_in": "0.500",
+        "pitch_mm": "12.70",
+        "lacing": "4×6",
+        "avg_ultimate_lbs": "28000",
+        "max_working_load_lbs": "5600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "28000",
+          "working_load_lbs": "5600",
+          "source": "Donghua catalog p.228, ANSI B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "BL0846",
+          "confidence": "Confirmed",
+          "catalog_page": "228",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "BL1022",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL1022",
+      "display_name": "BL1022 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "1.000",
+      "pitch_mm": "25.40",
+      "description": "BL series 1\" pitch leaf chain. BL series uses thicker plates than AL series for higher loads.",
+      "specs": {
+        "pitch_in": "1.000",
+        "pitch_mm": "25.40",
+        "lacing": "2×2",
+        "avg_ultimate_lbs": "31000",
+        "max_working_load_lbs": "6200"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "31000",
+          "working_load_lbs": "6200",
+          "source": "ANSI/ASME B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "BL1022",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Iwis",
+          "code": "BL1022",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "BL1022",
+          "confidence": "Confirmed",
+          "catalog_page": "226",
+          "notes": "BL series leaf chain"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "BL1044",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL1044",
+      "display_name": "BL1044 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "1.000",
+      "pitch_mm": "25.40",
+      "description": "BL series heavy leaf chain for maximum load forklift mast and hoist applications.",
+      "specs": {
+        "pitch_in": "1.000",
+        "pitch_mm": "25.40",
+        "lacing": "4×4",
+        "avg_ultimate_lbs": "62000",
+        "max_working_load_lbs": "12400"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "62000",
+          "working_load_lbs": "12400",
+          "source": "ANSI/ASME B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "BL1044",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Iwis",
+          "code": "BL1044",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "BL1044",
+          "confidence": "Confirmed",
+          "catalog_page": "228",
+          "notes": "BL series leaf chain"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "BL1044F",
+          "confidence": "Confirmed",
+          "catalog_page": "229",
+          "notes": "BL1044 with clevis fitting"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "BL1246",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL1246",
+      "display_name": "BL1246 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "0.750",
+      "pitch_mm": "19.05",
+      "description": "BL series 3/4\" pitch leaf chain for heavy forklift mast and large hoist applications.",
+      "specs": {
+        "pitch_in": "0.750",
+        "pitch_mm": "19.05",
+        "lacing": "4×6",
+        "avg_ultimate_lbs": "66000",
+        "max_working_load_lbs": "13200"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "66000",
+          "working_load_lbs": "13200",
+          "source": "Donghua catalog p.230, ANSI B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "BL1246",
+          "confidence": "Confirmed",
+          "catalog_page": "230",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "BL1634",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL1634",
+      "display_name": "BL1634 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "1.000",
+      "pitch_mm": "25.40",
+      "description": "BL series 1\" pitch leaf chain, 16 plates wide × 34 lacing for heavy industrial hoist applications.",
+      "specs": {
+        "pitch_in": "1.000",
+        "pitch_mm": "25.40",
+        "lacing": "8×34",
+        "avg_ultimate_lbs": "120000",
+        "max_working_load_lbs": "24000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "120000",
+          "working_load_lbs": "24000",
+          "source": "Donghua catalog p.232, ANSI B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "BL1634",
+          "confidence": "Confirmed",
+          "catalog_page": "232",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "BL2034",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL2034",
+      "display_name": "BL2034 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "1.250",
+      "pitch_mm": "31.75",
+      "description": "BL series 1-1/4\" pitch leaf chain, 20-wide × 34 lacing for very heavy industrial hoists.",
+      "specs": {
+        "pitch_in": "1.250",
+        "pitch_mm": "31.75",
+        "lacing": "10×34",
+        "avg_ultimate_lbs": "190000",
+        "max_working_load_lbs": "38000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "190000",
+          "working_load_lbs": "38000",
+          "source": "Donghua catalog p.234, ANSI B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "BL2034",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "234"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "BL2046",
+      "chain_family": "Leaf Chains",
+      "chain_number": "BL2046",
+      "display_name": "BL2046 Leaf Chain",
+      "standard": "ANSI/ASME B29.8",
+      "pitch_in": "1.250",
+      "pitch_mm": "31.75",
+      "description": "BL series 1-1/4\" pitch heavy leaf chain, 20-wide × 46 lacing. Maximum load heavy industrial hoist.",
+      "specs": {
+        "pitch_in": "1.250",
+        "pitch_mm": "31.75",
+        "lacing": "10×46",
+        "avg_ultimate_lbs": "250000",
+        "max_working_load_lbs": "50000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "250000",
+          "working_load_lbs": "50000",
+          "source": "Donghua catalog p.235, ANSI B29.8"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "BL2046",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "235"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "leaf_chain",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    }
+  ]
+}

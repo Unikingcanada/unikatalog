@@ -1,0 +1,465 @@
+{
+  "family": "Hollow Pin Chains",
+  "slug": "hollow-pin-chains",
+  "count": 8,
+  "chains": [
+    {
+      "chain_id": "HP-100",
+      "chain_family": "Hollow Pin Chains",
+      "chain_number": "100HP",
+      "display_name": "100HP Hollow Pin Roller Chain",
+      "standard": "ANSI B29.1",
+      "pitch_in": "1.250",
+      "pitch_mm": "31.75",
+      "description": "1-1/4\" pitch hollow pin chain using #100 components. Higher load cross-rod and slat conveyor applications.",
+      "specs": {
+        "pitch_in": "1.250",
+        "pitch_mm": "31.75",
+        "roller_dia_in": "0.750",
+        "roller_width_in": "0.750",
+        "pin_dia_in": "0.469",
+        "avg_ultimate_lbs": "24000",
+        "max_working_load_lbs": "4800"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "24000",
+          "working_load_lbs": "4800",
+          "source": "Donghua catalog p.67, ANSI B29.1"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "100HP",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "67"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "100HP",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-100",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "hollow_pin",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "HP-2060",
+      "chain_family": "Hollow Pin Chains",
+      "chain_number": "2060HP",
+      "display_name": "2060HP Double Pitch Hollow Pin Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "1.500",
+      "pitch_mm": "38.10",
+      "description": "Double pitch hollow pin conveyor chain. Economy hollow pin for longer spans.",
+      "specs": {
+        "pitch_in": "1.500",
+        "pitch_mm": "38.10",
+        "avg_ultimate_lbs": "8500",
+        "max_working_load_lbs": "1700"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "8500",
+          "working_load_lbs": "1700",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "2060HP",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "C2060HP",
+          "confidence": "Confirmed",
+          "catalog_page": "68",
+          "notes": "Double pitch hollow pin"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "C2060",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "hollow_pin",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "HP-40",
+      "chain_family": "Hollow Pin Chains",
+      "chain_number": "40HP",
+      "display_name": "40HP Hollow Pin Roller Chain",
+      "standard": "ANSI B29.1",
+      "pitch_in": "0.500",
+      "pitch_mm": "12.70",
+      "description": "1/2\" pitch hollow pin chain. Pins are drilled hollow to accept cross-rods, bars, and special attachments. Used in slat and scraper conveyors.",
+      "specs": {
+        "pitch_in": "0.500",
+        "pitch_mm": "12.70",
+        "roller_dia_in": "0.312",
+        "roller_width_in": "0.312",
+        "pin_dia_in": "0.156",
+        "avg_ultimate_lbs": "3700",
+        "max_working_load_lbs": "740"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "3700",
+          "working_load_lbs": "740",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "40HP",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "40HP",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "40HP",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "40HP-SS",
+          "confidence": "Confirmed",
+          "catalog_page": "65",
+          "notes": "40HP stainless steel"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-40",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "Extended pin option",
+        "Side roller option"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "hollow_pin",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "HP-50",
+      "chain_family": "Hollow Pin Chains",
+      "chain_number": "50HP",
+      "display_name": "50HP Hollow Pin Roller Chain",
+      "standard": "ANSI B29.1",
+      "pitch_in": "0.625",
+      "pitch_mm": "15.875",
+      "description": "5/8\" pitch hollow pin chain for cross-rod and slat conveyor applications.",
+      "specs": {
+        "pitch_in": "0.625",
+        "pitch_mm": "15.875",
+        "roller_dia_in": "0.400",
+        "roller_width_in": "0.375",
+        "avg_ultimate_lbs": "6100",
+        "max_working_load_lbs": "1220"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "6100",
+          "working_load_lbs": "1220",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "50HP",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "50HP",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "50HP",
+          "confidence": "Confirmed",
+          "catalog_page": "65",
+          "notes": "Hollow pin series"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-50",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "hollow_pin",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "HP-60",
+      "chain_family": "Hollow Pin Chains",
+      "chain_number": "60HP",
+      "display_name": "60HP Hollow Pin Roller Chain",
+      "standard": "ANSI B29.1",
+      "pitch_in": "0.750",
+      "pitch_mm": "19.05",
+      "description": "3/4\" pitch hollow pin chain. Common in flight conveyors, cross-rod slat chains, and specialty agricultural equipment.",
+      "specs": {
+        "pitch_in": "0.750",
+        "pitch_mm": "19.05",
+        "roller_dia_in": "0.469",
+        "roller_width_in": "0.500",
+        "avg_ultimate_lbs": "8500",
+        "max_working_load_lbs": "1700"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "8500",
+          "working_load_lbs": "1700",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "60HP",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "60HP",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "60HP",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "60HP-SS",
+          "confidence": "Confirmed",
+          "catalog_page": "66",
+          "notes": "60HP stainless steel"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-60",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "hollow_pin",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "HP-80",
+      "chain_family": "Hollow Pin Chains",
+      "chain_number": "80HP",
+      "display_name": "80HP Hollow Pin Roller Chain",
+      "standard": "ANSI B29.1",
+      "pitch_in": "1.000",
+      "pitch_mm": "25.40",
+      "description": "1\" pitch hollow pin chain. Cross-rod, slat, and scraper applications requiring higher loads.",
+      "specs": {
+        "pitch_in": "1.000",
+        "pitch_mm": "25.40",
+        "roller_dia_in": "0.625",
+        "roller_width_in": "0.625",
+        "avg_ultimate_lbs": "14500",
+        "max_working_load_lbs": "2900"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "14500",
+          "working_load_lbs": "2900",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "80HP",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "80HP",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "80HP",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-80",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "hollow_pin",
+      "_family_unmapped": false,
+      "provenance": "standard-nominal",
+      "needs_review": false
+    },
+    {
+      "chain_id": "HP-C2060",
+      "chain_family": "Hollow Pin Chains",
+      "chain_number": "C2060HP",
+      "display_name": "C2060HP Double Pitch Hollow Pin Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "1.500",
+      "pitch_mm": "38.10",
+      "description": "C2060H double pitch hollow pin chain — economy hollow pin for long spans in conveyor systems. Pin is hollow to accept cross-rods or special attachments.",
+      "specs": {
+        "pitch_in": "1.500",
+        "pitch_mm": "38.10",
+        "roller_dia_in": "0.469",
+        "roller_width_in": "0.500",
+        "pin_dia_in": "0.280",
+        "avg_ultimate_lbs": "8500",
+        "max_working_load_lbs": "1700"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "8500",
+          "working_load_lbs": "1700",
+          "source": "Donghua catalog p.68, ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "C2060HP",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "68"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "C2060HP",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "C2060",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "hollow_pin",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "HP-C2080",
+      "chain_family": "Hollow Pin Chains",
+      "chain_number": "C2080HP",
+      "display_name": "C2080HP Double Pitch Hollow Pin Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "2.000",
+      "pitch_mm": "50.80",
+      "description": "C2080 double pitch hollow pin chain for medium-load cross-rod and slat conveyor applications.",
+      "specs": {
+        "pitch_in": "2.000",
+        "pitch_mm": "50.80",
+        "roller_dia_in": "0.625",
+        "roller_width_in": "0.625",
+        "avg_ultimate_lbs": "14500",
+        "max_working_load_lbs": "2900"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "14500",
+          "working_load_lbs": "2900",
+          "source": "Donghua catalog p.69, ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "C2080HP",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "69"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "C2080",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "hollow_pin",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    }
+  ]
+}

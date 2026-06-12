@@ -1,0 +1,176 @@
+{
+  "family": "Conveyor Roller Chains",
+  "slug": "conveyor-roller-chains",
+  "count": 2,
+  "chains": [
+    {
+      "chain_id": "DH-CONV-40B",
+      "chain_family": "Conveyor Roller Chains",
+      "chain_number": "40-CONV",
+      "display_name": "No.40 Conveyor Grade Roller Chain",
+      "standard": "ANSI B29.1 / ANSI B29.2",
+      "pitch_in": "0.500",
+      "pitch_mm": "12.70",
+      "description": "ANSI 40 conveyor-grade roller chain — heavy-duty plates optimized for conveyor duty rather than drive duty. Extended fatigue life, available with A1/K1 attachments at standard or custom spacings.",
+      "specs": {
+        "pitch_in": "0.500",
+        "pitch_mm": "12.70",
+        "roller_dia_in": "0.312",
+        "roller_width_in": "0.312",
+        "avg_ultimate_lbs": "3700",
+        "max_working_load_lbs": "740"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "3700",
+          "working_load_lbs": "740",
+          "source": "Donghua catalog p.78, ANSI B29.2",
+          "notes": "Conveyor grade — same dims as drive chain but specified for conveyor duty with attachment availability."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "40A-CONV",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "78"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2",
+        "SA1"
+      ],
+      "attachment_configs": [
+        {
+          "code": "A1",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "Extended tab one side"
+        },
+        {
+          "code": "K1",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "Bent tab one side"
+        },
+        {
+          "code": "K2",
+          "side": "both_sides",
+          "spacing": "every_link",
+          "description": "Bent tab both sides"
+        },
+        {
+          "code": "SA1",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "Super-A1 extended tab"
+        }
+      ],
+      "sprocket_series": "ANSI-40",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304",
+        "nickel_plated"
+      ],
+      "options_upgrades": [
+        "Double strand conveyor",
+        "Stainless attachment chains"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "conveyor_roller",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-CONV-C2040-SA1",
+      "chain_family": "Conveyor Roller Chains",
+      "chain_number": "C2040-SA1",
+      "display_name": "C2040 Double Pitch Conveyor Chain with SA1 Attachment",
+      "standard": "ANSI B29.4",
+      "pitch_in": "1.000",
+      "pitch_mm": "25.40",
+      "description": "C2040 double pitch conveyor chain with Super A1 (SA1) extended attachments for carton/tray conveying on long-span inclined conveyor systems.",
+      "specs": {
+        "pitch_in": "1.000",
+        "pitch_mm": "25.40",
+        "attachment_type": "SA1",
+        "tab_height_in": "1.00",
+        "avg_ultimate_lbs": "3700",
+        "max_working_load_lbs": "810"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "3700",
+          "working_load_lbs": "810",
+          "source": "Donghua catalog p.93, ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "C2040SA1",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "93"
+        }
+      ],
+      "attachments_available": [],
+      "attachment_configs": [
+        {
+          "code": "SA1",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "Super-A1 tall tab"
+        },
+        {
+          "code": "SA1-E2",
+          "side": "one_side",
+          "spacing": "every_2nd",
+          "description": "SA1 every 2nd link"
+        },
+        {
+          "code": "SA2",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "Super-A2"
+        },
+        {
+          "code": "SK1",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "Super-K1 bent tab"
+        },
+        {
+          "code": "SK2",
+          "side": "both_sides",
+          "spacing": "every_link",
+          "description": "Super-K2 both sides"
+        }
+      ],
+      "sprocket_series": "C2040",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "Large roller (C2042) base chain"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "conveyor_roller",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    }
+  ]
+}

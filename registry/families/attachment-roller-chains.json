@@ -1,0 +1,762 @@
+{
+  "family": "Attachment Roller Chains",
+  "slug": "attachment-roller-chains",
+  "count": 9,
+  "chains": [
+    {
+      "chain_id": "C2060H-ATT",
+      "chain_family": "Attachment Roller Chains",
+      "chain_number": "C2060H-A1",
+      "display_name": "C2060H Attachment Double Pitch Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "1.500",
+      "pitch_mm": "38.10",
+      "description": "C2060H heavy double pitch chain with A1 or K1 attachments. For pallet conveying, parts accumulation, and case handling on long-span systems.",
+      "specs": {
+        "pitch_in": "1.500",
+        "pitch_mm": "38.10",
+        "attachment_type": "A1 / K1",
+        "avg_ultimate_lbs": "9200",
+        "max_working_load_lbs": "2000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "9200",
+          "working_load_lbs": "2000",
+          "source": "Donghua catalog p.94, ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "C2060HA1",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "94"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "C2060HA1",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "attachment_configs": [
+        {
+          "code": "A1",
+          "side": "one_side",
+          "spacing": "every_link"
+        },
+        {
+          "code": "A2",
+          "side": "one_side",
+          "spacing": "every_link"
+        },
+        {
+          "code": "K1",
+          "side": "one_side",
+          "spacing": "every_link"
+        },
+        {
+          "code": "K2",
+          "side": "both_sides",
+          "spacing": "every_link"
+        },
+        {
+          "code": "SA1",
+          "side": "one_side",
+          "spacing": "every_link"
+        }
+      ],
+      "sprocket_series": "C2060",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "Walk-on-Rail version",
+        "Custom spacing E2/E3/E4"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "attachment_roller",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "C2080H-ATT",
+      "chain_family": "Attachment Roller Chains",
+      "chain_number": "C2080H-A1",
+      "display_name": "C2080H Attachment Double Pitch Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "2.000",
+      "pitch_mm": "50.80",
+      "description": "C2080H heavy double pitch chain with attachments for heavy-duty case conveying and pallet transfer systems.",
+      "specs": {
+        "pitch_in": "2.000",
+        "pitch_mm": "50.80",
+        "attachment_type": "A1 / K1",
+        "avg_ultimate_lbs": "15600",
+        "max_working_load_lbs": "3600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "15600",
+          "working_load_lbs": "3600",
+          "source": "Donghua catalog p.95"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "C2080HA1",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "95"
+        }
+      ],
+      "attachments_available": [],
+      "attachment_configs": [
+        {
+          "code": "A1",
+          "side": "one_side",
+          "spacing": "every_link"
+        },
+        {
+          "code": "K1",
+          "side": "one_side",
+          "spacing": "every_link"
+        },
+        {
+          "code": "K2",
+          "side": "both_sides",
+          "spacing": "every_link"
+        }
+      ],
+      "sprocket_series": "C2080",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Large roller option"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "attachment_roller",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ATT-40-A2",
+      "chain_family": "Attachment Roller Chains",
+      "chain_number": "40A-A2",
+      "display_name": "40A-A2 ANSI Attachment Roller Chain",
+      "standard": "ANSI B29.1",
+      "pitch_in": "0.500",
+      "pitch_mm": "12.70",
+      "description": "ANSI 40 roller chain with A2 (extended tab, one side) attachments. Donghua confirmed from catalog p.70. Used in light conveying, positioning, and cross-rod mounting applications.",
+      "specs": {
+        "pitch_in": "0.500",
+        "pitch_mm": "12.70",
+        "attachment_type": "A2",
+        "attachment_side": "One side",
+        "tab_height_in": "0.591",
+        "tab_thickness_in": "0.050",
+        "avg_ultimate_lbs": "3700"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "3700",
+          "working_load_lbs": "740",
+          "source": "Donghua catalog p.70",
+          "notes": "A2 attachment — single side extended tab. ANSI B29.1."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "40A-1A2",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "70",
+          "notes": "Standard A2 attachment chain"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "40A2",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "attachment_configs": [
+        {
+          "code": "A2",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "Extended tab, one side, every pitch"
+        },
+        {
+          "code": "A2-E2",
+          "side": "one_side",
+          "spacing": "every_2nd",
+          "description": "A2 tab every 2nd link"
+        },
+        {
+          "code": "A2-E3",
+          "side": "one_side",
+          "spacing": "every_3rd",
+          "description": "A2 tab every 3rd link"
+        }
+      ],
+      "sprocket_series": "ANSI-40",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "K2 both-side variant",
+        "Custom attachment spacing"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "attachment_roller",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ATT-40-K2",
+      "chain_family": "Attachment Roller Chains",
+      "chain_number": "40A-K2",
+      "display_name": "40A-K2 ANSI Attachment Roller Chain",
+      "standard": "ANSI B29.1",
+      "pitch_in": "0.500",
+      "pitch_mm": "12.70",
+      "description": "ANSI 40 roller chain with K2 (bent tab, both sides) attachments. Used in conveyor and transfer systems where bilateral mounting is required.",
+      "specs": {
+        "pitch_in": "0.500",
+        "pitch_mm": "12.70",
+        "attachment_type": "K2",
+        "attachment_side": "Both sides",
+        "avg_ultimate_lbs": "3700"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "3700",
+          "working_load_lbs": "740",
+          "source": "Donghua catalog p.70",
+          "notes": "K2 attachment — bent tab both sides."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "40A-1K2",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "70"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "40K2",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "attachment_configs": [
+        {
+          "code": "K2",
+          "side": "both_sides",
+          "spacing": "every_link"
+        },
+        {
+          "code": "K2-E2",
+          "side": "both_sides",
+          "spacing": "every_2nd"
+        }
+      ],
+      "sprocket_series": "ANSI-40",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "Custom spacing"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "attachment_roller",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ATT-60-A1",
+      "chain_family": "Attachment Roller Chains",
+      "chain_number": "60A-A1",
+      "display_name": "60A-A1 ANSI Attachment Roller Chain",
+      "standard": "ANSI B29.1",
+      "pitch_in": "0.750",
+      "pitch_mm": "19.05",
+      "description": "ANSI 60 roller chain with A1 (extended tab, one side) attachments for 3/4\" pitch conveyor applications.",
+      "specs": {
+        "pitch_in": "0.750",
+        "pitch_mm": "19.05",
+        "attachment_type": "A1",
+        "attachment_side": "One side",
+        "avg_ultimate_lbs": "8500"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "8500",
+          "working_load_lbs": "1700",
+          "source": "Donghua catalog p.71"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "60A-1A1",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "71"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "60A1",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "attachment_configs": [
+        {
+          "code": "A1",
+          "side": "one_side",
+          "spacing": "every_link"
+        },
+        {
+          "code": "A1-E2",
+          "side": "one_side",
+          "spacing": "every_2nd"
+        },
+        {
+          "code": "A1-SA1",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "SA1 extended variant"
+        }
+      ],
+      "sprocket_series": "ANSI-60",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "A2 variant",
+        "K1/K2 variants",
+        "Custom spacing"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "attachment_roller",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ATT-80-A1",
+      "chain_family": "Attachment Roller Chains",
+      "chain_number": "80A-A1",
+      "display_name": "80A-A1 ANSI Attachment Roller Chain",
+      "standard": "ANSI B29.1",
+      "pitch_in": "1.000",
+      "pitch_mm": "25.40",
+      "description": "ANSI 80 roller chain with A1 attachments for 1\" pitch conveying. Standard for medium-duty pallet and parts conveying.",
+      "specs": {
+        "pitch_in": "1.000",
+        "pitch_mm": "25.40",
+        "attachment_type": "A1",
+        "attachment_side": "One side",
+        "avg_ultimate_lbs": "14500"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "14500",
+          "working_load_lbs": "2900",
+          "source": "Donghua catalog p.72"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "80A-1A1",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "72"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "80A1",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "80A1",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "attachment_configs": [
+        {
+          "code": "A1",
+          "side": "one_side",
+          "spacing": "every_link"
+        },
+        {
+          "code": "A2",
+          "side": "one_side",
+          "spacing": "every_link"
+        },
+        {
+          "code": "K1",
+          "side": "one_side",
+          "spacing": "every_link"
+        },
+        {
+          "code": "K2",
+          "side": "both_sides",
+          "spacing": "every_link"
+        },
+        {
+          "code": "SA1",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "Extended A1"
+        }
+      ],
+      "sprocket_series": "ANSI-80",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "Custom attachment spacing",
+        "Stainless with A1"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "attachment_roller",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ATT-LIB-EXTPIN",
+      "chain_family": "Attachment Roller Chains",
+      "chain_number": "EP-SERIES",
+      "display_name": "Extended-Pin / Hollow-Pin Attachment Configuration Library",
+      "standard": "ANSI B29.1 / ANSI B29.4",
+      "pitch_in": "varies",
+      "pitch_mm": "varies",
+      "description": "Extended-pin (EP) and extended-hollow-pin configurations. The pin extends beyond the sidebar plates to accept transverse rods, cross-bars, or custom fixtures. Used in cross-rod slat conveyors, bottle-handling, and bakery equipment.",
+      "specs": {
+        "type": "Attachment configuration library",
+        "attachment_series": "EP/HP-Extended"
+      },
+      "attachment_geometry": [
+        {
+          "code": "EP-ONE-SIDE",
+          "base_chains": [
+            "ANSI-40",
+            "ANSI-50",
+            "ANSI-60",
+            "ANSI-80",
+            "C2040",
+            "C2060"
+          ],
+          "side": "one_side",
+          "tab_type": "Extended pin, one side",
+          "pin_extension_in": "0.25 – 2.00",
+          "description": "EP one-side: pin extends beyond one sidebar plate for rod threading."
+        },
+        {
+          "code": "EP-BOTH-SIDES",
+          "base_chains": [
+            "ANSI-40",
+            "ANSI-60",
+            "ANSI-80",
+            "C2060",
+            "C2080"
+          ],
+          "side": "both_sides",
+          "tab_type": "Extended pin, both sides",
+          "description": "EP both sides: pin extends on both ends — accepts transverse cross-rods."
+        },
+        {
+          "code": "HP-CROSS-ROD",
+          "base_chains": [
+            "HP-40",
+            "HP-50",
+            "HP-60",
+            "HP-80",
+            "HP-100",
+            "HP-C2060",
+            "HP-C2080"
+          ],
+          "side": "both_sides",
+          "tab_type": "Hollow pin cross-rod",
+          "description": "Hollow-pin cross-rod: threaded rod passes through the hollow pin and is secured by nuts."
+        },
+        {
+          "code": "U-TAB",
+          "base_chains": [
+            "ANSI-60",
+            "ANSI-80",
+            "C2060H"
+          ],
+          "side": "one_side",
+          "tab_type": "U-shaped channel tab",
+          "description": "U-tab: U-shaped bracket welded to sidebar for accepting conveyor slat bolts. Needs Review.",
+          "confidence": "Needs Review"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "EP-SERIES",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "65",
+          "notes": "Extended pin and hollow pin configurations — Donghua catalog pp.65–72"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "attachment_roller",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ATT-LIB-SA",
+      "chain_family": "Attachment Roller Chains",
+      "chain_number": "SA-SERIES",
+      "display_name": "SA Super-Extended Attachment Chain Configuration Library",
+      "standard": "ANSI B29.1 / ANSI B29.4",
+      "pitch_in": "varies",
+      "pitch_mm": "varies",
+      "description": "SA (Super-A) attachment series — extra-long extended tabs for taller conveyor slats, flights, and cross-rod support. Available on ANSI 40–120 and double-pitch C2040–C2100 chains. Donghua catalog pp.70–98.",
+      "specs": {
+        "type": "Attachment configuration library",
+        "attachment_series": "SA"
+      },
+      "attachment_geometry": [
+        {
+          "code": "SA1",
+          "base_chains": [
+            "ANSI-40",
+            "ANSI-50",
+            "ANSI-60",
+            "ANSI-80",
+            "ANSI-100",
+            "C2040",
+            "C2060",
+            "C2080"
+          ],
+          "side": "one_side",
+          "tab_type": "Extended flat",
+          "tab_height_range_in": "0.75 – 2.00",
+          "hole_pattern": "Single or double hole",
+          "spacing_options": [
+            "E1",
+            "E2",
+            "E3",
+            "E4",
+            "E6"
+          ],
+          "description": "Super A1 — extra-long single-side flat tab. Standard for slat conveyor mounting."
+        },
+        {
+          "code": "SA2",
+          "base_chains": [
+            "ANSI-40",
+            "ANSI-60",
+            "ANSI-80",
+            "C2060",
+            "C2080"
+          ],
+          "side": "one_side",
+          "tab_type": "Extended flat, offset hole",
+          "tab_height_range_in": "0.75 – 2.00",
+          "description": "SA2 — SA1 with offset mounting hole for angled slat mounting."
+        },
+        {
+          "code": "SK1",
+          "base_chains": [
+            "ANSI-40",
+            "ANSI-60",
+            "ANSI-80",
+            "C2040",
+            "C2060"
+          ],
+          "side": "one_side",
+          "tab_type": "Super bent-tab",
+          "description": "SK1 — taller version of K1, one side. For deeper flight attachment."
+        },
+        {
+          "code": "SK2",
+          "base_chains": [
+            "ANSI-40",
+            "ANSI-60",
+            "ANSI-80",
+            "C2060"
+          ],
+          "side": "both_sides",
+          "tab_type": "Super bent-tab both sides",
+          "description": "SK2 — SK1 both sides. For bilateral slat or cross-rod mounting."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "SA-SERIES",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "70",
+          "notes": "SA series attachment geometry — confirmed from Donghua catalog attachment tables pp.70–98"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "attachment_roller",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ATT-LIB-W",
+      "chain_family": "Attachment Roller Chains",
+      "chain_number": "W-SERIES",
+      "display_name": "W / WA Wide-Tab Attachment Chain Configuration Library",
+      "standard": "ANSI B29.1",
+      "pitch_in": "varies",
+      "pitch_mm": "varies",
+      "description": "W and WA (Wide-A) attachment series — wide flat tabs for apron conveyor and wide-slat mounting. Available on ANSI 50–120 and welded steel chains. Used in apron feeders, steel mill scale conveyors, and heavy pan conveyors.",
+      "specs": {
+        "type": "Attachment configuration library",
+        "attachment_series": "W/WA"
+      },
+      "attachment_geometry": [
+        {
+          "code": "WA-K1",
+          "base_chains": [
+            "ANSI-60",
+            "ANSI-80",
+            "ANSI-100",
+            "WH-78",
+            "WH-124",
+            "DH-WS-102B",
+            "DH-WS-132B"
+          ],
+          "side": "one_side",
+          "tab_type": "Wide bent-tab",
+          "tab_width_in": "2.00 – 4.00",
+          "description": "WA-K1 wide bent attachment for welded steel and heavy ANSI chains. Standard on WH/WR series."
+        },
+        {
+          "code": "WA-A1",
+          "base_chains": [
+            "ANSI-60",
+            "ANSI-80",
+            "ANSI-100",
+            "DH-WS-102B",
+            "DH-WS-132B",
+            "DH-WS-160B"
+          ],
+          "side": "one_side",
+          "tab_type": "Wide flat extended tab",
+          "tab_width_in": "2.00 – 4.00",
+          "description": "WA-A1 wide flat tab for apron conveyor pan mounting."
+        },
+        {
+          "code": "WA-FLIGHT",
+          "base_chains": [
+            "DH-WR-78",
+            "DH-WR-110",
+            "DH-WR-124",
+            "DH-WS-102B",
+            "DH-WS-132B"
+          ],
+          "side": "both_sides",
+          "tab_type": "Wide drag flight bar",
+          "description": "WA-FLIGHT — full-width welded drag flight for aggregate and bulk material drag conveyors."
+        },
+        {
+          "code": "APRON-W",
+          "base_chains": [
+            "ANSI-80",
+            "ANSI-100",
+            "ANSI-120"
+          ],
+          "side": "both_sides",
+          "tab_type": "Hinged apron attachment",
+          "description": "APRON-W — hinged wide apron attachment for steel mill and foundry apron conveyors. Needs Review.",
+          "confidence": "Needs Review"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "W-SERIES",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "73",
+          "notes": "W/WA attachment geometry — confirmed from Donghua catalog conveyor chain section pp.73–128"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "attachment_roller",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    }
+  ]
+}

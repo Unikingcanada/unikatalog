@@ -1,0 +1,1957 @@
+{
+  "family": "Specialty / Custom Chains",
+  "slug": "specialty-custom-chains",
+  "count": 32,
+  "chains": [
+    {
+      "chain_id": "103B",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "103B",
+      "display_name": "103B Specialty Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.000",
+      "pitch_mm": "76.20",
+      "description": "103B specialty agricultural and industrial conveying chain.",
+      "specs": {
+        "pitch_in": "3.000",
+        "pitch_mm": "76.20",
+        "avg_ultimate_lbs": "21000",
+        "max_working_load_lbs": "4200"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "21000",
+          "working_load_lbs": "4200",
+          "source": "ASME B29.100"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "103B",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "K1"
+      ],
+      "sprocket_series": "103B",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "81X",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "81X",
+      "display_name": "81X Extended Pitch Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.000",
+      "pitch_mm": "76.20",
+      "description": "81X series extended pitch chain for agricultural conveying, waste water, and specialty industrial applications.",
+      "specs": {
+        "pitch_in": "3.000",
+        "pitch_mm": "76.20",
+        "avg_ultimate_lbs": "24000",
+        "max_working_load_lbs": "4800"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "24000",
+          "working_load_lbs": "4800",
+          "source": "ASME B29.100"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "81X",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2"
+      ],
+      "sprocket_series": "81X",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "ANSI-SPKT-FAMILY-REF",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "SPKT-ANSI-FAMILY",
+      "display_name": "ANSI Roller Chain Family — Sprocket Compatibility Reference",
+      "standard": "ANSI B29.1",
+      "pitch_in": "varies",
+      "pitch_mm": "varies",
+      "description": "Master sprocket compatibility reference for ANSI B29.1 roller chain family (#25 through #240). Documents tooth counts, bore styles, materials, and split sprocket availability across all major ANSI chain sizes and manufacturers. Use for RFQ and procurement guidance.",
+      "specs": {
+        "type": "Sprocket compatibility family reference"
+      },
+      "performance_tiers": [],
+      "sprocket_compatibility": {
+        "ansi_sizes": {
+          "25": {
+            "tooth_range": "9–96",
+            "standard_bores": [
+              "plain",
+              "keyway"
+            ],
+            "split": false,
+            "notes": "Small sprocket — typically stocked teeth 12–30"
+          },
+          "35": {
+            "tooth_range": "9–96",
+            "standard_bores": [
+              "plain",
+              "keyway",
+              "QD"
+            ],
+            "split": false
+          },
+          "40": {
+            "tooth_range": "9–120",
+            "standard_bores": [
+              "plain",
+              "keyway",
+              "QD",
+              "taper_lock"
+            ],
+            "split": true,
+            "notes": "Most widely stocked sprocket family"
+          },
+          "41": {
+            "tooth_range": "9–60",
+            "standard_bores": [
+              "plain",
+              "keyway"
+            ],
+            "split": false,
+            "notes": "Narrow 40 pitch — verify sprocket catalog"
+          },
+          "50": {
+            "tooth_range": "9–96",
+            "standard_bores": [
+              "plain",
+              "keyway",
+              "QD"
+            ],
+            "split": true
+          },
+          "60": {
+            "tooth_range": "9–120",
+            "standard_bores": [
+              "plain",
+              "keyway",
+              "QD",
+              "taper_lock"
+            ],
+            "split": true
+          },
+          "80": {
+            "tooth_range": "9–120",
+            "standard_bores": [
+              "plain",
+              "keyway",
+              "QD",
+              "taper_lock"
+            ],
+            "split": true,
+            "notes": "Most complete sprocket catalog — all styles stocked"
+          },
+          "100": {
+            "tooth_range": "9–80",
+            "standard_bores": [
+              "plain",
+              "keyway",
+              "QD",
+              "taper_lock"
+            ],
+            "split": true
+          },
+          "120": {
+            "tooth_range": "9–60",
+            "standard_bores": [
+              "plain",
+              "keyway",
+              "QD",
+              "taper_lock"
+            ],
+            "split": true
+          },
+          "140": {
+            "tooth_range": "9–50",
+            "standard_bores": [
+              "plain",
+              "keyway",
+              "QD"
+            ],
+            "split": true
+          },
+          "160": {
+            "tooth_range": "9–40",
+            "standard_bores": [
+              "plain",
+              "keyway",
+              "QD"
+            ],
+            "split": true
+          },
+          "180": {
+            "tooth_range": "7–30",
+            "standard_bores": [
+              "plain",
+              "keyway"
+            ],
+            "split": false
+          },
+          "200": {
+            "tooth_range": "7–25",
+            "standard_bores": [
+              "plain",
+              "keyway"
+            ],
+            "split": false
+          },
+          "240": {
+            "tooth_range": "7–20",
+            "standard_bores": [
+              "plain",
+              "keyway"
+            ],
+            "split": false
+          }
+        },
+        "materials": {
+          "cast_iron": {
+            "grades": "ASTM A48 Cl30",
+            "description": "Standard service, most economical"
+          },
+          "carbon_steel": {
+            "grades": "AISI 1045",
+            "description": "Higher strength, shock load"
+          },
+          "hardened_steel": {
+            "grades": "AISI 4140 ind.hard",
+            "description": "Extended tooth life in abrasive environments"
+          },
+          "stainless_303": {
+            "grades": "303 SS",
+            "description": "Corrosion — non-washdown"
+          },
+          "stainless_316": {
+            "grades": "316 SS",
+            "description": "Corrosion — full CIP washdown"
+          },
+          "nylon_mc": {
+            "grades": "MC Nylon 901",
+            "description": "Low noise, light duty, no lube"
+          },
+          "split": {
+            "notes": "Available #40–#120 cast iron or steel. Field installation without shaft removal."
+          }
+        },
+        "manufacturers_confirmed": [
+          "Martin",
+          "Browning",
+          "Rexnord",
+          "Tsubaki",
+          "Morse",
+          "Daido",
+          "Allied-Locke"
+        ]
+      },
+      "source_refs": [
+        {
+          "manufacturer": "Martin",
+          "code": "ANSI-SPKT",
+          "confidence": "Confirmed",
+          "notes": "Martin Sprocket — most complete ANSI catalog"
+        },
+        {
+          "manufacturer": "Browning",
+          "code": "ANSI-SPKT",
+          "confidence": "Confirmed",
+          "notes": "Browning/Regal — full ANSI sprocket line"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "ANSI-SPKT",
+          "confidence": "Confirmed",
+          "notes": "Rexnord Rex sprockets"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "ANSI-SPKT",
+          "confidence": "Confirmed",
+          "notes": "Tsubaki ANSI sprockets"
+        },
+        {
+          "manufacturer": "Morse",
+          "code": "ANSI-SPKT",
+          "confidence": "Confirmed",
+          "notes": "Morse/Emerson sprockets"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "ANSI-SPKT",
+          "confidence": "Confirmed",
+          "notes": "Allied-Locke sprocket companion line"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-ALL",
+      "materials_available": [
+        "cast_iron",
+        "carbon_steel",
+        "hardened_steel",
+        "stainless_303",
+        "stainless_316",
+        "nylon_mc"
+      ],
+      "options_upgrades": [
+        "Split sprocket",
+        "Taper lock mount",
+        "QD bushing mount",
+        "Hardened tooth tips"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "ansi_family",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "standard-nominal",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-CATALOG-MASTER",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "DH-CATALOG-2020",
+      "display_name": "Donghua Chain Group Product Catalogue 2020 — Full Reference",
+      "standard": "Various",
+      "pitch_in": "varies",
+      "pitch_mm": "varies",
+      "description": "Master reference record for the Donghua Chain Group Product Catalogue 2020. Contains full dimensional tables, material specifications, application notes, and sprocket data for over 12,000 chain varieties. Source document for all Donghua entries in this normalized catalog.",
+      "specs": {
+        "type": "Catalog reference record",
+        "publisher": "Hangzhou Donghua Chain Group Co., Ltd.",
+        "year": "2020",
+        "pages": "320+",
+        "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+      },
+      "performance_tiers": [],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CATALOG-2020",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "1",
+          "notes": "Full catalog download. Source of truth for all DH entries."
+        }
+      ],
+      "downloads": [
+        {
+          "label": "Donghua Chain Group Product Catalogue 2020 (Full PDF)",
+          "url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "type": "pdf",
+          "description": "Full 320+ page catalog. Sections: A-Drive Chains (1–72), B-Conveyor Chains (73–128), C-Engineering Chains (129–168), D-Agricultural (169–196), E-Stainless (197–220), F-Leaf Chains (221–240), G-Escalator (241–248), H-Specialty (249–280), I-Sprockets (281–320)."
+        },
+        {
+          "label": "Donghua Website (English)",
+          "url": "http://www.dhchain.com",
+          "type": "website",
+          "description": "Donghua Chain Group official English website for latest product updates."
+        },
+        {
+          "label": "Donghua USA",
+          "url": "http://www.dhchain.us",
+          "type": "website",
+          "description": "Donghua USA Inc. — North American sales and technical support."
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [],
+      "options_upgrades": [],
+      "image_strategy": "none",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-LINK-CONN-08B",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "CL-08B",
+      "display_name": "08B Connecting Link (BS/ISO)",
+      "standard": "ISO 606",
+      "pitch_in": "0.500",
+      "pitch_mm": "12.70",
+      "description": "Connecting link for BS/ISO 08B roller chain. Spring clip type. Standard joining link for 1/2\" BS chain.",
+      "specs": {
+        "pitch_mm": "12.70",
+        "chain_no": "08B",
+        "link_type": "Spring clip"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "3800",
+          "working_load_lbs": "860",
+          "source": "Donghua catalog p.283"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CL-08B",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "283"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "BS-08B",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-LINK-CONN-100",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "CL-100",
+      "display_name": "No.100 Connecting Link",
+      "standard": "ANSI B29.1",
+      "pitch_in": "1.250",
+      "pitch_mm": "31.75",
+      "description": "Connecting link for ANSI 100 roller chain. Spring clip or cotter pin type. For chains requiring field joining.",
+      "specs": {
+        "pitch_in": "1.250",
+        "chain_no": "100",
+        "link_type": "Spring clip / Cotter pin"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "24000",
+          "working_load_lbs": "4800",
+          "source": "Donghua catalog p.281"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CL-100",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "281"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-100",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-LINK-CONN-120",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "CL-120",
+      "display_name": "No.120 Connecting Link",
+      "standard": "ANSI B29.1",
+      "pitch_in": "1.500",
+      "pitch_mm": "38.10",
+      "description": "Connecting link for ANSI 120 roller chain. Cotter pin type standard at this pitch for security.",
+      "specs": {
+        "pitch_in": "1.500",
+        "chain_no": "120",
+        "link_type": "Cotter pin"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "32000",
+          "working_load_lbs": "6400",
+          "source": "Donghua catalog p.282"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CL-120",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "282"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-120",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-LINK-CONN-16B",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "CL-16B",
+      "display_name": "16B Connecting Link (BS/ISO)",
+      "standard": "ISO 606",
+      "pitch_in": "1.000",
+      "pitch_mm": "25.40",
+      "description": "Connecting link for BS/ISO 16B roller chain. Cotter pin type standard at this pitch.",
+      "specs": {
+        "pitch_mm": "25.40",
+        "chain_no": "16B",
+        "link_type": "Cotter pin"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "13500",
+          "working_load_lbs": "3060",
+          "source": "Donghua catalog p.283"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CL-16B",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "283"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "BS-16B",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-LINK-CONN-40",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "CL-40",
+      "display_name": "No.40 Connecting Link (Spring Clip)",
+      "standard": "ANSI B29.1",
+      "pitch_in": "0.500",
+      "pitch_mm": "12.70",
+      "description": "Connecting link for ANSI 40 roller chain — spring clip (open) type. Donghua catalog confirmed. Standard assembly/disassembly joining link.",
+      "specs": {
+        "pitch_in": "0.500",
+        "chain_no": "40",
+        "link_type": "Spring clip (open)",
+        "max_load_lbs": "740"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "3700",
+          "working_load_lbs": "740",
+          "source": "Donghua catalog p.279",
+          "notes": "Connecting link — not for cyclic loading beyond 40% of chain working load."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CL-40",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "279"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-40",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "Cotter pin type (CLP-40)"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-LINK-CONN-60",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "CL-60",
+      "display_name": "No.60 Connecting Link",
+      "standard": "ANSI B29.1",
+      "pitch_in": "0.750",
+      "pitch_mm": "19.05",
+      "description": "Connecting link for ANSI 60 roller chain — spring clip type. Standard joining link.",
+      "specs": {
+        "pitch_in": "0.750",
+        "chain_no": "60",
+        "link_type": "Spring clip",
+        "max_load_lbs": "1700"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "8500",
+          "working_load_lbs": "1700",
+          "source": "Donghua catalog p.280"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CL-60",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "280"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-60",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "Cotter pin type"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-LINK-CONN-80",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "CL-80",
+      "display_name": "No.80 Connecting Link",
+      "standard": "ANSI B29.1",
+      "pitch_in": "1.000",
+      "pitch_mm": "25.40",
+      "description": "Connecting link for ANSI 80 roller chain. Spring clip or cotter pin type available.",
+      "specs": {
+        "pitch_in": "1.000",
+        "chain_no": "80",
+        "link_type": "Spring clip / Cotter pin",
+        "max_load_lbs": "2900"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "14500",
+          "working_load_lbs": "2900",
+          "source": "Donghua catalog p.280"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CL-80",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "280"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-80",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-LINK-OFFSET-40",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "OL-40",
+      "display_name": "No.40 Offset Link (Half Link)",
+      "standard": "ANSI B29.1",
+      "pitch_in": "0.500",
+      "pitch_mm": "12.70",
+      "description": "Offset link (half link) for ANSI 40 chain — allows odd-number chain lengths. Use sparingly as offset links reduce chain strength.",
+      "specs": {
+        "pitch_in": "0.500",
+        "chain_no": "40",
+        "link_type": "Offset (half link)",
+        "strength_factor": "~75% of chain tensile"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "2775",
+          "working_load_lbs": "555",
+          "source": "Donghua catalog p.279",
+          "notes": "Offset link — approx 75% of chain tensile strength. Use sparingly."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "OL-40",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "279"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-40",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-LINK-OFFSET-60",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "OL-60",
+      "display_name": "No.60 Offset Link (Half Link)",
+      "standard": "ANSI B29.1",
+      "pitch_in": "0.750",
+      "pitch_mm": "19.05",
+      "description": "Offset link (half link) for ANSI 60 chain. Allows odd-number chain lengths. Approx 75% of chain tensile.",
+      "specs": {
+        "pitch_in": "0.750",
+        "chain_no": "60",
+        "link_type": "Offset (half link)",
+        "strength_factor": "~75% of chain tensile"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "6375",
+          "working_load_lbs": "1275",
+          "source": "Donghua catalog p.280",
+          "notes": "Offset link — ~75% tensile. Use sparingly."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "OL-60",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "280"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-60",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-LINK-OFFSET-80",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "OL-80",
+      "display_name": "No.80 Offset Link (Half Link)",
+      "standard": "ANSI B29.1",
+      "pitch_in": "1.000",
+      "pitch_mm": "25.40",
+      "description": "Offset link for ANSI 80 chain. Allows odd-number chain lengths. Reduced tensile — use only where necessary.",
+      "specs": {
+        "pitch_in": "1.000",
+        "chain_no": "80",
+        "link_type": "Offset (half link)",
+        "strength_factor": "~75% of chain tensile"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "10875",
+          "working_load_lbs": "2175",
+          "source": "Donghua catalog p.281",
+          "notes": "Offset link — 75% of chain tensile."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "OL-80",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "281"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-80",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-SPKT-ANSI-A",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "SPKT-ANSI-STD",
+      "display_name": "ANSI Standard Sprockets — Donghua Catalog Reference",
+      "standard": "ANSI B29.1",
+      "pitch_in": "varies",
+      "pitch_mm": "varies",
+      "description": "Donghua sprocket catalog reference for ANSI B29.1 standard roller chain sprockets. Covers chains #25 through #240, single to quadruple strand. Available in plain bore, keyway, QD bushing, taper lock, and split configurations.",
+      "specs": {
+        "type": "Sprocket compatibility reference",
+        "chain_range": "ANSI 25 to ANSI 240",
+        "catalog_section": "Sprockets pp.281–320"
+      },
+      "sprocket_compatibility": {
+        "ansi_chains_covered": [
+          "25",
+          "35",
+          "40",
+          "41",
+          "50",
+          "60",
+          "80",
+          "100",
+          "120",
+          "140",
+          "160",
+          "180",
+          "200",
+          "240"
+        ],
+        "tooth_range": "9–120 teeth",
+        "bore_styles": [
+          {
+            "style": "plain_bore",
+            "description": "Plain bore — customer machines to size"
+          },
+          {
+            "style": "keyway",
+            "description": "Keyway with setscrew — standard bore + keyway"
+          },
+          {
+            "style": "QD_bushing",
+            "description": "Quick Detach bushing mount — JA/SK/SH/SF bushing sizes"
+          },
+          {
+            "style": "taper_lock",
+            "description": "Taper lock bushing — 1008 through 4040 sizes"
+          },
+          {
+            "style": "split",
+            "description": "Split sprocket — for in-place installation without shaft removal"
+          },
+          {
+            "style": "shear_pin_hub",
+            "description": "Shear pin hub — overload protection — Needs Review",
+            "confidence": "Needs Review"
+          }
+        ],
+        "materials": [
+          {
+            "material": "cast_iron",
+            "grades": "ASTM A48 Class 30/35",
+            "description": "Standard cast iron — most economical, good wear"
+          },
+          {
+            "material": "carbon_steel",
+            "grades": "AISI 1045",
+            "description": "Carbon steel — higher strength than CI, machineable"
+          },
+          {
+            "material": "hardened_steel",
+            "grades": "AISI 4140 / 4340 induction-hardened",
+            "description": "Induction hardened sprocket teeth for extended life"
+          },
+          {
+            "material": "stainless_303_304",
+            "grades": "303/304 SS",
+            "description": "Stainless — food/beverage and corrosive environments"
+          },
+          {
+            "material": "plastic_nylon",
+            "grades": "Nylon 6/6 or MC nylon",
+            "description": "Plastic — low-noise, low-lubrication light-duty applications"
+          }
+        ],
+        "split_sprocket_notes": "Split sprockets allow in-place installation — no shaft removal needed. Available for ANSI 40–120. Extra cost but saves downtime.",
+        "catalog_page_sprockets": "281"
+      },
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "SPKT-ANSI-CATALOG",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "281",
+          "notes": "Donghua ANSI sprocket catalog — pp.281–320. Full tooth/bore/material matrix."
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ANSI-ALL",
+      "materials_available": [
+        "cast_iron",
+        "carbon_steel",
+        "hardened_steel",
+        "stainless_304",
+        "plastic"
+      ],
+      "options_upgrades": [
+        "Split sprocket",
+        "Hardened teeth",
+        "QD bushing mount"
+      ],
+      "downloads": [
+        {
+          "label": "Donghua Sprocket Catalog (pp.281–320)",
+          "url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "type": "pdf",
+          "page_ref": "281"
+        }
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-SPKT-ENG-81X",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "SPKT-81X-STD",
+      "display_name": "81X / 81XH / 81XHH Engineering Class Sprockets",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.000",
+      "pitch_mm": "76.20",
+      "description": "Engineering class 81X/81XH/81XHH bushed chain sprockets. Donghua catalog section pp.290–296. Available in split configurations for field installation. Rexnord/Link-Belt interchangeable.",
+      "specs": {
+        "type": "Engineering class sprocket reference",
+        "pitch_in": "3.000",
+        "chain_compatibility": [
+          "81X",
+          "81XH",
+          "81XHH"
+        ]
+      },
+      "sprocket_compatibility": {
+        "series": "ENG-81X",
+        "tooth_range": "5–30 teeth",
+        "common_teeth": [
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          18,
+          20,
+          24,
+          30
+        ],
+        "bore_styles": [
+          "plain_bore",
+          "keyway",
+          "QD_bushing",
+          "taper_lock",
+          "split"
+        ],
+        "materials": [
+          "cast_iron",
+          "carbon_steel",
+          "hardened_steel",
+          "ductile_iron"
+        ],
+        "split_sprocket_available": true,
+        "hardened_teeth_available": true,
+        "rexnord_interchangeable": true,
+        "link_belt_interchangeable": true,
+        "catalog_page_sprockets": "290",
+        "notes": "Split sprockets strongly recommended for cement/mining installations. 5-tooth minimum for slow-speed high-load applications."
+      },
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "SPKT-81X",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "290"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "81X-SPKT",
+          "confidence": "Confirmed",
+          "notes": "Rexnord 81X sprockets are interchangeable with Donghua"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "ENG-81X",
+      "materials_available": [
+        "cast_iron",
+        "carbon_steel",
+        "hardened_steel"
+      ],
+      "options_upgrades": [
+        "Split configuration",
+        "Hardened tooth profile",
+        "Ductile iron upgrade"
+      ],
+      "downloads": [
+        {
+          "label": "Donghua Engineering Sprocket Catalog",
+          "url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "type": "pdf",
+          "page_ref": "290"
+        }
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-SPKT-WR-WD",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "SPKT-WR-WD",
+      "display_name": "WR/WD Welded Drag Chain Sprockets",
+      "standard": "ASME B29.100",
+      "pitch_in": "varies",
+      "pitch_mm": "varies",
+      "description": "WR78/WD78/WR110/WR124 welded drag chain sprockets. Donghua catalog pp.293–297. Cast iron or steel, split construction available for drag conveyor installation without shaft removal.",
+      "specs": {
+        "type": "Welded drag chain sprocket reference",
+        "chain_compatibility": [
+          "WR78",
+          "WD78",
+          "WR110",
+          "WR124"
+        ]
+      },
+      "sprocket_compatibility": {
+        "series": "WR-WD",
+        "pitch_range_in": "3.075 – 4.760",
+        "tooth_range": "5–18 teeth",
+        "bore_styles": [
+          "plain_bore",
+          "keyway",
+          "split"
+        ],
+        "materials": [
+          "cast_iron",
+          "carbon_steel",
+          "hardened_steel"
+        ],
+        "split_sprocket_available": true,
+        "catalog_page_sprockets": "293",
+        "notes": "Split sprockets available for most WR/WD sizes. Hardened tooth tips extend life in abrasive environments."
+      },
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "SPKT-WR-WD",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "293"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "WR-WD-ALL",
+      "materials_available": [
+        "cast_iron",
+        "hardened_steel"
+      ],
+      "options_upgrades": [
+        "Split configuration",
+        "Hardened teeth"
+      ],
+      "downloads": [
+        {
+          "label": "Donghua WR/WD Sprocket Section",
+          "url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "type": "pdf",
+          "page_ref": "293"
+        }
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DLI-SCANNER",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "DLI",
+      "display_name": "DLI Scanner Chain",
+      "standard": "Custom / OEM",
+      "pitch_in": "1.500",
+      "pitch_mm": "38.10",
+      "description": "DLI (Double Latch Index) scanner chain for precision indexing in document scanning, mail processing, and similar applications.",
+      "specs": {
+        "pitch_in": "1.500",
+        "pitch_mm": "38.10",
+        "avg_ultimate_lbs": "8500",
+        "max_working_load_lbs": "850",
+        "type": "Precision indexing",
+        "construction": "Double latch, precision ground"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "8500",
+          "working_load_lbs": "850",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "DLI",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "DLI",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "DOUBLE-FLEX",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "DF",
+      "display_name": "Double Flex Chain",
+      "standard": "Custom / OEM",
+      "pitch_in": "1.500",
+      "pitch_mm": "38.10",
+      "description": "Double-flex chain for curved conveyor paths both horizontally and vertically. Used in spiral conveyors and complex routing.",
+      "specs": {
+        "pitch_in": "1.500",
+        "pitch_mm": "38.10",
+        "avg_ultimate_lbs": "8000",
+        "max_working_load_lbs": "1600",
+        "type": "Double-flex",
+        "construction": "Side-bow both planes"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "8000",
+          "working_load_lbs": "1600",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "DF-Chain",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "DF",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "ESC-133mm",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "ESC-133",
+      "display_name": "133mm Escalator Step Chain",
+      "standard": "EN 115 / ISO 22559",
+      "pitch_in": "5.236",
+      "pitch_mm": "133.00",
+      "description": "133mm pitch escalator step chain. High-precision, pre-stressed construction for escalator step attachments. Complies with EN 115 safety standard.",
+      "specs": {
+        "pitch_mm": "133.00",
+        "pitch_in": "5.236",
+        "type": "Escalator step",
+        "standard_ref": "EN 115"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "44800",
+          "working_load_lbs": "9000",
+          "source": "Donghua catalog p.241",
+          "notes": "Escalator duty — pre-stressed, precision ground for smooth step movement."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "ESC-133",
+          "confidence": "Confirmed",
+          "catalog_page": "241",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "notes": "Escalator step chain, EN 115 compliant"
+        }
+      ],
+      "attachments_available": [
+        "ESC-STEP-AXLE"
+      ],
+      "sprocket_series": "ESC-133",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Pre-stressed",
+        "Corrosion resistant coating"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ESC-147mm",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "ESC-147",
+      "display_name": "147mm Escalator Step Chain",
+      "standard": "EN 115 / ISO 22559",
+      "pitch_in": "5.787",
+      "pitch_mm": "147.00",
+      "description": "147mm pitch escalator step chain. Heavy-duty construction for high-traffic escalators.",
+      "specs": {
+        "pitch_mm": "147.00",
+        "pitch_in": "5.787",
+        "type": "Escalator step",
+        "standard_ref": "EN 115"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "53600",
+          "working_load_lbs": "10700",
+          "source": "Donghua catalog p.242",
+          "notes": "Escalator duty. Specification varies by OEM."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "ESC-147",
+          "confidence": "Confirmed",
+          "catalog_page": "242",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [
+        "ESC-STEP-AXLE"
+      ],
+      "sprocket_series": "ESC-147",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "GLOVES-CARRIER",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "GCC",
+      "display_name": "Rubber Gloves Carrier Chain",
+      "standard": "Custom / Rubber Glove Industry",
+      "pitch_in": "2.500",
+      "pitch_mm": "63.50",
+      "description": "Specialty carrier chain for rubber glove dipping/processing lines. Precision construction for consistent glove form spacing. Corrosion and chemical resistant.",
+      "specs": {
+        "pitch_in": "2.500",
+        "pitch_mm": "63.50",
+        "type": "Glove carrier",
+        "industry": "Rubber glove manufacturing"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "18000",
+          "working_load_lbs": "3600",
+          "source": "Donghua catalog p.270",
+          "notes": "Rubber glove carrier — chemical resistant, precision spacing."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "GCC",
+          "confidence": "Confirmed",
+          "catalog_page": "270",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [
+        "GLOVE-FORM-CARRIER"
+      ],
+      "sprocket_series": "GCC",
+      "materials_available": [
+        "stainless_304",
+        "stainless_316",
+        "nickel_plated"
+      ],
+      "options_upgrades": [
+        "316SS for acid environments"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "KILN-CHAIN-3",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "KC-3",
+      "display_name": "3\" Kiln Chain",
+      "standard": "Custom / Cement Industry",
+      "pitch_in": "3.000",
+      "pitch_mm": "76.20",
+      "description": "3\" pitch kiln chain for cement rotary kilns. Heat-resistant construction for high-temperature processing environments. Tumbles material and aids heat transfer in cement, lime, and aggregate kilns.",
+      "application_tags": [
+        "cement",
+        "kiln",
+        "aggregate",
+        "bulk_material"
+      ],
+      "specs": {
+        "pitch_in": "3.000",
+        "pitch_mm": "76.20",
+        "type": "Kiln chain",
+        "industry": "Cement / Kiln",
+        "temperature_rating": "High temperature"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "24000",
+          "working_load_lbs": "4800",
+          "source": "Uniking Industrial Bulk Material Catalog p.60",
+          "notes": "Uniking primary baseline — kiln chain."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "KC-3",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "60",
+          "notes": "Uniking primary baseline"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel",
+        "high_temp",
+        "heat_treated"
+      ],
+      "options_upgrades": [
+        "Heat resistant alloy",
+        "Extended wear construction"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "KILN-CHAIN-4",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "KC-4",
+      "display_name": "4\" Kiln Chain",
+      "standard": "Custom / Cement Industry",
+      "pitch_in": "4.000",
+      "pitch_mm": "101.60",
+      "description": "4\" pitch kiln chain for large-diameter rotary kilns in cement and lime manufacturing. Heavy duty heat-resistant construction.",
+      "application_tags": [
+        "cement",
+        "kiln",
+        "bulk_material"
+      ],
+      "specs": {
+        "pitch_in": "4.000",
+        "pitch_mm": "101.60",
+        "type": "Kiln chain",
+        "industry": "Cement / Kiln"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "36000",
+          "working_load_lbs": "7200",
+          "source": "Uniking Industrial Bulk Material Catalog p.60"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "KC-4",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "60",
+          "notes": "Uniking primary baseline"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel",
+        "high_temp"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "KILN-CHAIN-6",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "KC-6",
+      "display_name": "6\" Kiln Chain",
+      "standard": "Custom / Cement Industry",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "6\" pitch heavy kiln chain for the largest industrial rotary kilns. Maximum heat resistance and durability for extended kiln operation.",
+      "application_tags": [
+        "cement",
+        "kiln",
+        "bulk_material",
+        "heavy_industrial"
+      ],
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "type": "Kiln chain",
+        "industry": "Cement / Kiln"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "55000",
+          "working_load_lbs": "11000",
+          "source": "Uniking Industrial Bulk Material Catalog p.61"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "KC-6",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "61",
+          "notes": "Uniking primary baseline"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": null,
+      "materials_available": [
+        "carbon_steel",
+        "high_temp"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "LUMBER-LK-2734",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "LK-2734",
+      "display_name": "LK-2734 Lumber Conveyor Chain",
+      "standard": "Custom / Lumber Industry",
+      "pitch_in": "4.000",
+      "pitch_mm": "101.60",
+      "description": "LK series lumber conveyor chain for log handling, debarkers, and sawmill conveyors. Heavy-duty forged attachments.",
+      "specs": {
+        "pitch_in": "4.000",
+        "pitch_mm": "101.60",
+        "type": "Lumber conveyor",
+        "industry": "Lumber and forestry"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "55000",
+          "working_load_lbs": "11000",
+          "source": "Donghua catalog p.265",
+          "notes": "Lumber series — heavy attachments for log handling."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "LK-2734",
+          "confidence": "Confirmed",
+          "catalog_page": "265",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [
+        "LUMBER-DOG",
+        "LUMBER-LOG-SPIKE",
+        "LUMBER-KICK"
+      ],
+      "sprocket_series": "LK-2734",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "Hardened dog attachments",
+        "Extended wear pins"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "LUMBER-WD-3939",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "WD-3939",
+      "display_name": "WD-3939 Lumber/Forestry Drag Chain",
+      "standard": "Custom / Lumber Industry",
+      "pitch_in": "3.000",
+      "pitch_mm": "76.20",
+      "description": "WD-3939 lumber drag chain for log sorting, transfer decks, and waste wood conveying.",
+      "specs": {
+        "pitch_in": "3.000",
+        "pitch_mm": "76.20",
+        "type": "Lumber drag",
+        "industry": "Lumber and forestry"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "40000",
+          "working_load_lbs": "8000",
+          "source": "Donghua catalog p.267",
+          "notes": "Lumber drag series."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "WD-3939",
+          "confidence": "Confirmed",
+          "catalog_page": "267",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [
+        "LUMBER-DOG",
+        "LUMBER-FLIGHT"
+      ],
+      "sprocket_series": "LK-WD",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "PALM-OIL-9075",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "POM-9075",
+      "display_name": "9075 Palm Oil Mill Fruit Conveyor Chain",
+      "standard": "Custom / Palm Oil Industry",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "Palm oil fruit bunch conveyor chain (FFB chain). Designed for wet, corrosive, high-temperature environments in palm oil sterilization and conveying.",
+      "specs": {
+        "pitch_mm": "152.40",
+        "pitch_in": "6.000",
+        "type": "Palm oil conveyor",
+        "industry": "Palm oil processing"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "85000",
+          "working_load_lbs": "17000",
+          "source": "Donghua catalog p.260",
+          "notes": "Palm oil industry — corrosion resistant construction for wet sterilizer environments."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "9075",
+          "confidence": "Confirmed",
+          "catalog_page": "260",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "notes": "Palm oil fruit bunch conveyor chain"
+        }
+      ],
+      "attachments_available": [
+        "PALM-FLIGHT",
+        "PALM-SCRAPER"
+      ],
+      "sprocket_series": "PALM-9075",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "Corrosion resistant coating",
+        "Hardened pins"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "PAVER-CHAIN",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "Paver",
+      "display_name": "Paver Chain",
+      "standard": "Custom / OEM",
+      "pitch_in": "1.654",
+      "pitch_mm": "42.01",
+      "description": "Heavy-duty paver chain for asphalt paving equipment. Constructed for extreme abrasion and heat resistance.",
+      "specs": {
+        "pitch_in": "1.654",
+        "pitch_mm": "42.01",
+        "avg_ultimate_lbs": "20000",
+        "max_working_load_lbs": "4000",
+        "type": "Paver",
+        "construction": "Heavy sidebar, hardened components"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "20000",
+          "working_load_lbs": "4000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "Paver-Chain",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "Paver",
+      "materials_available": [
+        "carbon_steel",
+        "hardened_pins"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "SUGAR-MILL-P152",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "P152",
+      "display_name": "P152 Sugar Mill Chain",
+      "standard": "Custom / Sugar Industry Standard",
+      "pitch_in": "5.985",
+      "pitch_mm": "152.00",
+      "description": "P152 sugar mill conveyor chain for bagasse handling and cane carrier conveyors. Heavy forged components, corrosion resistant construction.",
+      "specs": {
+        "pitch_mm": "152.00",
+        "pitch_in": "5.985",
+        "type": "Sugar mill",
+        "industry": "Sugar processing"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "80000",
+          "working_load_lbs": "16000",
+          "source": "Donghua catalog p.250",
+          "notes": "Sugar mill series — forged components for wet/abrasive environments."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "P152F78",
+          "confidence": "Confirmed",
+          "catalog_page": "250",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "notes": "Sugar mill cane carrier chain"
+        }
+      ],
+      "attachments_available": [
+        "SUGAR-FLIGHT",
+        "SUGAR-SCRAPER"
+      ],
+      "sprocket_series": "SUGAR-P152",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "Hardened pins",
+        "Extended wear plates"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "SUGAR-MILL-P203",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "P203",
+      "display_name": "P203 Sugar Mill Heavy Chain",
+      "standard": "Custom / Sugar Industry Standard",
+      "pitch_in": "7.992",
+      "pitch_mm": "203.00",
+      "description": "P203 heavy sugar mill chain for main cane carrier and boiler fuel conveyors. Extra-heavy construction.",
+      "specs": {
+        "pitch_mm": "203.00",
+        "pitch_in": "7.992",
+        "type": "Sugar mill heavy",
+        "industry": "Sugar processing"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "130000",
+          "working_load_lbs": "26000",
+          "source": "Donghua catalog p.252",
+          "notes": "Heavy sugar mill series. Specification varies by mill."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "P203F100",
+          "confidence": "Confirmed",
+          "catalog_page": "252",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [
+        "SUGAR-FLIGHT",
+        "SUGAR-SCRAPER"
+      ],
+      "sprocket_series": "SUGAR-P203",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WASTEWATER-CHAIN",
+      "chain_family": "Specialty / Custom Chains",
+      "chain_number": "WW",
+      "display_name": "Waste Water Treatment Chain",
+      "standard": "Custom / OEM",
+      "pitch_in": "3.000",
+      "pitch_mm": "76.20",
+      "description": "Corrosion-resistant chain specifically engineered for waste water treatment applications — sewage screens, sludge collectors, bar screens.",
+      "specs": {
+        "pitch_in": "3.000",
+        "pitch_mm": "76.20",
+        "avg_ultimate_lbs": "24000",
+        "max_working_load_lbs": "4800",
+        "type": "Corrosion resistant",
+        "construction": "Stainless or coated components"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "24000",
+          "working_load_lbs": "4800",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WW-Chain",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [],
+      "sprocket_series": "WW",
+      "materials_available": [
+        "stainless_304",
+        "stainless_316",
+        "polymer_roller"
+      ],
+      "options_upgrades": [
+        "Stainless 316 components"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "specialty_custom",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    }
+  ]
+}

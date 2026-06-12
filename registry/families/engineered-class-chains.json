@@ -1,0 +1,3051 @@
+{
+  "family": "Engineered Class Chains",
+  "slug": "engineered-class-chains",
+  "count": 39,
+  "chains": [
+    {
+      "chain_id": "DH-ENG-81X",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "81X",
+      "display_name": "81X Engineering Bushed Conveyor Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.000",
+      "pitch_mm": "76.20",
+      "description": "81X class engineering bushed conveyor chain — 3\" pitch. Standard engineering class for cement, aggregate, and mining drag conveyors. The most common engineered-class chain in North American bulk handling.",
+      "application_tags": [
+        "cement",
+        "aggregate",
+        "mining",
+        "bulk_material",
+        "drag_conveyor"
+      ],
+      "specs": {
+        "pitch_in": "3.000",
+        "pitch_mm": "76.20",
+        "inner_width_in": "1.812",
+        "inner_width_mm": "46.02",
+        "pin_dia_in": "0.625",
+        "pin_dia_mm": "15.88",
+        "plate_height_in": "2.50",
+        "plate_height_mm": "63.50",
+        "plate_thickness_in": "0.375",
+        "plate_thickness_mm": "9.53",
+        "avg_ultimate_lbs": "55000",
+        "max_working_load_lbs": "11000",
+        "weight_lbs_ft": "8.2"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "55000",
+          "working_load_lbs": "11000",
+          "source": "Donghua catalog p.143, ASME B29.100",
+          "notes": "81X bushed conveyor chain. Most common North American engineered-class chain."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "81X",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "143"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "81X",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "81X",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "81X",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT",
+        "ENG-SCRAPER",
+        "ENG-SA1",
+        "ENG-W-TAB"
+      ],
+      "attachment_configs": [
+        {
+          "code": "ENG-A1",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "Standard extended tab, one side"
+        },
+        {
+          "code": "ENG-A2",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "Extended tab, higher profile"
+        },
+        {
+          "code": "ENG-K1",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "Bent tab, one side"
+        },
+        {
+          "code": "ENG-K2",
+          "side": "both_sides",
+          "spacing": "every_link",
+          "description": "Bent tab, both sides"
+        },
+        {
+          "code": "ENG-SA1",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "Super A1 — extra-long extended tab"
+        },
+        {
+          "code": "ENG-W-TAB",
+          "side": "both_sides",
+          "spacing": "every_2nd",
+          "description": "W-shaped tab, both sides, E2"
+        },
+        {
+          "code": "ENG-FLIGHT",
+          "side": "both_sides",
+          "spacing": "every_4th",
+          "description": "Heavy drag flight, both sides, E4"
+        },
+        {
+          "code": "ENG-SCRAPER",
+          "side": "both_sides",
+          "spacing": "every_6th",
+          "description": "Scraper bar attachment, E6"
+        }
+      ],
+      "sprocket_series": "ENG-81X",
+      "sprocket_compatibility": {
+        "series": "81X",
+        "tooth_range": "7–24",
+        "bore_styles": [
+          "plain_bore",
+          "keyway",
+          "QD_bushing",
+          "taper_lock"
+        ],
+        "materials": [
+          "cast_iron",
+          "ductile_iron",
+          "carbon_steel",
+          "hardened_steel"
+        ],
+        "split_sprocket_available": true,
+        "catalog_page_sprockets": "290",
+        "notes": "Rexnord/Link-Belt sprocket interchangeable with Donghua 81X chain."
+      },
+      "materials_available": [
+        "carbon_steel",
+        "alloy_steel",
+        "carburized"
+      ],
+      "options_upgrades": [
+        "81XH heavy",
+        "81XHH extra-heavy",
+        "Hardened pins",
+        "Alloy steel sidebars"
+      ],
+      "downloads": [
+        {
+          "label": "Donghua Catalog — 81X Section",
+          "url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "type": "pdf",
+          "page_ref": "143"
+        },
+        {
+          "label": "Rexnord 81X Cross-Reference Guide",
+          "url": "https://www.rexnord.com/contentitems/techlibrary/documents/229-010_catalog.pdf",
+          "type": "pdf"
+        }
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ENG-81XH",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "81XH",
+      "display_name": "81XH Heavy Engineering Bushed Conveyor Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.000",
+      "pitch_mm": "76.20",
+      "description": "81XH heavy-duty engineering bushed chain — same 3\" pitch as 81X with heavier plate stock and pin diameter. Used in high-load cement, aggregate, and mining drag conveyors.",
+      "application_tags": [
+        "cement",
+        "aggregate",
+        "mining",
+        "bulk_material"
+      ],
+      "specs": {
+        "pitch_in": "3.000",
+        "pitch_mm": "76.20",
+        "inner_width_in": "1.812",
+        "pin_dia_in": "0.750",
+        "plate_height_in": "2.75",
+        "plate_thickness_in": "0.437",
+        "avg_ultimate_lbs": "80000",
+        "max_working_load_lbs": "16000",
+        "weight_lbs_ft": "11.5"
+      },
+      "performance_tiers": [
+        {
+          "tier": "performance",
+          "tensile_strength_lbs": "80000",
+          "working_load_lbs": "16000",
+          "source": "Donghua catalog p.144, ASME B29.100",
+          "notes": "81XH heavy series — heavier plates and pin vs 81X."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "81XH",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "144"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "81XH",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "81XH",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "81XH",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT",
+        "ENG-SCRAPER"
+      ],
+      "sprocket_series": "ENG-81X",
+      "materials_available": [
+        "carbon_steel",
+        "alloy_steel"
+      ],
+      "options_upgrades": [
+        "81XHH extra-heavy",
+        "Alloy steel"
+      ],
+      "downloads": [
+        {
+          "label": "Donghua Catalog — 81XH Section",
+          "url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "type": "pdf",
+          "page_ref": "144"
+        }
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ENG-81XHH",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "81XHH",
+      "display_name": "81XHH Extra-Heavy Engineering Bushed Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.000",
+      "pitch_mm": "76.20",
+      "description": "81XHH extra-heavy engineering bushed chain. Maximum load rating in the 81X pitch family. Used in cement kiln feed, mining overland conveyors, and heaviest-duty drag conveyor applications.",
+      "application_tags": [
+        "cement",
+        "mining",
+        "bulk_material",
+        "kiln",
+        "heavy_industrial"
+      ],
+      "specs": {
+        "pitch_in": "3.000",
+        "pitch_mm": "76.20",
+        "inner_width_in": "1.812",
+        "pin_dia_in": "0.875",
+        "plate_height_in": "3.00",
+        "plate_thickness_in": "0.500",
+        "avg_ultimate_lbs": "110000",
+        "max_working_load_lbs": "22000",
+        "weight_lbs_ft": "14.8"
+      },
+      "performance_tiers": [
+        {
+          "tier": "premium",
+          "tensile_strength_lbs": "110000",
+          "working_load_lbs": "22000",
+          "source": "Donghua catalog p.145, ASME B29.100",
+          "notes": "81XHH — maximum 3\" pitch load. For kiln and overland mining applications."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "81XHH",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "145"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "81XHH",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "81XHH",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-81X",
+      "materials_available": [
+        "carbon_steel",
+        "alloy_steel"
+      ],
+      "options_upgrades": [
+        "Alloy steel plates"
+      ],
+      "downloads": [
+        {
+          "label": "Donghua Catalog — 81XHH",
+          "url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "type": "pdf",
+          "page_ref": "145"
+        }
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ENG-M112",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "M112",
+      "display_name": "M112 Engineering Bushed Conveyor Chain",
+      "standard": "ISO / DIN 8167",
+      "pitch_in": "4.409",
+      "pitch_mm": "112.00",
+      "description": "M112 class heavy engineering bushed chain — 112mm pitch. Maximum-load bulk material conveying in heavy mining, cement production, and aggregate processing.",
+      "application_tags": [
+        "mining",
+        "cement",
+        "heavy_industrial",
+        "bulk_material"
+      ],
+      "specs": {
+        "pitch_mm": "112.00",
+        "pitch_in": "4.409",
+        "inner_width_mm": "70.0",
+        "pin_dia_mm": "28.0",
+        "plate_height_mm": "112.0",
+        "plate_thickness_mm": "14.0",
+        "avg_ultimate_lbs": "160000",
+        "max_working_load_lbs": "32000",
+        "weight_kg_m": "34.0"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "160000",
+          "working_load_lbs": "32000",
+          "source": "Donghua catalog p.140",
+          "notes": "M112 — heavy engineering class. DIN 8167."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "M112",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "140"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-M112",
+      "materials_available": [
+        "carbon_steel",
+        "alloy_steel"
+      ],
+      "options_upgrades": [
+        "With rollers",
+        "Alloy steel"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ENG-M56",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "M56",
+      "display_name": "M56 Engineering Bushed Conveyor Chain",
+      "standard": "ISO / DIN 8167",
+      "pitch_in": "2.205",
+      "pitch_mm": "56.00",
+      "description": "M56 class engineering bushed conveyor chain — 56mm pitch. Heavy-duty construction for mining conveyors, cement plants, and bulk material handling. DIN 8167 / ISO compliant.",
+      "application_tags": [
+        "mining",
+        "cement",
+        "bulk_material",
+        "heavy_industrial"
+      ],
+      "specs": {
+        "pitch_mm": "56.00",
+        "pitch_in": "2.205",
+        "inner_width_mm": "35.0",
+        "pin_dia_mm": "14.0",
+        "plate_height_mm": "60.0",
+        "plate_thickness_mm": "8.0",
+        "avg_ultimate_lbs": "45000",
+        "max_working_load_lbs": "9000",
+        "weight_kg_m": "8.5"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "45000",
+          "working_load_lbs": "9000",
+          "source": "Donghua catalog p.135",
+          "notes": "M56 bushed engineering class. DIN 8167 standard."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "M56",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "135"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "M56",
+          "confidence": "Needs Review",
+          "notes": "Cross-ref requires verification"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT",
+        "ENG-SCRAPER"
+      ],
+      "sprocket_series": "ENG-M56",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [
+        "Hardened pins",
+        "Alloy steel plates"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ENG-M80",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "M80",
+      "display_name": "M80 Engineering Bushed Conveyor Chain",
+      "standard": "ISO / DIN 8167",
+      "pitch_in": "3.150",
+      "pitch_mm": "80.00",
+      "description": "M80 class engineering bushed conveyor chain — 80mm pitch. Heavy-duty bulk material conveying. Common in European quarry, sand, gravel, and aggregate plants.",
+      "application_tags": [
+        "aggregate",
+        "mining",
+        "cement",
+        "bulk_material"
+      ],
+      "specs": {
+        "pitch_mm": "80.00",
+        "pitch_in": "3.150",
+        "inner_width_mm": "50.0",
+        "pin_dia_mm": "20.0",
+        "plate_height_mm": "80.0",
+        "plate_thickness_mm": "10.0",
+        "avg_ultimate_lbs": "80000",
+        "max_working_load_lbs": "16000",
+        "weight_kg_m": "16.0"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "80000",
+          "working_load_lbs": "16000",
+          "source": "Donghua catalog p.137",
+          "notes": "M80 bushed engineering class. DIN 8167."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "M80",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "137"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT",
+        "ENG-SCRAPER"
+      ],
+      "sprocket_series": "ENG-M80",
+      "materials_available": [
+        "carbon_steel",
+        "carburized",
+        "alloy_steel"
+      ],
+      "options_upgrades": [
+        "With rollers (MR80)",
+        "Alloy steel version"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ENG-MR56",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "MR56",
+      "display_name": "MR56 Engineering Bushed Chain with Rollers",
+      "standard": "ISO / DIN 8167",
+      "pitch_in": "2.205",
+      "pitch_mm": "56.00",
+      "description": "MR56 class engineering bushed chain with outer rollers — 56mm pitch. Rollers reduce friction on guide rails. For cement, aggregate, and mining conveyor applications requiring roller-on-rail design.",
+      "application_tags": [
+        "cement",
+        "aggregate",
+        "mining",
+        "bulk_material"
+      ],
+      "specs": {
+        "pitch_mm": "56.00",
+        "pitch_in": "2.205",
+        "roller_dia_mm": "28.0",
+        "inner_width_mm": "35.0",
+        "pin_dia_mm": "14.0",
+        "avg_ultimate_lbs": "45000",
+        "max_working_load_lbs": "9000",
+        "weight_kg_m": "9.5"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "45000",
+          "working_load_lbs": "9000",
+          "source": "Donghua catalog p.136, DIN 8167",
+          "notes": "MR56 — M56 with outer rollers. Same tensile but reduced trough friction."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "MR56",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "136"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-M56",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [
+        "Alloy steel",
+        "Hardened rollers"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ENG-MR80",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "MR80",
+      "display_name": "MR80 Engineering Bushed Chain with Rollers",
+      "standard": "ISO / DIN 8167",
+      "pitch_in": "3.150",
+      "pitch_mm": "80.00",
+      "description": "MR80 class engineering bushed chain with outer rollers — 80mm pitch. Roller-on-rail conveyor design for heavy quarry and mining applications.",
+      "application_tags": [
+        "aggregate",
+        "mining",
+        "cement",
+        "bulk_material"
+      ],
+      "specs": {
+        "pitch_mm": "80.00",
+        "pitch_in": "3.150",
+        "roller_dia_mm": "40.0",
+        "inner_width_mm": "50.0",
+        "pin_dia_mm": "20.0",
+        "avg_ultimate_lbs": "80000",
+        "max_working_load_lbs": "16000",
+        "weight_kg_m": "17.5"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "80000",
+          "working_load_lbs": "16000",
+          "source": "Donghua catalog p.138, DIN 8167"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "MR80",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "138"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-M80",
+      "materials_available": [
+        "carbon_steel",
+        "alloy_steel"
+      ],
+      "options_upgrades": [
+        "Alloy steel version",
+        "Hardened rollers"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ENG-P102F64",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "P102F64",
+      "display_name": "P102F64 Bulk Material Conveyor Chain",
+      "standard": "ASME B29.100 / Custom",
+      "pitch_in": "4.016",
+      "pitch_mm": "102.00",
+      "description": "P102F64 bulk material conveyor chain — 102mm pitch, 64mm face. Drop-forged sidebar construction. Used in cement, aggregate, and heavy mining en-masse drag conveyors.",
+      "application_tags": [
+        "cement",
+        "aggregate",
+        "mining",
+        "drag_conveyor",
+        "bulk_material"
+      ],
+      "specs": {
+        "pitch_mm": "102.00",
+        "pitch_in": "4.016",
+        "face_width_mm": "64.0",
+        "pin_dia_mm": "22.0",
+        "plate_height_mm": "95.0",
+        "avg_ultimate_lbs": "110000",
+        "max_working_load_lbs": "22000",
+        "weight_kg_m": "22.0"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "110000",
+          "working_load_lbs": "22000",
+          "source": "Donghua catalog p.148",
+          "notes": "P102F64 bulk conveyor. Drop-forged construction."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "P102F64",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "148"
+        }
+      ],
+      "attachments_available": [
+        "ENG-FLIGHT",
+        "ENG-SCRAPER",
+        "ENG-SA1"
+      ],
+      "sprocket_series": "ENG-P102",
+      "materials_available": [
+        "carbon_steel",
+        "alloy_steel"
+      ],
+      "options_upgrades": [
+        "With rollers",
+        "Hardened pins"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-ENG-P142F78",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "P142F78",
+      "display_name": "P142F78 Heavy Bulk Conveyor Chain",
+      "standard": "ASME B29.100 / Custom",
+      "pitch_in": "5.591",
+      "pitch_mm": "142.00",
+      "description": "P142F78 heavy bulk material conveyor chain — 142mm pitch, 78mm face. Maximum-capacity drag and en-masse conveyors in mining, cement, and aggregate.",
+      "application_tags": [
+        "mining",
+        "cement",
+        "bulk_material",
+        "drag_conveyor"
+      ],
+      "specs": {
+        "pitch_mm": "142.00",
+        "pitch_in": "5.591",
+        "face_width_mm": "78.0",
+        "pin_dia_mm": "28.0",
+        "plate_height_mm": "118.0",
+        "avg_ultimate_lbs": "176000",
+        "max_working_load_lbs": "35200",
+        "weight_kg_m": "38.0"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "176000",
+          "working_load_lbs": "35200",
+          "source": "Donghua catalog p.152",
+          "notes": "P142F78 heavy bulk conveyor."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "P142F78",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "152"
+        }
+      ],
+      "attachments_available": [
+        "ENG-FLIGHT",
+        "ENG-SCRAPER"
+      ],
+      "sprocket_series": "ENG-P142",
+      "materials_available": [
+        "carbon_steel",
+        "alloy_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-1578",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "1578",
+      "display_name": "1578 Engineered Class Roller Chain (K-Style)",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "2.609\" pitch 1578 K-style engineered class chain. CARB pins and bushings, extended pin design. Rated 2,200 lb working load.",
+      "application_tags": [
+        "bulk_material",
+        "aggregate",
+        "heavy_industrial"
+      ],
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "style": "K",
+        "overall_pin_cotter_in": "2.36",
+        "sidebar_width_in": "1.06",
+        "sidebar_thickness_in": "0.19",
+        "sidebar_height_in": "1.13",
+        "pin_dia_in": "0.41",
+        "pin_properties": "CARB",
+        "face_width_in": "1.03",
+        "roller_dia_in": "0.90",
+        "roller_style": "A",
+        "roller_properties": "CARB",
+        "bushing_length_in": "1.44",
+        "bushing_dia_in": "0.63",
+        "rated_working_load_lbs": "2200",
+        "min_ultimate_strength_lbs": "17000",
+        "weight_per_foot_lbs": "2.6",
+        "max_rpm_12t": "145"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "17000",
+          "working_load_lbs": "2200",
+          "source": "Uniking Industrial Bulk Material Catalog p.4",
+          "notes": "Rexnord 1578 K-style. No Link-Belt equivalent listed."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "1578",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "1578",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1"
+      ],
+      "sprocket_series": "ENG-78",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-2126",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "2126",
+      "display_name": "2126 6\" Engineered Class Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "6\" pitch 2126 engineered class roller chain. Heavier construction than SR196 with larger sidebar. Rated 3,400 lb working load. Cement, aggregate, and bulk drag conveying.",
+      "application_tags": [
+        "cement",
+        "aggregate",
+        "bulk_material",
+        "drag_conveyor"
+      ],
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "style": "R",
+        "overall_pin_cotter_in": "2.89",
+        "sidebar_width_in": "1.25",
+        "sidebar_thickness_in": "0.25",
+        "sidebar_height_in": "1.50",
+        "pin_dia_in": "0.56",
+        "pin_properties": "CARB",
+        "face_width_in": "1.19",
+        "roller_dia_in": "2.00",
+        "roller_style": "A",
+        "roller_properties": "CARB",
+        "bushing_length_in": "1.75",
+        "bushing_dia_in": "0.81",
+        "rated_working_load_lbs": "3400",
+        "min_ultimate_strength_lbs": "21000",
+        "weight_per_foot_lbs": "5.0",
+        "max_rpm_12t": "40"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "21000",
+          "working_load_lbs": "3400",
+          "source": "Uniking Industrial Bulk Material Catalog p.5",
+          "notes": "Rexnord 2126 / Link-Belt RS1116."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "2126",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "5"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "2126",
+          "confidence": "Confirmed",
+          "catalog_page": "5"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "RS1116",
+          "confidence": "Confirmed",
+          "catalog_page": "5"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-196",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-2180",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "2180",
+      "display_name": "2180 6\" Heavy Duty Engineered Class Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "6\" pitch 2180 engineered class roller chain. Heaviest standard 6\" pitch engineered class — rated 4,500 lb working load. For maximum capacity drag and bulk conveyors.",
+      "application_tags": [
+        "bulk_material",
+        "cement",
+        "heavy_industrial",
+        "mining"
+      ],
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "style": "R",
+        "overall_pin_cotter_in": "3.47",
+        "sidebar_width_in": "1.31",
+        "sidebar_thickness_in": "0.38",
+        "sidebar_height_in": "1.75",
+        "pin_dia_in": "0.63",
+        "pin_properties": "CARB",
+        "face_width_in": "1.19",
+        "roller_dia_in": "2.25",
+        "roller_style": "A",
+        "roller_properties": "CARB",
+        "bushing_length_in": "2.06",
+        "bushing_dia_in": "0.94",
+        "rated_working_load_lbs": "4500",
+        "min_ultimate_strength_lbs": "35000",
+        "weight_per_foot_lbs": "8.7",
+        "max_rpm_12t": "40"
+      },
+      "performance_tiers": [
+        {
+          "tier": "premium",
+          "tensile_strength_lbs": "35000",
+          "working_load_lbs": "4500",
+          "source": "Uniking Industrial Bulk Material Catalog p.5",
+          "notes": "Rexnord 2180. No Link-Belt equivalent listed. Heavy capacity 6\" engineered chain."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "2180",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "5"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "2180",
+          "confidence": "Confirmed",
+          "catalog_page": "5"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT",
+        "ENG-SCRAPER"
+      ],
+      "sprocket_series": "ENG-2180",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-2183",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "2183",
+      "display_name": "2183 6\" Wide Roller Engineered Class Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "6\" pitch 2183 engineered class chain with 3.00\" wide roller for maximum material support width. Rated 4,600 lb working load.",
+      "application_tags": [
+        "bulk_material",
+        "cement",
+        "drag_conveyor"
+      ],
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "style": "R",
+        "overall_pin_cotter_in": "3.50",
+        "sidebar_width_in": "1.31",
+        "sidebar_thickness_in": "0.31",
+        "sidebar_height_in": "1.50",
+        "pin_dia_in": "0.63",
+        "pin_properties": "CARB",
+        "face_width_in": "1.38",
+        "roller_dia_in": "3.00",
+        "roller_style": "A",
+        "roller_properties": "CARB",
+        "bushing_length_in": "2.13",
+        "bushing_dia_in": "0.89",
+        "rated_working_load_lbs": "4600",
+        "min_ultimate_strength_lbs": "24000",
+        "weight_per_foot_lbs": "10.7",
+        "max_rpm_12t": "40"
+      },
+      "performance_tiers": [
+        {
+          "tier": "premium",
+          "tensile_strength_lbs": "24000",
+          "working_load_lbs": "4600",
+          "source": "Uniking Industrial Bulk Material Catalog p.5",
+          "notes": "Rexnord 2183 / Link-Belt RS951. Wide 3\" roller."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "2183",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "5"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "2183",
+          "confidence": "Confirmed",
+          "catalog_page": "5"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "RS951",
+          "confidence": "Confirmed",
+          "catalog_page": "5"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-1131",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-2190",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "2190",
+      "display_name": "2190 6\" Wide Roller Engineered Class Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "6\" pitch 2190 engineered class chain with 2.50\" wide roller — wider track for stable bulk material support. Rated 3,400 lb working load.",
+      "application_tags": [
+        "bulk_material",
+        "drag_conveyor",
+        "cement",
+        "aggregate"
+      ],
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "style": "R",
+        "overall_pin_cotter_in": "2.89",
+        "sidebar_width_in": "1.25",
+        "sidebar_thickness_in": "0.25",
+        "sidebar_height_in": "1.50",
+        "pin_dia_in": "0.56",
+        "pin_properties": "CARB",
+        "face_width_in": "1.19",
+        "roller_dia_in": "2.50",
+        "roller_style": "A",
+        "roller_properties": "CARB",
+        "bushing_length_in": "1.75",
+        "bushing_dia_in": "0.81",
+        "rated_working_load_lbs": "3400",
+        "min_ultimate_strength_lbs": "21000",
+        "weight_per_foot_lbs": "7.0",
+        "max_rpm_12t": "40"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "21000",
+          "working_load_lbs": "3400",
+          "source": "Uniking Industrial Bulk Material Catalog p.5",
+          "notes": "Rexnord 2190 / Link-Belt RS2190. Wide roller variant of 2126."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "2190",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "5"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "2190",
+          "confidence": "Confirmed",
+          "catalog_page": "5"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "RS2190",
+          "confidence": "Confirmed",
+          "catalog_page": "5"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-197",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-270",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "270",
+      "display_name": "270 Heavy Duty Engineered Class Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "2.609\" pitch 270-class heavy duty engineered roller chain. Large 1.13\" roller diameter. Rated 3,500 lb working load — heaviest standard 2.609\" engineered class chain. Preferred for severe bulk material, mining, and aggregate applications.",
+      "application_tags": [
+        "bulk_material",
+        "mining",
+        "aggregate",
+        "cement",
+        "heavy_industrial"
+      ],
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "style": "N",
+        "overall_pin_cotter_in": "2.95",
+        "sidebar_width_in": "1.14",
+        "sidebar_thickness_in": "0.31",
+        "sidebar_height_in": "1.63",
+        "pin_dia_in": "0.56",
+        "pin_properties": "TH",
+        "face_width_in": "1.09",
+        "roller_dia_in": "1.13",
+        "roller_style": "A",
+        "roller_properties": "TH",
+        "bushing_length_in": "1.77",
+        "bushing_dia_in": "0.81",
+        "rated_working_load_lbs": "3500",
+        "min_ultimate_strength_lbs": "40000",
+        "weight_per_foot_lbs": "6.9",
+        "max_rpm_12t": "145"
+      },
+      "performance_tiers": [
+        {
+          "tier": "premium",
+          "tensile_strength_lbs": "40000",
+          "working_load_lbs": "3500",
+          "source": "Uniking Industrial Bulk Material Catalog p.4",
+          "notes": "Uniking primary baseline. Rexnord 270 / Link-Belt SS2004. Largest standard 2.609\" engineered chain."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "270",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "4",
+          "notes": "Uniking primary baseline"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "270",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "SS2004",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-270",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Attachment chains",
+        "Extended pin"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-81X",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "81X",
+      "display_name": "81X Engineered Class Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "2.609\" pitch 81X engineered class bushed roller chain. CARB pins, TH rollers. Rated 2,000 lb working load. Industry standard for bulk material conveyors in aggregate, mining, recycling, and grain handling.",
+      "application_tags": [
+        "aggregate",
+        "mining",
+        "recycling",
+        "grain_handling",
+        "bulk_material",
+        "heavy_industrial"
+      ],
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "style": "N",
+        "overall_pin_cotter_in": "2.14",
+        "sidebar_width_in": "1.07",
+        "sidebar_thickness_in": "0.16",
+        "sidebar_height_in": "1.13",
+        "pin_dia_in": "0.43",
+        "pin_properties": "CARB",
+        "face_width_in": "1.00",
+        "roller_dia_in": "0.88",
+        "roller_style": "A",
+        "roller_properties": "TH",
+        "bushing_length_in": "1.39",
+        "bushing_dia_in": "0.63",
+        "rated_working_load_lbs": "2000",
+        "min_ultimate_strength_lbs": "16000",
+        "weight_per_foot_lbs": "2.5",
+        "max_rpm_12t": "145"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "16000",
+          "working_load_lbs": "2000",
+          "source": "Uniking Industrial Bulk Material Catalog p.4",
+          "notes": "Uniking primary baseline. Rexnord 81X / Link-Belt RS81X cross-reference. Industry-standard 2.609\" bulk conveyor chain."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "81X",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "4",
+          "notes": "Uniking primary baseline"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "81X",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "RS81X",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "81X",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-78",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [
+        "81XH Heavy",
+        "81XHH Extra Heavy",
+        "Attachment chains"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-81XH",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "81XH",
+      "display_name": "81XH Heavy Engineered Class Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "2.609\" pitch 81XH heavy series engineered class chain. TH pins and sidebars (thicker than 81X). Rated 2,500 lb working load for heavy-duty bulk material conveying.",
+      "application_tags": [
+        "bulk_material",
+        "aggregate",
+        "mining",
+        "cement",
+        "recycling"
+      ],
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "style": "N",
+        "overall_pin_cotter_in": "2.58",
+        "sidebar_width_in": "1.07",
+        "sidebar_thickness_in": "0.31",
+        "sidebar_height_in": "1.27",
+        "pin_dia_in": "0.43",
+        "pin_properties": "TH",
+        "face_width_in": "1.00",
+        "roller_dia_in": "0.88",
+        "roller_style": "A",
+        "roller_properties": "TH",
+        "bushing_length_in": "1.69",
+        "bushing_dia_in": "0.63",
+        "rated_working_load_lbs": "2500",
+        "min_ultimate_strength_lbs": "28000",
+        "weight_per_foot_lbs": "4.1",
+        "max_rpm_12t": "145"
+      },
+      "performance_tiers": [
+        {
+          "tier": "performance",
+          "tensile_strength_lbs": "28000",
+          "working_load_lbs": "2500",
+          "source": "Uniking Industrial Bulk Material Catalog p.4",
+          "notes": "Uniking primary baseline. Rexnord 81XH / Link-Belt RS81XHN. Heavy series — thicker sidebars vs standard 81X."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "81XH",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "4",
+          "notes": "Uniking primary baseline"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "81XH",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "RS81XHN",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-78",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "81XHH extra heavy"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-81XHH",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "81XHH",
+      "display_name": "81XHH Extra Heavy Engineered Class Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "2.609\" pitch 81XHH extra heavy engineered class chain. Heaviest sidebar in the 81X family. Rated 2,500 lb working load with maximum fatigue life. For severe-duty bulk material conveying.",
+      "application_tags": [
+        "bulk_material",
+        "aggregate",
+        "mining",
+        "cement",
+        "heavy_industrial"
+      ],
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "style": "N",
+        "overall_pin_cotter_in": "2.76",
+        "sidebar_width_in": "1.07",
+        "sidebar_thickness_in": "0.31",
+        "sidebar_height_in": "1.27",
+        "pin_dia_in": "0.43",
+        "pin_properties": "TH",
+        "face_width_in": "1.00",
+        "roller_dia_in": "0.88",
+        "roller_style": "A",
+        "roller_properties": "TH",
+        "bushing_length_in": "1.69",
+        "bushing_dia_in": "0.63",
+        "rated_working_load_lbs": "2500",
+        "min_ultimate_strength_lbs": "28000",
+        "weight_per_foot_lbs": "4.6",
+        "max_rpm_12t": "145"
+      },
+      "performance_tiers": [
+        {
+          "tier": "premium",
+          "tensile_strength_lbs": "28000",
+          "working_load_lbs": "2500",
+          "source": "Uniking Industrial Bulk Material Catalog p.4",
+          "notes": "Rexnord 81XHH / Link-Belt RS81XHN. Extra heavy — heaviest 81X series."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "81XHH",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "81XHH",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "RS81XHN",
+          "confidence": "Confirmed",
+          "catalog_page": "4",
+          "notes": "Same LB code as 81XH — verify with manufacturer"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-78",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-A2800",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "A2800",
+      "display_name": "A2800 8\" Heavy Duty Engineered Class Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "8.000",
+      "pitch_mm": "203.20",
+      "description": "8\" pitch A2800 extra-heavy engineered class roller chain. CIH (Circumferentially Induction Hardened) pins. 3.50\" roller. Rated 9,800 lb working load. Heaviest bulk material conveying applications.",
+      "application_tags": [
+        "bulk_material",
+        "mining",
+        "cement",
+        "heavy_industrial"
+      ],
+      "specs": {
+        "pitch_in": "8.000",
+        "pitch_mm": "203.20",
+        "style": "R",
+        "overall_pin_cotter_in": "4.71",
+        "sidebar_width_in": "1.81",
+        "sidebar_thickness_in": "0.50",
+        "sidebar_height_in": "2.75",
+        "pin_dia_in": "1.00",
+        "pin_properties": "CIH",
+        "face_width_in": "1.50",
+        "roller_dia_in": "3.50",
+        "roller_style": "A",
+        "roller_properties": "CARB",
+        "bushing_length_in": "2.81",
+        "bushing_dia_in": "1.50",
+        "rated_working_load_lbs": "9800",
+        "min_ultimate_strength_lbs": "94000",
+        "weight_per_foot_lbs": "62.2",
+        "max_rpm_12t": "26"
+      },
+      "performance_tiers": [
+        {
+          "tier": "premium",
+          "tensile_strength_lbs": "94000",
+          "working_load_lbs": "9800",
+          "source": "Uniking Industrial Bulk Material Catalog p.6",
+          "notes": "Rexnord A2800. CIH pin construction. 8\" pitch maximum load chain."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "A2800",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "6"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "A2800",
+          "confidence": "Confirmed",
+          "catalog_page": "6"
+        }
+      ],
+      "attachments_available": [
+        "ENG-FLIGHT",
+        "ENG-SCRAPER"
+      ],
+      "sprocket_series": "ENG-2800",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-C1288",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "C1288",
+      "display_name": "C1288 Engineered Class Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "2.609\" pitch C1288 engineered class chain. CARB pins and bushings. Equivalent to 81X with slightly different sidebar geometry. Rated 2,000 lb working load.",
+      "application_tags": [
+        "bulk_material",
+        "aggregate",
+        "mining"
+      ],
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "style": "N",
+        "overall_pin_cotter_in": "2.23",
+        "sidebar_width_in": "1.08",
+        "sidebar_thickness_in": "0.16",
+        "sidebar_height_in": "1.13",
+        "pin_dia_in": "0.41",
+        "pin_properties": "CARB",
+        "face_width_in": "1.03",
+        "roller_dia_in": "0.90",
+        "roller_style": "A",
+        "roller_properties": "CARB",
+        "bushing_length_in": "1.38",
+        "bushing_dia_in": "0.63",
+        "rated_working_load_lbs": "2000",
+        "min_ultimate_strength_lbs": "16000",
+        "weight_per_foot_lbs": "2.5",
+        "max_rpm_12t": "145"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "16000",
+          "working_load_lbs": "2000",
+          "source": "Uniking Industrial Bulk Material Catalog p.4",
+          "notes": "Rexnord C1288 / Link-Belt SS1088. Similar rating to 81X, different geometry."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "C1288",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "C1288",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "SS1088",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1"
+      ],
+      "sprocket_series": "ENG-78",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-ER911",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "ER911",
+      "display_name": "ER911 9\" Engineered Class Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "9.000",
+      "pitch_mm": "228.60",
+      "description": "9\" pitch ER911 engineered class roller chain. CARB pins, 3.00\" roller. Rated 4,650 lb working load. Heavy drag and scraper conveying in cement and aggregate.",
+      "application_tags": [
+        "cement",
+        "aggregate",
+        "bulk_material",
+        "drag_conveyor"
+      ],
+      "specs": {
+        "pitch_in": "9.000",
+        "pitch_mm": "228.60",
+        "style": "R",
+        "overall_pin_cotter_in": "3.45",
+        "sidebar_width_in": "2.00",
+        "sidebar_thickness_in": "0.31",
+        "sidebar_height_in": "2.00",
+        "pin_dia_in": "0.63",
+        "pin_properties": "CARB",
+        "face_width_in": "1.44",
+        "roller_dia_in": "3.00",
+        "roller_style": "A",
+        "roller_properties": "CARB",
+        "bushing_length_in": "2.13",
+        "bushing_dia_in": "0.89",
+        "rated_working_load_lbs": "4650",
+        "min_ultimate_strength_lbs": "33000",
+        "weight_per_foot_lbs": "8.5",
+        "max_rpm_12t": "22"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "33000",
+          "working_load_lbs": "4650",
+          "source": "Uniking Industrial Bulk Material Catalog p.7",
+          "notes": "Rexnord ER911 / Link-Belt RS911."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "ER911",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "7"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "ER911",
+          "confidence": "Confirmed",
+          "catalog_page": "7"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "RS911",
+          "confidence": "Confirmed",
+          "catalog_page": "7"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT",
+        "ENG-SCRAPER"
+      ],
+      "sprocket_series": "ENG-911",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [
+        "White iron rollers"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-ER922",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "ER922",
+      "display_name": "ER922 9\" Heavy Duty Engineered Class Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "9.000",
+      "pitch_mm": "228.60",
+      "description": "9\" pitch ER922 heavy duty engineered class roller chain with white iron rollers. Rated 7,200 lb working load. Maximum heavy duty bulk material drag conveying.",
+      "application_tags": [
+        "bulk_material",
+        "cement",
+        "mining",
+        "heavy_industrial"
+      ],
+      "specs": {
+        "pitch_in": "9.000",
+        "pitch_mm": "228.60",
+        "style": "R",
+        "overall_pin_cotter_in": "4.28",
+        "sidebar_width_in": "2.00",
+        "sidebar_thickness_in": "0.38",
+        "sidebar_height_in": "2.00",
+        "pin_dia_in": "0.75",
+        "pin_properties": "TH",
+        "face_width_in": "1.94",
+        "roller_dia_in": "3.50",
+        "roller_style": "A",
+        "roller_properties": "WI",
+        "bushing_length_in": "2.75",
+        "bushing_dia_in": "1.13",
+        "rated_working_load_lbs": "7200",
+        "min_ultimate_strength_lbs": "34000",
+        "weight_per_foot_lbs": "12.0",
+        "max_rpm_12t": "22"
+      },
+      "performance_tiers": [
+        {
+          "tier": "premium",
+          "tensile_strength_lbs": "34000",
+          "working_load_lbs": "7200",
+          "source": "Uniking Industrial Bulk Material Catalog p.7",
+          "notes": "Rexnord ER922 / Link-Belt SS927. White iron rollers for abrasive materials."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "ER922",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "7"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "ER922",
+          "confidence": "Confirmed",
+          "catalog_page": "7"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "SS927",
+          "confidence": "Confirmed",
+          "catalog_page": "7"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT",
+        "ENG-SCRAPER"
+      ],
+      "sprocket_series": "ENG-922",
+      "materials_available": [
+        "carbon_steel",
+        "white_iron_roller"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-RR362",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "RR362",
+      "display_name": "RR362 Engineered Class Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "1.654",
+      "pitch_mm": "42.01",
+      "description": "1.654\" pitch engineered class bushed roller chain. Carburized pins, TH rollers and bushings. Rated 1,650 lb working load. Used in light bulk material conveying, aggregate, and grain applications.",
+      "application_tags": [
+        "aggregate",
+        "grain_handling",
+        "bulk_material"
+      ],
+      "specs": {
+        "pitch_in": "1.654",
+        "pitch_mm": "42.01",
+        "style": "N",
+        "overall_pin_cotter_in": "2.03",
+        "sidebar_width_in": "1.00",
+        "sidebar_thickness_in": "0.13",
+        "sidebar_height_in": "1.13",
+        "pin_dia_in": "0.38",
+        "pin_properties": "CARB",
+        "face_width_in": "0.97",
+        "roller_dia_in": "0.88",
+        "roller_style": "A",
+        "roller_properties": "TH",
+        "bushing_length_in": "1.25",
+        "bushing_dia_in": "0.56",
+        "rated_working_load_lbs": "1650",
+        "min_ultimate_strength_lbs": "8000",
+        "weight_per_foot_lbs": "3.0",
+        "max_rpm_12t": "280"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "8000",
+          "working_load_lbs": "1650",
+          "source": "Uniking Industrial Bulk Material Catalog p.4",
+          "notes": "Uniking primary baseline. Rexnord RR362 / Link-Belt RS625 cross-reference."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "RR362",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "4",
+          "notes": "Uniking primary baseline"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "RR362",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "RS625",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1"
+      ],
+      "sprocket_series": "ENG-62",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [
+        "Attachment chains",
+        "Extended pin"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-RR432",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "RR432",
+      "display_name": "RR432 Engineered Class Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "1.654",
+      "pitch_mm": "42.01",
+      "description": "1.654\" pitch TH-pin engineered class roller chain. Heavier construction than RR362. Rated 2,100 lb working load for light-to-medium bulk material conveying.",
+      "application_tags": [
+        "aggregate",
+        "grain_handling",
+        "bulk_material"
+      ],
+      "specs": {
+        "pitch_in": "1.654",
+        "pitch_mm": "42.01",
+        "style": "N",
+        "overall_pin_cotter_in": "2.28",
+        "sidebar_width_in": "1.00",
+        "sidebar_thickness_in": "0.19",
+        "sidebar_height_in": "1.13",
+        "pin_dia_in": "0.44",
+        "pin_properties": "TH",
+        "face_width_in": "0.97",
+        "roller_dia_in": "0.88",
+        "roller_style": "A",
+        "roller_properties": "TH",
+        "bushing_length_in": "1.38",
+        "bushing_dia_in": "0.63",
+        "rated_working_load_lbs": "2100",
+        "min_ultimate_strength_lbs": "10000",
+        "weight_per_foot_lbs": "3.7",
+        "max_rpm_12t": "280"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "10000",
+          "working_load_lbs": "2100",
+          "source": "Uniking Industrial Bulk Material Catalog p.4",
+          "notes": "Uniking primary baseline. Rexnord RR432 / Link-Belt RS627 cross-reference."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "RR432",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "RR432",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "RS627",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1"
+      ],
+      "sprocket_series": "ENG-62",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-RR588",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "RR588",
+      "display_name": "RR588 Engineered Class Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "2.609\" pitch RR588 heavy engineered class roller chain. CARB pins, TH bushings. Rated 2,500 lb working load — heavier sidebar than RR778.",
+      "application_tags": [
+        "bulk_material",
+        "mining",
+        "heavy_industrial"
+      ],
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "style": "N",
+        "overall_pin_cotter_in": "2.57",
+        "sidebar_width_in": "1.13",
+        "sidebar_thickness_in": "0.25",
+        "sidebar_height_in": "1.13",
+        "pin_dia_in": "0.44",
+        "pin_properties": "CARB",
+        "face_width_in": "1.08",
+        "roller_dia_in": "0.88",
+        "roller_style": "A",
+        "roller_properties": "TH",
+        "bushing_length_in": "1.63",
+        "bushing_dia_in": "0.63",
+        "rated_working_load_lbs": "2500",
+        "min_ultimate_strength_lbs": "17000",
+        "weight_per_foot_lbs": "3.8",
+        "max_rpm_12t": "145"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "17000",
+          "working_load_lbs": "2500",
+          "source": "Uniking Industrial Bulk Material Catalog p.4",
+          "notes": "Rexnord RR588 / Link-Belt RS887."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "RR588",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "RR588",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "RS887",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-78",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-RR778",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "RR778",
+      "display_name": "RR778 Engineered Class Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "2.609\" pitch RR778 engineered class chain. Heavier than 81X — CARB pins, TH bushings. Rated 2,300 lb working load. Preferred for medium-heavy bulk conveying.",
+      "application_tags": [
+        "bulk_material",
+        "aggregate",
+        "mining",
+        "recycling"
+      ],
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "style": "N",
+        "overall_pin_cotter_in": "2.41",
+        "sidebar_width_in": "1.13",
+        "sidebar_thickness_in": "0.19",
+        "sidebar_height_in": "1.13",
+        "pin_dia_in": "0.44",
+        "pin_properties": "CARB",
+        "face_width_in": "1.08",
+        "roller_dia_in": "0.88",
+        "roller_style": "A",
+        "roller_properties": "TH",
+        "bushing_length_in": "1.50",
+        "bushing_dia_in": "0.63",
+        "rated_working_load_lbs": "2300",
+        "min_ultimate_strength_lbs": "23000",
+        "weight_per_foot_lbs": "2.9",
+        "max_rpm_12t": "145"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "23000",
+          "working_load_lbs": "2300",
+          "source": "Uniking Industrial Bulk Material Catalog p.4",
+          "notes": "Rexnord RR778 / Link-Belt RS886."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "RR778",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "RR778",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "RS886",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1"
+      ],
+      "sprocket_series": "ENG-78",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-SR1114",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "SR1114",
+      "display_name": "SR1114 6\" Heavy Duty Engineered Class Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "6\" pitch SR1114 heavy duty engineered class roller chain. Rated 4,200 lb working load. Preferred for high-capacity cement, aggregate, and bulk drag conveyors.",
+      "application_tags": [
+        "cement",
+        "aggregate",
+        "bulk_material",
+        "drag_conveyor",
+        "heavy_industrial"
+      ],
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "style": "R",
+        "overall_pin_cotter_in": "3.25",
+        "sidebar_width_in": "1.31",
+        "sidebar_thickness_in": "0.31",
+        "sidebar_height_in": "1.50",
+        "pin_dia_in": "0.63",
+        "pin_properties": "CARB",
+        "face_width_in": "1.25",
+        "roller_dia_in": "2.00",
+        "roller_style": "A",
+        "roller_properties": "CARB",
+        "bushing_length_in": "1.94",
+        "bushing_dia_in": "0.94",
+        "rated_working_load_lbs": "4200",
+        "min_ultimate_strength_lbs": "23000",
+        "weight_per_foot_lbs": "6.3",
+        "max_rpm_12t": "40"
+      },
+      "performance_tiers": [
+        {
+          "tier": "performance",
+          "tensile_strength_lbs": "23000",
+          "working_load_lbs": "4200",
+          "source": "Uniking Industrial Bulk Material Catalog p.5",
+          "notes": "Uniking primary baseline. Rexnord SR1114 / Link-Belt RS1114."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "SR1114",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "5",
+          "notes": "Uniking primary baseline"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "SR1114",
+          "confidence": "Confirmed",
+          "catalog_page": "5"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "RS1114",
+          "confidence": "Confirmed",
+          "catalog_page": "5"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-196",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-SR196",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "SR196",
+      "display_name": "SR196 6\" Engineered Class Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "6\" pitch SR196 engineered class roller chain. CARB pins and bushings. 2.00\" roller face. Rated 2,600 lb working load. Used in heavy drag conveyors, aggregate, cement, and mining applications.",
+      "application_tags": [
+        "bulk_material",
+        "cement",
+        "aggregate",
+        "mining",
+        "drag_conveyor"
+      ],
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "style": "R",
+        "overall_pin_cotter_in": "2.72",
+        "sidebar_width_in": "1.19",
+        "sidebar_thickness_in": "0.25",
+        "sidebar_height_in": "1.50",
+        "pin_dia_in": "0.44",
+        "pin_properties": "CARB",
+        "face_width_in": "1.09",
+        "roller_dia_in": "2.00",
+        "roller_style": "A",
+        "roller_properties": "CARB",
+        "bushing_length_in": "1.69",
+        "bushing_dia_in": "0.63",
+        "rated_working_load_lbs": "2600",
+        "min_ultimate_strength_lbs": "18000",
+        "weight_per_foot_lbs": "5.0",
+        "max_rpm_12t": "40"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "18000",
+          "working_load_lbs": "2600",
+          "source": "Uniking Industrial Bulk Material Catalog p.4",
+          "notes": "Rexnord SR196 / Link-Belt RS6018. 6\" pitch engineered class."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "SR196",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "4",
+          "notes": "Uniking primary baseline"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "SR196",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "RS6018",
+          "confidence": "Confirmed",
+          "catalog_page": "4"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-196",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [
+        "White iron rollers",
+        "Extended pin attachments"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-SS1044",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "SS1044",
+      "display_name": "SS1044 Engineered Class Bushed Chain (No Roller)",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.000",
+      "pitch_mm": "76.20",
+      "description": "3\" pitch SS1044 engineered class chain without rollers. Solid barrel bushed construction. Rides on track/guide rails. Used in drag and scraper conveyors for grain, aggregate, and bulk material.",
+      "application_tags": [
+        "grain_handling",
+        "aggregate",
+        "bulk_material",
+        "drag_conveyor",
+        "scraper_conveyor"
+      ],
+      "specs": {
+        "pitch_in": "3.000",
+        "pitch_mm": "76.20",
+        "style": "N",
+        "rated_working_load_lbs": "2200",
+        "min_ultimate_strength_lbs": "18000",
+        "weight_per_foot_lbs": "4.2"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "18000",
+          "working_load_lbs": "2200",
+          "source": "Uniking Industrial Bulk Material Catalog p.9",
+          "notes": "Uniking primary baseline — bushed no-roller class. Link-Belt SS1044."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "SS1044",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "9",
+          "notes": "Uniking primary baseline"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "SS1044",
+          "confidence": "Confirmed",
+          "catalog_page": "9"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "ENG-SS",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "ENG-SS2184",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "SS2184",
+      "display_name": "SS2184 Heavy Bushed Engineered Chain (No Roller)",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "6\" pitch SS2184 heavy bushed engineered chain without rollers. High load drag and scraper conveying applications in cement, aggregate, and mining.",
+      "application_tags": [
+        "cement",
+        "aggregate",
+        "mining",
+        "drag_conveyor",
+        "bulk_material"
+      ],
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "rated_working_load_lbs": "4800",
+        "min_ultimate_strength_lbs": "38000",
+        "weight_per_foot_lbs": "10.5"
+      },
+      "performance_tiers": [
+        {
+          "tier": "performance",
+          "tensile_strength_lbs": "38000",
+          "working_load_lbs": "4800",
+          "source": "Uniking Industrial Bulk Material Catalog p.10",
+          "notes": "Uniking primary baseline — 6\" pitch bushed no-roller."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "SS2184",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "10",
+          "notes": "Uniking primary baseline"
+        },
+        {
+          "manufacturer": "Link-Belt",
+          "code": "SS2184",
+          "confidence": "Confirmed",
+          "catalog_page": "10"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT",
+        "ENG-SCRAPER"
+      ],
+      "sprocket_series": "ENG-SS",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "MSR-10028",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "MSR10028",
+      "display_name": "MSR10028 Bushed Roller Steel Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "10.000",
+      "pitch_mm": "254.00",
+      "description": "MSR10028 extra-heavy bushed roller chain for the most demanding industrial applications.",
+      "specs": {
+        "pitch_in": "10.000",
+        "pitch_mm": "254.00",
+        "barrel_dia_in": "3.000",
+        "avg_ultimate_lbs": "200000",
+        "max_working_load_lbs": "40000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "200000",
+          "working_load_lbs": "40000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "MSR10028",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "MSR10028",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "MSR-100",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "MSR-6018",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "MSR6018",
+      "display_name": "MSR6018 Bushed Roller Steel Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "MSR Class bushed roller steel conveyor chain with 18\" face width. Heavy-duty drag and conveying applications.",
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "barrel_dia_in": "2.000",
+        "avg_ultimate_lbs": "90000",
+        "max_working_load_lbs": "18000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "90000",
+          "working_load_lbs": "18000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "MSR6018",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "MSR6018",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "SR196",
+          "confidence": "Confirmed",
+          "catalog_page": "4",
+          "notes": "Uniking baseline = Rexnord SR196 / Link-Belt RS6018, 6\" pitch with rollers"
+        }
+      ],
+      "attachments_available": [
+        "ENG-FLIGHT",
+        "ENG-SA1"
+      ],
+      "sprocket_series": "MSR-60",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Extended pitch"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "MSR-8028",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "MSR8028",
+      "display_name": "MSR8028 Bushed Roller Steel Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "8.000",
+      "pitch_mm": "203.20",
+      "description": "MSR8028 heavy bushed roller conveyor chain, 28\" face width. For extreme-load drag and conveying.",
+      "specs": {
+        "pitch_in": "8.000",
+        "pitch_mm": "203.20",
+        "barrel_dia_in": "2.500",
+        "avg_ultimate_lbs": "140000",
+        "max_working_load_lbs": "28000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "140000",
+          "working_load_lbs": "28000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "MSR8028",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "MSR8028",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "RS2800",
+          "confidence": "Confirmed",
+          "catalog_page": "4",
+          "notes": "Uniking baseline — 8\" pitch heavy engineered class"
+        }
+      ],
+      "attachments_available": [
+        "ENG-FLIGHT",
+        "ENG-SA1"
+      ],
+      "sprocket_series": "MSR-80",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "MXS-881",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "MXS881",
+      "display_name": "MXS881 Offset Steel Drive Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "MXS Class offset sidebar steel drive chain. Used in heavy drag conveyors, reciprocating and horizontal conveyors.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "avg_ultimate_lbs": "40000",
+        "max_working_load_lbs": "8000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "40000",
+          "working_load_lbs": "8000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "MXS881",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "MXS881",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "ENG-FLIGHT",
+        "ENG-K1"
+      ],
+      "sprocket_series": "MXS-88",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "SS-118",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "SS118",
+      "display_name": "SS118 Bushed Steel Conveyor Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.075",
+      "pitch_mm": "78.11",
+      "description": "SS118 large-pitch bushed steel conveyor chain for heavy drag and elevating applications.",
+      "specs": {
+        "pitch_in": "3.075",
+        "pitch_mm": "78.11",
+        "barrel_dia_in": "1.500",
+        "avg_ultimate_lbs": "35000",
+        "max_working_load_lbs": "7000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "35000",
+          "working_load_lbs": "7000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "SS118",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "SS118",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "SS118",
+          "confidence": "Confirmed",
+          "catalog_page": "9",
+          "notes": "Uniking bulk material baseline — no rollers"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "SS-118",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "SS-188",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "SS188",
+      "display_name": "SS188 Bushed Steel Conveyor Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "SS188 heavy-pitch bushed steel chain for maximum load elevating and drag applications.",
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "barrel_dia_in": "2.000",
+        "avg_ultimate_lbs": "70000",
+        "max_working_load_lbs": "14000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "70000",
+          "working_load_lbs": "14000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "SS188",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "SS188",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "ENG-FLIGHT",
+        "ENG-SA1"
+      ],
+      "sprocket_series": "SS-188",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "SS-78",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "SS78",
+      "display_name": "SS78 Bushed Steel Conveyor Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "SS Class solid roller bushed steel conveyor chain. No rollers — rides directly on track. Used in conveying applications where rollers are not required.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "avg_ultimate_lbs": "18000",
+        "max_working_load_lbs": "3600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "18000",
+          "working_load_lbs": "3600",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "SS78",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "SS78",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "SS78",
+          "confidence": "Confirmed",
+          "catalog_page": "9",
+          "notes": "Uniking bulk material baseline — no rollers"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1"
+      ],
+      "sprocket_series": "SS-78",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Heat treated version"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "SS-88",
+      "chain_family": "Engineered Class Chains",
+      "chain_number": "SS88",
+      "display_name": "SS88 Bushed Steel Conveyor Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "SS88 heavy solid-barrel bushed steel conveyor chain. No rollers. Heavy-duty version of the SS series.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "barrel_dia_in": "1.250",
+        "avg_ultimate_lbs": "25000",
+        "max_working_load_lbs": "5000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "25000",
+          "working_load_lbs": "5000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "SS88",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "SS88",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "SS88",
+          "confidence": "Confirmed",
+          "catalog_page": "9",
+          "notes": "Uniking bulk material baseline — no rollers"
+        }
+      ],
+      "attachments_available": [
+        "ENG-A1",
+        "ENG-K1",
+        "ENG-SA1",
+        "ENG-FLIGHT"
+      ],
+      "sprocket_series": "SS-88",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Heat treated version"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "engineered_class",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    }
+  ]
+}

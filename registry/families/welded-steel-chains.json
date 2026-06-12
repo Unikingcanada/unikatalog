@@ -1,0 +1,2109 @@
+{
+  "family": "Welded Steel Chains",
+  "slug": "welded-steel-chains",
+  "count": 31,
+  "chains": [
+    {
+      "chain_id": "DH-WD-78",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WD78",
+      "display_name": "WD78 Welded Steel Drag Chain (No Rollers)",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.075",
+      "pitch_mm": "78.11",
+      "description": "WD78 welded steel drag chain — 3.075\" pitch, barrel-only (no rollers). Simpler and lower cost than WR78. Used in light bulk drag applications where sliding friction is acceptable.",
+      "application_tags": [
+        "drag_conveyor",
+        "bulk_material",
+        "grain_handling"
+      ],
+      "specs": {
+        "pitch_in": "3.075",
+        "pitch_mm": "78.11",
+        "barrel_dia_in": "0.875",
+        "sidebar_height_in": "1.50",
+        "avg_ultimate_lbs": "22000",
+        "max_working_load_lbs": "4400",
+        "weight_lbs_ft": "4.8"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "22000",
+          "working_load_lbs": "4400",
+          "source": "Donghua catalog p.157, ASME B29.100",
+          "notes": "WD78 — rollerless barrel drag chain, lower cost than WR78."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "WD78",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "157"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WD78",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-FLIGHT"
+      ],
+      "sprocket_series": "WR-78",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Roller upgrade → WR78"
+      ],
+      "downloads": [
+        {
+          "label": "Donghua Catalog — WD78 Section",
+          "url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "type": "pdf",
+          "page_ref": "157"
+        }
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-WR-110",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WR110",
+      "display_name": "WR110 Welded Steel Drag Chain with Rollers",
+      "standard": "ASME B29.100",
+      "pitch_in": "4.760",
+      "pitch_mm": "120.90",
+      "description": "WR110 heavy welded steel drag chain — 4.76\" pitch with rollers. High-capacity grain, coal, and phosphate drag conveyor applications.",
+      "application_tags": [
+        "drag_conveyor",
+        "bulk_material",
+        "grain_handling",
+        "coal",
+        "aggregate"
+      ],
+      "specs": {
+        "pitch_in": "4.760",
+        "pitch_mm": "120.90",
+        "roller_dia_in": "1.25",
+        "barrel_dia_in": "1.12",
+        "sidebar_height_in": "1.88",
+        "avg_ultimate_lbs": "44000",
+        "max_working_load_lbs": "8800",
+        "weight_lbs_ft": "9.6"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "44000",
+          "working_load_lbs": "8800",
+          "source": "Donghua catalog p.159, ASME B29.100"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "WR110",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "159"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WR110",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-FLIGHT",
+        "WA-SCRAPER"
+      ],
+      "sprocket_series": "WR-110",
+      "sprocket_compatibility": {
+        "series": "WR110",
+        "tooth_range": "5–14",
+        "bore_styles": [
+          "plain_bore",
+          "keyway",
+          "split"
+        ],
+        "materials": [
+          "cast_iron",
+          "hardened_steel"
+        ],
+        "split_sprocket_available": true,
+        "catalog_page_sprockets": "295"
+      },
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "Induction hardened rollers",
+        "WR110HD heavy duty"
+      ],
+      "downloads": [
+        {
+          "label": "Donghua Catalog",
+          "url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "type": "pdf",
+          "page_ref": "159"
+        }
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-WR-124",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WR124",
+      "display_name": "WR124 Welded Steel Drag Chain with Rollers",
+      "standard": "ASME B29.100",
+      "pitch_in": "4.063",
+      "pitch_mm": "103.19",
+      "description": "WR124 welded steel drag chain — 4.063\" pitch, roller type. Heavy-duty grain elevator legs, potash, and coal drag conveyor applications.",
+      "application_tags": [
+        "drag_conveyor",
+        "grain_handling",
+        "bulk_material",
+        "coal"
+      ],
+      "specs": {
+        "pitch_in": "4.063",
+        "pitch_mm": "103.19",
+        "roller_dia_in": "1.25",
+        "barrel_dia_in": "1.00",
+        "sidebar_height_in": "1.62",
+        "avg_ultimate_lbs": "50000",
+        "max_working_load_lbs": "10000",
+        "weight_lbs_ft": "10.2"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "50000",
+          "working_load_lbs": "10000",
+          "source": "Donghua catalog p.160, ASME B29.100"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "WR124",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "160"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WR124",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2",
+        "WA-FLIGHT"
+      ],
+      "sprocket_series": "WR-124",
+      "sprocket_compatibility": {
+        "series": "WR124",
+        "tooth_range": "5–12",
+        "bore_styles": [
+          "plain_bore",
+          "keyway",
+          "split",
+          "QD_bushing"
+        ],
+        "materials": [
+          "cast_iron",
+          "hardened_steel"
+        ],
+        "split_sprocket_available": true,
+        "catalog_page_sprockets": "296"
+      },
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "WR124HD heavy duty",
+        "Induction hardened"
+      ],
+      "downloads": [
+        {
+          "label": "Donghua Catalog",
+          "url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "type": "pdf",
+          "page_ref": "160"
+        }
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-WR-78",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WR78",
+      "display_name": "WR78 Welded Steel Drag Chain with Rollers",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.075",
+      "pitch_mm": "78.11",
+      "description": "WR78 welded steel drag chain — 3.075\" pitch, with rollers for reduced friction on drag conveyor troughs. Used in fertilizer, grain, limestone, and agricultural en-masse systems.",
+      "application_tags": [
+        "drag_conveyor",
+        "bulk_material",
+        "grain_handling",
+        "fertilizer",
+        "aggregate"
+      ],
+      "specs": {
+        "pitch_in": "3.075",
+        "pitch_mm": "78.11",
+        "roller_dia_in": "1.06",
+        "barrel_dia_in": "0.875",
+        "sidebar_height_in": "1.50",
+        "sidebar_thickness_in": "0.25",
+        "avg_ultimate_lbs": "26000",
+        "max_working_load_lbs": "5200",
+        "weight_lbs_ft": "5.8"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "26000",
+          "working_load_lbs": "5200",
+          "source": "Donghua catalog p.157, ASME B29.100",
+          "notes": "WR78 welded roller drag chain. Rollers reduce sliding friction on drag trough floor."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "WR78",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "157"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WR78",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WR78",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-A1",
+        "WA-FLIGHT",
+        "WA-SCRAPER"
+      ],
+      "attachment_configs": [
+        {
+          "code": "WA-K1",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "K1 sidebar lug"
+        },
+        {
+          "code": "WA-A1",
+          "side": "one_side",
+          "spacing": "every_link",
+          "description": "A1 tab"
+        },
+        {
+          "code": "WA-FLIGHT",
+          "side": "both_sides",
+          "spacing": "every_2nd",
+          "description": "Drag flight, both sides, E2"
+        },
+        {
+          "code": "WA-SCRAPER",
+          "side": "both_sides",
+          "spacing": "every_4th",
+          "description": "Scraper flight E4"
+        }
+      ],
+      "sprocket_series": "WR-78",
+      "sprocket_compatibility": {
+        "series": "WR78",
+        "tooth_range": "6–18",
+        "bore_styles": [
+          "plain_bore",
+          "keyway",
+          "QD_bushing"
+        ],
+        "materials": [
+          "cast_iron",
+          "carbon_steel",
+          "hardened_steel"
+        ],
+        "split_sprocket_available": true,
+        "catalog_page_sprockets": "293"
+      },
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "Induction hardened rollers",
+        "Alloy steel version",
+        "WR78XHD extra heavy"
+      ],
+      "downloads": [
+        {
+          "label": "Donghua Catalog — WR78 Section",
+          "url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "type": "pdf",
+          "page_ref": "157"
+        }
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-WS-102B",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "102B",
+      "display_name": "102B Welded Steel Bushed Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "4.016",
+      "pitch_mm": "102.00",
+      "description": "Donghua 102B welded steel bushed chain — 4\" pitch. Barrel-and-sidebar welded construction for bulk material elevators and drag conveyors.",
+      "specs": {
+        "pitch_mm": "102.00",
+        "pitch_in": "4.016",
+        "barrel_dia_mm": "38.0",
+        "sidebar_height_mm": "50.8",
+        "avg_ultimate_lbs": "45000",
+        "max_working_load_lbs": "9000",
+        "weight_kg_m": "12.5"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "45000",
+          "working_load_lbs": "9000",
+          "source": "Donghua catalog p.158",
+          "notes": "102B welded steel — Donghua catalog confirmed."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "102B",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "158"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-A1",
+        "WA-FLIGHT"
+      ],
+      "sprocket_series": "WS-102",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "With rollers (102BR)",
+        "Induction hardened barrels"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-WS-132B",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "132B",
+      "display_name": "132B Welded Steel Bushed Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "5.197",
+      "pitch_mm": "132.00",
+      "description": "Donghua 132B welded steel bushed chain — 5.2\" pitch. Heavy welded construction for high-load bulk material elevator and drag applications.",
+      "specs": {
+        "pitch_mm": "132.00",
+        "pitch_in": "5.197",
+        "barrel_dia_mm": "44.45",
+        "sidebar_height_mm": "63.5",
+        "avg_ultimate_lbs": "65000",
+        "max_working_load_lbs": "13000",
+        "weight_kg_m": "18.0"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "65000",
+          "working_load_lbs": "13000",
+          "source": "Donghua catalog p.160",
+          "notes": "132B welded steel chain — Donghua catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "132B",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "160"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-A1",
+        "WA-FLIGHT"
+      ],
+      "sprocket_series": "WS-132",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "With rollers",
+        "Induction hardened"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-WS-160B",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "160B",
+      "display_name": "160B Welded Steel Bushed Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.299",
+      "pitch_mm": "160.00",
+      "description": "Donghua 160B heavy welded steel chain — 6.3\" pitch. For maximum capacity grain elevators and aggregate drag conveyors.",
+      "specs": {
+        "pitch_mm": "160.00",
+        "pitch_in": "6.299",
+        "barrel_dia_mm": "50.8",
+        "sidebar_height_mm": "76.2",
+        "avg_ultimate_lbs": "90000",
+        "max_working_load_lbs": "18000",
+        "weight_kg_m": "28.0"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "90000",
+          "working_load_lbs": "18000",
+          "source": "Donghua catalog p.162",
+          "notes": "160B — largest standard welded steel pitch in DH catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "160B",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "162"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-FLIGHT",
+        "WA-SCRAPER"
+      ],
+      "sprocket_series": "WS-160",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-106",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH106",
+      "display_name": "WH106 Welded Steel Mill Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.075",
+      "pitch_mm": "78.11",
+      "description": "WH106 heavy welded steel mill chain for grain elevators and heavy bulk material handling.",
+      "specs": {
+        "pitch_in": "3.075",
+        "pitch_mm": "78.11",
+        "barrel_dia_in": "1.250",
+        "bearing_length_in": "1.875",
+        "avg_ultimate_lbs": "32000",
+        "max_working_load_lbs": "6400"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "32000",
+          "working_load_lbs": "6400",
+          "source": "Allied-Locke / MAC Chain"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH106",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH106",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH106",
+          "confidence": "Confirmed",
+          "catalog_page": "32",
+          "notes": "Uniking welded steel baseline"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2",
+        "WA-A1"
+      ],
+      "sprocket_series": "WH-106",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "WHX106 Induction Hardened"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-106HD",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH106HD",
+      "display_name": "WH106HD Heavy Duty Welded Steel Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "WH106HD — same pitch as WH106 with extended bearing length (3.00\") for higher load rating.",
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "rivet_dia_in": "0.750",
+        "sidebar_width_in": "1.50",
+        "barrel_dia_in": "1.25",
+        "max_sprocket_face_in": "1.62",
+        "bearing_length_in": "3.00"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "39000",
+          "working_load_lbs": "7875",
+          "source": "Allied-Locke",
+          "notes": "Confirmed from Allied-Locke live catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH106HD",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh106hd",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH106HD",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH106HD",
+          "confidence": "Confirmed",
+          "catalog_page": "33",
+          "notes": "Uniking welded steel heavy duty"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2",
+        "WA-A1"
+      ],
+      "sprocket_series": "WH-106",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "WH106XHD"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-106XHD",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH106XHD",
+      "display_name": "WH106XHD Extra Heavy Welded Steel Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.050",
+      "pitch_mm": "153.67",
+      "description": "WH106XHD extra heavy-duty — 1.00\" rivet, 2.00\" sidebar, 1.62\" barrel. Maximum capacity 6\" pitch welded mill chain.",
+      "specs": {
+        "pitch_in": "6.050",
+        "pitch_mm": "153.67",
+        "rivet_dia_in": "1.00",
+        "sidebar_width_in": "2.00",
+        "barrel_dia_in": "1.62",
+        "max_sprocket_face_in": "1.62",
+        "bearing_length_in": "3.00"
+      },
+      "performance_tiers": [
+        {
+          "tier": "performance",
+          "tensile_strength_lbs": "52000",
+          "working_load_lbs": "10500",
+          "source": "Allied-Locke",
+          "notes": "XHD construction — confirmed from Allied-Locke live catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH106XHD",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh106xhd",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH106XHD",
+          "confidence": "Confirmed",
+          "catalog_page": "33",
+          "notes": "Uniking welded steel extra heavy"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2"
+      ],
+      "sprocket_series": "WH-106",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-110",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH110",
+      "display_name": "WH110 Welded Steel Mill Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "WH110 welded steel mill chain — same pitch as WH106 but wider sprocket face (1.88\") for broader conveyor applications.",
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "rivet_dia_in": "0.750",
+        "sidebar_width_in": "1.50",
+        "barrel_dia_in": "1.25",
+        "max_sprocket_face_in": "1.88",
+        "bearing_length_in": "3.00"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "39000",
+          "working_load_lbs": "7875",
+          "source": "Allied-Locke",
+          "notes": "Confirmed from Allied-Locke live catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH110",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh110",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH110",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH110",
+          "confidence": "Confirmed",
+          "catalog_page": "33",
+          "notes": "Uniking welded steel section"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2",
+        "WA-A1"
+      ],
+      "sprocket_series": "WH-110",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-111",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH111",
+      "display_name": "WH111 Welded Steel Mill Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "4.760",
+      "pitch_mm": "120.90",
+      "description": "WH111 welded steel mill chain — 4.76\" pitch, 1.75\" sidebar width. Confirmed from Allied-Locke catalog.",
+      "specs": {
+        "pitch_in": "4.760",
+        "pitch_mm": "120.90",
+        "rivet_dia_in": "0.750",
+        "sidebar_width_in": "1.75",
+        "barrel_dia_in": "1.25",
+        "max_sprocket_face_in": "2.00",
+        "bearing_length_in": "3.38"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "44000",
+          "working_load_lbs": "8850",
+          "source": "Allied-Locke",
+          "notes": "Confirmed from Allied-Locke live catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH111",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh111",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH111",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH111",
+          "confidence": "Confirmed",
+          "catalog_page": "32",
+          "notes": "Uniking welded steel section"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2",
+        "WA-A1"
+      ],
+      "sprocket_series": "WH-111",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-124",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH124",
+      "display_name": "WH124 Welded Steel Mill Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "4.063",
+      "pitch_mm": "103.19",
+      "description": "Heavy welded steel mill chain. Used in bulk handling and elevator applications requiring higher load capacity.",
+      "specs": {
+        "pitch_in": "4.063",
+        "pitch_mm": "103.19",
+        "barrel_dia_in": "1.375",
+        "bearing_length_in": "2.000",
+        "avg_ultimate_lbs": "38000",
+        "max_working_load_lbs": "7600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "38000",
+          "working_load_lbs": "7600",
+          "source": "Allied-Locke / MAC Chain"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH124",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH124",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "124B",
+          "confidence": "Confirmed",
+          "catalog_page": "160",
+          "notes": "WH124 welded steel — Donghua 124B designation"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH124",
+          "confidence": "Confirmed",
+          "catalog_page": "32",
+          "notes": "Uniking welded steel baseline"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2",
+        "WA-A1"
+      ],
+      "sprocket_series": "WH-124",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "WHX124 Induction Hardened"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-124HD",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH124HD",
+      "display_name": "WH124HD Heavy Duty Welded Steel Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "4.063",
+      "pitch_mm": "103.19",
+      "description": "WH124HD — extra-heavy 4.063\" pitch welded mill chain with 1.00\" rivet and 1.62\" barrel. High-load grain elevator and aggregate use.",
+      "specs": {
+        "pitch_in": "4.063",
+        "pitch_mm": "103.19",
+        "rivet_dia_in": "1.00",
+        "sidebar_width_in": "2.00",
+        "barrel_dia_in": "1.62",
+        "max_sprocket_face_in": "1.62",
+        "bearing_length_in": "3.00"
+      },
+      "performance_tiers": [
+        {
+          "tier": "performance",
+          "tensile_strength_lbs": "52000",
+          "working_load_lbs": "10500",
+          "source": "Allied-Locke",
+          "notes": "HD construction — confirmed from Allied-Locke live catalog. Specification varies by manufacturer vs WH124 baseline."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH124HD",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh124hd",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH124HD",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH124HD",
+          "confidence": "Confirmed",
+          "catalog_page": "34",
+          "notes": "Uniking welded steel heavy duty"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2"
+      ],
+      "sprocket_series": "WH-124",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-132",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH132",
+      "display_name": "WH132 Welded Steel Mill Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.050",
+      "pitch_mm": "153.67",
+      "description": "WH132 heavy welded steel chain — 2.88\" sprocket face for wide-conveyor grain elevator and aggregate applications.",
+      "specs": {
+        "pitch_in": "6.050",
+        "pitch_mm": "153.67",
+        "rivet_dia_in": "1.00",
+        "sidebar_width_in": "2.00",
+        "barrel_dia_in": "1.62",
+        "max_sprocket_face_in": "2.88",
+        "bearing_length_in": "4.38"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "76000",
+          "working_load_lbs": "15300",
+          "source": "Allied-Locke",
+          "notes": "Confirmed from Allied-Locke live catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH132",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh132",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH132",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH132",
+          "confidence": "Confirmed",
+          "catalog_page": "34",
+          "notes": "Uniking welded steel section"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2",
+        "WA-A1"
+      ],
+      "sprocket_series": "WH-132",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "WH132HD Heavy Duty"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-132HD",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH132HD",
+      "display_name": "WH132HD Heavy Duty Welded Steel Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.050",
+      "pitch_mm": "153.67",
+      "description": "WH132HD — extended bearing length (4.62\") vs WH132 (4.38\") for higher load capacity.",
+      "specs": {
+        "pitch_in": "6.050",
+        "pitch_mm": "153.67",
+        "rivet_dia_in": "1.00",
+        "sidebar_width_in": "2.00",
+        "barrel_dia_in": "1.62",
+        "max_sprocket_face_in": "2.88",
+        "bearing_length_in": "4.62"
+      },
+      "performance_tiers": [
+        {
+          "tier": "performance",
+          "tensile_strength_lbs": "81000",
+          "working_load_lbs": "16200",
+          "source": "Allied-Locke",
+          "notes": "HD construction — confirmed from Allied-Locke live catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH132HD",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh132hd",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH132HD",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH132HD",
+          "confidence": "Confirmed",
+          "catalog_page": "34",
+          "notes": "Uniking welded steel heavy duty"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2"
+      ],
+      "sprocket_series": "WH-132",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-150",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH150",
+      "display_name": "WH150 Welded Steel Mill Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "5.000",
+      "pitch_mm": "127.00",
+      "description": "WH150 heavy-pitch welded steel mill chain for high-load bulk handling applications.",
+      "specs": {
+        "pitch_in": "5.000",
+        "pitch_mm": "127.00",
+        "barrel_dia_in": "1.750",
+        "bearing_length_in": "2.500",
+        "avg_ultimate_lbs": "54000",
+        "max_working_load_lbs": "10800"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "54000",
+          "working_load_lbs": "10800",
+          "source": "Allied-Locke / MAC Chain"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH150",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH150",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH150",
+          "confidence": "Confirmed",
+          "catalog_page": "32",
+          "notes": "Uniking welded steel baseline"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2",
+        "WA-A1"
+      ],
+      "sprocket_series": "WH-150",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "WHX150 Induction Hardened"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-150HD",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH150HD",
+      "display_name": "WH150HD Heavy Duty Welded Steel Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.050",
+      "pitch_mm": "153.67",
+      "description": "WH150HD — wide sidebar (2.50\") with extended bearing length (4.62\"). Higher load than standard WH150.",
+      "specs": {
+        "pitch_in": "6.050",
+        "pitch_mm": "153.67",
+        "rivet_dia_in": "1.00",
+        "sidebar_width_in": "2.50",
+        "barrel_dia_in": "1.62",
+        "max_sprocket_face_in": "2.88",
+        "bearing_length_in": "4.62"
+      },
+      "performance_tiers": [
+        {
+          "tier": "performance",
+          "tensile_strength_lbs": "81000",
+          "working_load_lbs": "16200",
+          "source": "Allied-Locke",
+          "notes": "Confirmed from Allied-Locke live catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH150HD",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh150hd",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH150HD",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH150HD",
+          "confidence": "Confirmed",
+          "catalog_page": "35",
+          "notes": "Uniking welded steel heavy duty"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2"
+      ],
+      "sprocket_series": "WH-150",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "WH150XHD"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-150XHD",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH150XHD",
+      "display_name": "WH150XHD Extra Heavy Welded Steel Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.050",
+      "pitch_mm": "153.67",
+      "description": "WH150XHD — 1.12\" rivet diameter, heaviest sidebar in WH150 series. Maximum working load 18,200 lb.",
+      "specs": {
+        "pitch_in": "6.050",
+        "pitch_mm": "153.67",
+        "rivet_dia_in": "1.12",
+        "sidebar_width_in": "2.50",
+        "barrel_dia_in": "1.62",
+        "max_sprocket_face_in": "2.88",
+        "bearing_length_in": "4.62"
+      },
+      "performance_tiers": [
+        {
+          "tier": "premium",
+          "tensile_strength_lbs": "91000",
+          "working_load_lbs": "18200",
+          "source": "Allied-Locke",
+          "notes": "XHD construction — confirmed from Allied-Locke live catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH150XHD",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh150xhd",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH150XHD",
+          "confidence": "Confirmed",
+          "catalog_page": "35",
+          "notes": "Uniking welded steel extra heavy"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2"
+      ],
+      "sprocket_series": "WH-150",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-155",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH155",
+      "display_name": "WH155 Welded Steel Mill Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.050",
+      "pitch_mm": "153.67",
+      "description": "WH155 — 1.75\" barrel diameter, 3.00\" sprocket face. Wider than WH150 series for broader conveyor tracks.",
+      "specs": {
+        "pitch_in": "6.050",
+        "pitch_mm": "153.67",
+        "rivet_dia_in": "1.12",
+        "sidebar_width_in": "2.50",
+        "barrel_dia_in": "1.75",
+        "max_sprocket_face_in": "3.00",
+        "bearing_length_in": "4.50"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "88000",
+          "working_load_lbs": "17750",
+          "source": "Allied-Locke",
+          "notes": "Confirmed from Allied-Locke live catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH155",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh155",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH155",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH155",
+          "confidence": "Confirmed",
+          "catalog_page": "35",
+          "notes": "Uniking welded steel section"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2"
+      ],
+      "sprocket_series": "WH-155",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-159",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH159",
+      "display_name": "WH159 Welded Steel Mill Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.125",
+      "pitch_mm": "155.57",
+      "description": "WH159 — 2.00\" barrel, 3.00\" sprocket face, 6.125\" pitch. Largest standard WH mill chain in the Allied-Locke catalog. Working load 20,250 lb.",
+      "specs": {
+        "pitch_in": "6.125",
+        "pitch_mm": "155.57",
+        "rivet_dia_in": "1.25",
+        "sidebar_width_in": "3.00",
+        "barrel_dia_in": "2.00",
+        "max_sprocket_face_in": "3.00",
+        "bearing_length_in": "4.63"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "101000",
+          "working_load_lbs": "20250",
+          "source": "Allied-Locke",
+          "notes": "Confirmed from Allied-Locke live catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH159",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh159",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH159",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH159",
+          "confidence": "Confirmed",
+          "catalog_page": "35",
+          "notes": "Uniking welded steel section"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2"
+      ],
+      "sprocket_series": "WH-159",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-188",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH188",
+      "display_name": "WH188 Welded Steel Mill Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "WH188 lighter welded steel mill chain — 0.88\" barrel, narrower face than WH78. Used in lighter conveying applications.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "rivet_dia_in": "0.500",
+        "sidebar_width_in": "1.12",
+        "barrel_dia_in": "0.88",
+        "max_sprocket_face_in": "0.88",
+        "bearing_length_in": "1.62"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "14000",
+          "working_load_lbs": "2850",
+          "source": "Allied-Locke",
+          "notes": "Confirmed — working load 2,850 lb from Allied-Locke live catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH188",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh188",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH188",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH188",
+          "confidence": "Confirmed",
+          "catalog_page": "32",
+          "notes": "Uniking welded steel section"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-A1"
+      ],
+      "sprocket_series": "WH-188",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "WHX188 Induction Hardened"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-78",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH78",
+      "display_name": "WH78 Welded Steel Mill Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "All-welded steel mill chain with heat-treated components. Used in grain elevators, log handling, and bulk material conveying.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "barrel_dia_in": "1.000",
+        "bearing_length_in": "1.375",
+        "max_sprocket_face_in": "1.500",
+        "avg_ultimate_lbs": "18000",
+        "max_working_load_lbs": "3600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "18000",
+          "working_load_lbs": "3600",
+          "source": "Allied-Locke / MAC Chain"
+        },
+        {
+          "tier": "performance",
+          "tensile_strength_lbs": "22000",
+          "working_load_lbs": "4400",
+          "source": "WHX Series",
+          "notes": "Induction hardened barrels and sidebars"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH78",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH78",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WHX78",
+          "confidence": "Confirmed",
+          "notes": "Induction Hardened version"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "78B",
+          "confidence": "Confirmed",
+          "catalog_page": "158",
+          "notes": "WH78 welded steel — Donghua 78B designation"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH78",
+          "confidence": "Confirmed",
+          "catalog_page": "32",
+          "notes": "Uniking welded steel baseline"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2",
+        "WA-A1",
+        "WA-A2",
+        "WA-SA1"
+      ],
+      "sprocket_series": "WH-78",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "WHX78 Induction Hardened",
+        "Extended pitch versions"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-78-4",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH78-4",
+      "display_name": "WH78-4 Extended Pitch Welded Steel Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "4.000",
+      "pitch_mm": "101.60",
+      "description": "WH78 components at 4\" extended pitch. Used where wider pitch spacing is required while retaining WH78 sprocket compatibility.",
+      "specs": {
+        "pitch_in": "4.000",
+        "pitch_mm": "101.60",
+        "rivet_dia_in": "0.500",
+        "sidebar_width_in": "1.12",
+        "barrel_dia_in": "0.88",
+        "max_sprocket_face_in": "1.12",
+        "bearing_length_in": "2.00"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "18000",
+          "working_load_lbs": "3500",
+          "source": "Allied-Locke",
+          "notes": "Extended pitch variant of WH78. Confirmed from Allied-Locke live catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH78-4",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh78-4",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-A1"
+      ],
+      "sprocket_series": "WH-78",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-82",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH82",
+      "display_name": "WH82 Welded Steel Mill Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.075",
+      "pitch_mm": "78.11",
+      "description": "WH82 welded steel mill chain — 3.075\" pitch, heavier construction than WH78. Confirmed from Allied-Locke catalog.",
+      "specs": {
+        "pitch_in": "3.075",
+        "pitch_mm": "78.11",
+        "rivet_dia_in": "0.560",
+        "sidebar_width_in": "1.250",
+        "barrel_dia_in": "1.06",
+        "max_sprocket_face_in": "1.25",
+        "bearing_length_in": "2.25"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "22000",
+          "working_load_lbs": "4400",
+          "source": "Allied-Locke",
+          "notes": "Confirmed from Allied-Locke live catalog."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH82",
+          "confidence": "Confirmed",
+          "catalog_url": "https://chains.alliedlocke.com/item/welded-steel-chains/welded-mill-chains/wh82",
+          "image_url": "https://chains.alliedlocke.com/ImgMedium/WH124.jpg"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH82",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH82",
+          "confidence": "Confirmed",
+          "catalog_page": "32",
+          "notes": "Uniking welded steel section"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2",
+        "WA-A1"
+      ],
+      "sprocket_series": "WH-82",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "WHX82 Induction Hardened"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion2",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WH-88",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WH88",
+      "display_name": "WH88 Welded Steel Mill Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "WH88 welded steel mill chain with barrel diameter 1.000\" and heavier construction than WH78.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "barrel_dia_in": "1.000",
+        "bearing_length_in": "1.750",
+        "avg_ultimate_lbs": "25000",
+        "max_working_load_lbs": "5000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "25000",
+          "working_load_lbs": "5000",
+          "source": "Allied-Locke / MAC Chain"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WH88",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WH88",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WH88",
+          "confidence": "Confirmed",
+          "catalog_page": "32",
+          "notes": "Uniking welded steel baseline"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2",
+        "WA-A1",
+        "WA-A2"
+      ],
+      "sprocket_series": "WH-88",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "WHX88 Induction Hardened"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WR-106",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WR106",
+      "display_name": "WR106 Welded Steel Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.075",
+      "pitch_mm": "78.11",
+      "description": "WR106 welded steel roller chain for bulk handling and log processing.",
+      "specs": {
+        "pitch_in": "3.075",
+        "pitch_mm": "78.11",
+        "barrel_dia_in": "1.250",
+        "bearing_length_in": "1.875",
+        "avg_ultimate_lbs": "32000",
+        "max_working_load_lbs": "6400"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "32000",
+          "working_load_lbs": "6400",
+          "source": "Allied-Locke / MAC Chain"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WR106",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WR106",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2"
+      ],
+      "sprocket_series": "WR-106",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "WR-124",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WR124",
+      "display_name": "WR124 Welded Steel Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "4.063",
+      "pitch_mm": "103.19",
+      "description": "WR124 heavy welded steel roller chain for high-load conveying applications.",
+      "specs": {
+        "pitch_in": "4.063",
+        "pitch_mm": "103.19",
+        "barrel_dia_in": "1.375",
+        "bearing_length_in": "2.000",
+        "avg_ultimate_lbs": "38000",
+        "max_working_load_lbs": "7600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "38000",
+          "working_load_lbs": "7600",
+          "source": "Allied-Locke / MAC Chain"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WR124",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WR124",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2"
+      ],
+      "sprocket_series": "WR-124",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "WR-150",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WR150",
+      "display_name": "WR150 Welded Steel Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "5.000",
+      "pitch_mm": "127.00",
+      "description": "WR150 large-pitch welded steel roller chain for heavy bulk handling.",
+      "specs": {
+        "pitch_in": "5.000",
+        "pitch_mm": "127.00",
+        "barrel_dia_in": "1.750",
+        "bearing_length_in": "2.500",
+        "avg_ultimate_lbs": "54000",
+        "max_working_load_lbs": "10800"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "54000",
+          "working_load_lbs": "10800",
+          "source": "Allied-Locke / MAC Chain"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WR150",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WR150",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2"
+      ],
+      "sprocket_series": "WR-150",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "WR-78",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WR78",
+      "display_name": "WR78 Welded Steel Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "WR78 welded steel chain with rollers. Roller reduces friction against guide rails in conveyor applications.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "barrel_dia_in": "1.000",
+        "bearing_length_in": "1.375",
+        "avg_ultimate_lbs": "18000",
+        "max_working_load_lbs": "3600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "18000",
+          "working_load_lbs": "3600",
+          "source": "Allied-Locke / MAC Chain"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WR78",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WR78",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2",
+        "WA-A1",
+        "WA-A2"
+      ],
+      "sprocket_series": "WR-78",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "WR-88",
+      "chain_family": "Welded Steel Chains",
+      "chain_number": "WR88",
+      "display_name": "WR88 Welded Steel Roller Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "WR88 welded steel chain with rollers. Heavier construction than WR78.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "barrel_dia_in": "1.000",
+        "bearing_length_in": "1.750",
+        "avg_ultimate_lbs": "25000",
+        "max_working_load_lbs": "5000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "25000",
+          "working_load_lbs": "5000",
+          "source": "Allied-Locke / MAC Chain"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WR88",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WR88",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "WA-K1",
+        "WA-K2",
+        "WA-A1"
+      ],
+      "sprocket_series": "WR-88",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "welded_steel",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    }
+  ]
+}

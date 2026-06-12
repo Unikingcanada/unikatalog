@@ -1,0 +1,678 @@
+{
+  "family": "Steel Pintle Chains",
+  "slug": "steel-pintle-chains",
+  "count": 12,
+  "chains": [
+    {
+      "chain_id": "667",
+      "chain_family": "Steel Pintle Chains",
+      "chain_number": "667",
+      "display_name": "667 Steel Pintle Chain",
+      "standard": "ASME B29.6",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "Standard 667 steel pintle chain. All heat-treated components. Open barrel construction. Common in spreaders and agricultural conveying.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "avg_ultimate_lbs": "13000",
+        "max_working_load_lbs": "2600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "13000",
+          "working_load_lbs": "2600",
+          "source": "ASME B29.6"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "667",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "667",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "PC-A1",
+        "PC-K1",
+        "PC-SA1"
+      ],
+      "sprocket_series": "667",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "667X Extended life",
+        "667H Heavy"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "steel_pintle",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "667X",
+      "chain_family": "Steel Pintle Chains",
+      "chain_number": "667X",
+      "display_name": "667X Steel Pintle Chain — Extended Life",
+      "standard": "ASME B29.6",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "667X extended-life steel pintle chain with hardened barrels and quad-staked pins for demanding agricultural and industrial applications.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "avg_ultimate_lbs": "17000",
+        "max_working_load_lbs": "3400"
+      },
+      "performance_tiers": [
+        {
+          "tier": "performance",
+          "tensile_strength_lbs": "17000",
+          "working_load_lbs": "3400",
+          "source": "Allied-Locke 667X",
+          "notes": "Hardened barrels, quad-staked pins"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "667X",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "667X",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "PC-A1",
+        "PC-K1"
+      ],
+      "sprocket_series": "667",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "steel_pintle",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "667XH",
+      "chain_family": "Steel Pintle Chains",
+      "chain_number": "667XH",
+      "display_name": "667XH Steel Pintle Chain — Heavy Extended Life",
+      "standard": "ASME B29.6",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "667XH heavy-duty extended-life pintle chain. Quad-staked pins, induction-hardened barrels, heaviest sidebar plates in the 667 series.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "avg_ultimate_lbs": "22000",
+        "max_working_load_lbs": "4400"
+      },
+      "performance_tiers": [
+        {
+          "tier": "premium",
+          "tensile_strength_lbs": "22000",
+          "working_load_lbs": "4400",
+          "source": "Allied-Locke 667XH",
+          "notes": "Quad-staked, hardened barrels, heavy sidebars"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "667XH",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "667XH",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "PC-A1",
+        "PC-K1"
+      ],
+      "sprocket_series": "667",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "steel_pintle",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "7200",
+      "chain_family": "Steel Pintle Chains",
+      "chain_number": "7200",
+      "display_name": "7200 Series Steel Pintle Chain",
+      "standard": "ASME B29.6",
+      "pitch_in": "3.000",
+      "pitch_mm": "76.20",
+      "description": "7200 series pintle chain for fertilizer spreaders, manure conveyors, and heavier agricultural applications.",
+      "specs": {
+        "pitch_in": "3.000",
+        "pitch_mm": "76.20",
+        "avg_ultimate_lbs": "26000",
+        "max_working_load_lbs": "5200"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "26000",
+          "working_load_lbs": "5200",
+          "source": "ASME B29.6"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "7200",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "7200",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "PC-A1",
+        "PC-K1",
+        "PC-SA1",
+        "PC-FLAP"
+      ],
+      "sprocket_series": "7200",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Quad-staked pins",
+        "Extended barrel"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "steel_pintle",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "DH-PC-102B-PINTLE",
+      "chain_family": "Steel Pintle Chains",
+      "chain_number": "102B-P",
+      "display_name": "102B Steel Pintle Chain",
+      "standard": "ASME B29.6",
+      "pitch_in": "4.016",
+      "pitch_mm": "102.00",
+      "description": "102B steel pintle chain — 4\" pitch. Heavy-duty for large agricultural conveyors, industrial spreading equipment, and grain handling.",
+      "specs": {
+        "pitch_in": "4.016",
+        "pitch_mm": "102.00",
+        "avg_ultimate_lbs": "32000",
+        "max_working_load_lbs": "6400"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "32000",
+          "working_load_lbs": "6400",
+          "source": "Donghua catalog p.168, ASME B29.6"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "102B",
+          "confidence": "Needs Review",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "168",
+          "notes": "Verify: 102B appears in both welded steel and pintle sections — confirm correct classification"
+        }
+      ],
+      "attachments_available": [
+        "PC-A1",
+        "PC-K1"
+      ],
+      "sprocket_series": "PC-102",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Pending Review",
+      "_origin": "donghua_deep",
+      "_family_key": "steel_pintle",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "DH-PC-667",
+      "chain_family": "Steel Pintle Chains",
+      "chain_number": "667",
+      "display_name": "667 Steel Pintle Chain",
+      "standard": "ASME B29.6",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "667 steel pintle chain — standard pitch, single barrel construction. For agricultural conveyors, fertilizer spreaders, and light bulk material handling. Donghua confirmed.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "barrel_dia_in": "0.875",
+        "sidebar_height_in": "1.500",
+        "avg_ultimate_lbs": "14000",
+        "max_working_load_lbs": "2800",
+        "weight_lbs_ft": "2.8"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "14000",
+          "working_load_lbs": "2800",
+          "source": "Donghua catalog p.165, ASME B29.6"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "667",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "165"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "667",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "667",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "PC-A1",
+        "PC-K1",
+        "PC-SA1"
+      ],
+      "sprocket_series": "PC-667",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "667H Heavy",
+        "667X Extended Life",
+        "667XH Extra Heavy"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "steel_pintle",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-PC-667H",
+      "chain_family": "Steel Pintle Chains",
+      "chain_number": "667H",
+      "display_name": "667H Heavy Steel Pintle Chain",
+      "standard": "ASME B29.6",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "667H heavy series steel pintle chain. Heavier barrel and sidebar than standard 667. Higher working load for medium bulk material and agricultural applications.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "barrel_dia_in": "0.875",
+        "avg_ultimate_lbs": "18000",
+        "max_working_load_lbs": "3600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "performance",
+          "tensile_strength_lbs": "18000",
+          "working_load_lbs": "3600",
+          "source": "Donghua catalog p.165, ASME B29.6",
+          "notes": "H suffix — heavier construction than 667."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "667H",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "165"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "667H",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "PC-A1",
+        "PC-K1"
+      ],
+      "sprocket_series": "PC-667",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "667XH extra heavy"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "steel_pintle",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-PC-667X",
+      "chain_family": "Steel Pintle Chains",
+      "chain_number": "667X",
+      "display_name": "667X Extended Life Steel Pintle Chain",
+      "standard": "ASME B29.6",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "667X extended-life steel pintle chain. Induction-hardened barrels, staked pins — designed for maximum service life in abrasive bulk material applications.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "barrel_dia_in": "0.875",
+        "avg_ultimate_lbs": "20000",
+        "max_working_load_lbs": "4000",
+        "barrel_treatment": "Induction hardened",
+        "pin_staking": "Quad-staked"
+      },
+      "performance_tiers": [
+        {
+          "tier": "premium",
+          "tensile_strength_lbs": "20000",
+          "working_load_lbs": "4000",
+          "source": "Donghua catalog p.166",
+          "notes": "667X — induction hardened barrels, extended life."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "667X",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "166"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "667X",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "PC-A1",
+        "PC-K1"
+      ],
+      "sprocket_series": "PC-667",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "steel_pintle",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-PC-88K",
+      "chain_family": "Steel Pintle Chains",
+      "chain_number": "88K",
+      "display_name": "88K Steel Pintle Chain",
+      "standard": "ASME B29.6",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "88K steel pintle chain — heavier barrel than 667 series. Common in fertilizer and lime spreading equipment.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "avg_ultimate_lbs": "16000",
+        "max_working_load_lbs": "3200"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "16000",
+          "working_load_lbs": "3200",
+          "source": "Donghua catalog p.167, ASME B29.6"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "88K",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "167"
+        },
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "88K",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "PC-A1",
+        "PC-K1",
+        "PC-FLAP"
+      ],
+      "sprocket_series": "PC-88K",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Induction hardened variant"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "steel_pintle",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "PC-549",
+      "chain_family": "Steel Pintle Chains",
+      "chain_number": "549",
+      "display_name": "549 Steel Pintle Chain",
+      "standard": "ASME B29.6",
+      "pitch_in": "1.634",
+      "pitch_mm": "41.50",
+      "description": "Smaller pitch 549 steel pintle chain for lighter agricultural and industrial conveying.",
+      "specs": {
+        "pitch_in": "1.634",
+        "pitch_mm": "41.50",
+        "avg_ultimate_lbs": "8000",
+        "max_working_load_lbs": "1600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "8000",
+          "working_load_lbs": "1600",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "549",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "549",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "PC-A1",
+        "PC-K1"
+      ],
+      "sprocket_series": "549",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "steel_pintle",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "PC-557",
+      "chain_family": "Steel Pintle Chains",
+      "chain_number": "557",
+      "display_name": "557 Steel Pintle Chain",
+      "standard": "ASME B29.6",
+      "pitch_in": "1.634",
+      "pitch_mm": "41.50",
+      "description": "557 steel pintle chain with heavier construction than 549 for demanding agricultural conveying.",
+      "specs": {
+        "pitch_in": "1.634",
+        "pitch_mm": "41.50",
+        "avg_ultimate_lbs": "10000",
+        "max_working_load_lbs": "2000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "10000",
+          "working_load_lbs": "2000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "557",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "557",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "PC-A1",
+        "PC-K1",
+        "PC-SA1"
+      ],
+      "sprocket_series": "557",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "steel_pintle",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "PC-700",
+      "chain_family": "Steel Pintle Chains",
+      "chain_number": "700",
+      "display_name": "700 Class Steel Pintle Chain",
+      "standard": "ASME B29.6",
+      "pitch_in": "2.500",
+      "pitch_mm": "63.50",
+      "description": "700 class steel pintle chain for heavy fertilizer spreaders, manure conveyors, and industrial drag applications.",
+      "specs": {
+        "pitch_in": "2.500",
+        "pitch_mm": "63.50",
+        "avg_ultimate_lbs": "20000",
+        "max_working_load_lbs": "4000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "20000",
+          "working_load_lbs": "4000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "700",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "700",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "PC-A1",
+        "PC-K1",
+        "PC-SA1",
+        "PC-FLAP"
+      ],
+      "sprocket_series": "700",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "steel_pintle",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    }
+  ]
+}

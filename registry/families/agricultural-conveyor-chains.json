@@ -1,0 +1,942 @@
+{
+  "family": "Agricultural Conveyor Chains",
+  "slug": "agricultural-conveyor-chains",
+  "count": 18,
+  "chains": [
+    {
+      "chain_id": "CA2060H-AGR",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "CA2060H",
+      "display_name": "CA2060H Agricultural Double Pitch Chain",
+      "standard": "ASME B29.200 / ANSI B29.4",
+      "pitch_in": "1.500",
+      "pitch_mm": "38.10",
+      "description": "CA2060H double pitch heavy agricultural roller chain for long-span grain conveyors.",
+      "specs": {
+        "pitch_in": "1.500",
+        "pitch_mm": "38.10",
+        "avg_ultimate_lbs": "10500",
+        "max_working_load_lbs": "2100"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "10500",
+          "working_load_lbs": "2100",
+          "source": "Donghua catalog p.174"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CA2060H",
+          "confidence": "Confirmed",
+          "catalog_page": "174",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-A1",
+        "AGRI-K1"
+      ],
+      "sprocket_series": "C2060",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "CA2060H-F5",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "CA2060HF5",
+      "display_name": "CA2060H with F5 Attachment — Double Pitch Agricultural",
+      "standard": "ASME B29.200 / ANSI B29.4",
+      "pitch_in": "1.500",
+      "pitch_mm": "38.10",
+      "description": "CA2060H double pitch heavy agricultural chain with F5 bent-tab flight attachments for grain elevator boot sections and long-span inclined conveyors.",
+      "specs": {
+        "pitch_in": "1.500",
+        "pitch_mm": "38.10",
+        "attachment_type": "F5",
+        "avg_ultimate_lbs": "10500",
+        "max_working_load_lbs": "2100"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "10500",
+          "working_load_lbs": "2100",
+          "source": "Donghua catalog p.174"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CA2060HF5",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "174"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-F5"
+      ],
+      "sprocket_series": "C2060",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "CA550",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "CA550",
+      "display_name": "CA550 Agricultural Roller Chain",
+      "standard": "ASME B29.200",
+      "pitch_in": "1.654",
+      "pitch_mm": "42.01",
+      "description": "CA550 agricultural roller chain. Common in combines, forage harvesters, and grain handling equipment.",
+      "specs": {
+        "pitch_in": "1.654",
+        "pitch_mm": "42.01",
+        "avg_ultimate_lbs": "16000",
+        "max_working_load_lbs": "3200"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "16000",
+          "working_load_lbs": "3200",
+          "source": "ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "CA550",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "CA550",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "CA550V5",
+          "confidence": "Needs Review",
+          "catalog_page": "170",
+          "notes": "V5 attachment variant — verify dimensions"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-A1",
+        "AGRI-K1"
+      ],
+      "sprocket_series": "CA550",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "O-Ring version"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "CA550F2",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "CA550F2",
+      "display_name": "CA550F2 Agricultural Chain with F2 Attachment",
+      "standard": "ASME B29.200",
+      "pitch_in": "1.654",
+      "pitch_mm": "42.01",
+      "description": "CA550 agricultural chain with F2 flight attachments — bent-tab style for grain elevator legs and cross-rod mounting in agricultural conveyors.",
+      "specs": {
+        "pitch_in": "1.654",
+        "pitch_mm": "42.01",
+        "attachment_type": "F2",
+        "avg_ultimate_lbs": "17000",
+        "max_working_load_lbs": "3400"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "17000",
+          "working_load_lbs": "3400",
+          "source": "Donghua catalog p.170, ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CA550F2",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "170"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-F2",
+        "AGRI-FLIGHT"
+      ],
+      "attachment_configs": [
+        {
+          "code": "F2",
+          "side": "one_side",
+          "spacing": "every_2nd",
+          "description": "Bent flight tab for elevator legs"
+        }
+      ],
+      "sprocket_series": "CA550",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "CA550V5",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "CA550V5",
+      "display_name": "CA550V5 Agricultural Chain with V5 Attachment",
+      "standard": "ASME B29.200",
+      "pitch_in": "1.654",
+      "pitch_mm": "42.01",
+      "description": "CA550 chain with V5 slat/conveyor attachments for horizontal grain conveyors and auger-fed agricultural equipment.",
+      "specs": {
+        "pitch_in": "1.654",
+        "pitch_mm": "42.01",
+        "attachment_type": "V5",
+        "avg_ultimate_lbs": "17000",
+        "max_working_load_lbs": "3400"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "17000",
+          "working_load_lbs": "3400",
+          "source": "Donghua catalog p.171",
+          "notes": "V5 attachment — Needs Review: dimensions to be field-confirmed."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CA550V5",
+          "confidence": "Needs Review",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "171",
+          "notes": "V5 slat attachment — verify tab geometry against field units"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-V5"
+      ],
+      "sprocket_series": "CA550",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Pending Review",
+      "_origin": "donghua_deep",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "CA555",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "CA555",
+      "display_name": "CA555 Agricultural Roller Chain",
+      "standard": "ASME B29.200",
+      "pitch_in": "1.654",
+      "pitch_mm": "42.01",
+      "description": "CA555 agricultural chain for combines and harvesting equipment. Between CA550 and CA557 in strength.",
+      "specs": {
+        "pitch_in": "1.654",
+        "pitch_mm": "42.01",
+        "avg_ultimate_lbs": "17500",
+        "max_working_load_lbs": "3500"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "17500",
+          "working_load_lbs": "3500",
+          "source": "Donghua catalog p.172, ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CA555",
+          "confidence": "Confirmed",
+          "catalog_page": "172",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-A1",
+        "AGRI-K1"
+      ],
+      "sprocket_series": "CA550",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "CA557",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "CA557",
+      "display_name": "CA557 Agricultural Roller Chain",
+      "standard": "ASME B29.200",
+      "pitch_in": "1.654",
+      "pitch_mm": "42.01",
+      "description": "CA557 agricultural roller chain. Heavier than CA550. Common in combines and forage harvesters.",
+      "specs": {
+        "pitch_in": "1.654",
+        "pitch_mm": "42.01",
+        "avg_ultimate_lbs": "19000",
+        "max_working_load_lbs": "3800"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "19000",
+          "working_load_lbs": "3800",
+          "source": "ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "CA557",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "CA557",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-A1",
+        "AGRI-K1"
+      ],
+      "sprocket_series": "CA550",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "O-Ring version"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "CA557V5",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "CA557V5",
+      "display_name": "CA557V5 Agricultural Chain with V5 Attachment",
+      "standard": "ASME B29.200",
+      "pitch_in": "1.654",
+      "pitch_mm": "42.01",
+      "description": "CA557 chain with V5 attachment — heavier construction than CA550V5 for high-throughput grain and forage handling.",
+      "specs": {
+        "pitch_in": "1.654",
+        "pitch_mm": "42.01",
+        "attachment_type": "V5",
+        "avg_ultimate_lbs": "19000",
+        "max_working_load_lbs": "3800"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "19000",
+          "working_load_lbs": "3800",
+          "source": "Donghua catalog p.171",
+          "notes": "CA557 series with V5 attachment."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CA557V5",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "171"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-V5"
+      ],
+      "sprocket_series": "CA550",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "CA620",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "CA620",
+      "display_name": "CA620 Agricultural Roller Chain",
+      "standard": "ASME B29.200",
+      "pitch_in": "1.972",
+      "pitch_mm": "50.09",
+      "description": "CA620 heavy agricultural roller chain for demanding combine and forage harvester applications.",
+      "specs": {
+        "pitch_in": "1.972",
+        "pitch_mm": "50.09",
+        "avg_ultimate_lbs": "22000",
+        "max_working_load_lbs": "4400"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "22000",
+          "working_load_lbs": "4400",
+          "source": "ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "CA620",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "CA620",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-A1",
+        "AGRI-K1"
+      ],
+      "sprocket_series": "CA620",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "O-Ring version"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "CA620F2",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "CA620F2",
+      "display_name": "CA620F2 Agricultural Chain with F2 Flight",
+      "standard": "ASME B29.200",
+      "pitch_in": "1.972",
+      "pitch_mm": "50.09",
+      "description": "CA620 agricultural chain with F2 flight attachments for grain elevator legs and bucket elevator casings.",
+      "specs": {
+        "pitch_in": "1.972",
+        "pitch_mm": "50.09",
+        "attachment_type": "F2",
+        "avg_ultimate_lbs": "20500",
+        "max_working_load_lbs": "4100"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "20500",
+          "working_load_lbs": "4100",
+          "source": "Donghua catalog p.172, ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CA620F2",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "172"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-F2"
+      ],
+      "sprocket_series": "CA620",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "CA624",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "CA624",
+      "display_name": "CA624 Agricultural Roller Chain",
+      "standard": "ASME B29.200",
+      "pitch_in": "1.972",
+      "pitch_mm": "50.09",
+      "description": "CA624 heavy agricultural chain variant. Used in heavier combines and high-throughput harvesters.",
+      "specs": {
+        "pitch_in": "1.972",
+        "pitch_mm": "50.09",
+        "avg_ultimate_lbs": "24000",
+        "max_working_load_lbs": "4800"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "24000",
+          "working_load_lbs": "4800",
+          "source": "Donghua catalog p.172, ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CA624",
+          "confidence": "Confirmed",
+          "catalog_page": "172",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-A1",
+        "AGRI-K1"
+      ],
+      "sprocket_series": "CA620",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "CA650",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "CA650",
+      "display_name": "CA650 Agricultural Roller Chain",
+      "standard": "ASME B29.200",
+      "pitch_in": "2.148",
+      "pitch_mm": "54.56",
+      "description": "CA650 large-pitch agricultural chain for heavy-duty combine and forage harvester elevator systems.",
+      "specs": {
+        "pitch_in": "2.148",
+        "pitch_mm": "54.56",
+        "avg_ultimate_lbs": "28000",
+        "max_working_load_lbs": "5600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "28000",
+          "working_load_lbs": "5600",
+          "source": "Donghua catalog p.173, ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "CA650",
+          "confidence": "Confirmed",
+          "catalog_page": "173",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-A1",
+        "AGRI-K1"
+      ],
+      "sprocket_series": "CA650",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "S102BF11",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "S102BF11",
+      "display_name": "S102B Agricultural Chain with F11 Attachment",
+      "standard": "ASME B29.200",
+      "pitch_in": "4.000",
+      "pitch_mm": "101.60",
+      "description": "S102B large-pitch agricultural chain with F11 extended flat attachments for heavy duty combine platforms and industrial grain conveyor flights.",
+      "specs": {
+        "pitch_in": "4.000",
+        "pitch_mm": "101.60",
+        "attachment_type": "F11",
+        "avg_ultimate_lbs": "18000",
+        "max_working_load_lbs": "3600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "18000",
+          "working_load_lbs": "3600",
+          "source": "Donghua catalog p.179, ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "S102BF11",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "179"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-F11"
+      ],
+      "sprocket_series": "S102",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "S55",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "S55",
+      "display_name": "S55 Steel Detachable Chain",
+      "standard": "ASME B29.200",
+      "pitch_in": "1.630",
+      "pitch_mm": "41.40",
+      "description": "S55 steel detachable chain for spreaders, manure conveyors, and agricultural feeders.",
+      "specs": {
+        "pitch_in": "1.630",
+        "pitch_mm": "41.40",
+        "avg_ultimate_lbs": "5500",
+        "max_working_load_lbs": "1100"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "5500",
+          "working_load_lbs": "1100",
+          "source": "ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "S55",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "S55",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "S55A1",
+          "confidence": "Confirmed",
+          "catalog_page": "176",
+          "notes": "S55 with flight attachment"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-FLIGHT"
+      ],
+      "sprocket_series": "S55",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "S62",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "S62",
+      "display_name": "S62 Steel Detachable Chain",
+      "standard": "ASME B29.200",
+      "pitch_in": "1.630",
+      "pitch_mm": "41.40",
+      "description": "S62 heavy steel detachable chain. Higher strength than S55 for demanding agricultural applications.",
+      "specs": {
+        "pitch_in": "1.630",
+        "pitch_mm": "41.40",
+        "avg_ultimate_lbs": "6200",
+        "max_working_load_lbs": "1240"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "6200",
+          "working_load_lbs": "1240",
+          "source": "ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "S62",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "S62",
+          "confidence": "Confirmed",
+          "catalog_page": "175",
+          "notes": "Steel detachable"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "S62A1",
+          "confidence": "Confirmed",
+          "catalog_page": "176",
+          "notes": "S62 with flight attachment"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-FLIGHT"
+      ],
+      "sprocket_series": "S62",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "S77",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "S77",
+      "display_name": "S77 Steel Detachable Chain",
+      "standard": "ASME B29.200",
+      "pitch_in": "2.031",
+      "pitch_mm": "51.59",
+      "description": "S77 steel detachable chain for heavier agricultural conveying and spreading applications.",
+      "specs": {
+        "pitch_in": "2.031",
+        "pitch_mm": "51.59",
+        "avg_ultimate_lbs": "7700",
+        "max_working_load_lbs": "1540"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "7700",
+          "working_load_lbs": "1540",
+          "source": "ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "S77",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-FLIGHT"
+      ],
+      "sprocket_series": "S77",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "S77V1",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "S77V1",
+      "display_name": "S77V1 Agricultural Chain with V1 Attachment",
+      "standard": "ASME B29.200",
+      "pitch_in": "2.031",
+      "pitch_mm": "51.59",
+      "description": "S77 detachable chain with V1 flight attachment for manure spreaders, bedding conveyors, and agricultural drag applications.",
+      "specs": {
+        "pitch_in": "2.031",
+        "pitch_mm": "51.59",
+        "attachment_type": "V1",
+        "avg_ultimate_lbs": "7700",
+        "max_working_load_lbs": "1540"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "7700",
+          "working_load_lbs": "1540",
+          "source": "Donghua catalog p.177, ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "S77V1",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "177"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-V1",
+        "AGRI-FLIGHT"
+      ],
+      "sprocket_series": "S77",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "S88F7",
+      "chain_family": "Agricultural Conveyor Chains",
+      "chain_number": "S88F7",
+      "display_name": "S88F7 Agricultural Chain with F7 Attachment",
+      "standard": "ASME B29.200",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "S88 steel pintle-style agricultural chain with F7 broad flat-tab attachments. For wide-platform hay conveyors, straw walkers, and chaff handling in combines.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "attachment_type": "F7",
+        "avg_ultimate_lbs": "10000",
+        "max_working_load_lbs": "2000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "10000",
+          "working_load_lbs": "2000",
+          "source": "Donghua catalog p.178, ASME B29.200"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "S88F7",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "178"
+        }
+      ],
+      "attachments_available": [
+        "AGRI-F7"
+      ],
+      "sprocket_series": "S88",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "agricultural_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    }
+  ]
+}

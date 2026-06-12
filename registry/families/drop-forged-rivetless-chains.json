@@ -1,0 +1,364 @@
+{
+  "family": "Drop Forged Rivetless Chains",
+  "slug": "drop-forged-rivetless-chains",
+  "count": 6,
+  "chains": [
+    {
+      "chain_id": "DFR-477",
+      "chain_family": "Drop Forged Rivetless Chains",
+      "chain_number": "477",
+      "display_name": "477 Drop Forged Rivetless Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "4.000",
+      "pitch_mm": "101.60",
+      "description": "477 drop forged rivetless chain — alternative to X458 for certain overhead conveyor systems.",
+      "specs": {
+        "pitch_in": "4.000",
+        "pitch_mm": "101.60",
+        "avg_ultimate_lbs": "30000",
+        "max_working_load_lbs": "6000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "30000",
+          "working_load_lbs": "6000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "477",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "477",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "DFR-DOG",
+        "DFR-PUSHER"
+      ],
+      "sprocket_series": "477",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "drop_forged_rivetless",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "DFR-698",
+      "chain_family": "Drop Forged Rivetless Chains",
+      "chain_number": "698",
+      "display_name": "698 Drop Forged Rivetless Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "698 drop forged rivetless chain for heavy-duty overhead conveyor systems.",
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "avg_ultimate_lbs": "60000",
+        "max_working_load_lbs": "12000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "60000",
+          "working_load_lbs": "12000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "698",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "698",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "DFR-DOG",
+        "DFR-TROLLEY"
+      ],
+      "sprocket_series": "698",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "drop_forged_rivetless",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "FORGED-DFR-FAMILY",
+      "chain_family": "Drop Forged Rivetless Chains",
+      "chain_number": "DFR-Family",
+      "display_name": "Drop Forged Rivetless Chain — Uniking Family",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.075",
+      "pitch_mm": "78.11",
+      "description": "Drop forged rivetless chain family entry for Uniking normalized baseline. Includes X348, X458, X678, 477, 698 series. Used in overhead conveyors, power-and-free systems, and heavy industrial conveying.",
+      "application_tags": [
+        "heavy_industrial",
+        "bulk_material",
+        "transfer_conveyor"
+      ],
+      "specs": {
+        "type": "Drop forged rivetless",
+        "pitch_range_in": "3.075 - 6.000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "19500",
+          "working_load_lbs": "3900",
+          "source": "Uniking Industrial Bulk Material Catalog p.52"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "DFR-Family",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "52",
+          "notes": "Uniking forged chain section — see X348, X458, X678 for individual entries"
+        }
+      ],
+      "attachments_available": [
+        "DFR-DOG",
+        "DFR-PUSHER",
+        "DFR-TROLLEY"
+      ],
+      "sprocket_series": "X348",
+      "materials_available": [
+        "carbon_steel",
+        "high_temp"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "drop_forged_rivetless",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "X348",
+      "chain_family": "Drop Forged Rivetless Chains",
+      "chain_number": "X348",
+      "display_name": "X348 Drop Forged Rivetless Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.075",
+      "pitch_mm": "78.11",
+      "description": "Most common drop forged rivetless chain. Used in overhead conveyors, pusher bars, and automotive paint lines. X348 standard pitch.",
+      "specs": {
+        "pitch_in": "3.075",
+        "pitch_mm": "78.11",
+        "avg_ultimate_lbs": "19500",
+        "max_working_load_lbs": "3900"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "19500",
+          "working_load_lbs": "3900",
+          "source": "Allied-Locke"
+        },
+        {
+          "tier": "performance",
+          "tensile_strength_lbs": "25000",
+          "working_load_lbs": "5000",
+          "source": "Allied-Locke Extended",
+          "notes": "Heat treated version"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "X348",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "X348",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "X348",
+          "confidence": "Needs Review"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "X348",
+          "confidence": "Confirmed",
+          "catalog_page": "52",
+          "notes": "Uniking forged chains section"
+        }
+      ],
+      "attachments_available": [
+        "DFR-DOG",
+        "DFR-PUSHER",
+        "DFR-TROLLEY"
+      ],
+      "sprocket_series": "X348",
+      "materials_available": [
+        "carbon_steel",
+        "high_temp"
+      ],
+      "options_upgrades": [
+        "Extended pitch versions",
+        "Chrome pin upgrade",
+        "Corrosion coating"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "drop_forged_rivetless",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "X458",
+      "chain_family": "Drop Forged Rivetless Chains",
+      "chain_number": "X458",
+      "display_name": "X458 Drop Forged Rivetless Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "4.000",
+      "pitch_mm": "101.60",
+      "description": "Medium drop forged rivetless chain for overhead conveyors requiring higher load capacity than X348.",
+      "specs": {
+        "pitch_in": "4.000",
+        "pitch_mm": "101.60",
+        "avg_ultimate_lbs": "28000",
+        "max_working_load_lbs": "5600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "28000",
+          "working_load_lbs": "5600",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "X458",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "X458",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "X458",
+          "confidence": "Confirmed",
+          "catalog_page": "52",
+          "notes": "Uniking forged chains section"
+        }
+      ],
+      "attachments_available": [
+        "DFR-DOG",
+        "DFR-PUSHER"
+      ],
+      "sprocket_series": "X458",
+      "materials_available": [
+        "carbon_steel",
+        "high_temp"
+      ],
+      "options_upgrades": [
+        "Chrome pins"
+      ],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "drop_forged_rivetless",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "X678",
+      "chain_family": "Drop Forged Rivetless Chains",
+      "chain_number": "X678",
+      "display_name": "X678 Drop Forged Rivetless Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "Large-pitch drop forged rivetless chain for heavy overhead and power-and-free conveyor systems.",
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "avg_ultimate_lbs": "65000",
+        "max_working_load_lbs": "13000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "65000",
+          "working_load_lbs": "13000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "X678",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "X678",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "X678",
+          "confidence": "Needs Review"
+        }
+      ],
+      "attachments_available": [
+        "DFR-DOG",
+        "DFR-PUSHER",
+        "DFR-TROLLEY"
+      ],
+      "sprocket_series": "X678",
+      "materials_available": [
+        "carbon_steel",
+        "high_temp"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "drop_forged_rivetless",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    }
+  ]
+}

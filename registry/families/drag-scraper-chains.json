@@ -1,0 +1,384 @@
+{
+  "family": "Drag / Scraper Chains",
+  "slug": "drag-scraper-chains",
+  "count": 6,
+  "chains": [
+    {
+      "chain_id": "DH-EM-2609",
+      "chain_family": "Drag / Scraper Chains",
+      "chain_number": "EM-2609",
+      "display_name": "2.609\" En-Masse Drag Conveyor Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "2.609\" pitch en-masse drag conveyor chain (Donghua catalog). Solid barrel bushed construction with heavy flight attachments. Used in grain, fertilizer, and bulk chemical en-masse conveyors.",
+      "application_tags": [
+        "grain_handling",
+        "bulk_material",
+        "drag_conveyor",
+        "fertilizer"
+      ],
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "type": "En-masse drag",
+        "barrel_dia_in": "0.875",
+        "avg_ultimate_lbs": "18000",
+        "max_working_load_lbs": "3600",
+        "weight_lbs_ft": "4.5"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "18000",
+          "working_load_lbs": "3600",
+          "source": "Donghua catalog p.155",
+          "notes": "En-masse drag chain configuration."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "EM-2609",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "155"
+        }
+      ],
+      "attachments_available": [
+        "ENG-FLIGHT-EN-MASSE",
+        "ENG-SCRAPER",
+        "ENG-K1"
+      ],
+      "sprocket_series": "ENG-78",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Hardened pins",
+        "Extended wear flights"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "drag_scraper",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-SCRAP-F6-102",
+      "chain_family": "Drag / Scraper Chains",
+      "chain_number": "F6-P102",
+      "display_name": "F6 Scraper Chain — 102mm Pitch",
+      "standard": "Custom / Bulk Handling",
+      "pitch_in": "4.016",
+      "pitch_mm": "102.00",
+      "description": "F6 scraper conveyor chain — 102mm pitch with heavy double-bent flight attachments. For high-capacity scraper conveyors in cement, aggregate, and mining.",
+      "application_tags": [
+        "cement",
+        "aggregate",
+        "mining",
+        "scraper_conveyor",
+        "bulk_material"
+      ],
+      "specs": {
+        "pitch_mm": "102.00",
+        "pitch_in": "4.016",
+        "type": "Scraper conveyor",
+        "flight_type": "F6 double-bent",
+        "avg_ultimate_lbs": "110000",
+        "max_working_load_lbs": "22000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "110000",
+          "working_load_lbs": "22000",
+          "source": "Donghua catalog p.156, scraper series"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "F6-P102",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "156"
+        }
+      ],
+      "attachments_available": [
+        "ENG-FLIGHT-F6",
+        "ENG-SCRAPER-DOUBLE"
+      ],
+      "sprocket_series": "ENG-P102",
+      "materials_available": [
+        "carbon_steel",
+        "alloy_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "drag_scraper",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DRAG-ENG-2.609",
+      "chain_family": "Drag / Scraper Chains",
+      "chain_number": "DRAG-2.609",
+      "display_name": "2.609\" Drag Conveyor Chain Family",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "2.609\" pitch drag and scraper conveyor chain family. Normalized entry covering 81X, 81XH, 81XHH, 270 and equivalent chains configured with flight/scraper attachments for en-masse drag conveying in bulk material handling.",
+      "application_tags": [
+        "bulk_material",
+        "grain_handling",
+        "aggregate",
+        "drag_conveyor",
+        "scraper_conveyor"
+      ],
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "type": "Drag/scraper conveyor",
+        "rated_working_load_range_lbs": "2000-3500",
+        "common_chain_series": "81X / 81XH / 81XHH / 270"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "16000",
+          "working_load_lbs": "2000",
+          "source": "Uniking Industrial Bulk Material Catalog p.4 (81X baseline)"
+        },
+        {
+          "tier": "premium",
+          "tensile_strength_lbs": "40000",
+          "working_load_lbs": "3500",
+          "source": "Uniking Industrial Bulk Material Catalog p.4 (270 series)"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "DRAG-2.609",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "4-11",
+          "notes": "Uniking family grouping — see individual chain entries"
+        }
+      ],
+      "attachments_available": [
+        "ENG-FLIGHT",
+        "ENG-SCRAPER",
+        "ENG-A1",
+        "ENG-K1"
+      ],
+      "sprocket_series": "ENG-78",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [
+        "Flight attachments",
+        "Scraper attachments",
+        "Extended pin"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "drag_scraper",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DRAG-ENG-6.000",
+      "chain_family": "Drag / Scraper Chains",
+      "chain_number": "DRAG-6.000",
+      "display_name": "6\" Drag Conveyor Chain Family",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "6\" pitch drag and scraper conveyor chain family. Covers SR196, 2126, SR1114, 2180, 2183 and equivalents with flight/scraper attachments for heavy bulk material handling.",
+      "application_tags": [
+        "cement",
+        "aggregate",
+        "mining",
+        "bulk_material",
+        "drag_conveyor"
+      ],
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "type": "Drag/scraper conveyor",
+        "rated_working_load_range_lbs": "2600-4600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "18000",
+          "working_load_lbs": "2600",
+          "source": "Uniking Industrial Bulk Material Catalog p.5 (SR196 baseline)"
+        },
+        {
+          "tier": "premium",
+          "tensile_strength_lbs": "35000",
+          "working_load_lbs": "4600",
+          "source": "Uniking Industrial Bulk Material Catalog p.5 (2183 series)"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Uniking",
+          "code": "DRAG-6.000",
+          "confidence": "Confirmed",
+          "catalog_url": "https://unikingcanada.com/catalogs/uniking-industrial-bulk-material-catalog-industry-conveyor-chains-supplier-canada.pdf",
+          "catalog_page": "4-11",
+          "notes": "Uniking family grouping"
+        }
+      ],
+      "attachments_available": [
+        "ENG-FLIGHT",
+        "ENG-SCRAPER",
+        "ENG-A1",
+        "ENG-K1"
+      ],
+      "sprocket_series": "ENG-196",
+      "materials_available": [
+        "carbon_steel",
+        "carburized"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "uniking_bulk",
+      "_family_key": "drag_scraper",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WD-124",
+      "chain_family": "Drag / Scraper Chains",
+      "chain_number": "WD124",
+      "display_name": "WD124 Welded Steel Drag Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "4.063",
+      "pitch_mm": "103.19",
+      "description": "WD124 heavy welded steel drag chain for high-load en-masse conveying.",
+      "specs": {
+        "pitch_in": "4.063",
+        "pitch_mm": "103.19",
+        "avg_ultimate_lbs": "38000",
+        "max_working_load_lbs": "7600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "38000",
+          "working_load_lbs": "7600",
+          "source": "Allied-Locke / MAC Chain"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WD124",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WD124",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WD124",
+          "confidence": "Confirmed",
+          "catalog_page": "49",
+          "notes": "Uniking drag chain attachments section"
+        }
+      ],
+      "attachments_available": [
+        "WA-FLIGHT",
+        "WA-SCRAPER"
+      ],
+      "sprocket_series": "WD-124",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "drag_scraper",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "WD-78",
+      "chain_family": "Drag / Scraper Chains",
+      "chain_number": "WD78",
+      "display_name": "WD78 Welded Steel Drag Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "2.609",
+      "pitch_mm": "66.27",
+      "description": "WD78 welded steel drag chain for en-masse and scraper conveying applications.",
+      "specs": {
+        "pitch_in": "2.609",
+        "pitch_mm": "66.27",
+        "avg_ultimate_lbs": "18000",
+        "max_working_load_lbs": "3600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "18000",
+          "working_load_lbs": "3600",
+          "source": "Allied-Locke / MAC Chain"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "WD78",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "WD78",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Uniking",
+          "code": "WD78",
+          "confidence": "Confirmed",
+          "catalog_page": "49",
+          "notes": "Uniking drag chain attachments section"
+        }
+      ],
+      "attachments_available": [
+        "WA-FLIGHT",
+        "WA-SCRAPER"
+      ],
+      "sprocket_series": "WD-78",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "exact",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "drag_scraper",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    }
+  ]
+}

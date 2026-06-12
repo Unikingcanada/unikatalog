@@ -1,0 +1,344 @@
+{
+  "family": "Bucket Elevator Chains",
+  "slug": "bucket-elevator-chains",
+  "count": 6,
+  "chains": [
+    {
+      "chain_id": "BEC-AA2050",
+      "chain_family": "Bucket Elevator Chains",
+      "chain_number": "AA2050",
+      "display_name": "AA2050 Bucket Elevator Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "1.250",
+      "pitch_mm": "31.75",
+      "description": "AA2050 center chain for bucket elevators. Central chain design allows buckets to be mounted on pins.",
+      "specs": {
+        "pitch_in": "1.250",
+        "pitch_mm": "31.75",
+        "avg_ultimate_lbs": "18000",
+        "max_working_load_lbs": "3600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "18000",
+          "working_load_lbs": "3600",
+          "source": "ASME B29.100"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "AA2050",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "AA2050",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "ELEV-BUCKET-A",
+        "ELEV-BUCKET-B"
+      ],
+      "sprocket_series": "BEC-AA",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "Extended pin option for bucket mounting"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "bucket_elevator",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "BEC-AA2060",
+      "chain_family": "Bucket Elevator Chains",
+      "chain_number": "AA2060",
+      "display_name": "AA2060 Bucket Elevator Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "1.500",
+      "pitch_mm": "38.10",
+      "description": "AA2060 bucket elevator chain. Heavier construction for larger bucket elevator systems.",
+      "specs": {
+        "pitch_in": "1.500",
+        "pitch_mm": "38.10",
+        "avg_ultimate_lbs": "24000",
+        "max_working_load_lbs": "4800"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "24000",
+          "working_load_lbs": "4800",
+          "source": "ASME B29.100"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "AA2060",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "AA2060",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "ELEV-BUCKET-A",
+        "ELEV-BUCKET-B"
+      ],
+      "sprocket_series": "BEC-AA",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "bucket_elevator",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "BEC-CAST-G6",
+      "chain_family": "Bucket Elevator Chains",
+      "chain_number": "G6",
+      "display_name": "G6 Cast Rivetless Bucket Elevator Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "6.000",
+      "pitch_mm": "152.40",
+      "description": "G6 cast manganese rivetless chain for heavy bucket elevators in cement, aggregate, and mining applications.",
+      "specs": {
+        "pitch_in": "6.000",
+        "pitch_mm": "152.40",
+        "avg_ultimate_lbs": "90000",
+        "max_working_load_lbs": "18000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "90000",
+          "working_load_lbs": "18000",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "G6",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "MAC Chain",
+          "code": "G6",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "ELEV-BUCKET-CAST"
+      ],
+      "sprocket_series": "BEC-CAST",
+      "materials_available": [
+        "cast_manganese",
+        "cast_alloy"
+      ],
+      "options_upgrades": [
+        "Alloy steel version"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "bucket_elevator",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "DH-BEC-FU-160",
+      "chain_family": "Bucket Elevator Chains",
+      "chain_number": "FU160",
+      "display_name": "FU160 Drag & Elevator Chain",
+      "standard": "Custom / Chinese Standard GB/T",
+      "pitch_in": "6.299",
+      "pitch_mm": "160.00",
+      "description": "FU160 scraper and elevator combination chain for grain hoppers, coal handling, and bulk material elevators. Chinese standard GB/T compatible, widely used in domestic grain handling systems.",
+      "application_tags": [
+        "grain_handling",
+        "bulk_material",
+        "elevator",
+        "coal"
+      ],
+      "specs": {
+        "pitch_mm": "160.00",
+        "pitch_in": "6.299",
+        "type": "Drag & bucket elevator",
+        "standard_ref": "GB/T 10074",
+        "avg_ultimate_lbs": "50000",
+        "max_working_load_lbs": "10000"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "50000",
+          "working_load_lbs": "10000",
+          "source": "Donghua catalog p.185",
+          "notes": "FU160 — Chinese GB standard chain for grain elevator/drag systems."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "FU160",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "185"
+        }
+      ],
+      "attachments_available": [
+        "ELEV-BUCKET-FU",
+        "FU-FLIGHT"
+      ],
+      "sprocket_series": "FU160",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "bucket_elevator",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-BEC-TH-102",
+      "chain_family": "Bucket Elevator Chains",
+      "chain_number": "TH102",
+      "display_name": "TH102 High-Speed Bucket Elevator Chain",
+      "standard": "Custom / Bucket Elevator",
+      "pitch_in": "4.016",
+      "pitch_mm": "102.00",
+      "description": "TH102 high-speed bucket elevator chain. Precision-ground, hardened components for high-speed grain elevators in ports and grain terminals. Smooth-running at speeds up to 3 m/s.",
+      "application_tags": [
+        "grain_handling",
+        "elevator",
+        "bulk_material"
+      ],
+      "specs": {
+        "pitch_mm": "102.00",
+        "pitch_in": "4.016",
+        "type": "High-speed bucket elevator",
+        "max_speed_ms": "3.0",
+        "avg_ultimate_lbs": "72000",
+        "max_working_load_lbs": "14400"
+      },
+      "performance_tiers": [
+        {
+          "tier": "performance",
+          "tensile_strength_lbs": "72000",
+          "working_load_lbs": "14400",
+          "source": "Donghua catalog p.186",
+          "notes": "TH102 high-speed elevator — hardened components."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "TH102",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "186"
+        }
+      ],
+      "attachments_available": [
+        "ELEV-BUCKET-TH"
+      ],
+      "sprocket_series": "TH102",
+      "materials_available": [
+        "carbon_steel",
+        "induction_hard"
+      ],
+      "options_upgrades": [
+        "Hardened pin version"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "bucket_elevator",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-BEC-VC",
+      "chain_family": "Bucket Elevator Chains",
+      "chain_number": "VC",
+      "display_name": "VC Series Bucket Elevator Chain",
+      "standard": "Custom / Bucket Elevator",
+      "pitch_in": "varies",
+      "pitch_mm": "varies",
+      "description": "Donghua VC series bucket elevator chain. Continuous center-chain design for vertical bucket elevators in grain, cement, fertilizer, and bulk chemical handling.",
+      "application_tags": [
+        "grain_handling",
+        "cement",
+        "bulk_material",
+        "elevator"
+      ],
+      "specs": {
+        "type": "Bucket elevator center chain",
+        "pitch_range_mm": "50.8 - 160.0",
+        "construction": "Welded steel, center chain"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "20000",
+          "working_load_lbs": "4000",
+          "source": "Donghua catalog p.183",
+          "notes": "VC series — working load varies by pitch. Specification varies by manufacturer."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "VC",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "183"
+        }
+      ],
+      "attachments_available": [
+        "ELEV-BUCKET-BOLT",
+        "ELEV-BUCKET-A",
+        "ELEV-BUCKET-B"
+      ],
+      "sprocket_series": "BEC-VC",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Stainless for corrosive materials",
+        "With plastic rollers"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_deep",
+      "_family_key": "bucket_elevator",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    }
+  ]
+}

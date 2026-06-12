@@ -1,0 +1,251 @@
+{
+  "family": "Overhead Conveyor Chains",
+  "slug": "overhead-conveyor-chains",
+  "count": 4,
+  "chains": [
+    {
+      "chain_id": "DH-OVH-IBEAM-3",
+      "chain_family": "Overhead Conveyor Chains",
+      "chain_number": "X458-I-BEAM",
+      "display_name": "3\" I-Beam Overhead Conveyor Chain",
+      "standard": "ASME B29.100 / Custom",
+      "pitch_in": "3.000",
+      "pitch_mm": "76.20",
+      "description": "3\" pitch drop-forged I-beam trolley conveyor chain for overhead monorail and power-&-free systems. Used in automotive paint lines, metal finishing, and assembly automation.",
+      "application_tags": [
+        "automotive",
+        "overhead_conveyor",
+        "assembly_automation",
+        "paint_line"
+      ],
+      "specs": {
+        "pitch_in": "3.000",
+        "pitch_mm": "76.20",
+        "type": "I-beam trolley",
+        "avg_ultimate_lbs": "32000",
+        "max_working_load_lbs": "6400",
+        "max_load_per_trolley_lbs": "1200",
+        "trolley_wheel_dia_in": "3.00"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "32000",
+          "working_load_lbs": "6400",
+          "source": "Donghua catalog p.108, overhead conveyor section",
+          "notes": "I-beam overhead chain — load per trolley wheel is separate from chain tensile rating."
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "X458-3IN",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "108"
+        },
+        {
+          "manufacturer": "Rexnord",
+          "code": "X458",
+          "confidence": "Needs Review",
+          "notes": "X458 cross-ref — verify I-beam size compatibility"
+        }
+      ],
+      "attachments_available": [
+        "OVH-PUSHER-DOG",
+        "OVH-CARRIER-BAR",
+        "OVH-PICKUP-DOG"
+      ],
+      "sprocket_series": "OVH-3IN",
+      "materials_available": [
+        "carbon_steel",
+        "alloy_steel"
+      ],
+      "options_upgrades": [
+        "4\" pitch version",
+        "Extended trolley assemblies"
+      ],
+      "downloads": [
+        {
+          "label": "Donghua Catalog — Overhead Conveyor",
+          "url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "type": "pdf",
+          "page_ref": "108"
+        }
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "overhead_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "DH-OVH-IBEAM-4",
+      "chain_family": "Overhead Conveyor Chains",
+      "chain_number": "X678-I-BEAM",
+      "display_name": "4\" I-Beam Overhead Conveyor Chain",
+      "standard": "ASME B29.100 / Custom",
+      "pitch_in": "4.000",
+      "pitch_mm": "101.60",
+      "description": "4\" pitch drop-forged I-beam trolley overhead conveyor chain. Heavy-duty automotive, foundry, and industrial hanging conveyor applications.",
+      "application_tags": [
+        "automotive",
+        "overhead_conveyor",
+        "foundry",
+        "heavy_industrial"
+      ],
+      "specs": {
+        "pitch_in": "4.000",
+        "pitch_mm": "101.60",
+        "type": "I-beam trolley heavy",
+        "avg_ultimate_lbs": "55000",
+        "max_working_load_lbs": "11000",
+        "max_load_per_trolley_lbs": "2000",
+        "trolley_wheel_dia_in": "4.00"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "55000",
+          "working_load_lbs": "11000",
+          "source": "Donghua catalog p.110",
+          "notes": "4\" I-beam overhead — heavy duty"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "X678-4IN",
+          "confidence": "Confirmed",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "catalog_page": "110"
+        }
+      ],
+      "attachments_available": [
+        "OVH-PUSHER-DOG",
+        "OVH-CARRIER-BAR"
+      ],
+      "sprocket_series": "OVH-4IN",
+      "materials_available": [
+        "carbon_steel",
+        "alloy_steel"
+      ],
+      "options_upgrades": [],
+      "downloads": [
+        {
+          "label": "Donghua Catalog — Overhead Section",
+          "url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf",
+          "type": "pdf",
+          "page_ref": "110"
+        }
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua_phase4",
+      "_family_key": "overhead_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "OHC-X348-TROLLEY",
+      "chain_family": "Overhead Conveyor Chains",
+      "chain_number": "X348-Trolley",
+      "display_name": "X348 Overhead Trolley Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "3.075",
+      "pitch_mm": "78.11",
+      "description": "X348 rivetless chain configured for overhead trolley conveyor systems. Includes trolley pusher and dog attachments.",
+      "specs": {
+        "pitch_in": "3.075",
+        "pitch_mm": "78.11",
+        "avg_ultimate_lbs": "19500",
+        "max_working_load_lbs": "3900"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "19500",
+          "working_load_lbs": "3900",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "X348-Trolley",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "DFR-TROLLEY",
+        "DFR-PUSHER",
+        "DFR-DOG"
+      ],
+      "sprocket_series": "X348",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "Power-and-Free configuration",
+        "Corrosion coating"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "overhead_conveyor",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    },
+    {
+      "chain_id": "OHC-X458-TROLLEY",
+      "chain_family": "Overhead Conveyor Chains",
+      "chain_number": "X458-Trolley",
+      "display_name": "X458 Overhead Trolley Chain",
+      "standard": "ASME B29.100",
+      "pitch_in": "4.000",
+      "pitch_mm": "101.60",
+      "description": "X458 rivetless chain for heavier overhead trolley conveyor systems.",
+      "specs": {
+        "pitch_in": "4.000",
+        "pitch_mm": "101.60",
+        "avg_ultimate_lbs": "28000",
+        "max_working_load_lbs": "5600"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "28000",
+          "working_load_lbs": "5600",
+          "source": "Allied-Locke"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "X458-Trolley",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "DFR-TROLLEY",
+        "DFR-PUSHER"
+      ],
+      "sprocket_series": "X458",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "overhead_conveyor",
+      "_family_unmapped": false,
+      "provenance": "derived",
+      "needs_review": true
+    }
+  ]
+}

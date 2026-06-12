@@ -1,0 +1,793 @@
+{
+  "family": "Double Pitch Conveyor Chains",
+  "slug": "double-pitch-conveyor-chains",
+  "count": 12,
+  "chains": [
+    {
+      "chain_id": "C2040",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2040",
+      "display_name": "C2040 Double Pitch Roller Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "1.000",
+      "pitch_mm": "25.40",
+      "description": "1\" double pitch conveyor chain. Uses #40 components at double pitch — economy conveyor chain.",
+      "specs": {
+        "pitch_in": "1.000",
+        "pitch_mm": "25.40",
+        "roller_dia_in": "0.312",
+        "roller_width_in": "0.312",
+        "avg_ultimate_lbs": "3700",
+        "max_working_load_lbs": "810"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "3700",
+          "working_load_lbs": "810",
+          "source": "ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "C2040",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "C2040",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "C2040",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "C2040H",
+          "confidence": "Confirmed",
+          "catalog_page": "90",
+          "notes": "Double pitch heavy C2040 series"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2",
+        "SA1",
+        "SA2"
+      ],
+      "sprocket_series": "C2040",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304",
+        "nickel_plated"
+      ],
+      "options_upgrades": [
+        "Large roller (C2042 LR)",
+        "Small roller (C2040 SR)",
+        "Walk-on-Rail"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "double_pitch_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "C2042",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2042",
+      "display_name": "C2042 Double Pitch Large Roller Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "1.000",
+      "pitch_mm": "25.40",
+      "description": "C2042 — double pitch chain using #40 components with large roller (R2) for smoother running on guide rails.",
+      "specs": {
+        "pitch_in": "1.000",
+        "pitch_mm": "25.40",
+        "roller_dia_in": "0.440",
+        "roller_width_in": "0.312"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "3700",
+          "working_load_lbs": "810",
+          "source": "Donghua catalog p.90, ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "C2042",
+          "confidence": "Confirmed",
+          "catalog_page": "90",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "C2042",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "SA1",
+        "SA2",
+        "SK1",
+        "SK2"
+      ],
+      "sprocket_series": "C2040",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "double_pitch_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "C2050",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2050",
+      "display_name": "C2050 Double Pitch Roller Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "1.250",
+      "pitch_mm": "31.75",
+      "description": "1-1/4\" double pitch chain using #50 components. Economy conveyor chain for light loads.",
+      "specs": {
+        "pitch_in": "1.250",
+        "pitch_mm": "31.75",
+        "roller_dia_in": "0.400",
+        "roller_width_in": "0.375",
+        "avg_ultimate_lbs": "6100",
+        "max_working_load_lbs": "1330"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "6100",
+          "working_load_lbs": "1330",
+          "source": "ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "C2050",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "C2050",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "C2050",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2"
+      ],
+      "sprocket_series": "C2050",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304",
+        "nickel_plated"
+      ],
+      "options_upgrades": [
+        "Large roller (LR)",
+        "Small roller (SR)"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "double_pitch_conveyor",
+      "_family_unmapped": false,
+      "provenance": "standard-nominal",
+      "needs_review": false
+    },
+    {
+      "chain_id": "C2052",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2052",
+      "display_name": "C2052 Double Pitch Large Roller Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "1.250",
+      "pitch_mm": "31.75",
+      "description": "C2052 — double pitch chain using #50 components with large roller (R2).",
+      "specs": {
+        "pitch_in": "1.250",
+        "pitch_mm": "31.75",
+        "roller_dia_in": "0.563",
+        "roller_width_in": "0.375"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "6100",
+          "working_load_lbs": "1330",
+          "source": "Donghua catalog p.90, ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "C2052",
+          "confidence": "Confirmed",
+          "catalog_page": "90",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [
+        "SA1",
+        "SA2",
+        "SK1",
+        "SK2"
+      ],
+      "sprocket_series": "C2050",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "double_pitch_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "C2060",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2060",
+      "display_name": "C2060 Double Pitch Roller Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "1.500",
+      "pitch_mm": "38.10",
+      "description": "1-1/2\" double pitch chain using #60 components. Standard bore conveyor chain.",
+      "specs": {
+        "pitch_in": "1.500",
+        "pitch_mm": "38.10",
+        "roller_dia_in": "0.469",
+        "roller_width_in": "0.500",
+        "avg_ultimate_lbs": "8500",
+        "max_working_load_lbs": "1950"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "8500",
+          "working_load_lbs": "1950",
+          "source": "ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "C2060",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "C2060",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "C2060",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Peer",
+          "code": "C2060",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "C2060A1",
+          "confidence": "Confirmed",
+          "catalog_page": "94",
+          "notes": "A1 attachment double pitch"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "C2060K1",
+          "confidence": "Confirmed",
+          "catalog_page": "94",
+          "notes": "K1 attachment double pitch"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2",
+        "SA1",
+        "SA2"
+      ],
+      "sprocket_series": "C2060",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304",
+        "nickel_plated"
+      ],
+      "options_upgrades": [
+        "C2060H Heavy Series",
+        "Large Roller",
+        "Small Roller",
+        "Walk-on-Rail"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "double_pitch_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "C2060H",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2060H",
+      "display_name": "C2060H Double Pitch Heavy Roller Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "1.500",
+      "pitch_mm": "38.10",
+      "description": "1-1/2\" double pitch heavy roller chain. Heavy sidebar plates. Common in package handling and assembly.",
+      "specs": {
+        "pitch_in": "1.500",
+        "pitch_mm": "38.10",
+        "roller_dia_in": "0.469",
+        "roller_width_in": "0.500",
+        "avg_ultimate_lbs": "10500",
+        "max_working_load_lbs": "2100"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "10500",
+          "working_load_lbs": "2100",
+          "source": "ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "C2060H",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "C2060H",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "C2060H",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Peer",
+          "code": "C2060H",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2",
+        "SA1",
+        "SA2",
+        "WA2"
+      ],
+      "sprocket_series": "C2060",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304",
+        "nickel_plated",
+        "armor_coat"
+      ],
+      "options_upgrades": [
+        "Large Roller",
+        "Small Roller",
+        "Walk-on-Rail"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "double_pitch_conveyor",
+      "_family_unmapped": false,
+      "provenance": "standard-nominal",
+      "needs_review": false
+    },
+    {
+      "chain_id": "C2062",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2062",
+      "display_name": "C2062 Double Pitch Large Roller Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "1.500",
+      "pitch_mm": "38.10",
+      "description": "C2062 — double pitch chain with large roller, #60 components.",
+      "specs": {
+        "pitch_in": "1.500",
+        "pitch_mm": "38.10",
+        "roller_dia_in": "0.625",
+        "roller_width_in": "0.500"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "8500",
+          "working_load_lbs": "1950",
+          "source": "Donghua catalog p.91, ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "C2062",
+          "confidence": "Confirmed",
+          "catalog_page": "91",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [
+        "SA1",
+        "SA2",
+        "SK1",
+        "SK2"
+      ],
+      "sprocket_series": "C2060",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "double_pitch_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "C2080",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2080",
+      "display_name": "C2080 Double Pitch Roller Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "2.000",
+      "pitch_mm": "50.80",
+      "description": "2\" double pitch conveyor chain using #80 components.",
+      "specs": {
+        "pitch_in": "2.000",
+        "pitch_mm": "50.80",
+        "roller_dia_in": "0.625",
+        "roller_width_in": "0.625",
+        "avg_ultimate_lbs": "14500",
+        "max_working_load_lbs": "3500"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "14500",
+          "working_load_lbs": "3500",
+          "source": "ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "C2080",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "C2080",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "C2080",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "C2080A1",
+          "confidence": "Confirmed",
+          "catalog_page": "95",
+          "notes": "A1 attachment double pitch"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2"
+      ],
+      "sprocket_series": "C2080",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "C2080H Heavy Series",
+        "Large Roller",
+        "Walk-on-Rail"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "double_pitch_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "C2080H",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2080H",
+      "display_name": "C2080H Double Pitch Heavy Roller Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "2.000",
+      "pitch_mm": "50.80",
+      "description": "2\" double pitch heavy roller conveyor chain.",
+      "specs": {
+        "pitch_in": "2.000",
+        "pitch_mm": "50.80",
+        "roller_dia_in": "0.625",
+        "roller_width_in": "0.625",
+        "avg_ultimate_lbs": "14500",
+        "max_working_load_lbs": "3500"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "14500",
+          "working_load_lbs": "3500",
+          "source": "ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "C2080H",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "C2080H",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "C2080H",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2"
+      ],
+      "sprocket_series": "C2080",
+      "materials_available": [
+        "carbon_steel",
+        "stainless_304"
+      ],
+      "options_upgrades": [
+        "Large Roller",
+        "Walk-on-Rail"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "dictionary",
+      "_family_key": "double_pitch_conveyor",
+      "_family_unmapped": false,
+      "provenance": "standard-nominal",
+      "needs_review": false
+    },
+    {
+      "chain_id": "C2082",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2082",
+      "display_name": "C2082 Double Pitch Large Roller Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "2.000",
+      "pitch_mm": "50.80",
+      "description": "C2082 — double pitch chain with large roller, #80 components.",
+      "specs": {
+        "pitch_in": "2.000",
+        "pitch_mm": "50.80",
+        "roller_dia_in": "0.812",
+        "roller_width_in": "0.625"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "14500",
+          "working_load_lbs": "3500",
+          "source": "Donghua catalog p.92, ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "C2082",
+          "confidence": "Confirmed",
+          "catalog_page": "92",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        }
+      ],
+      "attachments_available": [
+        "SA1",
+        "SA2",
+        "SK1",
+        "SK2"
+      ],
+      "sprocket_series": "C2080",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "double_pitch_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "C2100",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2100",
+      "display_name": "C2100 Double Pitch Roller Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "2.500",
+      "pitch_mm": "63.50",
+      "description": "2-1/2\" double pitch conveyor chain for heavy load conveying.",
+      "specs": {
+        "pitch_in": "2.500",
+        "pitch_mm": "63.50",
+        "roller_dia_in": "0.750",
+        "roller_width_in": "0.750",
+        "avg_ultimate_lbs": "24000",
+        "max_working_load_lbs": "5500"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "24000",
+          "working_load_lbs": "5500",
+          "source": "ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Allied-Locke",
+          "code": "C2100",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "C2100",
+          "confidence": "Confirmed"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "C2100",
+          "confidence": "Confirmed",
+          "catalog_page": "93",
+          "notes": "Double pitch conveyor"
+        },
+        {
+          "manufacturer": "Donghua",
+          "code": "C2100H",
+          "confidence": "Confirmed",
+          "catalog_page": "93",
+          "notes": "Double pitch heavy C2100 series"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2"
+      ],
+      "sprocket_series": "C2100",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [
+        "C2100H Heavy",
+        "Large Roller"
+      ],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "expansion",
+      "_family_key": "double_pitch_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    },
+    {
+      "chain_id": "C2102H",
+      "chain_family": "Double Pitch Conveyor Chains",
+      "chain_number": "C2102H",
+      "display_name": "C2102H Double Pitch Heavy Roller Chain",
+      "standard": "ANSI B29.4",
+      "pitch_in": "2.500",
+      "pitch_mm": "63.50",
+      "description": "C2102H heavy double pitch chain — #100 components, heavy sidebar, for high-load package handling and assembly conveyors.",
+      "specs": {
+        "pitch_in": "2.500",
+        "pitch_mm": "63.50",
+        "avg_ultimate_lbs": "28000",
+        "max_working_load_lbs": "6400"
+      },
+      "performance_tiers": [
+        {
+          "tier": "standard",
+          "tensile_strength_lbs": "28000",
+          "working_load_lbs": "6400",
+          "source": "Donghua catalog p.93, ANSI B29.4"
+        }
+      ],
+      "source_refs": [
+        {
+          "manufacturer": "Donghua",
+          "code": "C2102H",
+          "confidence": "Confirmed",
+          "catalog_page": "93",
+          "catalog_url": "http://en.dhchain.com/wp-content/uploads/2020/11/2020111706240075.pdf"
+        },
+        {
+          "manufacturer": "Tsubaki",
+          "code": "C2102H",
+          "confidence": "Confirmed"
+        }
+      ],
+      "attachments_available": [
+        "A1",
+        "A2",
+        "K1",
+        "K2"
+      ],
+      "sprocket_series": "C2100",
+      "materials_available": [
+        "carbon_steel"
+      ],
+      "options_upgrades": [],
+      "image_strategy": "family",
+      "status": "Active",
+      "_origin": "donghua",
+      "_family_key": "double_pitch_conveyor",
+      "_family_unmapped": false,
+      "provenance": "catalog-verified",
+      "needs_review": false
+    }
+  ]
+}
