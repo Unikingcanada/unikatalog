@@ -32,6 +32,8 @@ Base44 staging step against the live registry.
 
 [MAC / MAC Chain]   PKG-09_macchain               | catalog: in-Drive MAC Chain 2019 catalog (chain tables pp.14-80; sprockets/pins truncated, out of scope) | chains 102, equiv 102, dims 102, perf 102 | flags 0 | PASS (catalog-verified). pn_macchain. Welded mill/drag + SuperMac/MegaMac, malleable, engineered (MS/81X/M3939/M900), pintle/sander (M-series), long link, DF3500, waste water; + standard DP (C2060/2080/2100H) & agri (CA550/620) -> dedupe. needs_review=TRUE on welded rows (catalog lists two ultimate-strength cols; both kept in uniking_notes). MAC kept DISTINCT from Can-Am.
 
+[Rexnord]           PKG-07_rexnord_linkbelt        | catalog: in-Drive Rexnord/Link-Belt Engineered Steel Chains catalog (pp.4-81 captured) | chains 168, equiv 221 (pn_rexnord + pn_linkbelt), dims 168, perf 168 | flags 0 | PASS (catalog-verified). Engineered class (with/without rollers incl ER800/900 elevator), welded steel WH/WHX/WDH, drop-forged 468/X/S series (WITH tensile), cast pintle/combination. Primary-spec policy on column-uncertain tables (pitch/working/ultimate/weight only; dims blank, not guessed). DEFERRED: drive chains (incl 3100CM=ANSI120/140/160/180 -> dedupe), live roller RF, double flex (column-uncertain; next pass).
+
 --- SKIPPED / DEFERRED ---
 [Donghua/drop-forged] SKIPPED -> NEEDS_MANUAL_PDF | X-series rivetless + DIN drop-forged not extractable (Donghua PDF text truncates ~p.54 of 282; dhchain.com & goodlucktransmission 403). No data invented.
 [MCU] SKIPPED -> NEEDS_MANUAL_PDF | could not resolve brand (low-confidence handwriting; no matching chain maker found).
@@ -42,7 +44,7 @@ Base44 staging step against the live registry.
 3. Replace BRAND_QUEUE.txt with BRAND_QUEUE_UPDATED.txt (DONE markers applied) — could not edit in place.
 
 --- BRANDS STILL PENDING (resolved; catalogs identified, ready for next pass) ---
-Rexnord (rexnord.com; in-Drive: Emailing Rexnord_468B_Catalog.pdf), Webster (websterchain.com; WebsterCatalog (1).pdf),
+Webster (websterchain.com; WebsterCatalog (1).pdf),
 Renold (renold.com; 3 in-Drive PDFs),
 Jeffrey (Renold Jeffrey; shares Renold PDFs), Allied Locke (alliedlocke.com), John King (johnkingchains.com),
 IWIS (iwis.com), ESCO (verify), Connexus (cnxsind.com), Regina (reginachain.net), Sedis (sedis.com),
