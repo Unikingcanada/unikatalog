@@ -1,0 +1,45 @@
+IMPORT_LOG.txt — UniKatalog scrape/normalize/import run
+Session: 2026-06-17 (Claude Code remote). One line per brand/action.
+NOTE ON "import": the live Base44 staging API (importStageJob/importCommitJob, browser-auth) is NOT
+reachable from this container. The reachable, verifiable import artifact is the validated JSON pack set
+emitted by compile_workbook.py (import_01_normalized_chains.json .. 09_review_flags.json) — exactly the
+staged rows the pipeline consumes. All packages below were compiled+validated at ZERO errors (the gate the
+pipeline requires) and are import-ready. Records counts are post-validation; dedupe/merge happens at the
+Base44 staging step against the live registry.
+
+--- ALREADY-SHIPPED PACKAGES (validated this run) ---
+[Tsubaki]  PKG-01_tsubaki_rf_conveyor_chains      | catalogs: in-Drive Tsubaki RF/conveyor catalogs | chains 49, equiv 49, dims 40, perf 49 | flags 0 | PASS
+[Tsubaki]  PKG-01b_tsubaki_double_pitch_chains    | chains 14, equiv 14, dims 14, perf 0  | flags 0 | PASS (perf filled by PKG-01c JSON patch at import)
+[Tsubaki]  PKG-01d_tsubaki_hollow_pin_chains      | chains 12, equiv 12, dims 12, perf 0  | flags 0 | PASS (perf filled by PKG-02a crosscheck patch)
+[Tsubaki]  PKG-01f_leaf_chains_BL_part1           | chains 25, equiv 25, dims 25, perf 25 | flags 0 | PASS
+[Donghua]  PKG-02a_donghua_hp_dp_new_records      | chains 29, equiv 29, dims 29, perf 29 | flags 0 | PASS
+[Donghua]  PKG-02b_donghua_equivalents_FINAL      | EQUIVALENTS TABLE (123 cross-refs, not a chains CSV) | imports directly to Manufacturer_Equivalents | not compiled by compile_workbook (by design)
+[Donghua]  PKG-02c_donghua_M_series               | chains 24, equiv 24, dims 24, perf 24 | flags 0 | PASS
+[Donghua]  PKG-02d_donghua_FV_series              | chains 23, equiv 23, dims 23, perf 23 | flags 0 | PASS
+[Donghua]  PKG-02e_donghua_S_agricultural         | chains 10 | FAIL as shipped (bad family 'Agricultural Chains') -> FIXED to 'Agricultural Conveyor Chains' -> PASS. See PKG-02e_..._FIXED.csv
+[Donghua]  PKG-02f_donghua_LL_leaf                | chains 43, equiv 43, dims 43, perf 43 | flags 0 | PASS
+[Donghua]  PKG-02g_donghua_welded_steel           | chains 22, equiv 22, dims 22, perf 22 | flags 0 | PASS
+[Donghua]  PKG-02g-drag_donghua_drag_chains       | chains 9,  equiv 9,  dims 9,  perf 9  | flags 0 | PASS
+  JSON patches applied at import: PKG-01_RF_inch_pitch_patch.json (8 RF inch-series pitch/tensile upserts),
+  PKG-01c_double_pitch_performance_patch.json (14 DP ANSI nominal tensile/temp/lube), PKG-02a_donghua_crosscheck_patch.json
+  (24 HP+DP catalog-verified Donghua tensile, overrides nominal). All parse as valid JSON.
+  TOTAL normalized chains across shipped passing packages: 260 (+123 Donghua equivalents).
+
+--- NEW THIS RUN ---
+[Donghua/oilfield]  PKG-02-oilfield_donghua        | catalog: in-Drive Donghua general catalog pp.31-32 "石油链 Oil field chains" (dhchain.com 403-blocked) | chains 43, equiv 43, dims 43, perf 42 | flags 0 | PASS (catalog-verified). Actioned PKG-02-oilfield-dropforged_SPEC (oilfield half). DEDUPE AT IMPORT: ANSI numbers 80..200 + duplex/triplex expected to merge into existing standard ANSI records as oil-field-tagged equivalents (+pn_donghua); tensile differs from std transmission -> set needs_review, keep both. 4/5/6/8-strand may be net-new.
+
+--- SKIPPED / DEFERRED ---
+[Donghua/drop-forged] SKIPPED -> NEEDS_MANUAL_PDF | X-series rivetless + DIN drop-forged not extractable (Donghua PDF text truncates ~p.54 of 282; dhchain.com & goodlucktransmission 403). No data invented.
+[MCU] SKIPPED -> NEEDS_MANUAL_PDF | could not resolve brand (low-confidence handwriting; no matching chain maker found).
+
+--- MANUAL ACTIONS REQUIRED (Drive MCP has no delete/overwrite tool) ---
+1. DELETE stale draft PKG-02b_donghua_equivalents.csv (id 1pA6ter6leWCuFVnCo7KYUnAKwR1hKLwW). FINAL keeper = PKG-02b_donghua_equivalents_FINAL.csv (id 1hlmo2CAJr4ODwagYYduv0h_VwcmWcCdj).
+2. DELETE broken original PKG-02e_donghua_S_agricultural.csv; use PKG-02e_donghua_S_agricultural_FIXED.csv instead.
+3. Replace BRAND_QUEUE.txt with BRAND_QUEUE_UPDATED.txt (DONE markers applied) — could not edit in place.
+
+--- BRANDS STILL PENDING (resolved; catalogs identified, ready for next pass) ---
+Rexnord (rexnord.com; in-Drive: Emailing Rexnord_468B_Catalog.pdf), Webster (websterchain.com; WebsterCatalog (1).pdf),
+MAC Chain (macchain.com; MAC CHAIN.pdf), Can-Am=CALL-AM (can-amchains.com; 2 in-Drive PDFs), Renold (renold.com; 3 in-Drive PDFs),
+Jeffrey (Renold Jeffrey; shares Renold PDFs), Allied Locke (alliedlocke.com), John King (johnkingchains.com),
+IWIS (iwis.com), ESCO (verify), Connexus (cnxsind.com), Regina (reginachain.net), Sedis (sedis.com),
+4B (go4b.com), Rosa (rosacatene.com), Ketten Wolf=KettenWulf (kettenwulf.com), Kobo=KÖBO (koebo.com).

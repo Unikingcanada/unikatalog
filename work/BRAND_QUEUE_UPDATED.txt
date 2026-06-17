@@ -1,0 +1,32 @@
+BRAND_QUEUE.txt — UniKatalog scrape/normalize/import queue
+One brand per line. Code processes top to bottom. Add brands here anytime; no re-prompt needed.
+Lines starting with # are comments/ignored. Mark done brands by prefixing with "DONE: ".
+
+DONE: Donghua
+Rexnord
+DONE: Tsubaki
+Webster
+MAC
+CALL-AM
+Renold
+Jeffrey
+Allied Locke
+John King
+IWIS
+ESCO
+Connexus
+Regina
+Sedis
+MCU
+4B
+Rosa
+Ketten Wolf
+Kobo
+
+# Notes:
+# - "CALL-AM" RESOLVED -> Can-Am Chains (can-amchains.com). NOT the same vendor as MAC (MAC Chain, macchain.com) —
+#   the Drive folder holds separate authoritative catalogs for each. "Mac and Cam" single-vendor guess rejected.
+# - "Kobo" RESOLVED -> KÖBO GmbH (koebo.com). "Rosa" RESOLVED -> Rosa Catene Spa (rosacatene.com).
+# - "MCU" UNRESOLVED -> logged to NEEDS_MANUAL_PDF.txt (could not resolve; no matching chain manufacturer).
+# - 2026-06-17: Donghua DONE (PKG-02a..g + PKG-02-oilfield). Tsubaki DONE (PKG-01 series). Donghua drop-forged -> NEEDS_MANUAL_PDF.
+# - This file (BRAND_QUEUE_UPDATED.txt) supersedes BRAND_QUEUE.txt; Drive MCP could not edit the original in place.
