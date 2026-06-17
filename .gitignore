@@ -29,3 +29,10 @@ dist-ssr
 
 .env
 .vite
+
+# UniKatalog scrape/normalize scratch (downloaded third-party catalog data)
+work/drive/
+work/out/
+work/drop_here/
+work/*.pdf
+work/*.xlsx
