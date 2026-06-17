@@ -77,6 +77,7 @@ MANUAL ACTIONS REQUIRED (Drive MCP has no delete/overwrite tool):
   3. Multiple superseding copies of IMPORT_LOG.txt / BRAND_QUEUE_UPDATED.txt exist (created per update since the
      MCP cannot edit in place) — keep the most recently modified; delete older duplicates. Replace BRAND_QUEUE.txt with
      BRAND_QUEUE_UPDATED.txt.
+  4. Delete stale Rexnord CSV upload 1uQt4yxXDAjAbesduLtJKFRG1DMAMXC_M (had a duplicated RexC110 row). KEEPER = PKG-07_rexnord_linkbelt.csv id 1Ls-1Udszb1dQ8DsOPTNlYu4S602kyHaY (168 rows, verified).
 NOTE ON IMPORT: the live Base44 staging API is not reachable from this container; every package above was compiled to
   validated JSON import packs (the pipeline's required zero-error gate) and is import-ready. Dedupe/merge happens at the
   Base44 staging step per each NOTES file.
