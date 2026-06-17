@@ -10,3 +10,25 @@ Format: [date] BRAND/SLICE | reason | source(s) tried
   | reason: could not resolve. "MCU" is a low-confidence handwriting read with no matching chain manufacturer found via web search (nearest candidate MCC/MAXTOP, Taiwan — not confidently the same). 
   | sources tried: web search "MCU chain manufacturer / drive chain / transmission chain" — no MCU-branded chain maker identified.
   | next: confirm the intended brand name, or drop its catalog PDF in DROP_HERE/.
+
+[2026-06-17] WEB-SCRAPE BLOCKED — all manufacturer sites return HTTP 403 to the fetch tool, and the sandbox network
+egress allowlist blocks curl to these hosts. Confirmed 403 on: en.dhchain.com, goodlucktransmission.com,
+johnkingchains.com, iwis.com, go4b.com, reginachain.net. Therefore the following RESOLVED web-only brands could not be
+auto-scraped this run — please drop their catalog PDFs in DROP_HERE/ (or add these hosts to the network egress allowlist).
+
+  John King Chains | johnkingchains.com | confirmed catalogue index: https://www.johnkingchains.com/catalogues/ ;
+     known PDFs (pattern /wp-content/uploads/catalogues/jk_<family>_eng.pdf): jk_mining_eng.pdf, jk_forged_eng.pdf
+     (drop-forged rivetless), jk_asphalt_eng.pdf, jk_agricultural_eng.pdf; cement/bucket-elevator (Millmaster) pages exist.
+  IWIS | iwis.com | downloads: iwis.com/en/service/downloads/ (conveyor, agricultural ELITE/MEGAlife, precision roller).
+  4B (Braime) | go4b.com | elevator/conveyor chains (forged-link, roller) + components.
+  Regina (Catene Calibrate Regina) | reginachain.net / regina-catene.com | roller & conveyor chains.
+  Allied-Locke | alliedlocke.com | roller, agricultural, pintle, drop-forged (existing AL source records noted in manifest).
+  Connexus (Viking/I'Anco/Lacey-Harmer) | cnxsind.com | 81X engineering class, mill, welded steel, sugar mill, sharp top, sorter.
+  Sedis (Renold Sedis) | sedis.com | transmission & conveyor chains.
+  Rosa Catene | rosacatene.com | conveyor, fly roller, agriculture, Redler, special chains.
+  Ketten Wulf / KettenWulf | kettenwulf.com | escalator, heavy conveyor, palletizer, sugar.
+  KOBO / KÖBO | koebo.com (kobousa.com, kobo.co.uk) | DIN/ANSI engineered conveyor, steel mill, escalator, wood (DIN 8165/8187).
+  ESCO | (entity unconfirmed) | verify which "ESCO" chain entity is intended before scraping.
+
+  In-Drive catalogs remain the viable path: Webster (in folder, extracting), and the two remaining Renold/Jeffrey
+  catalogs (cement-elevator, forestry) already in the folder are pending fold-in.

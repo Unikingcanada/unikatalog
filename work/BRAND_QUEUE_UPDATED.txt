@@ -30,3 +30,7 @@ Kobo
 # - "MCU" UNRESOLVED -> logged to NEEDS_MANUAL_PDF.txt (could not resolve; no matching chain manufacturer).
 # - 2026-06-17: Donghua DONE (PKG-02a..g + PKG-02-oilfield). Tsubaki DONE (PKG-01 series). CALL-AM/Can-Am DONE (PKG-10, 143). MAC DONE (PKG-09, 102). Rexnord DONE (PKG-07, 168/221). Renold+Jeffrey DONE (PKG-07b, 44; forestry/cement catalogs deferred). Donghua drop-forged -> NEEDS_MANUAL_PDF.
 # - This file (BRAND_QUEUE_UPDATED.txt) supersedes BRAND_QUEUE.txt; Drive MCP could not edit the original in place.
+# - 2026-06-17 (cont.): WEB-SCRAPE BLOCKED in this environment (HTTP 403 on all manufacturer sites + curl egress
+#   allowlist). Web-only brands logged to NEEDS_MANUAL_PDF.txt with resolved domains/URLs: John King, IWIS, 4B,
+#   Regina, Allied-Locke, Connexus, Sedis, Rosa, KettenWulf, KOBO (+ ESCO entity unconfirmed). Drop PDFs in DROP_HERE/.
+#   Still actionable via in-Drive catalogs: Webster (extracting), Renold forestry+cement (extracting).
