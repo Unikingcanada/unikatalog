@@ -8,8 +8,8 @@ DONE: Tsubaki
 Webster
 DONE: MAC
 DONE: CALL-AM
-Renold
-Jeffrey
+DONE: Renold
+DONE: Jeffrey
 Allied Locke
 John King
 IWIS
@@ -28,5 +28,5 @@ Kobo
 #   the Drive folder holds separate authoritative catalogs for each. "Mac and Cam" single-vendor guess rejected.
 # - "Kobo" RESOLVED -> KÖBO GmbH (koebo.com). "Rosa" RESOLVED -> Rosa Catene Spa (rosacatene.com).
 # - "MCU" UNRESOLVED -> logged to NEEDS_MANUAL_PDF.txt (could not resolve; no matching chain manufacturer).
-# - 2026-06-17: Donghua DONE (PKG-02a..g + PKG-02-oilfield). Tsubaki DONE (PKG-01 series). CALL-AM/Can-Am DONE (PKG-10, 143). MAC DONE (PKG-09, 102). Rexnord DONE (PKG-07, 168 chains / 221 equiv). Donghua drop-forged -> NEEDS_MANUAL_PDF.
+# - 2026-06-17: Donghua DONE (PKG-02a..g + PKG-02-oilfield). Tsubaki DONE (PKG-01 series). CALL-AM/Can-Am DONE (PKG-10, 143). MAC DONE (PKG-09, 102). Rexnord DONE (PKG-07, 168/221). Renold+Jeffrey DONE (PKG-07b, 44; forestry/cement catalogs deferred). Donghua drop-forged -> NEEDS_MANUAL_PDF.
 # - This file (BRAND_QUEUE_UPDATED.txt) supersedes BRAND_QUEUE.txt; Drive MCP could not edit the original in place.

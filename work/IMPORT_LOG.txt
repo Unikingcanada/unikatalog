@@ -34,6 +34,8 @@ Base44 staging step against the live registry.
 
 [Rexnord]           PKG-07_rexnord_linkbelt        | catalog: in-Drive Rexnord/Link-Belt Engineered Steel Chains catalog (pp.4-81 captured) | chains 168, equiv 221 (pn_rexnord + pn_linkbelt), dims 168, perf 168 | flags 0 | PASS (catalog-verified). Engineered class (with/without rollers incl ER800/900 elevator), welded steel WH/WHX/WDH, drop-forged 468/X/S series (WITH tensile), cast pintle/combination. Primary-spec policy on column-uncertain tables (pitch/working/ultimate/weight only; dims blank, not guessed). DEFERRED: drive chains (incl 3100CM=ANSI120/140/160/180 -> dedupe), live roller RF, double flex (column-uncertain; next pass).
 
+[Renold / Jeffrey]  PKG-07b_renold_jeffrey         | catalog: in-Drive Renold Conveyor Chain Catalogue (conveyor-ren2-eng-07-14.pdf) | chains 44, equiv 44, dims 28, perf 44 | flags 0 | PASS (catalog-verified). pn_renold + pn_jeffrey. Palm-oil SOLID + HOLLOW bearing-pin (hollow-pin physics honored, never backfilled), lumber 81X (dedupe), cane carrier, application-gallery engineered chains. Column-uncertain tables (cane/bagasse/water-treatment) + the other 2 Renold catalogs (cement-elevator, forestry) DEFERRED to next pass (heavy OCR column scrambling; no values guessed).
+
 --- SKIPPED / DEFERRED ---
 [Donghua/drop-forged] SKIPPED -> NEEDS_MANUAL_PDF | X-series rivetless + DIN drop-forged not extractable (Donghua PDF text truncates ~p.54 of 282; dhchain.com & goodlucktransmission 403). No data invented.
 [MCU] SKIPPED -> NEEDS_MANUAL_PDF | could not resolve brand (low-confidence handwriting; no matching chain maker found).
@@ -45,7 +47,37 @@ Base44 staging step against the live registry.
 
 --- BRANDS STILL PENDING (resolved; catalogs identified, ready for next pass) ---
 Webster (websterchain.com; WebsterCatalog (1).pdf),
-Renold (renold.com; 3 in-Drive PDFs),
-Jeffrey (Renold Jeffrey; shares Renold PDFs), Allied Locke (alliedlocke.com), John King (johnkingchains.com),
+Allied Locke (alliedlocke.com), John King (johnkingchains.com),
 IWIS (iwis.com), ESCO (verify), Connexus (cnxsind.com), Regina (reginachain.net), Sedis (sedis.com),
 4B (go4b.com), Rosa (rosacatene.com), Ketten Wolf=KettenWulf (kettenwulf.com), Kobo=KÖBO (koebo.com).
+
+
+================= SESSION FINAL SUMMARY (2026-06-17) =================
+NEW PACKAGES BUILT, VALIDATED (compile_workbook.py zero-error) & UPLOADED this session:
+  PKG-02-oilfield_donghua    43 chains   (Donghua oil-field, in-Drive catalog; dhchain.com was 403-blocked)
+  PKG-10_canam_chains       143 chains   (Can-Am / CALL-AM, 2 in-Drive catalogs)
+  PKG-09_macchain           102 chains   (MAC Chain, in-Drive catalog)
+  PKG-07_rexnord_linkbelt   168 chains / 221 equivalents (Rexnord+Link-Belt, in-Drive catalog)
+  PKG-07b_renold_jeffrey     44 chains   (Renold/Jeffrey conveyor catalogue, bounded)
+  TOTAL NEW: 500 normalized chains + 553 brand equivalents.
+SHIPPED PACKAGES VALIDATED: PKG-01/01b/01d/01f (Tsubaki) + PKG-02a/02c/02d/02f/02g/02g-drag (Donghua) PASS;
+  PKG-02e FIXED (family enum 'Agricultural Chains'->'Agricultural Conveyor Chains') now PASS; PKG-02b FINAL = equivalents table (direct import).
+  3 JSON patches (PKG-01 RF, PKG-01c DP perf, PKG-02a crosscheck) apply at import.
+BRANDS DONE (queue): Donghua, Tsubaki, CALL-AM/Can-Am, MAC, Rexnord, Renold, Jeffrey.
+SENT TO NEEDS_MANUAL_PDF: Donghua drop-forged (truncation + 403); MCU (could not resolve).
+STILL PENDING (resolved, catalogs identified, ready for next session):
+  - Webster (websterchain.com; in-Drive WebsterCatalog (1).pdf) — large 34MB catalog, not yet extracted.
+  - Renold/Jeffrey remaining catalogs: cement-elevator + forestry (in-Drive) — fold into PKG-07b/PKG-07c next pass.
+  - Web-only (need scrape next session): Allied Locke (alliedlocke.com), John King (johnkingchains.com), IWIS (iwis.com),
+    ESCO (verify entity), Connexus (cnxsind.com), Regina (reginachain.net), Sedis (sedis.com), 4B (go4b.com),
+    Rosa (rosacatene.com), Ketten Wolf/KettenWulf (kettenwulf.com), Kobo/KOBO (koebo.com).
+MANUAL ACTIONS REQUIRED (Drive MCP has no delete/overwrite tool):
+  1. Delete stale PKG-02b_donghua_equivalents.csv (id 1pA6ter6leWCuFVnCo7KYUnAKwR1hKLwW) — keep PKG-02b_..._FINAL.csv.
+  2. Delete broken original PKG-02e_donghua_S_agricultural.csv — use the _FIXED version.
+  3. Multiple superseding copies of IMPORT_LOG.txt / BRAND_QUEUE_UPDATED.txt exist (created per update since the
+     MCP cannot edit in place) — keep the most recently modified; delete older duplicates. Replace BRAND_QUEUE.txt with
+     BRAND_QUEUE_UPDATED.txt.
+NOTE ON IMPORT: the live Base44 staging API is not reachable from this container; every package above was compiled to
+  validated JSON import packs (the pipeline's required zero-error gate) and is import-ready. Dedupe/merge happens at the
+  Base44 staging step per each NOTES file.
+=====================================================================
