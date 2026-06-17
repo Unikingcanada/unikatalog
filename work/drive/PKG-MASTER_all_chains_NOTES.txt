@@ -1,0 +1,33 @@
+PKG-MASTER_all_chains.csv — COMBINED MASTER (all PKG chains, deduped on chain_number)
+Built: 2026-06-17 | compile_workbook.py PASS: 866 chains | 963 equivalents | 841 dims | 838 perf | 0 flags | 0 warnings.
+
+SCOPE: merges all 18 chains-bearing PKG CSVs (Tsubaki PKG-01/01b/01d/01f; Donghua PKG-02a/02c/02d/02e-FIXED/02f/02g/
+02g-drag/oilfield; Rexnord PKG-07; Renold/Jeffrey PKG-07b/07c; Webster PKG-08; MAC PKG-09; Can-Am PKG-10).
+EXCLUDED: PKG-02b_donghua_equivalents_FINAL.csv — that is an EQUIVALENTS cross-reference table (no chain_family),
+import it separately to Manufacturer_Equivalents (123 rows). Do not merge into the chains master.
+
+COLUMNS (46): the canonical 37 core columns + the 9 brand part-number columns
+(pn_tsubaki, pn_donghua, pn_canam, pn_macchain, pn_rexnord, pn_linkbelt, pn_renold, pn_jeffrey, pn_webster),
+inserted after perf_source (the documented "pn_<brand>" pattern). A row populates only the pn_ column(s) of its source
+brand(s); on a cross-brand merge multiple pn_ columns are populated -> the importer emits one equivalent per brand.
+
+DEDUPE (done in this file, exact match on chain_number):
+- 910 input rows -> 866 unique chain_numbers. 44 cross-brand collisions merged; 43 had a spec disagreement.
+- On collision: kept the FIRST-seen (baseline) chain_id (processing order = Tsubaki -> Donghua -> Rexnord -> Renold ->
+  Webster -> MAC -> Can-Am), unioned the brand pn_ columns, filled empty dimension/spec fields from later sources
+  (richer wins), and unioned application_tags / materials_available.
+- TENSILE/DIMENSION CONFLICTS: where two brands disagreed on pitch/tensile/working-load/roller/pin/plate/inner-width/
+  weight, set needs_review=TRUE and recorded BOTH values verbatim in uniking_notes
+  ("MERGE CONFLICT with <brand> - kept baseline, both values: <field>: <a> (<brandA>) vs <b> (<brandB>)").
+  Never silently overwrote. 156 rows are needs_review=TRUE (these merge conflicts + earlier per-package flags).
+- Examples merged: drop-forged 468/698/998/9118 (Rexnord+Can-Am), WR78/WD102/etc (Donghua welded-steel + MAC),
+  81XH/81XHH (Rexnord+Renold), 720S (Rexnord+Webster), double-pitch C20xxHP (Tsubaki+Donghua).
+- NOT merged (intentionally): different chain_number STRINGS for similar products stay separate, e.g. Can-Am "WR-78"
+  (hyphen) vs MAC "WR78" (no hyphen) — exact-match keying per the dedup rule.
+
+PROVENANCE/PHYSICS preserved from source rows (catalog-verified vs standard-nominal; hollow-pin kept distinct from solid,
+never backfilled). All extra_dims_json parse; no banned brand terms; all chain_family values in the 18-enum.
+
+IMPORT: load to Normalized_Chains (01) -> Manufacturer_Equivalents (02, from the pn_ columns) -> Chain_Dimensions (03)
+-> Performance_Data (04). The Base44 Import Center will also re-classify by chain_number (New/Duplicate/Changed/Conflict);
+this file is already deduped so collisions should present as clean single records.
