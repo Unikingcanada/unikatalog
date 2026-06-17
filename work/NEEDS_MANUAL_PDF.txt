@@ -1,0 +1,12 @@
+NEEDS_MANUAL_PDF.txt — brands/slices that could not be auto-scraped. Drop a PDF in DROP_HERE/ to resolve.
+Format: [date] BRAND/SLICE | reason | source(s) tried
+
+[2026-06-17] Donghua DROP-FORGED chains (X-series rivetless X348/X458/X678/X698, 468H/698H; DIN drop-forged trolley 10160/14218/14226/142N/150/160/200/250/315)
+  | reason: catalog-verified data not extractable. Donghua drop-forged section lives on later catalog pages; the Drive PDFs (dongua chain(1).pdf is 282 pages) truncate via the Drive text extractor near page ~54-56, and the section was not captured.
+  | sources tried: en.dhchain.com/product_detail/2908.html (HTTP 403 bot-block), goodlucktransmission.com/drop-forged-chains-product/ (HTTP 403), Drive Donghua catalog PDFs (text extraction truncated before the forged-chain pages).
+  | next: drop a dedicated Donghua drop-forged / rivetless catalog PDF (or the forged-chain pages of the general catalog) in DROP_HERE/. Provenance rules forbid inventing tensile/dimension values, so no rows were hand-keyed.
+
+[2026-06-17] MCU
+  | reason: could not resolve. "MCU" is a low-confidence handwriting read with no matching chain manufacturer found via web search (nearest candidate MCC/MAXTOP, Taiwan — not confidently the same). 
+  | sources tried: web search "MCU chain manufacturer / drive chain / transmission chain" — no MCU-branded chain maker identified.
+  | next: confirm the intended brand name, or drop its catalog PDF in DROP_HERE/.
