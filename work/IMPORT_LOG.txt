@@ -84,4 +84,11 @@ MANUAL ACTIONS REQUIRED (Drive MCP has no delete/overwrite tool):
 NOTE ON IMPORT: the live Base44 staging API is not reachable from this container; every package above was compiled to
   validated JSON import packs (the pipeline's required zero-error gate) and is import-ready. Dedupe/merge happens at the
   Base44 staging step per each NOTES file.
+  -- upload integrity --
+  5. TRUNCATED UPLOADS FIXED (verify-by-bytesize caught these): 
+     - PKG-09_macchain.csv: two stale 15,000-byte PARTIAL copies (ids 1vWxUJuw-KacB5nZtUOL-31hEHsfDvZnR and
+       1UskdJUA5BwRBqgTm24IkgqlAImYf5sqh) -> DELETE. Complete copy re-uploaded = id 1ERdf-7EE1lAMp9PDefgB_mHAK-ZSIzvH (57,510 bytes, 102 rows, verified).
+     - PKG-08_webster.csv: truncated copy (id 1vb2MA0p-0yEHyE7hlm9CNIAhBEQZqAyZ, 42,302 bytes, short) -> DELETE. Complete copy re-uploaded (see latest, ~42,881 bytes, 85 rows).
+     All other package CSVs verified byte-complete in Drive (Can-Am 76,383 / Rexnord 85,915 / Renold-b 23,797 /
+     Renold-c 36,886 / oilfield / 02e-fixed 15,681 all match expected size after CRLF->LF).
 =====================================================================
