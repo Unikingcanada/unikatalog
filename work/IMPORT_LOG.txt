@@ -28,6 +28,8 @@ Base44 staging step against the live registry.
 --- NEW THIS RUN ---
 [Donghua/oilfield]  PKG-02-oilfield_donghua        | catalog: in-Drive Donghua general catalog pp.31-32 "石油链 Oil field chains" (dhchain.com 403-blocked) | chains 43, equiv 43, dims 43, perf 42 | flags 0 | PASS (catalog-verified). Actioned PKG-02-oilfield-dropforged_SPEC (oilfield half). DEDUPE AT IMPORT: ANSI numbers 80..200 + duplex/triplex expected to merge into existing standard ANSI records as oil-field-tagged equivalents (+pn_donghua); tensile differs from std transmission -> set needs_review, keep both. 4/5/6/8-strand may be net-new.
 
+[Can-Am / CALL-AM]  PKG-10_canam_chains            | catalogs: 2 in-Drive Can-Am catalogs (Products + Mill&Drag, both fully extracted) | chains 143, equiv 143, dims 143, perf 134 | flags 0 | PASS (catalog-verified). 143 net-new PROPRIETARY chains (welded mill WR/WH/WRC/WHC/XHD/IBR, drag WD/XHD/SuperHog/WholeHog, malleable H/C, engineered SB/US/3939/CAM900, formed pintle 662/667/88K, bucket elevator SB85x, rivetless X-series [dims only -> needs_review], 142/CDM [pitch blank -> needs_review]). Products catalog authoritative where OCR disagreed. DEFERRED: Can-Am standard ANSI/BS/SS/leaf chains -> equivalents patch (dedupe to existing); sprockets/bearings/attachments out of chain scope.
+
 --- SKIPPED / DEFERRED ---
 [Donghua/drop-forged] SKIPPED -> NEEDS_MANUAL_PDF | X-series rivetless + DIN drop-forged not extractable (Donghua PDF text truncates ~p.54 of 282; dhchain.com & goodlucktransmission 403). No data invented.
 [MCU] SKIPPED -> NEEDS_MANUAL_PDF | could not resolve brand (low-confidence handwriting; no matching chain maker found).
@@ -39,7 +41,7 @@ Base44 staging step against the live registry.
 
 --- BRANDS STILL PENDING (resolved; catalogs identified, ready for next pass) ---
 Rexnord (rexnord.com; in-Drive: Emailing Rexnord_468B_Catalog.pdf), Webster (websterchain.com; WebsterCatalog (1).pdf),
-MAC Chain (macchain.com; MAC CHAIN.pdf), Can-Am=CALL-AM (can-amchains.com; 2 in-Drive PDFs), Renold (renold.com; 3 in-Drive PDFs),
+MAC Chain (macchain.com; MAC CHAIN.pdf), Renold (renold.com; 3 in-Drive PDFs),
 Jeffrey (Renold Jeffrey; shares Renold PDFs), Allied Locke (alliedlocke.com), John King (johnkingchains.com),
 IWIS (iwis.com), ESCO (verify), Connexus (cnxsind.com), Regina (reginachain.net), Sedis (sedis.com),
 4B (go4b.com), Rosa (rosacatene.com), Ketten Wolf=KettenWulf (kettenwulf.com), Kobo=KÖBO (koebo.com).
