@@ -1,0 +1,964 @@
+chain_id,brand,brand_part_number,brand_series,equivalency_type,confidence
+TSU-RF03075,Tsubaki,RF03075,,Direct,High
+TSU-RF03100,Tsubaki,RF03100,,Direct,High
+TSU-RF05075,Tsubaki,RF05075,,Direct,High
+TSU-RF05100,Tsubaki,RF05100,,Direct,High
+TSU-RF05125,Tsubaki,RF05125,,Direct,High
+TSU-RF05150,Tsubaki,RF05150,,Direct,High
+TSU-RF08125,Tsubaki,RF08125,,Direct,High
+TSU-RF08150,Tsubaki,RF08150,,Direct,High
+TSU-RF10100,Tsubaki,RF10100,,Direct,High
+TSU-RF10125,Tsubaki,RF10125,,Direct,High
+TSU-RF10150,Tsubaki,RF10150,,Direct,High
+TSU-RF12200,Tsubaki,RF12200,,Direct,High
+TSU-RF12250,Tsubaki,RF12250,,Direct,High
+TSU-RF17200,Tsubaki,RF17200,,Direct,High
+TSU-RF17250,Tsubaki,RF17250,,Direct,High
+TSU-RF17300,Tsubaki,RF17300,,Direct,High
+TSU-RF26200,Tsubaki,RF26200,,Direct,High
+TSU-RF26250,Tsubaki,RF26250,,Direct,High
+TSU-RF26300,Tsubaki,RF26300,,Direct,High
+TSU-RF26450,Tsubaki,RF26450,,Direct,High
+TSU-RF36250,Tsubaki,RF36250,,Direct,High
+TSU-RF36300,Tsubaki,RF36300,,Direct,High
+TSU-RF36450,Tsubaki,RF36450,,Direct,High
+TSU-RF36600,Tsubaki,RF36600,,Direct,High
+TSU-RF52300,Tsubaki,RF52300,,Direct,High
+TSU-RF52450,Tsubaki,RF52450,,Direct,High
+TSU-RF52600,Tsubaki,RF52600,,Direct,High
+TSU-RF60300,Tsubaki,RF60300,,Direct,High
+TSU-RF60350,Tsubaki,RF60350,,Direct,High
+TSU-RF60400,Tsubaki,RF60400,,Direct,High
+TSU-RF90350,Tsubaki,RF90350,,Direct,High
+TSU-RF90400,Tsubaki,RF90400,,Direct,High
+TSU-RF90500,Tsubaki,RF90500,,Direct,High
+TSU-RF120400,Tsubaki,RF120400,,Direct,High
+TSU-RF120600,Tsubaki,RF120600,,Direct,High
+TSU-RF280400,Tsubaki,RF280400,,Direct,High
+TSU-RF280600,Tsubaki,RF280600,,Direct,High
+TSU-RF360400,Tsubaki,RF360400,,Direct,High
+TSU-RF360600,Tsubaki,RF360600,,Direct,High
+TSU-RF440400,Tsubaki,RF440400,,Direct,High
+TSU-RF440600,Tsubaki,RF440600,,Direct,High
+TSU-RF430,Tsubaki,RF430,,Direct,High
+TSU-RF204,Tsubaki,RF204,,Direct,High
+TSU-RF450,Tsubaki,RF450,,Direct,High
+TSU-RF650,Tsubaki,RF650,,Direct,High
+TSU-RF214,Tsubaki,RF214,,Direct,High
+TSU-RF205,Tsubaki,RF205,,Direct,High
+TSU-RF6205,Tsubaki,RF6205,,Direct,High
+TSU-RF212,Tsubaki,RF212,,Direct,High
+DP-C2040,Tsubaki,RF2040S,,Direct,High
+DP-C2042,Tsubaki,RF2040R,,Direct,High
+DP-C2050,Tsubaki,RF2050S,,Direct,High
+DP-C2052,Tsubaki,RF2050R,,Direct,High
+DP-C2060,Tsubaki,RF2060S,,Direct,High
+DP-C2062,Tsubaki,RF2060R,,Direct,High
+DP-C2080,Tsubaki,RF2080S,,Direct,High
+DP-C2082,Tsubaki,RF2080R,,Direct,High
+DP-C2100,Tsubaki,RF2100S,,Direct,High
+DP-C2102,Tsubaki,RF2100R,,Direct,High
+DP-C2120,Tsubaki,RF2120S,,Direct,High
+DP-C2122,Tsubaki,RF2120R,,Direct,High
+DP-C2160,Tsubaki,RF2160S,,Direct,High
+DP-C2162,Tsubaki,RF2160R,,Direct,High
+HP-40HP,Tsubaki,RS40-HP,,Direct,High
+HP-50HP,Tsubaki,RS50-HP,,Direct,High
+HP-60HP,Tsubaki,RS60-HP,,Direct,High
+HP-80HP,Tsubaki,RS80-HP,,Direct,High
+HP-C2040HP,Tsubaki,RF2040S-HP,,Direct,High
+HP-C2042HP,Tsubaki,RF2040R-HP,,Direct,High
+HP-C2042HP,Donghua,C2042HP,,Direct,High
+HP-C2050HP,Tsubaki,RF2050S-HP,,Direct,High
+HP-C2052HP,Tsubaki,RF2050R-HP,,Direct,High
+HP-C2052HP,Donghua,C2052HP,,Direct,High
+HP-C2060HP,Tsubaki,RF2060S-HP,,Direct,High
+HP-C2062HP,Tsubaki,RF2060R-HP,,Direct,High
+HP-C2062HP,Donghua,C2062HP,,Direct,High
+HP-C2080HP,Tsubaki,RF2080S-HP,,Direct,High
+HP-C2082HP,Tsubaki,RF2080R-HP,,Direct,High
+HP-C2082HP,Donghua,C2082HP,,Direct,High
+LF-BL422,Tsubaki,BL422,,Direct,High
+LF-BL423,Tsubaki,BL423,,Direct,High
+LF-BL434,Tsubaki,BL434,,Direct,High
+LF-BL444,Tsubaki,BL444,,Direct,High
+LF-BL446,Tsubaki,BL446,,Direct,High
+LF-BL466,Tsubaki,BL466,,Direct,High
+LF-BL522,Tsubaki,BL522,,Direct,High
+LF-BL523,Tsubaki,BL523,,Direct,High
+LF-BL534,Tsubaki,BL534,,Direct,High
+LF-BL544,Tsubaki,BL544,,Direct,High
+LF-BL546,Tsubaki,BL546,,Direct,High
+LF-BL566,Tsubaki,BL566,,Direct,High
+LF-BL622,Tsubaki,BL622,,Direct,High
+LF-BL623,Tsubaki,BL623,,Direct,High
+LF-BL634,Tsubaki,BL634,,Direct,High
+LF-BL644,Tsubaki,BL644,,Direct,High
+LF-BL646,Tsubaki,BL646,,Direct,High
+LF-BL666,Tsubaki,BL666,,Direct,High
+LF-BL822,Tsubaki,BL822,,Direct,High
+LF-BL823,Tsubaki,BL823,,Direct,High
+LF-BL834,Tsubaki,BL834,,Direct,High
+LF-BL844,Tsubaki,BL844,,Direct,High
+LF-BL846,Tsubaki,BL846,,Direct,High
+LF-BL866,Tsubaki,BL866,,Direct,High
+LF-BL1022,Tsubaki,BL1022,,Direct,High
+DP-C2040H,Donghua,C208AH,,Direct,High
+DP-C2042H,Donghua,C208AHL,,Direct,High
+DP-C2060H,Donghua,C212AH,,Direct,High
+DP-C2060H,MAC Chain,C2060H,,Direct,High
+DP-C2062H,Donghua,C212AHL,,Direct,High
+DP-C2080H,Donghua,C216AH,,Direct,High
+DP-C2080H,MAC Chain,C2080H,,Direct,High
+DP-C2082H,Donghua,C216AHL,,Direct,High
+DP-C2100H,Donghua,C220AH,,Direct,High
+DP-C2100H,MAC Chain,C2100H,,Direct,High
+DP-C2102H,Donghua,C220AHL,,Direct,High
+DP-C2120H,Donghua,C224AH,,Direct,High
+DP-C2122H,Donghua,C224AHL,,Direct,High
+DP-C2160H,Donghua,C232AH,,Direct,High
+DP-C2162H,Donghua,C232AHL,,Direct,High
+DP-C208B,Donghua,C208B/C208BL,,Direct,High
+DP-C210B,Donghua,C210B/C210BL,,Direct,High
+DP-C212B,Donghua,C212B/C212BL,,Direct,High
+DP-C216B,Donghua,C216B/C216BL,,Direct,High
+DP-C220B,Donghua,C220B/C220BL,,Direct,High
+DP-C224B,Donghua,C224B/C224BL,,Direct,High
+HP-08BHP,Donghua,08BHP,,Direct,High
+HP-12BHP,Donghua,12BHP,,Direct,High
+HP-C2042H-HP,Donghua,C2042H-HP,,Direct,High
+HP-C2052H-HP,Donghua,C2052H-HP,,Direct,High
+HP-C2062H-HP,Donghua,C2062H-HP,,Direct,High
+HP-C2082H-HP,Donghua,C2082H-HP,,Direct,High
+HP-C2102HP,Donghua,C2102HP,,Direct,High
+ISO-M20,Donghua,M20,,Direct,High
+ISO-M28,Donghua,M28,,Direct,High
+ISO-M40,Donghua,M40,,Direct,High
+ISO-M56,Donghua,M56,,Direct,High
+ISO-M80,Donghua,M80,,Direct,High
+ISO-M112,Donghua,M112,,Direct,High
+ISO-M160,Donghua,M160,,Direct,High
+ISO-M224,Donghua,M224,,Direct,High
+ISO-M315,Donghua,M315,,Direct,High
+ISO-M450,Donghua,M450,,Direct,High
+ISO-MC28,Donghua,MC28,,Direct,High
+ISO-MC56,Donghua,MC56,,Direct,High
+ISO-MC112,Donghua,MC112,,Direct,High
+ISO-MC224,Donghua,MC224,,Direct,High
+ISO-MT20,Donghua,MT20,,Direct,High
+ISO-MT28,Donghua,MT28,,Direct,High
+ISO-MT40,Donghua,MT40,,Direct,High
+ISO-MT56,Donghua,MT56,,Direct,High
+ISO-MT80,Donghua,MT80,,Direct,High
+ISO-MT112,Donghua,MT112,,Direct,High
+ISO-MT160,Donghua,MT160,,Direct,High
+ISO-MT224,Donghua,MT224,,Direct,High
+ISO-MT315,Donghua,MT315,,Direct,High
+ISO-MT450,Donghua,MT450,,Direct,High
+FV-FV40,Donghua,FV40,,Direct,High
+FV-FV63,Donghua,FV63,,Direct,High
+FV-FV90,Donghua,FV90,,Direct,High
+FV-FV112,Donghua,FV112,,Direct,High
+FV-FV140,Donghua,FV140,,Direct,High
+FV-FV180,Donghua,FV180,,Direct,High
+FV-FV250,Donghua,FV250,,Direct,High
+FV-FV315,Donghua,FV315,,Direct,High
+FV-FVC63,Donghua,FVC63,,Direct,High
+FV-FVC90,Donghua,FVC90,,Direct,High
+FV-FVC112,Donghua,FVC112,,Direct,High
+FV-FVC140,Donghua,FVC140,,Direct,High
+FV-FVC180,Donghua,FVC180,,Direct,High
+FV-FVC250,Donghua,FVC250,,Direct,High
+FV-FVC315,Donghua,FVC315,,Direct,High
+FV-FVT40,Donghua,FVT40,,Direct,High
+FV-FVT63,Donghua,FVT63,,Direct,High
+FV-FVT90,Donghua,FVT90,,Direct,High
+FV-FVT112,Donghua,FVT112,,Direct,High
+FV-FVT140,Donghua,FVT140,,Direct,High
+FV-FVT180,Donghua,FVT180,,Direct,High
+FV-FVT250,Donghua,FVT250,,Direct,High
+FV-FVT315,Donghua,FVT315,,Direct,High
+AG-S32,Donghua,S32,,Direct,High
+AG-S42,Donghua,S42,,Direct,High
+AG-S45,Donghua,S45,,Direct,High
+AG-S51,Donghua,S51,,Direct,High
+AG-S52,Donghua,S52,,Direct,High
+AG-S55,Donghua,S55,,Direct,High
+AG-S55R,Donghua,S55R,,Direct,High
+AG-S62,Donghua,S62,,Direct,High
+AG-S77,Donghua,S77,,Direct,High
+AG-S88,Donghua,S88,,Direct,High
+LF-LL0622,Donghua,LL0622,,Direct,High
+LF-LL0644,Donghua,LL0644,,Direct,High
+LF-LL0666,Donghua,LL0666,,Direct,High
+LF-LL0822,Donghua,LL0822,,Direct,High
+LF-LL0844,Donghua,LL0844,,Direct,High
+LF-LL0866,Donghua,LL0866,,Direct,High
+LF-LL0888,Donghua,LL0888,,Direct,High
+LF-LL1022,Donghua,LL1022,,Direct,High
+LF-LL1044,Donghua,LL1044,,Direct,High
+LF-LL1066,Donghua,LL1066,,Direct,High
+LF-LL1088,Donghua,LL1088,,Direct,High
+LF-LL1222,Donghua,LL1222,,Direct,High
+LF-LL1244,Donghua,LL1244,,Direct,High
+LF-LL1266,Donghua,LL1266,,Direct,High
+LF-LL1288,Donghua,LL1288,,Direct,High
+LF-LL1622,Donghua,LL1622,,Direct,High
+LF-LL1644,Donghua,LL1644,,Direct,High
+LF-LL1666,Donghua,LL1666,,Direct,High
+LF-LL1688,Donghua,LL1688,,Direct,High
+LF-LL2022,Donghua,LL2022,,Direct,High
+LF-LL2044,Donghua,LL2044,,Direct,High
+LF-LL2066,Donghua,LL2066,,Direct,High
+LF-LL2088,Donghua,LL2088,,Direct,High
+LF-LL2422,Donghua,LL2422,,Direct,High
+LF-LL2444,Donghua,LL2444,,Direct,High
+LF-LL2466,Donghua,LL2466,,Direct,High
+LF-LL2488,Donghua,LL2488,,Direct,High
+LF-LL2822,Donghua,LL2822,,Direct,High
+LF-LL2844,Donghua,LL2844,,Direct,High
+LF-LL2866,Donghua,LL2866,,Direct,High
+LF-LL2888,Donghua,LL2888,,Direct,High
+LF-LL3222,Donghua,LL3222,,Direct,High
+LF-LL3244,Donghua,LL3244,,Direct,High
+LF-LL3266,Donghua,LL3266,,Direct,High
+LF-LL3288,Donghua,LL3288,,Direct,High
+LF-LL4022,Donghua,LL4022,,Direct,High
+LF-LL4044,Donghua,LL4044,,Direct,High
+LF-LL4066,Donghua,LL4066,,Direct,High
+LF-LL4088,Donghua,LL4088,,Direct,High
+LF-LL4822,Donghua,LL4822,,Direct,High
+LF-LL4844,Donghua,LL4844,,Direct,High
+LF-LL4866,Donghua,LL4866,,Direct,High
+LF-LL4888,Donghua,LL4888,,Direct,High
+WS-WR78,Donghua,WR78,,Direct,High
+WS-WR78,MAC Chain,WR78,,Direct,High
+WS-WH78,Donghua,WH78,,Direct,High
+WS-WH78,Rexnord,WH78,,Direct,High
+WS-WR82,Donghua,WR82,,Direct,High
+WS-WR82,MAC Chain,WR82,,Direct,High
+WS-WH82,Donghua,WH82,,Direct,High
+WS-WH82,Rexnord,WH82,,Direct,High
+WS-WR106,Donghua,WR106,,Direct,High
+WS-WR106,MAC Chain,WR106,,Direct,High
+WS-WH106,Donghua,WH106,,Direct,High
+WS-WR110,Donghua,WR110,,Direct,High
+WS-WH110,Donghua,WH110,,Direct,High
+WS-WH110,Rexnord,WH110,,Direct,High
+WS-WR111,Donghua,WR111,,Direct,High
+WS-WR111,MAC Chain,WR111,,Direct,High
+WS-WH111,Donghua,WH111,,Direct,High
+WS-WR124,Donghua,WR124,,Direct,High
+WS-WR124,MAC Chain,WR124,,Direct,High
+WS-WH124,Donghua,WH124,,Direct,High
+WS-WR124H,Donghua,WR124H,,Direct,High
+WS-WH124H,Donghua,WH124H,,Direct,High
+WS-WR132,Donghua,WR132,,Direct,High
+WS-WR132,MAC Chain,WR132,,Direct,High
+WS-WH132,Donghua,WH132,,Direct,High
+WS-WR150,Donghua,WR150,,Direct,High
+WS-WR150,MAC Chain,WR150,,Direct,High
+WS-WH150,Donghua,WH150,,Direct,High
+WS-WR155,Donghua,WR155,,Direct,High
+WS-WH155,Donghua,WH155,,Direct,High
+WS-WR157,Donghua,WR157,,Direct,High
+WS-WR157,MAC Chain,WR157,,Direct,High
+WS-WH157,Donghua,WH157,,Direct,High
+WD-WD104,Donghua,WD104,,Direct,High
+WD-WD104,MAC Chain,WD104,,Direct,High
+WD-WD102,Donghua,WD102,,Direct,High
+WD-WD102,MAC Chain,WD102,,Direct,High
+WD-WD110,Donghua,WD110,,Direct,High
+WD-WD110,MAC Chain,WD110,,Direct,High
+WD-WD112,Donghua,WD112,,Direct,High
+WD-WD112,MAC Chain,WD112,,Direct,High
+WD-WD113,Donghua,WD113,,Direct,High
+WD-WD116,Donghua,WD116,,Direct,High
+WD-WD116,MAC Chain,WD116,,Direct,High
+WD-WD118,Donghua,WD118,,Direct,High
+WD-WD118,MAC Chain,WD118,,Direct,High
+WD-WD122,Donghua,WD122,,Direct,High
+WD-WD122,MAC Chain,WD122,,Direct,High
+WD-WD480,Donghua,WD480,,Direct,High
+WD-WD480,MAC Chain,WD480,,Direct,High
+DH-OILFIELD-80,Donghua,16S-1,,Direct,High
+DH-OILFIELD-100,Donghua,20S-1,,Direct,High
+DH-OILFIELD-120,Donghua,24S-1,,Direct,High
+DH-OILFIELD-140,Donghua,28S-1,,Direct,High
+DH-OILFIELD-160,Donghua,32S-1,,Direct,High
+DH-OILFIELD-180,Donghua,36S-1,,Direct,High
+DH-OILFIELD-200,Donghua,40S-1,,Direct,High
+DH-OILFIELD-80-2,Donghua,16S-2,,Direct,High
+DH-OILFIELD-100-2,Donghua,20S-2,,Direct,High
+DH-OILFIELD-120-2,Donghua,24S-2,,Direct,High
+DH-OILFIELD-140-2,Donghua,28S-2,,Direct,High
+DH-OILFIELD-160-2,Donghua,32S-2,,Direct,High
+DH-OILFIELD-180-2,Donghua,36S-2,,Direct,High
+DH-OILFIELD-200-2,Donghua,40S-2,,Direct,High
+DH-OILFIELD-80-3,Donghua,16S-3,,Direct,High
+DH-OILFIELD-100-3,Donghua,20S-3,,Direct,High
+DH-OILFIELD-120-3,Donghua,24S-3,,Direct,High
+DH-OILFIELD-140-3,Donghua,28S-3,,Direct,High
+DH-OILFIELD-160-3,Donghua,32S-3,,Direct,High
+DH-OILFIELD-180-3,Donghua,36S-3,,Direct,High
+DH-OILFIELD-200-3,Donghua,40S-3,,Direct,High
+DH-OILFIELD-200H-3,Donghua,40HS-3,,Direct,High
+DH-OILFIELD-80-4,Donghua,16S-4,,Direct,High
+DH-OILFIELD-100-4,Donghua,20S-4,,Direct,High
+DH-OILFIELD-120-4,Donghua,24S-4,,Direct,High
+DH-OILFIELD-140-4,Donghua,28S-4,,Direct,High
+DH-OILFIELD-160-4,Donghua,32S-4,,Direct,High
+DH-OILFIELD-200-4,Donghua,40S-4,,Direct,High
+DH-OILFIELD-80-5,Donghua,16S-5,,Direct,High
+DH-OILFIELD-100-5,Donghua,20S-5,,Direct,High
+DH-OILFIELD-120-5,Donghua,24S-5,,Direct,High
+DH-OILFIELD-140-5,Donghua,28S-5,,Direct,High
+DH-OILFIELD-160-5,Donghua,32S-5,,Direct,High
+DH-OILFIELD-80-6,Donghua,16S-6,,Direct,High
+DH-OILFIELD-100-6,Donghua,20S-6,,Direct,High
+DH-OILFIELD-120-6,Donghua,24S-6,,Direct,High
+DH-OILFIELD-140-6,Donghua,28S-6,,Direct,High
+DH-OILFIELD-160-6,Donghua,32S-6,,Direct,High
+DH-OILFIELD-200-6,Donghua,40S-6,,Direct,High
+DH-OILFIELD-80-8,Donghua,16S-8,,Direct,High
+DH-OILFIELD-100-8,Donghua,20S-8,,Direct,High
+DH-OILFIELD-120-8,Donghua,24S-8,,Direct,High
+DH-OILFIELD-140-8,Donghua,28S-8,,Direct,High
+REX-RR362,Rexnord,RR362,,Direct,High
+REX-RR362,Link-Belt,RS625,,Direct,High
+REX-RR432,Rexnord,RR432,,Direct,High
+REX-RR432,Link-Belt,RS627,,Direct,High
+REX-81X,Rexnord,81X,,Direct,High
+REX-81X,Link-Belt,RS81X,,Direct,High
+REX-81X,MAC Chain,81X,,Direct,High
+REX-C1288,Rexnord,C1288,,Direct,High
+REX-C1288,Link-Belt,SS1088,,Direct,High
+REX-1578,Rexnord,1578,,Direct,High
+REX-RR778,Rexnord,RR778,,Direct,High
+REX-RR778,Link-Belt,RS886,,Direct,High
+REX-RR588,Rexnord,RR588,,Direct,High
+REX-RR588,Link-Belt,RS887,,Direct,High
+REX-81XH,Renold,81XH,,Direct,High
+REX-81XH,Rexnord,81XH,,Direct,High
+REX-81XH,Link-Belt,RS81XH,,Direct,High
+REX-81XHH,Renold,81XHH,,Direct,High
+REX-81XHH,Rexnord,81XHH,,Direct,High
+REX-81XHH,Link-Belt,RS81XHH,,Direct,High
+REX-270,Rexnord,270,,Direct,High
+REX-270,Link-Belt,SS2004,,Direct,High
+REX-7774,Rexnord,7774,,Direct,High
+REX-SR183,Rexnord,SR183,,Direct,High
+REX-SR183,Link-Belt,RS3013,,Direct,High
+REX-A4539,Rexnord,A4539,,Direct,High
+REX-1539,Rexnord,1539,,Direct,High
+REX-1539,Link-Belt,RS1539,,Direct,High
+REX-7539,Rexnord,7539,,Direct,High
+REX-RR1120,Rexnord,RR1120,,Direct,High
+REX-RR1120,Link-Belt,RS4013,,Direct,High
+REX-SR194,Rexnord,SR194,,Direct,High
+REX-SR194,Link-Belt,RS4216,,Direct,High
+REX-SR188,Rexnord,SR188,,Direct,High
+REX-4,Rexnord,4,,Direct,High
+REX-4,Link-Belt,RS4019,,Direct,High
+REX-2188,Rexnord,2188,,Direct,High
+REX-2188,Link-Belt,RS2188,,Direct,High
+REX-531,Rexnord,531,,Direct,High
+REX-531,Link-Belt,RS4328,,Direct,High
+REX-ER3433,Rexnord,ER3433,,Direct,High
+REX-A2868,Rexnord,A2868,,Direct,High
+REX-3420,Rexnord,3420,,Direct,High
+REX-3420,Link-Belt,RS1113,,Direct,High
+REX-C2848,Rexnord,C2848,,Direct,High
+REX-2858,Rexnord,2858,,Direct,High
+REX-3285,Rexnord,3285,,Direct,High
+REX-SR196,Rexnord,SR196,,Direct,High
+REX-SR196,Link-Belt,RS6018,,Direct,High
+REX-1604,Rexnord,1604,,Direct,High
+REX-2126,Rexnord,2126,,Direct,High
+REX-2126,Link-Belt,RS1116,,Direct,High
+REX-2190,Rexnord,2190,,Direct,High
+REX-2190,Link-Belt,RS2190,,Direct,High
+REX-1670,Rexnord,1670,,Direct,High
+REX-SR1114,Rexnord,SR1114,,Direct,High
+REX-SR1114,Link-Belt,RS1114,,Direct,High
+REX-2180,Rexnord,2180,,Direct,High
+REX-S951,Rexnord,S951,,Direct,High
+REX-2183,Rexnord,2183,,Direct,High
+REX-2183,Link-Belt,RS951,,Direct,High
+REX-1036,Rexnord,1036,,Direct,High
+REX-1617,Rexnord,1617,,Direct,High
+REX-SR3130,Rexnord,SR3130,,Direct,High
+REX-6,Rexnord,6,,Direct,High
+REX-6,Link-Belt,RS6238,,Direct,High
+REX-RR542,Rexnord,RR542,,Direct,High
+REX-BR2111,Rexnord,BR2111,,Direct,High
+REX-BR2111,Link-Belt,RS944,,Direct,High
+REX-C2124,Rexnord,C2124,,Direct,High
+REX-A2124,Rexnord,A2124,,Direct,High
+REX-A2124,Link-Belt,RS996,,Direct,High
+REX-RS1131,Rexnord,RS1131,,Direct,High
+REX-RS1131,Link-Belt,RS1131,,Direct,High
+REX-FX2184,Rexnord,FX2184,,Direct,High
+REX-FX2184,Link-Belt,RO2184,,Direct,High
+REX-FX9184,Rexnord,FX9184,,Direct,High
+REX-A2178,Rexnord,A2178,,Direct,High
+REX-A2198,Rexnord,A2198,,Direct,High
+REX-A2198,Link-Belt,RS960,,Direct,High
+REX-5208,Rexnord,5208,,Direct,High
+REX-C9856,Rexnord,C9856,,Direct,High
+REX-B9856,Rexnord,B9856,,Direct,High
+REX-A2800,Rexnord,A2800,,Direct,High
+REX-1039,Rexnord,1039,,Direct,High
+REX-ER911,Rexnord,ER911,,Direct,High
+REX-ER911,Link-Belt,RS911,,Direct,High
+REX-ER922,Rexnord,ER922,,Direct,High
+REX-ER922,Link-Belt,SS927,,Direct,High
+REX-FR922,Rexnord,FR922,,Direct,High
+REX-FR922,Link-Belt,SS922,,Direct,High
+REX-R2342,Rexnord,R2342,,Direct,High
+REX-R2405,Rexnord,R2405,,Direct,High
+REX-ER933,Rexnord,ER933,,Direct,High
+REX-FR933,Rexnord,FR933,,Direct,High
+REX-FR933,Link-Belt,SS933,,Direct,High
+REX-R4009,Rexnord,R4009,,Direct,High
+REX-R4009,Link-Belt,RS4851,,Direct,High
+REX-X4004,Rexnord,X4004,,Direct,High
+REX-X4004,Link-Belt,RS4852,,Direct,High
+REX-4065,Rexnord,4065,,Direct,High
+REX-4065,Link-Belt,RS4065,,Direct,High
+REX-E1211,Rexnord,E1211,,Direct,High
+REX-E1211,Link-Belt,RS1211,,Direct,High
+REX-ER1222,Rexnord,ER1222,,Direct,High
+REX-ER1222,Link-Belt,SS1227,,Direct,High
+REX-FR1222,Rexnord,FR1222,,Direct,High
+REX-FR1222,Link-Belt,SS1222,,Direct,High
+REX-R1251,Rexnord,R1251,,Direct,High
+REX-ER1233,Rexnord,ER1233,,Direct,High
+REX-FR1233,Rexnord,FR1233,,Direct,High
+REX-FR1233,Link-Belt,SS1233,,Direct,High
+REX-RR2397,Rexnord,RR2397,,Direct,High
+REX-4011,Rexnord,4011,,Direct,High
+REX-ER1244,Rexnord,ER1244,,Direct,High
+REX-FR1244,Rexnord,FR1244,,Direct,High
+REX-R1706,Rexnord,R1706,,Direct,High
+REX-R2614,Rexnord,R2614,,Direct,High
+REX-R4010,Rexnord,R4010,,Direct,High
+REX-ER1822,Rexnord,ER1822,,Direct,High
+REX-FR1822,Rexnord,FR1822,,Direct,High
+REX-F1833,Rexnord,F1833,,Direct,High
+REX-FR1844,Rexnord,FR1844,,Direct,High
+REX-S188,Rexnord,S188,,Direct,High
+REX-S188,Link-Belt,SBS188,,Direct,High
+REX-ER131,Rexnord,ER131,,Direct,High
+REX-ER131,Link-Belt,SBS131,,Direct,High
+REX-1536,Rexnord,1536,,Direct,High
+REX-1536,Link-Belt,SBS1972,,Direct,High
+REX-1535,Rexnord,1535,,Direct,High
+REX-1535,Link-Belt,SBS2162,,Direct,High
+REX-ER102B,Rexnord,ER102B,,Direct,High
+REX-ER102B,Link-Belt,SBS102B,,Direct,High
+REX-ER1025,Rexnord,ER1025,,Direct,High
+REX-ER1025,Link-Belt,SBS102.5,,Direct,High
+REX-ER111,Rexnord,ER111,,Direct,High
+REX-ER111,Link-Belt,SBS111,,Direct,High
+REX-SR830,Rexnord,SR830,,Direct,High
+REX-ER110,Rexnord,ER110,,Direct,High
+REX-ER110,Link-Belt,SBS110,,Direct,High
+REX-ER833,Rexnord,ER833,,Direct,High
+REX-SR844,Rexnord,SR844,,Direct,High
+REX-SR844,Link-Belt,SBS844,,Direct,High
+REX-6826,Rexnord,6826,,Direct,High
+REX-ER856,Rexnord,ER856,,Direct,High
+REX-ER856,Link-Belt,SBX856,,Direct,High
+REX-ER956,Rexnord,ER956,,Direct,High
+REX-ER857,Rexnord,ER857,,Direct,High
+REX-ER857,Link-Belt,SBX2857,,Direct,High
+REX-ER958,Rexnord,ER958,,Direct,High
+REX-ER859,Rexnord,ER859,,Direct,High
+REX-ER859,Link-Belt,SBX2859,,Direct,High
+REX-ER150,Rexnord,ER150,,Direct,High
+REX-ER150,Link-Belt,SBS150,,Direct,High
+REX-SX175,Rexnord,SX175,,Direct,High
+REX-ER864,Rexnord,ER864,,Direct,High
+REX-ER864,Link-Belt,SBX2864,,Direct,High
+REX-ER984,Rexnord,ER984,,Direct,High
+REX-SX886,Rexnord,SX886,,Direct,High
+REX-WHX124,Rexnord,WHX124,,Direct,High
+REX-WHX124HD,Rexnord,WHX124HD,,Direct,High
+REX-WHX111,Rexnord,WHX111,,Direct,High
+REX-WHX106,Rexnord,WHX106,,Direct,High
+REX-WHX132,Rexnord,WHX132,,Direct,High
+REX-WHX150,Rexnord,WHX150,,Direct,High
+REX-WHX155,Rexnord,WHX155,,Direct,High
+REX-WHX157,Rexnord,WHX157,,Direct,High
+REX-WHX2855,Rexnord,WHX2855,,Direct,High
+REX-WHX3855,Rexnord,WHX3855,,Direct,High
+REX-WHX159,Rexnord,WHX159,,Direct,High
+REX-WHX4855,Rexnord,WHX4855,,Direct,High
+REX-WDH104,Rexnord,WDH104,,Direct,High
+REX-WDH110,Rexnord,WDH110,,Direct,High
+REX-WDH113,Rexnord,WDH113,,Direct,High
+REX-WDH120,Rexnord,WDH120,,Direct,High
+REX-WDH112,Rexnord,WDH112,,Direct,High
+REX-WDH116,Rexnord,WDH116,,Direct,High
+REX-WDH118,Rexnord,WDH118,,Direct,High
+REX-WDH480,Rexnord,WDH480,,Direct,High
+REX-WDH580,Rexnord,WDH580,,Direct,High
+REX-WDH680,Rexnord,WDH680,,Direct,High
+REX-WDH2210,Rexnord,WDH2210,,Direct,High
+REX-WDH2316,Rexnord,WDH2316,,Direct,High
+REX-WDH2380,Rexnord,WDH2380,,Direct,High
+REX-WHX5157,Rexnord,WHX5157,,Direct,High
+REX-WHX6067,Rexnord,WHX6067,,Direct,High
+REX-WHX5121,Rexnord,WHX5121,,Direct,High
+REX-WHX6121,Rexnord,WHX6121,,Direct,High
+REX-468,Rexnord,468,,Direct,High
+REX-468,Can-Am,468,,Direct,High
+REX-698,Rexnord,698,,Direct,High
+REX-698,Can-Am,698,,Direct,High
+REX-998,Rexnord,998,,Direct,High
+REX-998,Can-Am,998,,Direct,High
+REX-9118,Rexnord,9118,,Direct,High
+REX-9118,Can-Am,9118,,Direct,High
+REX-X348,Rexnord,X348,,Direct,High
+REX-X458,Rexnord,X458,,Direct,High
+REX-X678,Rexnord,X678,,Direct,High
+REX-S348,Rexnord,S348,,Direct,High
+REX-S458,Rexnord,S458,,Direct,High
+REX-S468,Rexnord,S468,,Direct,High
+REX-S678,Rexnord,S678,,Direct,High
+REX-S698,Rexnord,S698,,Direct,High
+REX-S998,Rexnord,S998,,Direct,High
+REX-945,Rexnord,945,,Direct,High
+REX-955,Rexnord,955,,Direct,High
+REX-977,Rexnord,977,,Direct,High
+REX-988,Rexnord,988,,Direct,High
+REX-C9103,Rexnord,C9103,,Direct,High
+REX-C720,Rexnord,C720,,Direct,High
+REX-720S,Rexnord,720S,,Direct,High
+REX-720S,Webster,720S,,Direct,High
+REX-A730,Rexnord,A730,,Direct,High
+REX-CS720S,Rexnord,CS720S,,Direct,High
+REX-CS730,Rexnord,CS730,,Direct,High
+REX-REXC55,Rexnord,RexC55,,Direct,High
+REX-REXC77,Rexnord,RexC77,,Direct,High
+REX-REXC188,Rexnord,RexC188,,Direct,High
+REX-REXC131,Rexnord,RexC131,,Direct,High
+REX-REXC102B,Rexnord,RexC102B,,Direct,High
+REX-REXC1025,Rexnord,RexC1025,,Direct,High
+REX-REXC111,Rexnord,RexC111,,Direct,High
+REX-REXC133,Rexnord,RexC133,,Direct,High
+REX-REXC110,Rexnord,RexC110,,Direct,High
+REX-REXC132,Rexnord,RexC132,,Direct,High
+RENOLD-S45161,Renold,S45161,,Direct,High
+RENOLD-S45241,Renold,S45241,,Direct,High
+RENOLD-S45162,Renold,S45162,,Direct,High
+RENOLD-S45242,Renold,S45242,,Direct,High
+RENOLD-S45243,Renold,S45243,,Direct,High
+RENOLD-E45161,Renold,E45161,,Direct,High
+RENOLD-E45241,Renold,E45241,,Direct,High
+RENOLD-E45162,Renold,E45162,,Direct,High
+RENOLD-E45242,Renold,E45242,,Direct,High
+RENOLD-X62161,Renold,X62161,,Direct,High
+RENOLD-X62241,Renold,X62241,,Direct,High
+RENOLD-X62162,Renold,X62162,,Direct,High
+RENOLD-X62242,Renold,X62242,,Direct,High
+RENOLD-S05161,Renold,S05161,,Direct,High
+RENOLD-S05162,Renold,S05162,,Direct,High
+RENOLD-S05242,Renold,S05242,,Direct,High
+RENOLD-S05243,Renold,S05243,,Direct,High
+RENOLD-E05161,Renold,E05161,,Direct,High
+RENOLD-E05162,Renold,E05162,,Direct,High
+RENOLD-E05242,Renold,E05242,,Direct,High
+RENOLD-X02242,Renold,X02242,,Direct,High
+RENOLD-RENOLD-81X,Renold,Renold 81X,,Direct,High
+RENOLD-R-9060,Renold,R.9060,,Direct,High
+RENOLD-R-9061,Renold,R.9061,,Direct,High
+RENOLD-R-1796,Renold,R.1796,,Direct,High
+RENOLD-R-9063,Renold,R.9063,,Direct,High
+RENOLD-171123,Renold,171123,,Direct,High
+RENOLD-171360,Renold,171360,,Direct,High
+RENOLD-171649,Renold,171649,,Direct,High
+RENOLD-176499,Renold,176499,,Direct,High
+RENOLD-178388,Renold,178388,,Direct,High
+RENOLD-179362,Renold,179362,,Direct,High
+RENOLD-171749,Renold,171749,,Direct,High
+RENOLD-179840,Renold,179840,,Direct,High
+RENOLD-176493,Renold,176493,,Direct,High
+RENOLD-795034,Renold,795034,,Direct,High
+RENOLD-171044,Renold,171044,,Direct,High
+RENOLD-171260-90,Renold,171260/90,,Direct,High
+RENOLD-588506,Renold,588506,,Direct,High
+RENOLD-199232-90,Renold,199232/90,,Direct,High
+RENOLD-179701-90,Renold,179701/90,,Direct,High
+RENOLD-171320-90,Renold,171320/90,,Direct,High
+RENOLD-6956-PB,Renold,6956-PB,,Direct,High
+RENOLD-6867-R,Renold,6867-R,,Direct,High
+RENOLD-6866-R,Renold,6866-R,,Direct,High
+RENOLD-6869-R,Renold,6869-R,,Direct,High
+RENOLD-6969-R,Renold,6969-R,,Direct,High
+RENOLD-6864-R,Renold,6864-R,,Direct,High
+RENOLD-6684,Renold,6684,,Direct,High
+RENOLD-6875-R,Renold,6875-R,,Direct,High
+RENOLD-6874,Renold,6874,,Direct,High
+RENOLD-3252-PR,Renold,3252-PR,,Direct,High
+RENOLD-4035-PB,Renold,4035-PB,,Direct,High
+RENOLD-4065-RJ,Renold,4065-RJ,,Direct,High
+RENOLD-4037-PB,Renold,4037-PB,,Direct,High
+RENOLD-6859-R,Renold,6859-R,,Direct,High
+RENOLD-6881-AR,Renold,6881-AR,,Direct,High
+RENOLD-6889-PB,Renold,6889-PB,,Direct,High
+RENOLD-WS5157-H,Renold,WS5157-H,,Direct,High
+RENOLD-WS6067-HHF,Renold,WS6067-HHF,,Direct,High
+RENOLD-WS6267-HHF,Renold,WS6267-HHF,,Direct,High
+RENOLD-WS5121-HHF,Renold,WS5121-HHF,,Direct,High
+RENOLD-WS5221-HHF,Renold,WS5221-HHF,,Direct,High
+RENOLD-WS6121-HHF,Renold,WS6121-HHF,,Direct,High
+RENOLD-WS6221-HHF,Renold,WS6221-HHF,,Direct,High
+RENOLD-WS78,Renold,WS78,,Direct,High
+RENOLD-WS78,MAC Chain,WS78,,Direct,High
+RENOLD-WS78P,Renold,WS78P,,Direct,High
+RENOLD-WS82,Renold,WS82,,Direct,High
+RENOLD-WS82P,Renold,WS82P,,Direct,High
+RENOLD-WS82H,Renold,WS82H,,Direct,High
+RENOLD-WS82HP,Renold,WS82HP,,Direct,High
+RENOLD-WS784,Renold,WS784,,Direct,High
+RENOLD-WS784P,Renold,WS784P,,Direct,High
+RENOLD-WS124,Renold,WS124,,Direct,High
+RENOLD-WS124P,Renold,WS124P,,Direct,High
+RENOLD-WS124HD,Renold,WS124HD,,Direct,High
+RENOLD-WS124HDP,Renold,WS124HDP,,Direct,High
+RENOLD-WS111,Renold,WS111,,Direct,High
+RENOLD-WS111P,Renold,WS111P,,Direct,High
+RENOLD-WS106,Renold,WS106,,Direct,High
+RENOLD-WS106P,Renold,WS106P,,Direct,High
+RENOLD-WS110,Renold,WS110,,Direct,High
+RENOLD-WS110P,Renold,WS110P,,Direct,High
+RENOLD-WS132,Renold,WS132,,Direct,High
+RENOLD-WS132P,Renold,WS132P,,Direct,High
+RENOLD-WS150,Renold,WS150,,Direct,High
+RENOLD-WS150P,Renold,WS150P,,Direct,High
+RENOLD-WS855PB,Renold,WS855PB,,Direct,High
+RENOLD-WS855HDP,Renold,WS855HDP,,Direct,High
+RENOLD-WS859PB,Renold,WS859PB,,Direct,High
+RENOLD-WSD102,Renold,WSD102,,Direct,High
+RENOLD-WSD102P,Renold,WSD102P,,Direct,High
+RENOLD-WSD104,Renold,WSD104,,Direct,High
+RENOLD-WSD104P,Renold,WSD104P,,Direct,High
+RENOLD-WSD110,Renold,WSD110,,Direct,High
+RENOLD-WSD110P,Renold,WSD110P,,Direct,High
+RENOLD-WSD120,Renold,WSD120,,Direct,High
+RENOLD-WSD120P,Renold,WSD120P,,Direct,High
+RENOLD-WSD112,Renold,WSD112,,Direct,High
+RENOLD-WSD112P,Renold,WSD112P,,Direct,High
+RENOLD-WSD116,Renold,WSD116,,Direct,High
+RENOLD-WSD116P,Renold,WSD116P,,Direct,High
+RENOLD-WSD122,Renold,WSD122,,Direct,High
+RENOLD-WSD122P,Renold,WSD122P,,Direct,High
+RENOLD-WSD480,Renold,WSD480,,Direct,High
+RENOLD-WSD480P,Renold,WSD480P,,Direct,High
+RENOLD-WD480XHDP,Renold,WD480XHDP,,Direct,High
+WEBSTER-442,Webster,442,,Direct,High
+WEBSTER-445,Webster,445,,Direct,High
+WEBSTER-452,Webster,452,,Direct,High
+WEBSTER-455,Webster,455,,Direct,High
+WEBSTER-462,Webster,462,,Direct,High
+WEBSTER-477,Webster,477,,Direct,High
+WEBSTER-488,Webster,488,,Direct,High
+WEBSTER-4103,Webster,4103,,Direct,High
+WEBSTER-4124,Webster,4124,,Direct,High
+WEBSTER-720,Webster,720,,Direct,High
+WEBSTER-720NCS,Webster,720NCS,,Direct,High
+WEBSTER-730,Webster,730,,Direct,High
+WEBSTER-730S,Webster,730S,,Direct,High
+WEBSTER-730NCS,Webster,730NCS,,Direct,High
+WEBSTER-WC55,Webster,WC55,,Direct,High
+WEBSTER-N77,Webster,N77,,Direct,High
+WEBSTER-N102B,Webster,N102B,,Direct,High
+WEBSTER-N102H,Webster,N102H,,Direct,High
+WEBSTER-N110,Webster,N110,,Direct,High
+WEBSTER-N111,Webster,N111,,Direct,High
+WEBSTER-N131,Webster,N131,,Direct,High
+WEBSTER-N132,Webster,N132,,Direct,High
+WEBSTER-WC188,Webster,WC188,,Direct,High
+WEBSTER-N111SPC,Webster,N111SPC,,Direct,High
+WEBSTER-DW111,Webster,DW111,,Direct,High
+WEBSTER-N131WS,Webster,N131WS,,Direct,High
+WEBSTER-DW132,Webster,DW132,,Direct,High
+WEBSTER-N132WS,Webster,N132WS,,Direct,High
+WEBSTER-C188WS,Webster,C188WS,,Direct,High
+WEBSTER-CRN110,Webster,CRN110,,Direct,High
+WEBSTER-CRN111,Webster,CRN111,,Direct,High
+WEBSTER-CRN131,Webster,CRN131,,Direct,High
+WEBSTER-CRN132,Webster,CRN132,,Direct,High
+WEBSTER-CR188,Webster,CR188,,Direct,High
+WEBSTER-HSB188,Webster,HSB188,,Direct,High
+WEBSTER-HSB1663,Webster,HSB1663,,Direct,High
+WEBSTER-HSB131,Webster,HSB131,,Direct,High
+WEBSTER-HSB102B,Webster,HSB102B,,Direct,High
+WEBSTER-HSB825,Webster,HSB825,,Direct,High
+WEBSTER-HSB102H,Webster,HSB102H,,Direct,High
+WEBSTER-HSB6472,Webster,HSB6472,,Direct,High
+WEBSTER-HSB4933,Webster,HSB4933,,Direct,High
+WEBSTER-HSB111,Webster,HSB111,,Direct,High
+WEBSTER-HSB5131,Webster,HSB5131,,Direct,High
+WEBSTER-HSB1316,Webster,HSB1316,,Direct,High
+WEBSTER-HSB2730,Webster,HSB2730,,Direct,High
+WEBSTER-HSB835,Webster,HSB835,,Direct,High
+WEBSTER-HSB110,Webster,HSB110,,Direct,High
+WEBSTER-HSB830,Webster,HSB830,,Direct,High
+WEBSTER-HSB833,Webster,HSB833,,Direct,High
+WEBSTER-HSB844,Webster,HSB844,,Direct,High
+WEBSTER-HSB826,Webster,HSB826,,Direct,High
+WEBSTER-HSB860B,Webster,HSB860B,,Direct,High
+WEBSTER-HSB856B,Webster,HSB856B,,Direct,High
+WEBSTER-HSB956,Webster,HSB956,,Direct,High
+WEBSTER-HSB857A,Webster,HSB857A,,Direct,High
+WEBSTER-HSB2858A,Webster,HSB2858A,,Direct,High
+WEBSTER-HSB850,Webster,HSB850,,Direct,High
+WEBSTER-HSB859B,Webster,HSB859B,,Direct,High
+WEBSTER-HSB1654,Webster,HSB1654,,Direct,High
+WEBSTER-HSB851,Webster,HSB851,,Direct,High
+WEBSTER-HSB150,Webster,HSB150,,Direct,High
+WEBSTER-HSB864B,Webster,HSB864B,,Direct,High
+WEBSTER-HSB984,Webster,HSB984,,Direct,High
+WEBSTER-HSB2866,Webster,HSB2866,,Direct,High
+WEBSTER-HSB886,Webster,HSB886,,Direct,High
+WEBSTER-HSB187,Webster,HSB187,,Direct,High
+WEBSTER-HSB1856,Webster,HSB1856,,Direct,High
+WEBSTER-HSB1219,Webster,HSB1219,,Direct,High
+WEBSTER-HSB9124,Webster,HSB9124,,Direct,High
+WEBSTER-HSB1956,Webster,HSB1956,,Direct,High
+WEBSTER-HSB9150,Webster,HSB9150,,Direct,High
+WEBSTER-HSB1903,Webster,HSB1903,,Direct,High
+WEBSTER-HSB959,Webster,HSB959,,Direct,High
+WEBSTER-HSB964,Webster,HSB964,,Direct,High
+WEBSTER-HSB6322,Webster,HSB6322,,Direct,High
+WEBSTER-HSB6102H,Webster,HSB6102H,,Direct,High
+WEBSTER-HSB6124,Webster,HSB6124,,Direct,High
+WEBSTER-HSB852,Webster,HSB852,,Direct,High
+WEBSTER-HSB1259,Webster,HSB1259,,Direct,High
+WEBSTER-TS856,Webster,TS856,,Direct,High
+WEBSTER-TS956,Webster,TS956,,Direct,High
+WEBSTER-TS857,Webster,TS857,,Direct,High
+WEBSTER-TS859,Webster,TS859,,Direct,High
+MAC-WR78XHD,MAC Chain,WR78XHD,,Direct,High
+MAC-WR78-4,MAC Chain,WR78-4,,Direct,High
+MAC-WR82XHD,MAC Chain,WR82XHD,,Direct,High
+MAC-WR124XHD,MAC Chain,WR124XHD,,Direct,High
+MAC-WR106XHD,MAC Chain,WR106XHD,,Direct,High
+MAC-WR132XHD,MAC Chain,WR132XHD,,Direct,High
+MAC-WR150XHD,MAC Chain,WR150XHD,,Direct,High
+MAC-WRC131,MAC Chain,WRC131,,Direct,High
+MAC-WRC131,Can-Am,WRC131,,Direct,High
+MAC-WRC124,MAC Chain,WRC124,,Direct,High
+MAC-WRC124,Can-Am,WRC124,,Direct,High
+MAC-WRC124XHD,MAC Chain,WRC124XHD,,Direct,High
+MAC-WRC124XHD,Can-Am,WRC124XHD,,Direct,High
+MAC-WRC111,MAC Chain,WRC111,,Direct,High
+MAC-WRC111,Can-Am,WRC111,,Direct,High
+MAC-WRC110,MAC Chain,WRC110,,Direct,High
+MAC-WRC110,Can-Am,WRC110,,Direct,High
+MAC-WRC110XHD,MAC Chain,WRC110XHD,,Direct,High
+MAC-WRC110XHD,Can-Am,WRC110XHD,,Direct,High
+MAC-WRC132,MAC Chain,WRC132,,Direct,High
+MAC-WRC132,Can-Am,WRC132,,Direct,High
+MAC-WRC132XHD,MAC Chain,WRC132XHD,,Direct,High
+MAC-WRC132XHD,Can-Am,WRC132XHD,,Direct,High
+MAC-WRC150,MAC Chain,WRC150,,Direct,High
+MAC-WRC150,Can-Am,WRC150,,Direct,High
+MAC-WRC150XHD,MAC Chain,WRC150XHD,,Direct,High
+MAC-WD118XHD,MAC Chain,WD118XHD,,Direct,High
+MAC-WD120,MAC Chain,WD120,,Direct,High
+MAC-WD120XHD,MAC Chain,WD120XHD,,Direct,High
+MAC-WD122XHD,MAC Chain,WD122XHD,,Direct,High
+MAC-WD480XHD,MAC Chain,WD480XHD,,Direct,High
+MAC-WD118SM,MAC Chain,WD118SM,,Direct,High
+MAC-WD118XHDSM,MAC Chain,WD118XHDSM,,Direct,High
+MAC-WD120SM,MAC Chain,WD120SM,,Direct,High
+MAC-WD120XHDSM,MAC Chain,WD120XHDSM,,Direct,High
+MAC-WD122SM,MAC Chain,WD122SM,,Direct,High
+MAC-WD122XHDSM,MAC Chain,WD122XHDSM,,Direct,High
+MAC-WD480SM,MAC Chain,WD480SM,,Direct,High
+MAC-WD480XHDSM,MAC Chain,WD480XHDSM,,Direct,High
+MAC-WD118MM,MAC Chain,WD118MM,,Direct,High
+MAC-WD118XHDMM,MAC Chain,WD118XHDMM,,Direct,High
+MAC-WD120MM,MAC Chain,WD120MM,,Direct,High
+MAC-WD120XHDMM,MAC Chain,WD120XHDMM,,Direct,High
+MAC-WD122MM,MAC Chain,WD122MM,,Direct,High
+MAC-WD122XHDMM,MAC Chain,WD122XHDMM,,Direct,High
+MAC-WD480MM,MAC Chain,WD480MM,,Direct,High
+MAC-WD480XHDMM,MAC Chain,WD480XHDMM,,Direct,High
+MAC-H60,MAC Chain,H60,,Direct,High
+MAC-H74,MAC Chain,H74,,Direct,High
+MAC-H78,MAC Chain,H78,,Direct,High
+MAC-H82,MAC Chain,H82,,Direct,High
+MAC-C55,MAC Chain,C55,,Direct,High
+MAC-C77,MAC Chain,C77,,Direct,High
+MAC-C188,MAC Chain,C188,,Direct,High
+MAC-C131,MAC Chain,C131,,Direct,High
+MAC-C102B,MAC Chain,C102B,,Direct,High
+MAC-MS188,MAC Chain,MS188,,Direct,High
+MAC-MS131,MAC Chain,MS131,,Direct,High
+MAC-MS102B,MAC Chain,MS102B,,Direct,High
+MAC-MS110,MAC Chain,MS110,,Direct,High
+MAC-81X-HD,MAC Chain,81X-HD,,Direct,High
+MAC-81X-XHD,MAC Chain,81X-XHD,,Direct,High
+MAC-LXS882,MAC Chain,LXS882,,Direct,High
+MAC-M3939,MAC Chain,M3939,,Direct,High
+MAC-M3939-HD,MAC Chain,M3939-HD,,Direct,High
+MAC-M900,MAC Chain,M900,,Direct,High
+MAC-M662,MAC Chain,M662,,Direct,High
+MAC-M667X,MAC Chain,M667X,,Direct,High
+MAC-M667H,MAC Chain,M667H,,Direct,High
+MAC-M667KC,MAC Chain,M667KC,,Direct,High
+MAC-M667XH,MAC Chain,M667XH,,Direct,High
+MAC-M88K,MAC Chain,M88K,,Direct,High
+MAC-M88C,MAC Chain,M88C,,Direct,High
+MAC-M308C,MAC Chain,M308C,,Direct,High
+MAC-M662-A,MAC Chain,M662-A,,Direct,High
+MAC-M667X-A,MAC Chain,M667X-A,,Direct,High
+MAC-M667H-A,MAC Chain,M667H-A,,Direct,High
+MAC-M667K-A,MAC Chain,M667K-A,,Direct,High
+MAC-M667KC-A,MAC Chain,M667KC-A,,Direct,High
+MAC-M667XH-A,MAC Chain,M667XH-A,,Direct,High
+MAC-C77SS,MAC Chain,C77SS,,Direct,High
+MAC-LL-7-8X1-5X6,MAC Chain,LL-7/8x1.5x6,,Direct,High
+MAC-LL-1X1-75X6,MAC Chain,LL-1x1.75x6,,Direct,High
+MAC-LL-1-125X2X6,MAC Chain,LL-1.125x2x6,,Direct,High
+MAC-LL-1-25X2X6,MAC Chain,LL-1.25x2x6,,Direct,High
+MAC-DF3500,MAC Chain,DF3500,,Direct,High
+MAC-WR720S,MAC Chain,WR720S,,Direct,High
+MAC-WR730S,MAC Chain,WR730S,,Direct,High
+MAC-CA550,MAC Chain,CA550,,Direct,High
+MAC-CA620,MAC Chain,CA620,,Direct,High
+CANAM-WR-78,Can-Am,WR-78,,Direct,High
+CANAM-WH-78,Can-Am,WH-78,,Direct,High
+CANAM-WR-78-4,Can-Am,WR-78-4,,Direct,High
+CANAM-WR-82,Can-Am,WR-82,,Direct,High
+CANAM-WH-82,Can-Am,WH-82,,Direct,High
+CANAM-WR-124,Can-Am,WR-124,,Direct,High
+CANAM-WH-124,Can-Am,WH-124,,Direct,High
+CANAM-WR-111,Can-Am,WR-111,,Direct,High
+CANAM-WH-111,Can-Am,WH-111,,Direct,High
+CANAM-WR-106,Can-Am,WR-106,,Direct,High
+CANAM-WH-106,Can-Am,WH-106,,Direct,High
+CANAM-WR-132,Can-Am,WR-132,,Direct,High
+CANAM-WH-132,Can-Am,WH-132,,Direct,High
+CANAM-WR-150,Can-Am,WR-150,,Direct,High
+CANAM-WH-150,Can-Am,WH-150,,Direct,High
+CANAM-WR-155,Can-Am,WR-155,,Direct,High
+CANAM-WH-155,Can-Am,WH-155,,Direct,High
+CANAM-WR-157,Can-Am,WR-157,,Direct,High
+CANAM-WH-157,Can-Am,WH-157,,Direct,High
+CANAM-WR-159,Can-Am,WR-159,,Direct,High
+CANAM-WH-159,Can-Am,WH-159,,Direct,High
+CANAM-WR-200,Can-Am,WR-200,,Direct,High
+CANAM-WH-200,Can-Am,WH-200,,Direct,High
+CANAM-WRC78,Can-Am,WRC78,,Direct,High
+CANAM-WHC78,Can-Am,WHC78,,Direct,High
+CANAM-WRC82,Can-Am,WRC82,,Direct,High
+CANAM-WHC82,Can-Am,WHC82,,Direct,High
+CANAM-WHC131,Can-Am,WHC131,,Direct,High
+CANAM-WHC124,Can-Am,WHC124,,Direct,High
+CANAM-WHC111,Can-Am,WHC111,,Direct,High
+CANAM-WHC110,Can-Am,WHC110,,Direct,High
+CANAM-WHC132,Can-Am,WHC132,,Direct,High
+CANAM-WHC150,Can-Am,WHC150,,Direct,High
+CANAM-WRC157,Can-Am,WRC157,,Direct,High
+CANAM-WHC157,Can-Am,WHC157,,Direct,High
+CANAM-WR-78XHD,Can-Am,WR-78XHD,,Direct,High
+CANAM-WH-78XHD,Can-Am,WH-78XHD,,Direct,High
+CANAM-WR-82XHD,Can-Am,WR-82XHD,,Direct,High
+CANAM-WH-82XHD,Can-Am,WH-82XHD,,Direct,High
+CANAM-WR-124XHD,Can-Am,WR-124XHD,,Direct,High
+CANAM-WH-124XHD,Can-Am,WH-124XHD,,Direct,High
+CANAM-WR-106XHD,Can-Am,WR-106XHD,,Direct,High
+CANAM-WH-106XHD,Can-Am,WH-106XHD,,Direct,High
+CANAM-WR-132XHD,Can-Am,WR-132XHD,,Direct,High
+CANAM-WH-132XHD,Can-Am,WH-132XHD,,Direct,High
+CANAM-WRC82XHD,Can-Am,WRC82XHD,,Direct,High
+CANAM-WHC82XHD,Can-Am,WHC82XHD,,Direct,High
+CANAM-WHC124XHD,Can-Am,WHC124XHD,,Direct,High
+CANAM-WHC110XHD,Can-Am,WHC110XHD,,Direct,High
+CANAM-WHC132XHD,Can-Am,WHC132XHD,,Direct,High
+CANAM-WH-144-IBR,Can-Am,WH-144 IBR,,Direct,High
+CANAM-WH-166-IBR,Can-Am,WH-166 IBR,,Direct,High
+CANAM-WD-102,Can-Am,WD-102,,Direct,High
+CANAM-WD-104,Can-Am,WD-104,,Direct,High
+CANAM-WD-110,Can-Am,WD-110,,Direct,High
+CANAM-WD-112,Can-Am,WD-112,,Direct,High
+CANAM-WD-116,Can-Am,WD-116,,Direct,High
+CANAM-WD-118,Can-Am,WD-118,,Direct,High
+CANAM-WD-120,Can-Am,WD-120,,Direct,High
+CANAM-WD-122,Can-Am,WD-122,,Direct,High
+CANAM-WD-480,Can-Am,WD-480,,Direct,High
+CANAM-WD-120XHD,Can-Am,WD-120XHD,,Direct,High
+CANAM-WD-118XHD,Can-Am,WD-118XHD,,Direct,High
+CANAM-WD-122XHD,Can-Am,WD-122XHD,,Direct,High
+CANAM-WD-480XHD,Can-Am,WD-480XHD,,Direct,High
+CANAM-WDRS118-SH,Can-Am,WDRS118-SH,,Direct,High
+CANAM-WDRS118-XHDSH,Can-Am,WDRS118-XHDSH,,Direct,High
+CANAM-WDRS120-SH,Can-Am,WDRS120-SH,,Direct,High
+CANAM-WDRS120-XHDSH,Can-Am,WDRS120-XHDSH,,Direct,High
+CANAM-WDRS122-SH,Can-Am,WDRS122-SH,,Direct,High
+CANAM-WDRS122-XHDSH,Can-Am,WDRS122-XHDSH,,Direct,High
+CANAM-WDRS480-SH,Can-Am,WDRS480-SH,,Direct,High
+CANAM-WDRS480-XHDSH,Can-Am,WDRS480-XHDSH,,Direct,High
+CANAM-WDRS118-WH,Can-Am,WDRS118-WH,,Direct,High
+CANAM-WDRS118-XHDWH,Can-Am,WDRS118-XHDWH,,Direct,High
+CANAM-WDRS120-WH,Can-Am,WDRS120-WH,,Direct,High
+CANAM-WDRS120-XHDWH,Can-Am,WDRS120-XHDWH,,Direct,High
+CANAM-WDRS122-WH,Can-Am,WDRS122-WH,,Direct,High
+CANAM-WDRS122-XHDWH,Can-Am,WDRS122-XHDWH,,Direct,High
+CANAM-WDRS480-WH,Can-Am,WDRS480-WH,,Direct,High
+CANAM-WDRS480-XHDWH,Can-Am,WDRS480-XHDWH,,Direct,High
+CANAM-H-78,Can-Am,H-78,,Direct,High
+CANAM-H-82,Can-Am,H-82,,Direct,High
+CANAM-C-55,Can-Am,C-55,,Direct,High
+CANAM-C-77,Can-Am,C-77,,Direct,High
+CANAM-C-188,Can-Am,C-188,,Direct,High
+CANAM-C-131,Can-Am,C-131,,Direct,High
+CANAM-C-102B,Can-Am,C-102B,,Direct,High
+CANAM-SO-578,Can-Am,SO-578,,Direct,High
+CANAM-MO-88,Can-Am,MO-88,,Direct,High
+CANAM-LXS-882,Can-Am,LXS-882,,Direct,High
+CANAM-MOH-578,Can-Am,MOH-578,,Direct,High
+CANAM-MS-88,Can-Am,MS-88,,Direct,High
+CANAM-81-X,Can-Am,81-X,,Direct,High
+CANAM-81-XH,Can-Am,81-XH,,Direct,High
+CANAM-81-XHS,Can-Am,81-XHS,,Direct,High
+CANAM-SS-188,Can-Am,SS-188,,Direct,High
+CANAM-SB2512,Can-Am,SB2512,,Direct,High
+CANAM-SB3011,Can-Am,SB3011,,Direct,High
+CANAM-SB1242,Can-Am,SB1242,,Direct,High
+CANAM-SB1245,Can-Am,SB1245,,Direct,High
+CANAM-SB1254,Can-Am,SB1254,,Direct,High
+CANAM-US-3075,Can-Am,US-3075,,Direct,High
+CANAM-US-4522,Can-Am,US-4522,,Direct,High
+CANAM-SB850,Can-Am,SB850,,Direct,High
+CANAM-856,Can-Am,856,,Direct,High
+CANAM-857,Can-Am,857,,Direct,High
+CANAM-859,Can-Am,859,,Direct,High
+CANAM-662,Can-Am,662,,Direct,High
+CANAM-667H,Can-Am,667H,,Direct,High
+CANAM-667X,Can-Am,667X,,Direct,High
+CANAM-667XC,Can-Am,667XC,,Direct,High
+CANAM-667K,Can-Am,667K,,Direct,High
+CANAM-667KC,Can-Am,667KC,,Direct,High
+CANAM-667XH,Can-Am,667XH,,Direct,High
+CANAM-88K,Can-Am,88K,,Direct,High
+CANAM-3939,Can-Am,3939,,Direct,High
+CANAM-3939-4,Can-Am,3939-4,,Direct,High
+CANAM-3939-H,Can-Am,3939-H,,Direct,High
+CANAM-CAM-900STR,Can-Am,CAM 900STR,,Direct,High
+CANAM-CAM-900HSTRHVY,Can-Am,CAM 900HSTRHVY,,Direct,High
+CANAM-X-348,Can-Am,X-348,,Direct,High
+CANAM-X-458,Can-Am,X-458,,Direct,High
+CANAM-X-658,Can-Am,X-658,,Direct,High
+CANAM-X-678,Can-Am,X-678,,Direct,High
+CANAM-9148,Can-Am,9148,,Direct,High
+CANAM-102-HVY,Can-Am,102 HVY,,Direct,High
+CANAM-142-STD,Can-Am,142 STD,,Direct,High
+CANAM-142-HVY,Can-Am,142 HVY,,Direct,High
+CANAM-260-STD,Can-Am,260 STD,,Direct,High
