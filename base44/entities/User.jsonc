@@ -12,5 +12,6 @@
       "default": "employee",
       "description": "User role: super_admin = full access, admin = admin tools, employee = standard user"
     }
-  }
+  },
+  "required": []
 }

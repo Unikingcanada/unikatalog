@@ -11,10 +11,12 @@ import ICSessionList from "@/components/importCenter/ICSessionList";
 import ICSessionWorkflow from "@/components/importCenter/ICSessionWorkflow";
 import ICRollbackPanel from "@/components/importCenter/ICRollbackPanel";
 import ICSessionDetailView from "@/components/importCenter/ICSessionDetailView";
+import MasterCatalogImporter from "@/components/importCenter/MasterCatalogImporter";
 
 const TABS = [
   { key: "sessions",  label: "📋 Import Sessions" },
   { key: "new",       label: "⬆ New Import",      action: true },
+  { key: "master",    label: "🚀 Master Catalog",  action: true },
   { key: "rollback",  label: "↩ Rollback Center" },
   { key: "mappings",  label: "🗂 Saved Mappings" },
 ];
@@ -99,8 +101,8 @@ export default function ImportCenter() {
             onClick={() => handleTabClick(t.key)}
             style={{
               ...tabBtnStyle,
-              ...(activeTab === t.key || (t.key === "new" && activeTab === "new") ? tabActiveSt : {}),
-              ...(t.action ? { color: activeTab === "new" ? "#fff" : "#1d4ed8" } : {}),
+              ...(activeTab === t.key ? tabActiveSt : {}),
+              ...(t.action ? { color: (activeTab === t.key) ? "#fff" : "#1d4ed8" } : {}),
             }}>
             {t.label}
             {t.key === "sessions" && sessions.length > 0 && (
@@ -150,6 +152,11 @@ export default function ImportCenter() {
             sessions={sessions}
             onRollbackComplete={loadSessions}
           />
+        )}
+
+        {/* Master catalog bulk importer */}
+        {activeTab === "master" && (
+          <MasterCatalogImporter />
         )}
 
         {/* Saved mappings */}
