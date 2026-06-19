@@ -2,18 +2,23 @@
  * masterCatalogImport — Admin-only bulk importer for UniKatalog master CSV files
  *
  * POST body:
- *   { phase: "chains"|"dimensions"|"perf"|"equivalents", chunk: 0, chunkSize: 50 }
+ *   { phase: "chains"|"dimensions"|"perf"|"equivalents", chunk: 0, chunkSize: 20 }
  *
  * Returns:
  *   { done, nextChunk, created, updated, skipped, errors[], total, phase }
  *
- * Run each phase in sequence from the frontend; each call processes one chunk
- * and returns nextChunk so the UI can resume from where it left off.
+ * Rate-limit resilience:
+ *   - 150ms delay between every DB write
+ *   - Exponential backoff retry (1s→2s→4s→8s→16s→32s) on 429/rate-limit errors
+ *   - Up to 6 retries per operation before recording as an error and continuing
  */
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
 const CHAINS_CSV = "https://raw.githubusercontent.com/Unikingcanada/unikatalog/claude/fervent-brown-g3ylx1/work/drive/PKG-MASTER_all_chains.csv";
 const EQUIV_CSV  = "https://raw.githubusercontent.com/Unikingcanada/unikatalog/claude/fervent-brown-g3ylx1/work/drive/PKG-MASTER_equivalents_long.csv";
+
+const INTER_RECORD_DELAY_MS = 150;
+const MAX_RETRIES = 6;
 
 // ─── CSV parser ────────────────────────────────────────────────────────────────
 function parseCSV(text) {
@@ -50,38 +55,60 @@ function parseCSVLine(line) {
 }
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function isRateLimit(e) {
+  const msg = (e?.message || "").toLowerCase();
+  return msg.includes("rate limit") || msg.includes("429") || msg.includes("too many");
+}
+
+/**
+ * Retry wrapper with exponential backoff.
+ * On rate-limit errors: waits 1s, 2s, 4s, 8s, 16s, 32s then gives up.
+ * On other errors: throws immediately (no retry).
+ */
+async function withRetry(fn) {
+  let delay = 1000;
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (isRateLimit(e) && attempt < MAX_RETRIES) {
+        await sleep(delay);
+        delay = Math.min(delay * 2, 32000);
+      } else {
+        throw e;
+      }
+    }
+  }
+}
+
 function parseNum(v) {
   if (v === "" || v == null) return null;
   const n = parseFloat(v);
   return isNaN(n) ? null : n;
 }
-function parseBool(v) {
-  return String(v).toUpperCase() === "TRUE";
-}
+function parseBool(v) { return String(v).toUpperCase() === "TRUE"; }
 function parseArr(v) {
   if (!v || !v.trim()) return [];
   return v.split(",").map(s => s.trim()).filter(Boolean);
 }
-function nonEmpty(...vals) {
-  return vals.some(v => v !== null && v !== "");
-}
+function nonEmpty(...vals) { return vals.some(v => v !== null && v !== ""); }
 
-// ─── Fetch + cache CSVs in module scope (within one request they're warm) ──────
+// ─── Fetch CSVs (module-level cache — warm across chunks within same cold start) ──
 let _chainsCache = null;
 let _equivCache  = null;
 
 async function fetchChains() {
   if (_chainsCache) return _chainsCache;
   const r = await fetch(CHAINS_CSV);
-  const text = await r.text();
-  _chainsCache = parseCSV(text);
+  _chainsCache = parseCSV(await r.text());
   return _chainsCache;
 }
 async function fetchEquiv() {
   if (_equivCache) return _equivCache;
   const r = await fetch(EQUIV_CSV);
-  const text = await r.text();
-  _equivCache = parseCSV(text);
+  _equivCache = parseCSV(await r.text());
   return _equivCache;
 }
 
@@ -94,7 +121,7 @@ Deno.serve(async (req) => {
   }
 
   const body = await req.json();
-  const { phase, chunk = 0, chunkSize = 50 } = body;
+  const { phase, chunk = 0, chunkSize = 20 } = body;
 
   if (!["chains", "dimensions", "perf", "equivalents"].includes(phase)) {
     return Response.json({ error: "Invalid phase" }, { status: 400 });
@@ -111,36 +138,46 @@ Deno.serve(async (req) => {
     for (const row of slice) {
       const chainNumber = row.chain_number?.trim();
       if (!chainNumber) { skipped.push(`row missing chain_number`); continue; }
+
+      const record = {
+        chain_id:            row.chain_id?.trim() || chainNumber,
+        chain_family:        row.chain_family?.trim() || "",
+        chain_number:        chainNumber,
+        display_name:        row.display_name?.trim() || "",
+        standard:            row.standard?.trim() || "",
+        pitch_in:            row.pitch_in?.trim() || "",
+        pitch_mm:            row.pitch_mm?.trim() || "",
+        strands:             parseNum(row.strands) ?? 1,
+        status:              row.status?.trim() || "Active",
+        description:         row.description?.trim() || "",
+        application_tags:    parseArr(row.application_tags),
+        materials_available: parseArr(row.materials_available),
+        options_upgrades:    row.options_upgrades?.trim() || "",
+        image_url:           row.image_url?.trim() || "",
+        drawing_url:         row.drawing_url?.trim() || "",
+        needs_review:        parseBool(row.needs_review),
+        uniking_notes:       row.uniking_notes?.trim() || "",
+      };
+
       try {
-        // Look up existing by chain_number
-        const existing = await base44.asServiceRole.entities.Normalized_Chains.filter({ chain_number: chainNumber });
-        const record = {
-          chain_id:            row.chain_id?.trim() || chainNumber,
-          chain_family:        row.chain_family?.trim() || "",
-          chain_number:        chainNumber,
-          display_name:        row.display_name?.trim() || "",
-          standard:            row.standard?.trim() || "",
-          pitch_in:            row.pitch_in?.trim() || "",
-          pitch_mm:            row.pitch_mm?.trim() || "",
-          strands:             parseNum(row.strands) ?? 1,
-          status:              row.status?.trim() || "Active",
-          description:         row.description?.trim() || "",
-          application_tags:    parseArr(row.application_tags),
-          materials_available: parseArr(row.materials_available),
-          options_upgrades:    row.options_upgrades?.trim() || "",
-          image_url:           row.image_url?.trim() || "",
-          drawing_url:         row.drawing_url?.trim() || "",
-          needs_review:        parseBool(row.needs_review),
-          uniking_notes:       row.uniking_notes?.trim() || "",
-        };
+        // Single filter call, then branch on result
+        const existing = await withRetry(() =>
+          base44.asServiceRole.entities.Normalized_Chains.filter({ chain_number: chainNumber })
+        );
+        await sleep(INTER_RECORD_DELAY_MS);
 
         if (existing && existing.length > 0) {
-          await base44.asServiceRole.entities.Normalized_Chains.update(existing[0].id, record);
+          await withRetry(() =>
+            base44.asServiceRole.entities.Normalized_Chains.update(existing[0].id, record)
+          );
           updated.push(chainNumber);
         } else {
-          await base44.asServiceRole.entities.Normalized_Chains.create(record);
+          await withRetry(() =>
+            base44.asServiceRole.entities.Normalized_Chains.create(record)
+          );
           created.push(chainNumber);
         }
+        await sleep(INTER_RECORD_DELAY_MS);
       } catch (e) {
         errors.push(`chains ${chainNumber}: ${e.message}`);
       }
@@ -160,7 +197,6 @@ Deno.serve(async (req) => {
       const chainNumber = row.chain_number?.trim();
       if (!chainNumber) { skipped.push(`row missing chain_number`); continue; }
 
-      // Only create if there's any dimension data
       const hasData = nonEmpty(
         parseNum(row.roller_dia_in), parseNum(row.roller_dia_mm),
         parseNum(row.inner_width_in), parseNum(row.inner_width_mm),
@@ -171,22 +207,25 @@ Deno.serve(async (req) => {
       if (!hasData) { skipped.push(`${chainNumber}: no dimension data`); continue; }
 
       try {
-        // Resolve chain_id from Normalized_Chains
-        const chains = await base44.asServiceRole.entities.Normalized_Chains.filter({ chain_number: chainNumber });
-        if (!chains || !chains.length) {
-          skipped.push(`${chainNumber}: parent chain not found`); continue;
-        }
+        const chains = await withRetry(() =>
+          base44.asServiceRole.entities.Normalized_Chains.filter({ chain_number: chainNumber })
+        );
+        await sleep(INTER_RECORD_DELAY_MS);
+
+        if (!chains || !chains.length) { skipped.push(`${chainNumber}: parent chain not found`); continue; }
         const chainId = chains[0].chain_id || chains[0].id;
 
-        // Check for existing dimension record
-        const existing = await base44.asServiceRole.entities.Chain_Dimensions.filter({ chain_id: chainId });
+        const existing = await withRetry(() =>
+          base44.asServiceRole.entities.Chain_Dimensions.filter({ chain_id: chainId })
+        );
+        await sleep(INTER_RECORD_DELAY_MS);
 
         const record = {
           chain_id:         chainId,
           roller_dia_in:    parseNum(row.roller_dia_in),
           roller_dia_mm:    parseNum(row.roller_dia_mm),
-          roller_width_in:  parseNum(row.inner_width_in),   // mapped from inner_width_in
-          roller_width_mm:  parseNum(row.inner_width_mm),   // mapped from inner_width_mm
+          roller_width_in:  parseNum(row.inner_width_in),
+          roller_width_mm:  parseNum(row.inner_width_mm),
           pin_dia_in:       parseNum(row.pin_dia_in),
           pin_dia_mm:       parseNum(row.pin_dia_mm),
           plate_height_in:  parseNum(row.plate_height_in),
@@ -199,12 +238,17 @@ Deno.serve(async (req) => {
         };
 
         if (existing && existing.length > 0) {
-          await base44.asServiceRole.entities.Chain_Dimensions.update(existing[0].id, record);
+          await withRetry(() =>
+            base44.asServiceRole.entities.Chain_Dimensions.update(existing[0].id, record)
+          );
           updated.push(chainNumber);
         } else {
-          await base44.asServiceRole.entities.Chain_Dimensions.create(record);
+          await withRetry(() =>
+            base44.asServiceRole.entities.Chain_Dimensions.create(record)
+          );
           created.push(chainNumber);
         }
+        await sleep(INTER_RECORD_DELAY_MS);
       } catch (e) {
         errors.push(`dims ${chainNumber}: ${e.message}`);
       }
@@ -224,43 +268,53 @@ Deno.serve(async (req) => {
       const chainNumber = row.chain_number?.trim();
       if (!chainNumber) { skipped.push(`row missing chain_number`); continue; }
 
-      const tensile_lbs  = parseNum(row.tensile_lbs);
-      const tensile_kn   = parseNum(row.tensile_kn);
-      const working_lbs  = parseNum(row.working_load_lbs);
-      const working_kn   = parseNum(row.working_load_kn);
+      const tensile_lbs = parseNum(row.tensile_lbs);
+      const tensile_kn  = parseNum(row.tensile_kn);
+      const working_lbs = parseNum(row.working_load_lbs);
+      const working_kn  = parseNum(row.working_load_kn);
 
       if (!nonEmpty(tensile_lbs, tensile_kn, working_lbs, working_kn)) {
         skipped.push(`${chainNumber}: no perf data`); continue;
       }
 
       try {
-        const chains = await base44.asServiceRole.entities.Normalized_Chains.filter({ chain_number: chainNumber });
-        if (!chains || !chains.length) {
-          skipped.push(`${chainNumber}: parent chain not found`); continue;
-        }
+        const chains = await withRetry(() =>
+          base44.asServiceRole.entities.Normalized_Chains.filter({ chain_number: chainNumber })
+        );
+        await sleep(INTER_RECORD_DELAY_MS);
+
+        if (!chains || !chains.length) { skipped.push(`${chainNumber}: parent chain not found`); continue; }
         const chainId = chains[0].chain_id || chains[0].id;
 
-        const existing = await base44.asServiceRole.entities.Performance_Data.filter({ chain_id: chainId });
+        const existing = await withRetry(() =>
+          base44.asServiceRole.entities.Performance_Data.filter({ chain_id: chainId })
+        );
+        await sleep(INTER_RECORD_DELAY_MS);
 
         const record = {
-          chain_id:              chainId,
-          tier:                  "Standard Duty",
-          tensile_strength_lbs:  tensile_lbs,
-          tensile_strength_kn:   tensile_kn,
-          working_load_lbs:      working_lbs,
-          working_load_kn:       working_kn,
-          lubrication:           row.lubrication?.trim() || "",
-          source_brand:          row.perf_source?.trim() || "",
-          notes:                 "",
+          chain_id:             chainId,
+          tier:                 "Standard Duty",
+          tensile_strength_lbs: tensile_lbs,
+          tensile_strength_kn:  tensile_kn,
+          working_load_lbs:     working_lbs,
+          working_load_kn:      working_kn,
+          lubrication:          row.lubrication?.trim() || "",
+          source_brand:         row.perf_source?.trim() || "",
+          notes:                "",
         };
 
         if (existing && existing.length > 0) {
-          await base44.asServiceRole.entities.Performance_Data.update(existing[0].id, record);
+          await withRetry(() =>
+            base44.asServiceRole.entities.Performance_Data.update(existing[0].id, record)
+          );
           updated.push(chainNumber);
         } else {
-          await base44.asServiceRole.entities.Performance_Data.create(record);
+          await withRetry(() =>
+            base44.asServiceRole.entities.Performance_Data.create(record)
+          );
           created.push(chainNumber);
         }
+        await sleep(INTER_RECORD_DELAY_MS);
       } catch (e) {
         errors.push(`perf ${chainNumber}: ${e.message}`);
       }
@@ -277,33 +331,35 @@ Deno.serve(async (req) => {
     const total = rows.length;
 
     for (const row of slice) {
-      const chainId   = row.chain_id?.trim();
-      const brand     = row.brand?.trim();
-      const partNum   = row.brand_part_number?.trim();
-      if (!chainId || !brand || !partNum) {
-        skipped.push(`equiv row missing required field`); continue;
-      }
+      const chainId = row.chain_id?.trim();
+      const brand   = row.brand?.trim();
+      const partNum = row.brand_part_number?.trim();
+      if (!chainId || !brand || !partNum) { skipped.push(`equiv row missing required field`); continue; }
 
       try {
-        // Dedupe: skip if exact chain_id + brand + brand_part_number already exists
-        const existing = await base44.asServiceRole.entities.Manufacturer_Equivalents.filter({
-          chain_id: chainId, brand, brand_part_number: partNum,
-        });
+        const existing = await withRetry(() =>
+          base44.asServiceRole.entities.Manufacturer_Equivalents.filter({
+            chain_id: chainId, brand, brand_part_number: partNum,
+          })
+        );
+        await sleep(INTER_RECORD_DELAY_MS);
 
         if (existing && existing.length > 0) {
           skipped.push(`${chainId}/${brand}/${partNum}: duplicate`); continue;
         }
 
-        const record = {
-          chain_id:         chainId,
-          brand:            brand,
-          brand_part_number: partNum,
-          brand_series:     row.brand_series?.trim() || "",
-          equivalency_type: row.equivalency_type?.trim() || "Direct",
-          confidence:       row.confidence?.trim() || "Confirmed",
-        };
-        await base44.asServiceRole.entities.Manufacturer_Equivalents.create(record);
+        await withRetry(() =>
+          base44.asServiceRole.entities.Manufacturer_Equivalents.create({
+            chain_id:          chainId,
+            brand,
+            brand_part_number: partNum,
+            brand_series:      row.brand_series?.trim() || "",
+            equivalency_type:  row.equivalency_type?.trim() || "Direct",
+            confidence:        row.confidence?.trim() || "Confirmed",
+          })
+        );
         created.push(`${brand}/${partNum}`);
+        await sleep(INTER_RECORD_DELAY_MS);
       } catch (e) {
         errors.push(`equiv ${chainId}/${brand}: ${e.message}`);
       }

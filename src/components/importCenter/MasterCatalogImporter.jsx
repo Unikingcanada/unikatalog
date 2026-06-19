@@ -13,7 +13,7 @@ const PHASES = [
   { key: "equivalents", label: "Manufacturer_Equivalents", icon: "🏭", desc: "963 cross-reference rows" },
 ];
 
-const CHUNK_SIZE = 30;
+const CHUNK_SIZE = 20;
 
 function StatPill({ label, count, color }) {
   return (
@@ -24,9 +24,13 @@ function StatPill({ label, count, color }) {
 }
 
 function PhaseRow({ phase, state }) {
-  const pct = state.total > 0 ? Math.min(100, Math.round(((state.chunk) * CHUNK_SIZE / state.total) * 100)) : 0;
-  const statusColor = state.status === "done" ? "#166534" : state.status === "running" ? "#1d4ed8" : state.status === "error" ? "#dc2626" : "#94a3b8";
-  const bgColor = state.status === "done" ? "#f0fdf4" : state.status === "running" ? "#eff6ff" : state.status === "error" ? "#fef2f2" : "#f8fafc";
+  // processed = rows we've actually sent to the server so far (chunk * chunkSize)
+  const processed = Math.min(state.chunk * CHUNK_SIZE, state.total);
+  const pct = state.total > 0 ? Math.min(100, Math.round((processed / state.total) * 100)) : 0;
+  const remaining = state.total > 0 ? Math.max(0, state.total - processed) : null;
+
+  const statusColor = state.status === "done" ? "#166534" : state.status === "running" ? "#1d4ed8" : "#94a3b8";
+  const bgColor     = state.status === "done" ? "#f0fdf4" : state.status === "running" ? "#eff6ff" : "#f8fafc";
 
   return (
     <div style={{ background: bgColor, border: `1px solid ${statusColor}33`, borderRadius: 10, padding: "14px 18px", marginBottom: 10 }}>
@@ -36,9 +40,14 @@ function PhaseRow({ phase, state }) {
           <span style={{ fontSize: 13, fontWeight: 800, color: "#0C2340" }}>{phase.label}</span>
           <span style={{ fontSize: 11, color: "#64748b", marginLeft: 8 }}>{phase.desc}</span>
         </div>
-        <span style={{ fontSize: 11, fontWeight: 700, color: statusColor, textTransform: "uppercase", letterSpacing: 0.5 }}>
-          {state.status === "idle" ? "Waiting" : state.status === "running" ? `${pct}%` : state.status === "done" ? "✓ Done" : "✗ Error"}
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {state.status === "running" && remaining !== null && (
+            <span style={{ fontSize: 10, color: "#64748b" }}>{remaining} left</span>
+          )}
+          <span style={{ fontSize: 11, fontWeight: 700, color: statusColor, textTransform: "uppercase", letterSpacing: 0.5 }}>
+            {state.status === "idle" ? "Waiting" : state.status === "running" ? `${pct}%` : "✓ Done"}
+          </span>
+        </div>
       </div>
 
       {/* Progress bar */}
@@ -129,9 +138,15 @@ export default function MasterCatalogImporter() {
         const res = await masterCatalogImport({ phase: phaseKey, chunk, chunkSize: CHUNK_SIZE });
         result = res.data;
       } catch (e) {
-        updatePhase(phaseKey, { status: "error" });
-        setGlobalError(`Phase ${phaseKey} failed at chunk ${chunk}: ${e.message}`);
-        return false;
+        // Network-level failure: record error but keep going with next chunk
+        mergePhaseStats(phaseKey, { errors: [`chunk ${chunk} network error: ${e.message}`], nextChunk: chunk + 1 });
+        chunk = chunk + 1;
+        // Check if we've gone past total (unknown without a response — allow up to 50 chunks)
+        if (chunk > 50) {
+          updatePhase(phaseKey, { status: "done" });
+          return true;
+        }
+        continue;
       }
 
       mergePhaseStats(phaseKey, result);
@@ -154,8 +169,7 @@ export default function MasterCatalogImporter() {
 
     for (const phase of PHASES) {
       if (abortRef.current) break;
-      const ok = await runPhase(phase.key, 0);
-      if (!ok) { setRunning(false); return; }
+      await runPhase(phase.key, 0); // always continue to next phase even if rows had errors
     }
 
     setRunning(false);
@@ -180,7 +194,7 @@ export default function MasterCatalogImporter() {
           🚀 Import Master Catalog
         </div>
         <div style={{ fontSize: 12, color: "#64748b", maxWidth: 640, lineHeight: 1.6 }}>
-          One-click bulk import from the two public GitHub CSVs. Runs server-side in 30-row chunks across 4 entity phases.
+          One-click bulk import from the two public GitHub CSVs. Runs server-side in 20-row chunks across 4 entity phases. Rate-limited writes use automatic exponential backoff (up to 6 retries).
           Chains are upserted on <code style={{ background: "#f1f5f9", padding: "1px 5px", borderRadius: 3 }}>chain_number</code>; child rows are linked by <code style={{ background: "#f1f5f9", padding: "1px 5px", borderRadius: 3 }}>chain_id</code>.
           Safe to re-run — duplicates are skipped.
         </div>
