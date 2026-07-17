@@ -312,7 +312,7 @@ export default function RFQCartView({ onBack }) {
           <div><Label required>Full Name</Label><FieldInput value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="Jane Smith" required /></div>
           <div><Label>Company</Label><FieldInput value={form.company} onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))} placeholder="Acme Industries Ltd." /></div>
           <div><Label required>Email Address</Label><FieldInput type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} placeholder="jane@company.com" required /></div>
-          <div><Label>Phone Number</Label><FieldInput type="tel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="+1 (514) 000-0000" /></div>
+          <div><Label required>Phone Number</Label><FieldInput type="tel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="+1 (514) 000-0000" required /></div>
         </div>
       </div>
       <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", padding: "20px" }}>
@@ -334,7 +334,7 @@ export default function RFQCartView({ onBack }) {
       {error && <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: "12px 14px", fontSize: 13, color: "#dc2626" }}>{error}</div>}
       <div style={{ display: "flex", gap: 10 }}>
         <button onClick={() => { setError(""); setStep(0); }} style={{ flex: 1, background: "#fff", color: NAVY, padding: "14px 16px", borderRadius: 10, fontWeight: 700, fontSize: 15, border: "1.5px solid #e2e8f0", cursor: "pointer" }}>← Back</button>
-        <button onClick={() => { if (!form.name || !form.email) { setError("Please fill in your name and email."); return; } setError(""); setStep(2); }} style={{ flex: 2, background: NAVY, color: "#fff", padding: "14px 16px", borderRadius: 10, fontWeight: 800, fontSize: 15, border: "none", cursor: "pointer", boxShadow: "0 4px 14px rgba(15,35,64,0.2)" }}>Review & Submit →</button>
+        <button onClick={() => { if (!form.name || !form.email || !form.phone) { setError("Please fill in your name, email, and phone number."); return; } setError(""); setStep(2); }} style={{ flex: 2, background: NAVY, color: "#fff", padding: "14px 16px", borderRadius: 10, fontWeight: 800, fontSize: 15, border: "none", cursor: "pointer", boxShadow: "0 4px 14px rgba(15,35,64,0.2)" }}>Review & Submit →</button>
       </div>
     </div>
   );
