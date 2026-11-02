@@ -4,6 +4,8 @@
 //         + Blueline® Modular Belts & Sprockets Catalog V4 (2025)
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { EUROBELT_SERIES as _EB_SERIES, EUROBELT_CATALOG_URL as _EB_CAT_URL } from "./eurobeltData";
+
 export const MOVEX_LOGO = "https://wpbackend.movexii.com/wp-content/uploads/2024/11/logo_bianco.svg";
 export const MOVEX_LOGO_DARK = "https://wpbackend.movexii.com/wp-content/uploads/2024/09/logoMovex-1.svg";
 export const MOVEX_CATALOG_URL = "https://wpbackend.movexii.com/wp-content/uploads/2024/11/Movex_Conveyor_modular_belts_and_chains_Catalog_Digital_Imperial.pdf";
@@ -155,7 +157,7 @@ const S590_ACCESSORIES = [
   { name: "590 Straight Flight", type: "flight", image: null, notes: "Straight incline flight for 590 series.", url: "https://www.movexii.com/en/prodcat/accessories" },
 ];
 
-export const MOVEX_SERIES = [
+const _BASE_MOVEX_SERIES = [
   // ── 520 SERIES
   {
     id: "S520", name: "Series 520", beltType: "Straight-Running",
@@ -878,6 +880,33 @@ export const MOVEX_SERIES = [
       { key: "zero_contact_pro", label: "Zero Contact PRO", openArea: "N/A", surface: "Zero Contact PRO / Special", image: null, description: "PRO version for demanding no-contact applications.", applications: ["Demanding no-contact food processing"], beltData: "Missing Data – Needs Mapping", notes: ["Enhanced PRO zero contact design."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
     ],
   },
+];
+
+// ── Merge Eurobelt sub-brand series into the Movex catalog ──────────────────
+const _EB_FOR_MOVEX = _EB_SERIES.map(s => ({
+  ...s,
+  brand: "eurobelt",
+  name: s.name.includes("Eurobelt") ? s.name : `${s.name} (Eurobelt)`,
+  techChartUrl: _EB_CAT_URL,
+  catalogPageRef: s.url,
+  styles: (s.styles || []).map(st => ({
+    ...st,
+    image: st.image || s.image,
+    applications: s.applications || [],
+    beltData: [
+      { material: "POM",    label: "POM White (Acetal)",           pinMaterial: "SS Rod", tempC: "-40 to +90",  tempF: "-40 to 194" },
+      { material: "PP",     label: "PP White (Polypropylene)",       pinMaterial: "SS Rod", tempC: "+1 to +90",   tempF: "34 to 194"  },
+      { material: "PBT",    label: "PBT Beige",                      pinMaterial: "SS Rod", tempC: "-40 to +130", tempF: "-40 to 266" },
+      { material: "POM-DT", label: "POM Detectable (Acetal)",        pinMaterial: "SS Rod", tempC: "-40 to +90",  tempF: "-40 to 194" },
+    ],
+    notes: [st.description, "Contact Uniking for full tensile and mass specifications."],
+    url: s.url,
+  })),
+}));
+
+export const MOVEX_SERIES = [
+  ..._BASE_MOVEX_SERIES.map(s => ({ ...s, brand: s.name.includes("Blueline") ? "blueline" : "movex" })),
+  ..._EB_FOR_MOVEX,
 ];
 
 export const MOVEX_STRAIGHT_SERIES = MOVEX_SERIES.filter(s => s.beltType === "Straight-Running" || s.beltType === "Straight-Running / Special");

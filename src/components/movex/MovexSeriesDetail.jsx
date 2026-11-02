@@ -1,5 +1,6 @@
 import { useState } from "react";
 import MovexSprocketModal from "./MovexSprocketModal";
+import EurobeltModelModal from "./EurobeltModelModal";
 
 const C = {
   navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
@@ -208,6 +209,7 @@ export default function MovexSeriesDetail({ series, onConfigure, onBack, onGoRFQ
   const [activeTab, setActiveTab] = useState("styles");
   const [viewingStyle, setViewingStyle] = useState(null);
   const [viewingSprocket, setViewingSprocket] = useState(null);
+  const [viewingEurobeltModel, setViewingEurobeltModel] = useState(null);
   const [rfqMsg, setRfqMsg] = useState(null);
 
   const tabs = [
@@ -255,9 +257,14 @@ export default function MovexSeriesDetail({ series, onConfigure, onBack, onGoRFQ
           <div style={{ background: MOVEX_RED, borderRadius: 5, padding: "3px 8px" }}>
             <span style={{ fontSize: 10, fontWeight: 800, color: "#fff" }}>MOVEX</span>
           </div>
-          {series.name.includes("Blueline") && (
+          {series.brand === "blueline" && (
             <div style={{ background: "#1e40af", borderRadius: 5, padding: "3px 8px" }}>
               <span style={{ fontSize: 10, fontWeight: 800, color: "#fff" }}>Blueline®</span>
+            </div>
+          )}
+          {series.brand === "eurobelt" && (
+            <div style={{ background: "#0066B3", borderRadius: 5, padding: "3px 8px" }}>
+              <span style={{ fontSize: 10, fontWeight: 800, color: "#fff" }}>EUROBELT</span>
             </div>
           )}
           <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 12 }}>Modular Belting</span>
@@ -301,7 +308,13 @@ export default function MovexSeriesDetail({ series, onConfigure, onBack, onGoRFQ
               {(series.styles || []).map(style => (
                 <StyleCard key={style.key} style={style}
                   onViewSpecs={setViewingStyle}
-                  onConfigure={s => onConfigure(s, series)} />
+                  onConfigure={s => {
+                    if (series.brand === "eurobelt") {
+                      setViewingEurobeltModel(s);
+                    } else {
+                      onConfigure(s, series);
+                    }
+                  }} />
               ))}
             </div>
           </div>
@@ -485,7 +498,14 @@ export default function MovexSeriesDetail({ series, onConfigure, onBack, onGoRFQ
 
       {viewingStyle && (
         <SpecsModal series={series} style={viewingStyle}
-          onConfigure={s => onConfigure(s, series)}
+          onConfigure={s => {
+            if (series.brand === "eurobelt") {
+              setViewingStyle(null);
+              setViewingEurobeltModel(s);
+            } else {
+              onConfigure(s, series);
+            }
+          }}
           onClose={() => setViewingStyle(null)} />
       )}
 
@@ -494,6 +514,15 @@ export default function MovexSeriesDetail({ series, onConfigure, onBack, onGoRFQ
           sprocket={viewingSprocket}
           series={series}
           onClose={() => setViewingSprocket(null)}
+          onAddToRFQ={addToRFQ}
+        />
+      )}
+
+      {viewingEurobeltModel && (
+        <EurobeltModelModal
+          model={viewingEurobeltModel}
+          series={series}
+          onClose={() => setViewingEurobeltModel(null)}
           onAddToRFQ={addToRFQ}
         />
       )}

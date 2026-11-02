@@ -19,6 +19,7 @@ const FILTER_TYPES = [
   { key: "straight",  label: "Straight-Running" },
   { key: "sideflexing", label: "Sideflexing" },
   { key: "blueline",  label: "Blueline® Food" },
+  { key: "eurobelt",  label: "Eurobelt" },
 ];
 
 const FILTER_PITCH = [
@@ -37,7 +38,8 @@ function getFilteredSeries(typeFilter, pitchFilter) {
     const matchType = typeFilter === "all" || 
       (typeFilter === "straight" && s.beltType.includes("Straight")) ||
       (typeFilter === "sideflexing" && s.beltType === "Sideflexing") ||
-      (typeFilter === "blueline" && s.name.includes("Blueline"));
+      (typeFilter === "blueline" && s.brand === "blueline") ||
+      (typeFilter === "eurobelt" && s.brand === "eurobelt");
     const pitchMm = parseFloat(s.pitch_mm);
     const matchPitch = pitchFilter === "all" ||
       (pitchFilter === "8mm" && pitchMm === 8) ||
@@ -122,11 +124,14 @@ export default function MovexCatalog({ onBack }) {
               <div style={{ background: "#1e40af", borderRadius: 6, padding: "4px 10px" }}>
                 <span style={{ fontSize: 11, fontWeight: 800, color: "#fff" }}>Blueline®</span>
               </div>
+              <div style={{ background: "#0066B3", borderRadius: 6, padding: "4px 10px" }}>
+                <span style={{ fontSize: 11, fontWeight: 800, color: "#fff" }}>Eurobelt</span>
+              </div>
               <span style={{ color: "rgba(255,255,255,0.5)", fontSize: 12 }}>Modular Belting</span>
             </div>
             <h1 style={{ color: "#fff", fontSize: 26, fontWeight: 900, margin: "0 0 6px" }}>Movex Modular Belt Catalog</h1>
             <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 13, maxWidth: 560, lineHeight: 1.6, margin: 0 }}>
-              {MOVEX_SERIES.length} belt series covering 8 mm to 50.8 mm pitch. Straight-running, sideflexing, and Blueline® food-grade variants. Source: 2024 Movex Imperial Catalog + Blueline® V6 2026.
+              {MOVEX_SERIES.length} belt series covering 8 mm to 50.8 mm pitch. Straight-running, sideflexing, Blueline® food-grade, and Eurobelt variants. Source: 2024 Movex Imperial Catalog + Blueline® V6 2026 + Eurobelt.
             </p>
           </div>
           <div style={{ display: "flex", gap: 10, flexDirection: "column", alignItems: "flex-end" }}>
@@ -187,7 +192,7 @@ export default function MovexCatalog({ onBack }) {
       <div style={{ padding: "20px", background: C.bg }}>
 
         {/* Straight-Running */}
-        {(typeFilter === "all" || typeFilter === "straight" || typeFilter === "blueline") && (() => {
+        {(typeFilter === "all" || typeFilter === "straight" || typeFilter === "blueline" || typeFilter === "eurobelt") && (() => {
           const straightFiltered = filtered.filter(s => s.beltType.includes("Straight") || s.beltType.includes("Special"));
           if (straightFiltered.length === 0) return null;
           return (
@@ -207,7 +212,7 @@ export default function MovexCatalog({ onBack }) {
         })()}
 
         {/* Sideflexing */}
-        {(typeFilter === "all" || typeFilter === "sideflexing") && (() => {
+        {(typeFilter === "all" || typeFilter === "sideflexing" || typeFilter === "eurobelt") && (() => {
           const sfFiltered = filtered.filter(s => s.beltType === "Sideflexing");
           if (sfFiltered.length === 0) return null;
           return (

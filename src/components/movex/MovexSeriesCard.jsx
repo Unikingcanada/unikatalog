@@ -60,9 +60,15 @@ export default function MovexSeriesCard({ series, onViewSeries }) {
           <span style={{ fontSize: 9, fontWeight: 800, color: "#fff", letterSpacing: "0.5px" }}>MOVEX</span>
         </div>
         {/* Blueline badge */}
-        {series.name.includes("Blueline") && (
+        {series.brand === "blueline" && (
           <div style={{ position: "absolute", top: 8, right: 8, background: "#1e40af", borderRadius: 4, padding: "2px 7px" }}>
             <span style={{ fontSize: 9, fontWeight: 800, color: "#fff" }}>Blueline®</span>
+          </div>
+        )}
+        {/* Eurobelt badge */}
+        {series.brand === "eurobelt" && (
+          <div style={{ position: "absolute", top: 8, right: 8, background: "#0066B3", borderRadius: 4, padding: "2px 7px" }}>
+            <span style={{ fontSize: 9, fontWeight: 800, color: "#fff" }}>EUROBELT</span>
           </div>
         )}
         {/* Style count */}
