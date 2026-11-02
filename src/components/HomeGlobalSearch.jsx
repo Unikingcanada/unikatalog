@@ -35,6 +35,9 @@ function buildSearchStr(p) {
   parts.push(p.application, p.duty, p.discharge_type, p.description);
   parts.push(p._subcategory, p._mac_category);
 
+  // Search-only extras (W58 chain aliases / variants) - never displayed
+  if (Array.isArray(p._search_extra)) parts.push(...p._search_extra);
+
   // Chain-specific normalized fields
   parts.push(p.chain_id, p.chain_number, p.chain_family, p.standard);
   parts.push(p.display_name, p.options_upgrades);
@@ -158,7 +161,7 @@ function getSubtitle(p) {
   // Normalized chains — show family + pitch
   if (p._source === "normalized_chain") {
     if (p.chain_family) parts.push(p.chain_family);
-    if (p.pitch_in) parts.push(p.pitch_in + '" pitch');
+    if (p.pitch_in) parts.push(Math.round(parseFloat(p.pitch_in) * 1000) / 1000 + " in pitch");
     else if (p.pitch_mm) parts.push(p.pitch_mm + " mm");
     return parts.slice(0, 2).join(" · ");
   }

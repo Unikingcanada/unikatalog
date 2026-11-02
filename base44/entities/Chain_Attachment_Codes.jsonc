@@ -1,0 +1,49 @@
+{
+  "name": "Chain_Attachment_Codes",
+  "type": "object",
+  "properties": {
+    "code_key": {
+      "type": "string",
+      "description": "Opaque key"
+    },
+    "family": {
+      "type": "string",
+      "description": "Attachment family (eng, welded, ansi, dp, metric …)"
+    },
+    "code": {
+      "type": "string",
+      "description": "Code shown to customers, e.g. A1, K2, F2"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description"
+    },
+    "sides": {
+      "type": "string",
+      "description": "1 | 2 | 1 or 2"
+    },
+    "holes": {
+      "type": "number",
+      "description": "Holes per lug"
+    },
+    "legend": {
+      "type": "array",
+      "items": {
+        "type": "array"
+      },
+      "description": "[[letter, meaning]]"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "One drawing per code"
+    }
+  },
+  "required": [
+    "code_key",
+    "code"
+  ]
+}

@@ -1,8 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import AuthGate from './components/layout/AuthGate'
 import Home from './pages/Home';
-import ForgedChainConfigurator from './pages/ForgedChainConfigurator';
-import ForgedChain from './pages/ForgedChain';
 import RollerConfigurator from './pages/RollerConfigurator';
 import RFQCart from './pages/RFQCart';
 import ElevatorBuckets from './pages/ElevatorBuckets';
@@ -14,6 +12,8 @@ import ImportCenter from './pages/ImportCenter';
 import ICSessionResumePage from './pages/ICSessionResumePage';
 import ChainsAudit from './pages/ChainsAudit';
 import AdminUsers from './pages/AdminUsers';
+import ChainDataLoader from './pages/ChainDataLoader';
+import ChainSectionRedirect from './components/chainW58/ChainSectionRedirect';
 
 function App() {
   return (
@@ -22,8 +22,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/Home" replace />} />
         <Route path="/Home" element={<Home />} />
-        <Route path="/ForgedChainConfigurator" element={<ForgedChainConfigurator />} />
-        <Route path="/ForgedChain" element={<ForgedChain />} />
+        <Route path="/ForgedChainConfigurator" element={<ChainSectionRedirect group="Drop-Forged Chain" configure />} />
+        <Route path="/ForgedChain" element={<ChainSectionRedirect group="Drop-Forged Chain" />} />
+        <Route path="/Chains" element={<ChainSectionRedirect />} />
         <Route path="/RollerConfigurator" element={<RollerConfigurator />} />
         <Route path="/RFQCart" element={<RFQCart />} />
         <Route path="/ElevatorBuckets" element={<ElevatorBuckets />} />
@@ -35,6 +36,7 @@ function App() {
         <Route path="/admin/import-center" element={<ImportCenter />} />
         <Route path="/admin/import-center/session/:id" element={<ICSessionResumePage />} />
         <Route path="/admin/users" element={<AdminUsers />} />
+        <Route path="/admin/chain-data-loader" element={<ChainDataLoader />} />
       </Routes>
     </BrowserRouter>
     </AuthGate>

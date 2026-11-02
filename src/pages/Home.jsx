@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, useRef } from "react";
-import { UniCatalog, CatalogProduct, ElevatorBucket, DonghuaChain, MacChainProduct } from "@/api/entities";
+import { useState, useEffect, useMemo } from "react";
+import { UniCatalog, CatalogProduct, ElevatorBucket } from "@/api/entities";
 import RFQCartView from "@/components/RFQCartView";
 import WireMeshConfigurator from "@/components/WireMeshConfigurator";
 import ElevBucketsView from "@/components/elevatorBuckets/ElevBucketsView";
@@ -10,19 +10,20 @@ import IntraloxCatalog from "@/components/intralox/IntraloxCatalog";
 import ChainCatalog from "@/components/chains/ChainCatalog";
 import TableTopChainCatalog from "@/components/tableTopChain/TableTopChainCatalog";
 import HomeGlobalSearch from "@/components/HomeGlobalSearch";
-import MacProductModal, { printMacTearSheet as printMacTearSheetFn } from "@/components/catalog/MacProductModal";
+import MacProductModal from "@/components/catalog/MacProductModal";
 import ComparePanel from "@/components/ComparePanel";
 import { CompareBar } from "@/components/ComparePanel";
 import FourBCatalog from "@/components/fourB/FourBCatalog";
 import { PRODUCTS as FOURB_PRODUCTS } from "@/lib/fourBData";
-import { ALL_NORMALIZED_CHAINS } from "@/lib/chainNormalizedIndex";
+import { getChainIndex } from "@/lib/chainW58/chainRepo";
+import { tx as chainText } from "@/lib/chainW58/chainText";
+import { setChainIntent, hasChainIntent } from "@/components/chainW58/ChainSection";
 import TypeGrid from "@/components/catalog/TypeGrid";
 import WeldedSeriesView from "@/components/chains/WeldedSeriesView";
 import AppLayout from "@/components/layout/AppLayout";
 import FloatingRFQButton from "@/components/shared/FloatingRFQButton";
-import { COLORS, TYPOGRAPHY } from "@/lib/designSystem";
+import { COLORS } from "@/lib/designSystem";
 import { base44 } from "@/api/base44Client";
-import { getTotalUniqueChainCount, getAllFamilyCounts } from "@/lib/chainCountHelpers";
 
 function stripVendor(text) {
   if (!text) return text;
@@ -35,6 +36,10 @@ function stripVendor(text) {
 }
 
 
+// Engineered / roller chain types that now live only in the W58 chain section (table top stays separate)
+const W58_CHAIN_TYPES = new Set(["ANSI/BS Chain", "Engineered Chain", "Cast Chain", "Welded Steel Chain", "Forged Chain",
+  "Overhead Chain", "Sharptop Chain", "Kiln Chain", "Thermoforming Chain", "Conveyor Chain", "Pintle Chain",
+  "Long Link Chain", "Special Application Chain"]);
 const SHOW_BRAND = new Set(["Modular Belt", "Elevator Bucket", "4B Electronics"]);
 const BRAND_GATED = new Set(["Modular Belt", "Elevator Bucket"]);
 // ─── Chain grouping ──────────────────────────────────────────────────────────
@@ -386,46 +391,27 @@ function normalizeAllied(r) {
 }
 
 
+// W58: chain search records come from the Version X master (Normalized_Chains entity) only.
+// aliases / variants are search-only (_search_extra) and never displayed.
 function normalizeNormalizedChain(c) {
-  // Map source_refs → source_data shape expected by HomeGlobalSearch
-  const sourceData = (c.source_refs || []).map(r => ({
-    brand: r.manufacturer,
-    product_code: r.code,
-  }));
-  // Infer component codes for search
-  const chainNum = c.chain_number || "";
-  const inferredCodes = chainNum && /\d/.test(chainNum)
-    ? [`OL-${chainNum}`, `CL-${chainNum}`, `OL${chainNum}`, `CL${chainNum}`]
-    : [];
+  const variants = Array.isArray(c.variants) ? c.variants.map((v) => (v && typeof v === "object" ? v.name : v)) : [];
   return {
     id: "norm-" + c.chain_id,
     _source: "normalized_chain",
     _chain_id: c.chain_id,
-    type: "ANSI/BS Chain",
-    series: c.display_name || c.chain_number || c.chain_id,
+    type: "Chain",
+    series: chainText(c.chain_number || c.chain_id),
     part_number: c.chain_number || c.chain_id,
     chain_id: c.chain_id,
     chain_number: c.chain_number,
-    chain_family: c.chain_family,
-    display_name: c.display_name,
-    standard: c.standard,
-    description: c.description,
+    chain_family: chainText(c.catalog_group || c.chain_family),
+    catalog_group: c.catalog_group,
+    display_name: chainText(c.display_name),
+    standard: chainText(c.standard),
     pitch_in: c.pitch_in,
     pitch_mm: c.pitch_mm,
-    application_tags: c.application_tags || [],
-    materials_available: c.materials_available || [],
-    attachments_available: c.attachments_available || [],
-    pins_links_available: c.pins_links_available || [],
-    source_data: sourceData,
-    _inferred_codes: inferredCodes,
+    _search_extra: [...(Array.isArray(c.aliases) ? c.aliases : []), ...variants, c.series].filter(Boolean),
     image_url: c.image_url || "",
-    specs: {
-      "Chain Number": c.chain_number || null,
-      "Family": c.chain_family || null,
-      "Standard": c.standard || null,
-      "Pitch (in)": c.pitch_in || null,
-      "Pitch (mm)": c.pitch_mm || null,
-    },
   };
 }
 
@@ -1459,6 +1445,12 @@ export default function Home() {
   const [globalSearch, setGlobalSearch] = useState("");
   const [globalSelected, setGlobalSelected] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [chainCount, setChainCount] = useState(0);
+  // Open the chain section directly when another page (or ?chainsrc=) asked for it
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    if (hasChainIntent() || p.get("chainsrc")) setCurrentPage("chainCatalog");
+  }, []);
   useEffect(() => { base44.auth.me().then(u => { if (u?.role === "admin" || u?.email === "jsauro@unikingcanada.com") setIsAdmin(true); }).catch(() => {}); }, []);
 
 
@@ -1545,32 +1537,16 @@ export default function Home() {
     }
     async function load() {
       const s=(p)=>p.catch(()=>[]);
-      // Fetch DB chains (Active) alongside all other catalog sources
-      const fetchDbChains = async () => {
-        let all = [], skip = 0;
-        while (true) {
-          const batch = await base44.entities.Normalized_Chains.filter({ status: "Active" }, "-created_date", 500, skip);
-          if (!batch?.length) break;
-          all = [...all, ...batch];
-          if (batch.length < 500) break;
-          skip += batch.length;
-        }
-        return all;
-      };
-      const [cat,elev,uni,allied,donghua,dbChains]=await Promise.all([s(fetchAll(CatalogProduct)),s(fetchAll(ElevatorBucket)),s(fetchAll(UniCatalog)),s(fetchAll(MacChainProduct)),s(fetchAll(DonghuaChain)),s(fetchDbChains())]);
-      setRawMacRecords(allied||[]);
+      // W58: engineered/roller chain data comes only from the Version X master (chainRepo).
+      // Legacy chain sources (MacChainProduct / DonghuaChain entities, static chain arrays) are no longer shown.
+      const [cat,elev,uni,dbChains]=await Promise.all([s(fetchAll(CatalogProduct)),s(fetchAll(ElevatorBucket)),s(fetchAll(UniCatalog)),s(getChainIndex())]);
+      setRawMacRecords([]);
+      setCatalogStats({ staticCount: 0, dbCount: (dbChains||[]).length, mergedCount: (dbChains||[]).length });
+      setChainCount((dbChains||[]).length);
 
-      // Merge static + DB: DB takes priority for same chain_id, static is fallback only
-      const staticChains = ALL_NORMALIZED_CHAINS;
-      const validDb = (dbChains||[]).filter(r => !r.status || r.status === "Active");
-      const mergedMap = new Map();
-      for (const r of validDb) { if (r.chain_id) mergedMap.set(r.chain_id, { ...r, _from_db: true }); }
-      for (const c of staticChains) { if (!mergedMap.has(c.chain_id)) mergedMap.set(c.chain_id, c); }
-      const merged = [...mergedMap.values()];
-      setCatalogStats({ staticCount: staticChains.length, dbCount: validDb.length, mergedCount: merged.length });
-
-      const normalizedChains = merged.map(normalizeNormalizedChain);
-      setAllData([...normalizedChains,...(cat||[]).map(normalizeCatalogProduct),...(elev||[]).map(normalizeElevatorBucket),...(uni||[]).map(normalizeUniCatalog),...(allied||[]).map(normalizeAllied),...(donghua||[]).map(normalizeDonghuaChain),...FOURB_PRODUCTS.map(normalizeFourBProduct)]);
+      const normalizedChains = (dbChains||[]).map(normalizeNormalizedChain);
+      const uniNonChain = (uni||[]).map(normalizeUniCatalog).filter((p) => !W58_CHAIN_TYPES.has(p.type));
+      setAllData([...normalizedChains,...(cat||[]).map(normalizeCatalogProduct),...(elev||[]).map(normalizeElevatorBucket),...uniNonChain,...FOURB_PRODUCTS.map(normalizeFourBProduct)]);
       setLoading(false);
     }
     load();
@@ -1580,9 +1556,9 @@ export default function Home() {
     const c = {};
     for (const p of allData) c[p.type] = (c[p.type] || 0) + 1;
     // Override Chain count to use unique, active chains only
-    c["__chain__"] = getTotalUniqueChainCount();
+    c["__chain__"] = chainCount;
     return c;
-  }, [allData]);
+  }, [allData, chainCount]);
 
   // globalSearch/globalSelected still used for modal display only; search UI uses HomeGlobalSearch
   const availableTypes = useMemo(() => PRODUCT_TYPES, []);
@@ -1661,6 +1637,7 @@ export default function Home() {
                 <HomeGlobalSearch allData={allData} onSelect={(p) => {
                   // Normalized chains → go to ChainCatalog
                   if (p._source === "normalized_chain") {
+                    setChainIntent({ chainId: p.chain_id, group: p.catalog_group });
                     setCurrentPage("chainCatalog");
                     window.scrollTo(0, 0);
                     return;

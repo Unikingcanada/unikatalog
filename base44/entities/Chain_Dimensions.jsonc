@@ -4,7 +4,7 @@
   "properties": {
     "chain_id": {
       "type": "string",
-      "description": "Foreign key \u2014 references Normalized_Chains.chain_id"
+      "description": "Foreign key — references Normalized_Chains.chain_id"
     },
     "pitch_in": {
       "type": "number",
@@ -115,6 +115,10 @@
     "resolution_notes": {
       "type": "string",
       "description": "Admin resolution notes"
+    },
+    "bushing_dia_in": {
+      "type": "number",
+      "description": "Bushing diameter (in)"
     }
   },
   "required": [

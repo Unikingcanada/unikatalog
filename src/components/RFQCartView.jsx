@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { CatalogProduct, ElevatorBucket, UniCatalog, MacChainProduct } from "@/api/entities";
 
 const NAVY = "#0f2340";
-const UNIT_OPTIONS = ["Feet", "Meters", "Pieces", "Sets", "Rolls", "Inches", "Yards", "Each"];
+const UNIT_OPTIONS = ["Feet", "Meters", "Pitches", "Pieces", "Sets", "Rolls", "Inches", "Yards", "Each"];
 const LOGO_URL = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png";
 
 const C = {
