@@ -56,38 +56,52 @@ export async function readAllEntity(entityName, { query = null, fields = null, s
   const ent = base44.entities[entityName];
   const out = new Map();
   const keyOf = (r, i) => r.id || `${r.chain_id || ""}#${i}#${out.size}`;
+  // Expected total, so a short read is detected instead of silently returned (W58 fix: the
+  // first live run stopped at 1,000 because the server capped the page and sent no cursor).
+  let expected = null;
+  try { const n = await ent.count(query || undefined); if (typeof n === "number") expected = n; } catch { /* unknown */ }
+  const complete = () => expected !== null && out.size >= expected;
+  if (expected === 0) return [];
+
   // 1) cursor API
+  let lastPageLen = 0;
   try {
-    let cursor = null, guard = 0;
-    do {
+    let cursor = null;
+    for (let guard = 0; guard < 1000; guard++) {
       // The cursor carries the walk's query/sort/fields, so later pages send only cursor + limit.
       const opts = { limit: pageSize, sort };
       if (fields) opts.fields = fields;
       const page = cursor
         ? await ent.list({ cursor, limit: pageSize })
         : query ? await ent.filter(query, opts) : await ent.list(opts);
-      if (!page || !Array.isArray(page.items)) throw new Error("no cursor API");
+      if (!page || !Array.isArray(page.items)) break;
       page.items.forEach((r, i) => out.set(keyOf(r, i), r));
+      lastPageLen = page.items.length;
       onPage && onPage(out.size);
-      cursor = page.has_more ? page.next_cursor : null;
-      if (++guard > 500) break;
-    } while (cursor);
-    return [...out.values()];
-  } catch (e) {
-    if (out.size) throw e; // failed mid-walk: surface it rather than return a partial set
-  }
-  // 2) positional fallback
-  let skip = 0;
+      cursor = page.next_cursor || null;
+      if (!cursor || !page.items.length || complete()) break;
+    }
+  } catch { /* fall through to positional paging */ }
+  if (complete()) return [...out.values()];
+  if (expected === null && out.size && lastPageLen < pageSize && lastPageLen > 0) return [...out.values()];
+
+  // 2) positional paging. Stops only on an empty page, a page with nothing new, or the expected count
+  //    (never on "short page", because the server may cap the page size below what was asked).
   const limit = Math.min(pageSize, 500);
-  for (let guard = 0; guard < 2000; guard++) {
+  let skip = 0;
+  for (let guard = 0; guard < 5000; guard++) {
     const batch = query
       ? await ent.filter(query, sort, limit, skip, fields || undefined)
       : await ent.list(sort, limit, skip, fields || undefined);
     if (!Array.isArray(batch) || !batch.length) break;
+    const before = out.size;
     batch.forEach((r, i) => out.set(keyOf(r, skip + i), r));
     onPage && onPage(out.size);
-    if (batch.length < limit) break;
     skip += batch.length;
+    if (complete() || out.size === before) break;
+  }
+  if (expected !== null && out.size < expected) {
+    console.warn(`[chainRepo] ${entityName}: read ${out.size} of ${expected} records`);
   }
   return [...out.values()];
 }
