@@ -8,13 +8,13 @@
 import { getEquivalentsByConfidence } from "@/lib/chainEquivalencyEngine";
 
 const C = {
-  border: "#e2e8f0", bg: "#f8fafc", card: "#ffffff",
-  text: "#0f172a", muted: "#64748b", slate: "#334155",
-  green: "#16a34a", greenBg: "#f0fdf4",
-  amber: "#d97706", amberBg: "#fffbeb",
-  red: "#dc2626", redBg: "#fef2f2",
-  blue: "#2563eb", blueBg: "#eff6ff",
-  navy: "#003c5b", navyMid: "#1A3A5C",
+  border: "#D9D6CE", bg: "#F4F2ED", card: "#ffffff",
+  text: "#0E1F3A", muted: "#3A4A66", slate: "#3A4A66",
+  green: "#2E7D46", greenBg: "#f0fdf4",
+  amber: "#B8860B", amberBg: "#fffbeb",
+  red: "#C62828", redBg: "#fef2f2",
+  blue: "#F26522", blueBg: "#FDF0E9",
+  navy: "#0E1F3A", navyMid: "#0E1F3A",
 };
 
 function ConfidenceBadge({ confidence }) {
@@ -22,7 +22,7 @@ function ConfidenceBadge({ confidence }) {
     "Confirmed":                    { bg: C.greenBg,  color: C.green, border: "#86efac" },
     "Needs Review":                 { bg: C.amberBg,  color: C.amber, border: "#fbbf24" },
     "Missing Data – Needs Mapping": { bg: C.redBg,    color: C.red,   border: "#fca5a5" },
-  }[confidence] || { bg: "#f1f5f9", color: C.muted, border: C.border };
+  }[confidence] || { bg: "#ECEAE4", color: C.muted, border: C.border };
 
   return (
     <span style={{
@@ -121,7 +121,7 @@ export default function ChainEquivalencyPanel({ chain_id }) {
       )}
 
       {/* Disclaimer */}
-      <div style={{ padding: "10px 14px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 6, fontSize: 11, color: "#0369a1", lineHeight: 1.6, marginTop: 8 }}>
+      <div style={{ padding: "10px 14px", background: "#FDF0E9", border: "1px solid #bae6fd", borderRadius: 6, fontSize: 11, color: "#0E1F3A", lineHeight: 1.6, marginTop: 8 }}>
         ℹ Equivalency data is for reference only. Confirm performance data and availability before procurement.
         "Needs Review" equivalencies require engineering verification before substitution.
       </div>

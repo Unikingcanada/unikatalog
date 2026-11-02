@@ -139,7 +139,7 @@ function ModuleRow({ x, y, beltW, pitchH, surface, rowIndex, fingerW, fingerH, g
       {/* Rod line at hinge (connecting rod through all fingers) */}
       <line x1={x + offsetX} y1={y + fingerH * 0.55}
         x2={x + offsetX + totalFingersW} y2={y + fingerH * 0.55}
-        stroke="#3a5a7a" strokeWidth={1.2} strokeDasharray="2,1" opacity={0.7} />
+        stroke="#3A4A66" strokeWidth={1.2} strokeDasharray="2,1" opacity={0.7} />
     </g>
   );
 }
@@ -191,7 +191,7 @@ export default function BeltSchematic({ config, series, beltStyle, units }) {
       border: "1.5px solid #c8d8e8",
       padding: "10px 10px 6px",
       marginBottom: 16,
-      boxShadow: "0 2px 12px rgba(15,35,64,0.08)",
+      boxShadow: "0 2px 12px rgba(14,31,58,0.08)",
     }}>
       {/* Label bar */}
       <div style={{
@@ -207,30 +207,30 @@ export default function BeltSchematic({ config, series, beltStyle, units }) {
 
         {/* ── Dimension line: Width (top) ─────────────────────── */}
         <line x1={beltX} y1={beltY - 18} x2={beltX + beltW} y2={beltY - 18}
-          stroke="#3a5a7a" strokeWidth={0.8} markerEnd="url(#a_r)" markerStart="url(#a_l)" />
+          stroke="#3A4A66" strokeWidth={0.8} markerEnd="url(#a_r)" markerStart="url(#a_l)" />
         <text x={beltX + beltW / 2} y={beltY - 22} textAnchor="middle"
-          fontSize={9} fill="#1a3a5c" fontWeight="700">{widthLabel}</text>
+          fontSize={9} fill="#0E1F3A" fontWeight="700">{widthLabel}</text>
         {/* Tick marks */}
         <line x1={beltX} y1={beltY - 22} x2={beltX} y2={beltY - 12}
-          stroke="#3a5a7a" strokeWidth={0.8} />
+          stroke="#3A4A66" strokeWidth={0.8} />
         <line x1={beltX + beltW} y1={beltY - 22} x2={beltX + beltW} y2={beltY - 12}
-          stroke="#3a5a7a" strokeWidth={0.8} />
+          stroke="#3A4A66" strokeWidth={0.8} />
 
         {/* ── Pitch dimension (right side, one pitch height) ───── */}
         {pitchLabel && (
           <g>
             <line x1={beltX + beltW + 14} y1={beltY}
               x2={beltX + beltW + 14} y2={beltY + pitchH}
-              stroke="#3a5a7a" strokeWidth={0.8}
+              stroke="#3A4A66" strokeWidth={0.8}
               markerEnd="url(#a_d)" markerStart="url(#a_u)" />
             <line x1={beltX + beltW + 8} y1={beltY}
               x2={beltX + beltW + 20} y2={beltY}
-              stroke="#3a5a7a" strokeWidth={0.8} />
+              stroke="#3A4A66" strokeWidth={0.8} />
             <line x1={beltX + beltW + 8} y1={beltY + pitchH}
               x2={beltX + beltW + 20} y2={beltY + pitchH}
-              stroke="#3a5a7a" strokeWidth={0.8} />
+              stroke="#3A4A66" strokeWidth={0.8} />
             <text x={beltX + beltW + 18} y={beltY + pitchH / 2 + 4}
-              fontSize={7} fill="#1a3a5c" fontWeight="700">{pitchLabel}</text>
+              fontSize={7} fill="#0E1F3A" fontWeight="700">{pitchLabel}</text>
           </g>
         )}
 
@@ -270,9 +270,9 @@ export default function BeltSchematic({ config, series, beltStyle, units }) {
         {hasSideguards && (
           <>
             <rect x={beltX - 8} y={beltY} width={8} height={beltH}
-              fill="#c9a84c" stroke="#a07828" strokeWidth={0.8} />
+              fill="#F26522" stroke="#a07828" strokeWidth={0.8} />
             <rect x={beltX + beltW} y={beltY} width={8} height={beltH}
-              fill="#c9a84c" stroke="#a07828" strokeWidth={0.8} />
+              fill="#F26522" stroke="#a07828" strokeWidth={0.8} />
             <text x={beltX - 10} y={beltY + beltH / 2}
               fontSize={7} fill="#a07828" fontWeight="700" textAnchor="middle"
               transform={`rotate(-90, ${beltX - 10}, ${beltY + beltH / 2})`}>Sideguard</text>
@@ -282,16 +282,16 @@ export default function BeltSchematic({ config, series, beltStyle, units }) {
         {/* ── Arrow markers ────────────────────────────────────── */}
         <defs>
           <marker id="a_r" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
-            <path d="M0,0 L5,2.5 L0,5 Z" fill="#3a5a7a" />
+            <path d="M0,0 L5,2.5 L0,5 Z" fill="#3A4A66" />
           </marker>
           <marker id="a_l" markerWidth="5" markerHeight="5" refX="1" refY="2.5" orient="auto">
-            <path d="M5,0 L0,2.5 L5,5 Z" fill="#3a5a7a" />
+            <path d="M5,0 L0,2.5 L5,5 Z" fill="#3A4A66" />
           </marker>
           <marker id="a_d" markerWidth="5" markerHeight="5" refX="2.5" refY="4" orient="auto">
-            <path d="M0,0 L2.5,5 L5,0 Z" fill="#3a5a7a" />
+            <path d="M0,0 L2.5,5 L5,0 Z" fill="#3A4A66" />
           </marker>
           <marker id="a_u" markerWidth="5" markerHeight="5" refX="2.5" refY="1" orient="auto">
-            <path d="M0,5 L2.5,0 L5,5 Z" fill="#3a5a7a" />
+            <path d="M0,5 L2.5,0 L5,5 Z" fill="#3A4A66" />
           </marker>
         </defs>
 

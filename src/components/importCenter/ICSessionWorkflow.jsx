@@ -37,22 +37,22 @@ function StepBar({ current }) {
               <div style={{
                 width: 30, height: 30, borderRadius: "50%",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                background: done ? "#22c55e" : active ? "#0C2340" : "#e2e8f0",
-                color: done || active ? "#fff" : "#94a3b8",
+                background: done ? "#22c55e" : active ? "#0E1F3A" : "#D9D6CE",
+                color: done || active ? "#fff" : "#8A94A6",
                 fontSize: 12, fontWeight: 800, transition: "all 0.2s",
               }}>
                 {done ? "✓" : i + 1}
               </div>
               <div style={{
                 fontSize: 10, fontWeight: active ? 800 : 500,
-                color: active ? "#0C2340" : done ? "#22c55e" : "#94a3b8",
+                color: active ? "#0E1F3A" : done ? "#22c55e" : "#8A94A6",
                 whiteSpace: "nowrap",
               }}>
                 {s}
               </div>
             </div>
             {i < STEPS.length - 1 && (
-              <div style={{ flex: 1, height: 2, background: done ? "#22c55e" : "#e2e8f0", marginBottom: 16, transition: "all 0.2s" }} />
+              <div style={{ flex: 1, height: 2, background: done ? "#22c55e" : "#D9D6CE", marginBottom: 16, transition: "all 0.2s" }} />
             )}
           </div>
         );
@@ -67,22 +67,22 @@ function ProgressStats({ report, totalRows }) {
   const detected = report.total_detected || totalRows || 0;
   const processed = report.total_processed || report.pct != null ? Math.round((report.pct / 100) * detected) : 0;
   const stats = [
-    { label: "Detected", value: detected, color: "#64748b" },
-    { label: "Processed", value: report.total_processed ?? processed, color: "#3b82f6" },
-    { label: "Staged", value: report.total_staged ?? (report.New + report.Duplicate + report.Changed + report.Conflict + report.Invalid || 0), color: "#8b5cf6" },
+    { label: "Detected", value: detected, color: "#3A4A66" },
+    { label: "Processed", value: report.total_processed ?? processed, color: "#F26522" },
+    { label: "Staged", value: report.total_staged ?? (report.New + report.Duplicate + report.Changed + report.Conflict + report.Invalid || 0), color: "#3A4A66" },
     { label: "New", value: report.New || 0, color: "#22c55e" },
     { label: "Duplicate", value: report.Duplicate || 0, color: "#eab308" },
-    { label: "Changed", value: report.Changed || 0, color: "#3b82f6" },
+    { label: "Changed", value: report.Changed || 0, color: "#F26522" },
     { label: "Conflict", value: report.Conflict || 0, color: "#ef4444" },
     { label: "Invalid", value: report.Invalid || 0, color: "#f97316" },
-    { label: "Failed", value: report.Failed || 0, color: "#dc2626" },
+    { label: "Failed", value: report.Failed || 0, color: "#C62828" },
   ];
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 16 }}>
       {stats.map(s => (
-        <div key={s.label} style={{ textAlign: "center", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, padding: "8px 14px", minWidth: 72 }}>
+        <div key={s.label} style={{ textAlign: "center", background: "#F4F2ED", border: "1px solid #D9D6CE", borderRadius: 8, padding: "8px 14px", minWidth: 72 }}>
           <div style={{ fontSize: 22, fontWeight: 900, color: s.color, lineHeight: 1 }}>{s.value ?? "—"}</div>
-          <div style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", marginTop: 2 }}>{s.label}</div>
+          <div style={{ fontSize: 9, fontWeight: 700, color: "#8A94A6", textTransform: "uppercase", marginTop: 2 }}>{s.label}</div>
         </div>
       ))}
     </div>
@@ -94,17 +94,17 @@ function CommitStats({ sess }) {
   if (!sess) return null;
   const stats = [
     { label: "Written", value: sess.rows_written ?? 0, color: "#22c55e" },
-    { label: "Skipped", value: sess.duplicates_skipped ?? 0, color: "#94a3b8" },
+    { label: "Skipped", value: sess.duplicates_skipped ?? 0, color: "#8A94A6" },
     { label: "Failed", value: sess.failed_rows ?? 0, color: "#ef4444" },
     { label: "Flags", value: sess.flags_generated ?? 0, color: "#f59e0b" },
-    { label: "Total Staged", value: sess.rows_staged ?? 0, color: "#3b82f6" },
+    { label: "Total Staged", value: sess.rows_staged ?? 0, color: "#F26522" },
   ];
   return (
     <div style={{ display: "flex", gap: 24, flexWrap: "wrap", justifyContent: "center", marginBottom: 24 }}>
       {stats.map(s => (
         <div key={s.label} style={{ textAlign: "center" }}>
           <div style={{ fontSize: 36, fontWeight: 900, color: s.color }}>{s.value}</div>
-          <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>{s.label}</div>
+          <div style={{ fontSize: 11, color: "#3A4A66", fontWeight: 600 }}>{s.label}</div>
         </div>
       ))}
     </div>
@@ -182,24 +182,24 @@ function StagingMonitor({ session, allRows, mappingRules, transformRules, onRead
     <div style={{ padding: "40px 20px" }}>
       <div style={{ textAlign: "center", marginBottom: 28 }}>
         <div style={{ fontSize: 48, marginBottom: 10 }}>⚙️</div>
-        <div style={{ fontSize: 18, fontWeight: 800, color: "#0C2340" }}>Staging & Validation</div>
-        <div style={{ fontSize: 12, color: "#64748b", marginTop: 6 }}>
+        <div style={{ fontSize: 18, fontWeight: 800, color: "#0E1F3A" }}>Staging & Validation</div>
+        <div style={{ fontSize: 12, color: "#3A4A66", marginTop: 6 }}>
           {done
             ? "Staging complete — loading review…"
             : "Safe mode: 10 records/chunk · 200ms delay · continues on row failures"}
         </div>
       </div>
 
-      <div style={{ background: "#e2e8f0", borderRadius: 99, height: 10, maxWidth: 500, margin: "0 auto 12px", overflow: "hidden" }}>
+      <div style={{ background: "#D9D6CE", borderRadius: 99, height: 10, maxWidth: 500, margin: "0 auto 12px", overflow: "hidden" }}>
         <div style={{
           height: "100%", borderRadius: 99, transition: "width 0.4s ease",
           width: pct + "%",
           background: hasErrors
             ? "linear-gradient(90deg,#f59e0b,#ef4444)"
-            : "linear-gradient(90deg,#3b82f6,#8b5cf6)",
+            : "linear-gradient(90deg,#F26522,#3A4A66)",
         }} />
       </div>
-      <div style={{ textAlign: "center", fontSize: 12, color: "#64748b", marginBottom: 8 }}>
+      <div style={{ textAlign: "center", fontSize: 12, color: "#3A4A66", marginBottom: 8 }}>
         {`${staged.toLocaleString()} / ${total.toLocaleString()} rows staged (${pct}%)`}
         {hasErrors && <span style={{ marginLeft: 10, color: "#ef4444", fontWeight: 700 }}> · {chunkErrors.length} chunk error{chunkErrors.length > 1 ? "s" : ""}</span>}
       </div>
@@ -257,20 +257,20 @@ function CommitMonitor({ session, onDone }) {
   return (
     <div style={{ padding: "40px 20px", textAlign: "center" }}>
       <div style={{ fontSize: 48, marginBottom: 10 }}>💾</div>
-      <div style={{ fontSize: 18, fontWeight: 800, color: "#0C2340", marginBottom: 6 }}>
+      <div style={{ fontSize: 18, fontWeight: 800, color: "#0E1F3A", marginBottom: 6 }}>
         Server-Side Commit Running
       </div>
-      <div style={{ fontSize: 12, color: "#64748b", marginBottom: 20 }}>
+      <div style={{ fontSize: 12, color: "#3A4A66", marginBottom: 20 }}>
         Running on the server — safe to close this tab and return later.
       </div>
-      <div style={{ background: "#e2e8f0", borderRadius: 99, height: 10, maxWidth: 500, margin: "0 auto 12px", overflow: "hidden" }}>
-        <div style={{ height: "100%", borderRadius: 99, width: pct + "%", background: "linear-gradient(90deg,#22c55e,#16a34a)", transition: "width 0.6s ease" }} />
+      <div style={{ background: "#D9D6CE", borderRadius: 99, height: 10, maxWidth: 500, margin: "0 auto 12px", overflow: "hidden" }}>
+        <div style={{ height: "100%", borderRadius: 99, width: pct + "%", background: "linear-gradient(90deg,#22c55e,#2E7D46)", transition: "width 0.6s ease" }} />
       </div>
-      <div style={{ fontSize: 12, color: "#64748b" }}>
+      <div style={{ fontSize: 12, color: "#3A4A66" }}>
         {written.toLocaleString()} / {staged.toLocaleString()} committed ({pct}%)
       </div>
       <div style={{ marginTop: 10 }}>
-        <span style={{ display: "inline-block", padding: "3px 12px", borderRadius: 20, fontSize: 11, fontWeight: 700, background: "#eff6ff", color: "#1d4ed8" }}>
+        <span style={{ display: "inline-block", padding: "3px 12px", borderRadius: 20, fontSize: 11, fontWeight: 700, background: "#FDF0E9", color: "#0E1F3A" }}>
           Status: {liveSession?.import_status || "Committing"}
         </span>
       </div>
@@ -566,21 +566,21 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <div>
-      <button onClick={onBack} style={{ background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 7, padding: "6px 14px", fontSize: 12, fontWeight: 600, cursor: "pointer", marginBottom: 20, color: "#475569" }}>
+      <button onClick={onBack} style={{ background: "#ECEAE4", border: "1px solid #D9D6CE", borderRadius: 7, padding: "6px 14px", fontSize: 12, fontWeight: 600, cursor: "pointer", marginBottom: 20, color: "#3A4A66" }}>
         ← All Sessions
       </button>
-      <div style={{ fontSize: 20, fontWeight: 900, color: "#0C2340", marginBottom: 24 }}>New Import Session</div>
+      <div style={{ fontSize: 20, fontWeight: 900, color: "#0E1F3A", marginBottom: 24 }}>New Import Session</div>
 
       {/* Show done state inline if commit finished while watching CommitMonitor */}
       {step === 4 && doneSession ? (
         <div style={{ textAlign: "center", padding: "48px 20px" }}>
           <div style={{ fontSize: 56, marginBottom: 16 }}>✅</div>
-          <div style={{ fontSize: 22, fontWeight: 900, color: "#0C2340", marginBottom: 10 }}>Import Complete</div>
+          <div style={{ fontSize: 22, fontWeight: 900, color: "#0E1F3A", marginBottom: 10 }}>Import Complete</div>
           <CommitStats sess={doneSession} />
-          <div style={{ fontSize: 12, color: "#64748b", marginBottom: 24 }}>
+          <div style={{ fontSize: 12, color: "#3A4A66", marginBottom: 24 }}>
             Session <strong>{session?.session_id}</strong> — rollback snapshot saved.
           </div>
-          <button onClick={onBack} style={{ background: "#0C2340", color: "#fff", border: "none", borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+          <button onClick={onBack} style={{ background: "#0E1F3A", color: "#fff", border: "none", borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
             ← Back to Sessions
           </button>
         </div>
@@ -589,7 +589,7 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
           <StepBar current={step} />
 
           {error && (
-            <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8, padding: "10px 16px", marginBottom: 16, color: "#dc2626", fontSize: 12, fontWeight: 700 }}>
+            <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8, padding: "10px 16px", marginBottom: 16, color: "#C62828", fontSize: 12, fontWeight: 700 }}>
               ⚠ {error}
             </div>
           )}
@@ -620,16 +620,16 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
                     {xlsxSheets.map(sheet => (
                       <button key={sheet.name} onClick={() => handleSheetSelected(sheet)}
                         style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", background: "#fff", border: "1px solid #fcd34d", borderRadius: 8, cursor: "pointer" }}>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: "#1e293b" }}>{sheet.name}</span>
-                        <span style={{ fontSize: 11, color: "#64748b" }}>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: "#0E1F3A" }}>{sheet.name}</span>
+                        <span style={{ fontSize: 11, color: "#3A4A66" }}>
                           {sheet.rows.length.toLocaleString()} rows · {sheet.headers.length} columns
-                          {sheet.rows.length === 0 && <span style={{ color: "#dc2626", marginLeft: 6 }}>(empty)</span>}
+                          {sheet.rows.length === 0 && <span style={{ color: "#C62828", marginLeft: 6 }}>(empty)</span>}
                         </span>
                       </button>
                     ))}
                   </div>
                   <button onClick={() => { setXlsxSheets(null); setXlsxFileName(""); }}
-                    style={{ marginTop: 12, fontSize: 11, color: "#64748b", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>
+                    style={{ marginTop: 12, fontSize: 11, color: "#3A4A66", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>
                     Cancel — upload different file
                   </button>
                 </div>
@@ -637,7 +637,7 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
               {parsedFiles.length > 0 && !xlsxSheets && (
                 <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 6 }}>
                   {parsedFiles.map(f => (
-                    <div key={f.name} style={{ padding: "8px 14px", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 7, fontSize: 12, color: "#166534", fontWeight: 600 }}>
+                    <div key={f.name} style={{ padding: "8px 14px", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 7, fontSize: 12, color: "#2E7D46", fontWeight: 600 }}>
                       ✓ {f.name}{f.sheetName ? ` [${f.sheetName}]` : ''} — {f.rows.length.toLocaleString()} rows, {f.headers.length} columns
                     </div>
                   ))}
@@ -649,7 +649,7 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
           {/* Step 1: Configure mapping */}
           {step === 1 && (
             <div>
-              <div style={{ marginBottom: 16, padding: "10px 16px", background: "#f8fafc", borderRadius: 8, border: "1px solid #e2e8f0", fontSize: 12, color: "#475569" }}>
+              <div style={{ marginBottom: 16, padding: "10px 16px", background: "#F4F2ED", borderRadius: 8, border: "1px solid #D9D6CE", fontSize: 12, color: "#3A4A66" }}>
                 <strong>{parsedFiles.length} file(s)</strong> · <strong>{totalRows.toLocaleString()} rows</strong> · <strong>{allHeaders.length} unique columns detected</strong>
               </div>
               <ICColumnMapper
@@ -675,14 +675,14 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
 
           {/* Step 2: Loading staged records after server completes */}
           {step === 2 && !session && (
-            <div style={{ textAlign: "center", padding: "60px 20px", color: "#64748b" }}>
+            <div style={{ textAlign: "center", padding: "60px 20px", color: "#3A4A66" }}>
               <div style={{ fontSize: 48, marginBottom: 12 }}>⚙️</div>
               <div style={{ fontSize: 14 }}>Initializing session…</div>
             </div>
           )}
 
           {step === 2 && loadingRecords && (
-            <div style={{ textAlign: "center", padding: "60px 20px", color: "#64748b" }}>
+            <div style={{ textAlign: "center", padding: "60px 20px", color: "#3A4A66" }}>
               <div style={{ fontSize: 14 }}>Loading staged records for review…</div>
             </div>
           )}
@@ -728,11 +728,11 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
           {step === 3 && !dryRunMode && (
             <div>
               <div style={{ marginBottom: 8, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
-                <div style={{ fontSize: 14, fontWeight: 800, color: "#0C2340" }}>
+                <div style={{ fontSize: 14, fontWeight: 800, color: "#0E1F3A" }}>
                   Review Staged Records — {session?.session_id}
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                  <div style={{ fontSize: 12, color: "#64748b" }}>
+                  <div style={{ fontSize: 12, color: "#3A4A66" }}>
                     {stagedRecords.length.toLocaleString()} records · {session?.validation_report?.total_detected?.toLocaleString() || totalRows.toLocaleString()} detected
                   </div>
                   {/* Retry button — only shown when there are Failed records AND we have the original rows */}
@@ -740,7 +740,7 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
                     <button
                       onClick={handleRetryStagingFailed}
                       disabled={retryingStaging}
-                      style={{ padding: "5px 12px", background: retryingStaging ? "#f1f5f9" : "#fff7ed", border: "1px solid #fed7aa", borderRadius: 6, fontSize: 11, fontWeight: 700, color: retryingStaging ? "#94a3b8" : "#c2410c", cursor: retryingStaging ? "default" : "pointer" }}
+                      style={{ padding: "5px 12px", background: retryingStaging ? "#ECEAE4" : "#fff7ed", border: "1px solid #fed7aa", borderRadius: 6, fontSize: 11, fontWeight: 700, color: retryingStaging ? "#8A94A6" : "#c2410c", cursor: retryingStaging ? "default" : "pointer" }}
                     >
                       {retryingStaging ? "⏳ Retrying…" : `🔄 Retry Staging Failed (${stagedRecords.filter(r => r.record_status === "Failed").length})`}
                     </button>
@@ -775,5 +775,5 @@ export default function ICSessionWorkflow({ onBack, onSessionCreated }) {
   );
 }
 
-const labelStyle = { fontSize: 11, fontWeight: 700, color: "#475569", display: "block", marginBottom: 4 };
-const inputStyle = { width: "100%", padding: "8px 12px", border: "1px solid #e2e8f0", borderRadius: 7, fontSize: 12, color: "#1e293b", boxSizing: "border-box", outline: "none" };
+const labelStyle = { fontSize: 11, fontWeight: 700, color: "#3A4A66", display: "block", marginBottom: 4 };
+const inputStyle = { width: "100%", padding: "8px 12px", border: "1px solid #D9D6CE", borderRadius: 7, fontSize: 12, color: "#0E1F3A", boxSizing: "border-box", outline: "none" };

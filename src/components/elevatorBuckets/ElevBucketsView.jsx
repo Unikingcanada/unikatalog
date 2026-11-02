@@ -48,18 +48,18 @@ export default function ElevBucketsView({ onBack, onGoRFQ }) {
 
   if (loading) {
     return (
-      <div style={{ minHeight: "100vh", background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
-        <div style={{ textAlign: "center", color: "#9ca3af", fontSize: 14 }}>Loading catalog...</div>
+      <div style={{ minHeight: "100vh", background: "#F4F2ED", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
+        <div style={{ textAlign: "center", color: "#8A94A6", fontSize: 14 }}>Loading catalog...</div>
       </div>
     );
   }
 
   // Compare nav bar
   const CompareBar = () => (
-    <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "8px clamp(12px,4vw,32px)", display: "flex", justifyContent: "flex-end" }}>
+    <div style={{ background: "#fff", borderBottom: "1px solid #D9D6CE", padding: "8px clamp(12px,4vw,32px)", display: "flex", justifyContent: "flex-end" }}>
       <button
         onClick={() => navigate("/BucketCompare")}
-        style={{ padding: "6px 14px", borderRadius: 8, border: "1px solid #7c3aed", background: compareCount > 0 ? "#7c3aed" : "#faf5ff", color: compareCount > 0 ? "#fff" : "#7c3aed", fontSize: 12, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
+        style={{ padding: "6px 14px", borderRadius: 8, border: "1px solid #3A4A66", background: compareCount > 0 ? "#3A4A66" : "#faf5ff", color: compareCount > 0 ? "#fff" : "#3A4A66", fontSize: 12, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
         ⚖️ Comparisons
         {compareCount > 0 && (
           <span style={{ background: "rgba(255,255,255,0.25)", borderRadius: 99, padding: "1px 7px", fontSize: 11 }}>{compareCount}</span>
@@ -69,7 +69,7 @@ export default function ElevBucketsView({ onBack, onGoRFQ }) {
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#F4F2ED", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
       <CompareBar />
 
       {/* ── Section: Home ── */}

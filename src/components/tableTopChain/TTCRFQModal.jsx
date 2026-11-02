@@ -6,9 +6,9 @@ import { useState } from "react";
 import { MATERIALS, getMaterialsForProduct, WIDTH_DIMENSIONS } from "@/lib/tableTopChainData";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
-  border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
-  plastic: "#0057A8", steel: "#374151", green: "#16a34a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522",
+  border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
+  plastic: "#0E1F3A", steel: "#3A4A66", green: "#2E7D46",
 };
 
 const PREFERRED_BRANDS = [
@@ -28,7 +28,7 @@ function StepIndicator({ step }) {
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
               <div style={{
                 width: 26, height: 26, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
-                background: isDone ? C.green : isActive ? C.navyMid : "#e2e8f0",
+                background: isDone ? C.green : isActive ? C.navyMid : "#D9D6CE",
                 color: isDone || isActive ? "#fff" : C.muted,
                 fontSize: 11, fontWeight: 800,
               }}>
@@ -37,7 +37,7 @@ function StepIndicator({ step }) {
               <span style={{ fontSize: 9, fontWeight: 700, color: isActive ? C.navyMid : C.muted, whiteSpace: "nowrap" }}>{label}</span>
             </div>
             {i < steps.length - 1 && (
-              <div style={{ flex: 1, height: 2, background: isDone ? C.green : "#e2e8f0", margin: "0 4px", marginBottom: 16 }} />
+              <div style={{ flex: 1, height: 2, background: isDone ? C.green : "#D9D6CE", margin: "0 4px", marginBottom: 16 }} />
             )}
           </div>
         );
@@ -87,7 +87,7 @@ export default function TTCRFQModal({ product, initialWidth, onConfirm, onClose 
 
   return (
     <div style={{
-      position: "fixed", inset: 0, background: "rgba(10,20,40,0.65)", zIndex: 1000,
+      position: "fixed", inset: 0, background: "rgba(14,31,58,0.65)", zIndex: 1000,
       display: "flex", alignItems: "center", justifyContent: "center", padding: 20,
     }}>
       <div style={{
@@ -120,7 +120,7 @@ export default function TTCRFQModal({ product, initialWidth, onConfirm, onClose 
                       <div>
                         <span style={{ fontSize: 13, fontWeight: 800, color: C.navyMid }}>{mat.name}</span>
                         {mat.badge && (
-                          <span style={{ marginLeft: 7, fontSize: 9, fontWeight: 700, background: "#dbeafe", color: "#1d4ed8", padding: "1px 6px", borderRadius: 6 }}>{mat.badge}</span>
+                          <span style={{ marginLeft: 7, fontSize: 9, fontWeight: 700, background: "#FDF0E9", color: "#0E1F3A", padding: "1px 6px", borderRadius: 6 }}>{mat.badge}</span>
                         )}
                       </div>
                       {isSelected && <span style={{ color: C.green, fontSize: 16 }}>✓</span>}
@@ -167,7 +167,7 @@ export default function TTCRFQModal({ product, initialWidth, onConfirm, onClose 
               })}
             </div>
             {selectedWidth && WIDTH_DIMENSIONS[selectedWidth] && (
-              <div style={{ marginTop: 14, background: "#f0f7ff", borderRadius: 9, padding: "12px 14px", border: "1px solid #bfdbfe" }}>
+              <div style={{ marginTop: 14, background: "#f0f7ff", borderRadius: 9, padding: "12px 14px", border: "1px solid #F8C9B0" }}>
                 <div style={{ fontSize: 10, fontWeight: 700, color: C.navyMid, marginBottom: 8, textTransform: "uppercase" }}>Dimensions — {selectedWidth}</div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                   {Object.entries({
@@ -201,14 +201,14 @@ export default function TTCRFQModal({ product, initialWidth, onConfirm, onClose 
 
             <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}>
               <button onClick={() => setBoxes(b => Math.max(1, b - 1))}
-                style={{ width: 36, height: 36, borderRadius: 9, border: `1.5px solid ${C.border}`, background: "#f8fafc", fontSize: 20, cursor: "pointer", fontWeight: 700, color: C.navyMid }}>−</button>
+                style={{ width: 36, height: 36, borderRadius: 9, border: `1.5px solid ${C.border}`, background: "#F4F2ED", fontSize: 20, cursor: "pointer", fontWeight: 700, color: C.navyMid }}>−</button>
               <div style={{ textAlign: "center" }}>
                 <div style={{ fontSize: 28, fontWeight: 900, color: C.navyMid }}>{boxes}</div>
                 <div style={{ fontSize: 10, color: C.muted }}>box{boxes > 1 ? "es" : ""}</div>
               </div>
               <button onClick={() => setBoxes(b => b + 1)}
-                style={{ width: 36, height: 36, borderRadius: 9, border: `1.5px solid ${C.border}`, background: "#f8fafc", fontSize: 20, cursor: "pointer", fontWeight: 700, color: C.navyMid }}>+</button>
-              <div style={{ marginLeft: 8, background: "#f0f7ff", borderRadius: 9, padding: "10px 16px", border: "1px solid #bfdbfe" }}>
+                style={{ width: 36, height: 36, borderRadius: 9, border: `1.5px solid ${C.border}`, background: "#F4F2ED", fontSize: 20, cursor: "pointer", fontWeight: 700, color: C.navyMid }}>+</button>
+              <div style={{ marginLeft: 8, background: "#f0f7ff", borderRadius: 9, padding: "10px 16px", border: "1px solid #F8C9B0" }}>
                 <div style={{ fontSize: 18, fontWeight: 900, color: accentColor }}>{totalFt} ft</div>
                 <div style={{ fontSize: 10, color: C.muted }}>total length</div>
               </div>
@@ -267,7 +267,7 @@ export default function TTCRFQModal({ product, initialWidth, onConfirm, onClose 
             </div>
 
             {/* Summary */}
-            <div style={{ background: "#f8fafc", borderRadius: 9, padding: "12px 14px", border: `1px solid ${C.border}`, marginBottom: 16, fontSize: 11 }}>
+            <div style={{ background: "#F4F2ED", borderRadius: 9, padding: "12px 14px", border: `1px solid ${C.border}`, marginBottom: 16, fontSize: 11 }}>
               <div style={{ fontWeight: 700, color: C.navyMid, marginBottom: 6 }}>Order Summary</div>
               {[
                 ["Product", product.name],
@@ -276,7 +276,7 @@ export default function TTCRFQModal({ product, initialWidth, onConfirm, onClose 
                 ["Length", `${totalFt} ft (${boxes} × 10 ft box${boxes > 1 ? "es" : ""})`],
                 ["Brand", preferredBrand],
               ].map(([k, v]) => (
-                <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "2px 0", borderBottom: "1px solid #f1f5f9" }}>
+                <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "2px 0", borderBottom: "1px solid #ECEAE4" }}>
                   <span style={{ color: C.muted, fontWeight: 600 }}>{k}</span>
                   <span style={{ color: C.text, fontWeight: 700 }}>{v}</span>
                 </div>
@@ -298,9 +298,9 @@ export default function TTCRFQModal({ product, initialWidth, onConfirm, onClose 
 
 function btnStyle(type, disabled) {
   const base = { padding: "10px 16px", borderRadius: 9, cursor: disabled ? "not-allowed" : "pointer", fontSize: 13, fontWeight: 700, border: "none", transition: "opacity 0.12s", opacity: disabled ? 0.4 : 1 };
-  if (type === "cancel") return { ...base, flex: 1, background: "#f1f5f9", color: "#64748b", border: "1px solid #e2e8f0" };
-  if (type === "back")   return { ...base, flex: 1, background: "#f1f5f9", color: "#334155", border: "1px solid #e2e8f0" };
-  if (type === "next")   return { ...base, flex: 2, background: "#1A3A5C", color: "#fff" };
-  if (type === "confirm") return { ...base, flex: 2, background: "#16a34a", color: "#fff" };
+  if (type === "cancel") return { ...base, flex: 1, background: "#ECEAE4", color: "#3A4A66", border: "1px solid #D9D6CE" };
+  if (type === "back")   return { ...base, flex: 1, background: "#ECEAE4", color: "#3A4A66", border: "1px solid #D9D6CE" };
+  if (type === "next")   return { ...base, flex: 2, background: "#0E1F3A", color: "#fff" };
+  if (type === "confirm") return { ...base, flex: 2, background: "#2E7D46", color: "#fff" };
   return base;
 }

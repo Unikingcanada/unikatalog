@@ -453,42 +453,42 @@ function printTearSheet(product) {
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Segoe UI', Arial, sans-serif; color: #111; background: #fff; }
   @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
-  .header { background: #0f2340; color: #fff; padding: 22px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .header { background: #0E1F3A; color: #fff; padding: 22px 32px; display: flex; align-items: center; justify-content: space-between; }
   .header-left { display: flex; align-items: center; gap: 18px; }
   .header img { max-height: 44px; }
   .header-title { font-size: 22px; font-weight: 800; letter-spacing: 0.3px; }
   .header-sub { font-size: 12px; color: rgba(255,255,255,0.55); margin-top: 3px; }
   .header-meta { text-align: right; font-size: 11px; color: rgba(255,255,255,0.45); }
-  .accent-bar { height: 4px; background: linear-gradient(90deg, #2d8a4e, #1a3a5c); }
+  .accent-bar { height: 4px; background: linear-gradient(90deg, #2d8a4e, #0E1F3A); }
   .body { padding: 24px 32px; }
-  .product-hero { display: flex; gap: 24px; align-items: flex-start; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb; }
-  .product-img { width: 140px; height: 100px; object-fit: contain; border: 1px solid #e5e7eb; border-radius: 6px; padding: 6px; background: #f8fafc; flex-shrink: 0; }
-  .product-name { font-size: 26px; font-weight: 900; color: #0f2340; line-height: 1.1; }
+  .product-hero { display: flex; gap: 24px; align-items: flex-start; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #D9D6CE; }
+  .product-img { width: 140px; height: 100px; object-fit: contain; border: 1px solid #D9D6CE; border-radius: 6px; padding: 6px; background: #F4F2ED; flex-shrink: 0; }
+  .product-name { font-size: 26px; font-weight: 900; color: #0E1F3A; line-height: 1.1; }
   .product-type { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #2d8a4e; margin-bottom: 6px; }
-  .product-style { font-size: 14px; color: #64748b; margin-top: 4px; }
+  .product-style { font-size: 14px; color: #3A4A66; margin-top: 4px; }
   .tags { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-  .tag { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 99px; padding: 3px 10px; font-size: 11px; font-weight: 600; color: #334155; }
-  .notes-box { background: #f8fafc; border-left: 3px solid #1a3a5c; border-radius: 4px; padding: 10px 14px; font-size: 12px; color: #334155; line-height: 1.7; margin-bottom: 18px; }
-  .section-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #1a3a5c; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 2px solid #e2e8f0; }
+  .tag { background: #ECEAE4; border: 1px solid #D9D6CE; border-radius: 99px; padding: 3px 10px; font-size: 11px; font-weight: 600; color: #3A4A66; }
+  .notes-box { background: #F4F2ED; border-left: 3px solid #0E1F3A; border-radius: 4px; padding: 10px 14px; font-size: 12px; color: #3A4A66; line-height: 1.7; margin-bottom: 18px; }
+  .section-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #0E1F3A; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 2px solid #D9D6CE; }
   .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 20px; }
-  .spec-cell { background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 5px; padding: 7px 10px; }
-  .spec-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #94a3b8; margin-bottom: 2px; }
-  .spec-value { font-size: 12px; font-weight: 600; color: #0f2340; }
+  .spec-cell { background: #F4F2ED; border: 1px solid #ECEAE4; border-radius: 5px; padding: 7px 10px; }
+  .spec-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #8A94A6; margin-bottom: 2px; }
+  .spec-value { font-size: 12px; font-weight: 600; color: #0E1F3A; }
   table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px; }
-  thead tr { background: #0f2340; }
+  thead tr { background: #0E1F3A; }
   thead th { padding: 7px 10px; color: #fff; font-weight: 700; text-align: left; white-space: nowrap; }
-  tbody tr:nth-child(even) { background: #f8fafc; }
-  tbody td { padding: 6px 10px; border-bottom: 1px solid #e5e7eb; color: #334155; }
-  tbody td:first-child { font-weight: 600; color: #0f2340; }
-  .footer { margin-top: 24px; padding-top: 12px; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
-  .footer-left { font-size: 10px; color: #94a3b8; }
-  .footer-right { font-size: 10px; color: #94a3b8; text-align: right; }
-  .confidential { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #cbd5e1; }
+  tbody tr:nth-child(even) { background: #F4F2ED; }
+  tbody td { padding: 6px 10px; border-bottom: 1px solid #D9D6CE; color: #3A4A66; }
+  tbody td:first-child { font-weight: 600; color: #0E1F3A; }
+  .footer { margin-top: 24px; padding-top: 12px; border-top: 1px solid #D9D6CE; display: flex; justify-content: space-between; align-items: center; }
+  .footer-left { font-size: 10px; color: #8A94A6; }
+  .footer-right { font-size: 10px; color: #8A94A6; text-align: right; }
+  .confidential { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; color: #C9C5BB; }
   .no-print { margin: 16px 32px; display: flex; gap: 10px; }
   @media print { .no-print { display: none !important; } }
   .btn { padding: 8px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; }
-  .btn-primary { background: #0f2340; color: #fff; }
-  .btn-secondary { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
+  .btn-primary { background: #0E1F3A; color: #fff; }
+  .btn-secondary { background: #ECEAE4; color: #3A4A66; border: 1px solid #D9D6CE; }
   .section-wrap { margin-bottom: 20px; }
 </style></head><body>
 <div class="no-print">
@@ -526,7 +526,7 @@ function printTearSheet(product) {
   <div class="section-wrap">
     <div class="section-title">Dimensional Drawing</div>
     <div style="text-align:center; margin-bottom:8px;">
-      <img src="${product.diagram_image}" alt="Dimensional Drawing" style="max-width:100%; max-height:280px; object-fit:contain; border:1px solid #e5e7eb; border-radius:6px; padding:10px; background:#f8fafc;" />
+      <img src="${product.diagram_image}" alt="Dimensional Drawing" style="max-width:100%; max-height:280px; object-fit:contain; border:1px solid #D9D6CE; border-radius:6px; padding:10px; background:#F4F2ED;" />
     </div>
   </div>` : ""}
   ${product.notes ? `<div class="notes-box">${stripVendor(product.notes)}</div>` : ""}
@@ -561,7 +561,7 @@ function printTearSheet(product) {
   <div class="section-wrap">
     <div class="section-title">Technical Resources</div>
     <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;">
-      ${product.tech_doc_url ? `<a href="${product.tech_doc_url}" style="font-size:12px;color:#1a3a5c;font-weight:600;">Technical Documentation</a>` : ""}
+      ${product.tech_doc_url ? `<a href="${product.tech_doc_url}" style="font-size:12px;color:#0E1F3A;font-weight:600;">Technical Documentation</a>` : ""}
     </div>
   </div>` : ""}
 
@@ -624,7 +624,7 @@ function printMacTearSheet(record) {
   <div class="section-wrap">
     <div class="section-title">Key Features</div>
     <ul style="margin:0;padding-left:18px;">
-      ${features.map((f) => `<li style="font-size:12px;color:#334155;margin-bottom:4px;">${stripVendor(f)}</li>`).join("")}
+      ${features.map((f) => `<li style="font-size:12px;color:#3A4A66;margin-bottom:4px;">${stripVendor(f)}</li>`).join("")}
     </ul>
   </div>` : "";
 
@@ -633,35 +633,35 @@ function printMacTearSheet(record) {
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'Segoe UI',Arial,sans-serif; color:#111; background:#fff; }
   @media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }
-  .header { background:#0f2340; color:#fff; padding:22px 32px; display:flex; align-items:center; justify-content:space-between; }
+  .header { background:#0E1F3A; color:#fff; padding:22px 32px; display:flex; align-items:center; justify-content:space-between; }
   .header-title { font-size:22px; font-weight:800; letter-spacing:0.3px; }
   .header-sub { font-size:12px; color:rgba(255,255,255,0.55); margin-top:3px; }
   .header-meta { text-align:right; font-size:11px; color:rgba(255,255,255,0.45); }
-  .accent-bar { height:4px; background:linear-gradient(90deg,#2d8a4e,#1a3a5c); }
+  .accent-bar { height:4px; background:linear-gradient(90deg,#2d8a4e,#0E1F3A); }
   .body { padding:24px 32px; }
-  .product-hero { display:flex; gap:24px; align-items:flex-start; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid #e5e7eb; }
-  .product-img { width:150px; height:110px; object-fit:contain; border:1px solid #e5e7eb; border-radius:6px; padding:8px; background:#f8fafc; flex-shrink:0; }
-  .product-name { font-size:26px; font-weight:900; color:#0f2340; line-height:1.1; }
+  .product-hero { display:flex; gap:24px; align-items:flex-start; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid #D9D6CE; }
+  .product-img { width:150px; height:110px; object-fit:contain; border:1px solid #D9D6CE; border-radius:6px; padding:8px; background:#F4F2ED; flex-shrink:0; }
+  .product-name { font-size:26px; font-weight:900; color:#0E1F3A; line-height:1.1; }
   .product-type { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#2d8a4e; margin-bottom:6px; }
-  .product-sub { font-size:14px; color:#64748b; margin-top:4px; }
-  .desc-box { background:#f8fafc; border-left:3px solid #1a3a5c; border-radius:4px; padding:10px 14px; font-size:12px; color:#334155; line-height:1.7; margin-bottom:18px; }
-  .section-title { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#1a3a5c; margin-bottom:8px; padding-bottom:4px; border-bottom:2px solid #e2e8f0; }
+  .product-sub { font-size:14px; color:#3A4A66; margin-top:4px; }
+  .desc-box { background:#F4F2ED; border-left:3px solid #0E1F3A; border-radius:4px; padding:10px 14px; font-size:12px; color:#3A4A66; line-height:1.7; margin-bottom:18px; }
+  .section-title { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:#0E1F3A; margin-bottom:8px; padding-bottom:4px; border-bottom:2px solid #D9D6CE; }
   .section-wrap { margin-bottom:20px; }
   table { width:100%; border-collapse:collapse; font-size:11px; margin-top:6px; }
-  thead tr { background:#0f2340; }
+  thead tr { background:#0E1F3A; }
   thead th { padding:7px 10px; color:#fff; font-weight:700; text-align:left; white-space:nowrap; }
-  tbody tr:nth-child(even) { background:#f8fafc; }
-  tbody td { padding:6px 10px; border-bottom:1px solid #e5e7eb; color:#334155; }
-  tbody td:first-child { font-weight:600; color:#0f2340; }
-  .footer { margin-top:24px; padding-top:12px; border-top:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; }
-  .footer-left { font-size:10px; color:#94a3b8; }
-  .footer-right { font-size:10px; color:#94a3b8; text-align:right; }
-  .confidential { font-size:9px; text-transform:uppercase; letter-spacing:1px; color:#cbd5e1; }
+  tbody tr:nth-child(even) { background:#F4F2ED; }
+  tbody td { padding:6px 10px; border-bottom:1px solid #D9D6CE; color:#3A4A66; }
+  tbody td:first-child { font-weight:600; color:#0E1F3A; }
+  .footer { margin-top:24px; padding-top:12px; border-top:1px solid #D9D6CE; display:flex; justify-content:space-between; align-items:center; }
+  .footer-left { font-size:10px; color:#8A94A6; }
+  .footer-right { font-size:10px; color:#8A94A6; text-align:right; }
+  .confidential { font-size:9px; text-transform:uppercase; letter-spacing:1px; color:#C9C5BB; }
   .no-print { margin:16px 32px; display:flex; gap:10px; }
   @media print { .no-print { display:none !important; } }
   .btn { padding:8px 18px; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:700; }
-  .btn-primary { background:#0f2340; color:#fff; }
-  .btn-secondary { background:#f1f5f9; color:#334155; border:1px solid #e2e8f0; }
+  .btn-primary { background:#0E1F3A; color:#fff; }
+  .btn-secondary { background:#ECEAE4; color:#3A4A66; border:1px solid #D9D6CE; }
 </style></head><body>
 <div class="no-print">
   <button class="btn btn-primary" onclick="window.print()">Print / Save PDF</button>
@@ -693,7 +693,7 @@ function printMacTearSheet(record) {
   <div class="section-wrap">
     <div class="section-title">Dimensional Drawing</div>
     <div style="text-align:center;margin-bottom:8px;">
-      <img src="${diagImg}" alt="Dimensional Drawing" style="max-width:100%;max-height:260px;object-fit:contain;border:1px solid #e5e7eb;border-radius:6px;padding:10px;background:#f8fafc;" />
+      <img src="${diagImg}" alt="Dimensional Drawing" style="max-width:100%;max-height:260px;object-fit:contain;border:1px solid #D9D6CE;border-radius:6px;padding:10px;background:#F4F2ED;" />
     </div>
   </div>` : ""}
 
@@ -781,7 +781,7 @@ function SprocketTable({ data }) {
               </thead>
               <tbody>
                 {grpRows.map((row, i) =>
-              <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid " + C.border }}>
+              <tr key={i} style={{ background: i % 2 === 0 ? "#F4F2ED" : "#fff", borderBottom: "1px solid " + C.border }}>
                     {active.filter((k) => k !== "type").map((k) =>
                 <td key={k} style={{ padding: "6px 10px", color: k === "material" ? C.navyMid : C.text, fontWeight: k === "material" ? 700 : 400, whiteSpace: "nowrap" }}>
                         {row[k] != null ? String(row[k]) : "—"}
@@ -813,7 +813,7 @@ function SimpleDataTable({ headers, rows, firstColBold }) {
         </thead>
         <tbody>
           {rows.map((row, i) =>
-          <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid " + C.border }}>
+          <tr key={i} style={{ background: i % 2 === 0 ? "#F4F2ED" : "#fff", borderBottom: "1px solid " + C.border }}>
               {row.map((cell, j) =>
             <td key={j} style={{ padding: "7px 10px", color: firstColBold && j === 0 ? C.navyMid : C.text, fontWeight: firstColBold && j === 0 ? 700 : 400, whiteSpace: "nowrap" }}>
                   {cell != null ? String(cell) : "—"}
@@ -847,7 +847,7 @@ function BeltDataTable({ data }) {
           </thead>
           <tbody>
             {parsed.map((row, i) =>
-            <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid " + C.border }}>
+            <tr key={i} style={{ background: i % 2 === 0 ? "#F4F2ED" : "#fff", borderBottom: "1px solid " + C.border }}>
                 {cols.map((k) =>
               <td key={k} style={{ padding: "7px 10px", color: k === "material" ? C.navyMid : C.text, fontWeight: k === "material" ? 700 : 400, whiteSpace: "nowrap" }}>
                     {row[k] != null ? String(row[k]) : "—"}
@@ -895,7 +895,7 @@ function SpecTable({ specs }) {
     <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
       <tbody>
         {entries.map(([k, v], i) =>
-        <tr key={k} style={{ background: i % 2 ? "#f8fafc" : "#fff" }}>
+        <tr key={k} style={{ background: i % 2 ? "#F4F2ED" : "#fff" }}>
             <td style={{ padding: "8px 12px", color: C.muted, fontWeight: 600, width: "40%", verticalAlign: "top", borderBottom: "1px solid " + C.border }}>{k}</td>
             <td style={{ padding: "8px 12px", color: C.text, borderBottom: "1px solid " + C.border, lineHeight: 1.5 }}>{String(v)}</td>
           </tr>
@@ -1042,23 +1042,23 @@ function ProductCard({ product, showBrand, onClick, onToggleCompare, inCompare }
 
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-    style={{ background: C.card, borderRadius: 12, border: "1px solid " + (hovered ? C.navyMid : C.border), boxShadow: hovered ? "0 6px 20px rgba(0,60,91,0.12)" : "0 1px 3px rgba(0,60,91,0.05)", transition: "all 0.15s", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    style={{ background: C.card, borderRadius: 12, border: "1px solid " + (hovered ? C.navyMid : C.border), boxShadow: hovered ? "0 6px 20px rgba(14,31,58,0.12)" : "0 1px 3px rgba(14,31,58,0.05)", transition: "all 0.15s", display: "flex", flexDirection: "column", overflow: "hidden" }}>
       <div style={{ height: 2, background: C.navyMid, flexShrink: 0 }} />
       {product.image_url ?
-      <div onClick={() => onClick(product)} style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0", height: 120, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", cursor: "pointer" }}>
+      <div onClick={() => onClick(product)} style={{ background: "#F4F2ED", borderBottom: "1px solid #D9D6CE", height: 120, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", cursor: "pointer" }}>
           <img src={product.image_url} alt="" style={{ maxHeight: 105, maxWidth: "90%", objectFit: "contain" }} onError={(e) => {e.target.parentElement.style.display = "none";}} />
         </div> :
       null}
       <div onClick={() => onClick(product)} style={{ padding: "16px 14px", flex: 1, display: "flex", flexDirection: "column", gap: 6, cursor: "pointer" }}>
         {showBrand && product.brand ?
-        <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.7px", color: C.navyMid, background: "#eef3f8", padding: "3px 8px", borderRadius: 4, alignSelf: "flex-start" }}>{product.brand}</span> :
+        <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.7px", color: C.navyMid, background: "#F4F2ED", padding: "3px 8px", borderRadius: 4, alignSelf: "flex-start" }}>{product.brand}</span> :
         null}
         <div style={{ fontSize: 13, fontWeight: 800, color: C.text, lineHeight: 1.3 }}>{product.series}</div>
         {product.style && product.style !== product.series ? <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.4 }}>{product.style}</div> : null}
         {topSpecs.length > 0 ?
         <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 2 }}>
             {topSpecs.map(([k, v]) =>
-          <div key={k} style={{ fontSize: 10, background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 4, padding: "3px 7px", color: C.slate }}>
+          <div key={k} style={{ fontSize: 10, background: "#ECEAE4", border: "1px solid #D9D6CE", borderRadius: 4, padding: "3px 7px", color: C.slate }}>
                 <span style={{ color: C.muted, fontWeight: 500 }}>{k}: </span>
                 <span style={{ fontWeight: 600 }}>{String(v).length > 18 ? String(v).slice(0, 18) + "…" : String(v)}</span>
               </div>
@@ -1066,10 +1066,10 @@ function ProductCard({ product, showBrand, onClick, onToggleCompare, inCompare }
           </div> :
         null}
       </div>
-      <div style={{ borderTop: "1px solid #e2e8f0", padding: "10px 14px", background: hovered ? "#f8fafc" : C.card, transition: "background 0.12s", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
+      <div style={{ borderTop: "1px solid #D9D6CE", padding: "10px 14px", background: hovered ? "#F4F2ED" : C.card, transition: "background 0.12s", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
         <span onClick={() => onClick(product)} style={{ fontSize: 11, fontWeight: 600, color: C.navyMid, cursor: "pointer", whiteSpace: "nowrap" }}>View →</span>
-        {onToggleCompare && <button onClick={e=>{e.stopPropagation();onToggleCompare(product);}} style={{ padding: "4px 8px", borderRadius: 4, fontSize: 9, fontWeight: 700, cursor: "pointer", border: inCompare?"1px solid #7c3aed":"1px solid #cbd5e1", background: inCompare?"#ede9fe":"#f8fafc", color: inCompare?"#7c3aed":C.muted, whiteSpace: "nowrap" }}>{inCompare?"✓ Compare":"Compare"}</button>}
-        <button onClick={handleAddRFQ} style={{ padding: "4px 10px", borderRadius: 4, fontSize: 9, fontWeight: 700, cursor: "pointer", border: added?"1px solid #16a34a":"1px solid #2563eb", background: added?"#f0fdf4":"#eff6ff", color: added?"#16a34a":"#2563eb", whiteSpace: "nowrap", transition: "all 0.12s" }}>
+        {onToggleCompare && <button onClick={e=>{e.stopPropagation();onToggleCompare(product);}} style={{ padding: "4px 8px", borderRadius: 4, fontSize: 9, fontWeight: 700, cursor: "pointer", border: inCompare?"1px solid #3A4A66":"1px solid #C9C5BB", background: inCompare?"#ECEAE4":"#F4F2ED", color: inCompare?"#3A4A66":C.muted, whiteSpace: "nowrap" }}>{inCompare?"✓ Compare":"Compare"}</button>}
+        <button onClick={handleAddRFQ} style={{ padding: "4px 10px", borderRadius: 4, fontSize: 9, fontWeight: 700, cursor: "pointer", border: added?"1px solid #2E7D46":"1px solid #F26522", background: added?"#f0fdf4":"#FDF0E9", color: added?"#2E7D46":"#F26522", whiteSpace: "nowrap", transition: "all 0.12s" }}>
           {added ? "✓ RFQ" : "+ RFQ"}
         </button>
       </div>
@@ -1098,12 +1098,12 @@ function ProductListRow({ product, showBrand, onClick }) {
 
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-    style={{ background: C.card, borderRadius: 10, border: "1px solid " + (hovered ? C.navyLight : C.border), boxShadow: hovered ? "0 2px 8px rgba(15,35,64,0.08)" : "0 1px 3px rgba(15,35,64,0.04)", transition: "border-color 0.15s, box-shadow 0.15s", display: "flex", alignItems: "center", gap: 0, overflow: "hidden", cursor: "pointer" }}>
+    style={{ background: C.card, borderRadius: 10, border: "1px solid " + (hovered ? C.navyLight : C.border), boxShadow: hovered ? "0 2px 8px rgba(14,31,58,0.08)" : "0 1px 3px rgba(14,31,58,0.04)", transition: "border-color 0.15s, box-shadow 0.15s", display: "flex", alignItems: "center", gap: 0, overflow: "hidden", cursor: "pointer" }}>
       {/* Accent bar */}
       <div style={{ width: 3, alignSelf: "stretch", background: C.navyMid, flexShrink: 0 }} />
       {/* Image */}
       {product.image_url ?
-      <div onClick={() => onClick(product)} style={{ width: 64, height: 56, display: "flex", alignItems: "center", justifyContent: "center", background: "#f8fafc", borderRight: "1px solid #f1f5f9", flexShrink: 0 }}>
+      <div onClick={() => onClick(product)} style={{ width: 64, height: 56, display: "flex", alignItems: "center", justifyContent: "center", background: "#F4F2ED", borderRight: "1px solid #ECEAE4", flexShrink: 0 }}>
           <img src={product.image_url} alt="" style={{ maxHeight: 48, maxWidth: 56, objectFit: "contain" }} onError={(e) => {e.target.parentElement.style.display = "none";}} />
         </div> :
       null}
@@ -1111,7 +1111,7 @@ function ProductListRow({ product, showBrand, onClick }) {
       <div onClick={() => onClick(product)} style={{ flex: 1, padding: "10px 14px", minWidth: 0 }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
           {showBrand && product.brand ?
-          <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", color: C.navyMid, background: "#eef3f8", padding: "1px 6px", borderRadius: 3 }}>{product.brand}</span> :
+          <span style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", color: C.navyMid, background: "#F4F2ED", padding: "1px 6px", borderRadius: 3 }}>{product.brand}</span> :
           null}
           <span style={{ fontSize: 14, fontWeight: 800, color: C.text }}>{product.series}</span>
           {product.style && product.style !== product.series ? <span style={{ fontSize: 12, color: C.muted }}>{product.style}</span> : null}
@@ -1129,7 +1129,7 @@ function ProductListRow({ product, showBrand, onClick }) {
       </div>
       {/* Actions */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 14px", flexShrink: 0 }}>
-        <button onClick={handleAddRFQ} style={{ padding: "5px 10px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: added ? "1px solid #16a34a" : "1px solid #2563eb", background: added ? "#f0fdf4" : "#eff6ff", color: added ? "#16a34a" : "#2563eb", whiteSpace: "nowrap", transition: "all 0.15s" }}>
+        <button onClick={handleAddRFQ} style={{ padding: "5px 10px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: added ? "1px solid #2E7D46" : "1px solid #F26522", background: added ? "#f0fdf4" : "#FDF0E9", color: added ? "#2E7D46" : "#F26522", whiteSpace: "nowrap", transition: "all 0.15s" }}>
           {added ? "✓ In RFQ" : "+ RFQ"}
         </button>
         <span onClick={() => onClick(product)} style={{ fontSize: 11, fontWeight: 600, color: C.navyMid, whiteSpace: "nowrap" }}>View ›</span>
@@ -1154,7 +1154,7 @@ function FilterBar({ typeKey, allProducts, activeFilters, onChange }) {
           <div key={field}>
             <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", color: C.muted, marginBottom: 4 }}>{label}</div>
             <select value={active} onChange={(e) => onChange(field, e.target.value)}
-            style={{ padding: "7px 10px", border: "1px solid " + (active ? C.navyMid : C.border), borderRadius: 5, fontSize: 12, color: active ? C.navyMid : C.slate, fontWeight: active ? 600 : 400, background: active ? "#eef3f8" : "#fff", cursor: "pointer", outline: "none", minWidth: 150 }}>
+            style={{ padding: "7px 10px", border: "1px solid " + (active ? C.navyMid : C.border), borderRadius: 5, fontSize: 12, color: active ? C.navyMid : C.slate, fontWeight: active ? 600 : 400, background: active ? "#F4F2ED" : "#fff", cursor: "pointer", outline: "none", minWidth: 150 }}>
               <option value="">All</option>
               {options.map((o) => <option key={o} value={o}>{o}</option>)}
             </select>
@@ -1228,7 +1228,7 @@ function ProductList({ typeKey, brand, products: allProducts, showBrand, rawMacR
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexWrap: "wrap", gap: 10 }}>
         <div>
           <div style={{ fontSize: 19, fontWeight: 800, color: C.text }}>{TYPE_MAP[typeKey]?.label || typeKey}{brand ? " — " + brand : ""}</div>
-          <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{filtered.length} product{filtered.length !== 1 ? "s" : ""}{compareItems.length > 0 && <span style={{ marginLeft: 10, background: "#ede9fe", color: "#7c3aed", padding: "2px 9px", borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{compareItems.length} selected for compare</span>}</div>
+          <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{filtered.length} product{filtered.length !== 1 ? "s" : ""}{compareItems.length > 0 && <span style={{ marginLeft: 10, background: "#ECEAE4", color: "#3A4A66", padding: "2px 9px", borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{compareItems.length} selected for compare</span>}</div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search..." style={{ padding: "8px 13px", border: "1px solid " + C.border, borderRadius: 6, fontSize: 13, outline: "none", width: 180 }} />
@@ -1394,7 +1394,7 @@ function Breadcrumb({ items, onNav }) {
       <span key={i} style={{ display: "flex", alignItems: "center", gap: 5 }}>
           {i > 0 && <span style={{ color: C.border, fontSize: 13 }}>›</span>}
           {i < items.length - 1 ?
-        <span onClick={() => onNav(i)} style={{ color: C.navyMid, cursor: "pointer", fontWeight: 600, transition: "color 0.12s" }} onMouseEnter={e=>e.target.style.color="#C9A84C"} onMouseLeave={e=>e.target.style.color=C.navyMid}>{item}</span> :
+        <span onClick={() => onNav(i)} style={{ color: C.navyMid, cursor: "pointer", fontWeight: 600, transition: "color 0.12s" }} onMouseEnter={e=>e.target.style.color="#F26522"} onMouseLeave={e=>e.target.style.color=C.navyMid}>{item}</span> :
         <span style={{ color: C.muted, fontWeight: 500 }}>{item}</span>}
         </span>
       )}
@@ -1473,8 +1473,8 @@ export default function Home() {
       start_url: window.location.origin + "/",
       scope: "/",
       display: "standalone",
-      background_color: "#0a1628",
-      theme_color: "#0a1628",
+      background_color: "#0E1F3A",
+      theme_color: "#0E1F3A",
       orientation: "portrait-primary",
       icons: [
       { src: ICON_192, sizes: "192x192", type: "image/png", purpose: "any maskable" },
@@ -1514,7 +1514,7 @@ export default function Home() {
     document.querySelectorAll('meta[name="theme-color"]').forEach((el) => el.remove());
     const themeMeta = document.createElement("meta");
     themeMeta.name = "theme-color";
-    themeMeta.content = "#0a1628";
+    themeMeta.content = "#0E1F3A";
     document.head.appendChild(themeMeta);
 
     // App title
@@ -1655,7 +1655,7 @@ export default function Home() {
 
               {/* Admin-only catalog source debug widget */}
               {catalogStats && isAdmin && (
-                <div style={{ marginTop: 16, padding: "8px 14px", background: "#0C2340", borderRadius: 8, display: "inline-flex", gap: 16, fontSize: 11, color: "rgba(255,255,255,0.7)", fontFamily: "monospace" }}>
+                <div style={{ marginTop: 16, padding: "8px 14px", background: "#0E1F3A", borderRadius: 8, display: "inline-flex", gap: 16, fontSize: 11, color: "rgba(255,255,255,0.7)", fontFamily: "monospace" }}>
                   <span>⚙ Catalog Sources:</span>
                   <span>Static: <strong style={{ color: "#94c5e8" }}>{catalogStats.staticCount}</strong></span>
                   <span>DB: <strong style={{ color: "#86efac" }}>{catalogStats.dbCount}</strong></span>

@@ -38,16 +38,16 @@ export default function ICSessionPage() {
   return (
     <ICShell>
       {loading ? (
-        <div style={{ textAlign: "center", padding: "80px 20px", color: "#64748b", fontSize: 14 }}>
+        <div style={{ textAlign: "center", padding: "80px 20px", color: "#3A4A66", fontSize: 14 }}>
           Loading session {sessionId}…
         </div>
       ) : error ? (
         <div style={{ textAlign: "center", padding: "80px 20px" }}>
           <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
-          <div style={{ fontSize: 16, fontWeight: 700, color: "#dc2626", marginBottom: 8 }}>{error}</div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: "#C62828", marginBottom: 8 }}>{error}</div>
           <button
             onClick={() => navigate("/admin/import-center")}
-            style={{ background: "#0C2340", color: "#fff", border: "none", borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+            style={{ background: "#0E1F3A", color: "#fff", border: "none", borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
             ← Back to Import Center
           </button>
         </div>

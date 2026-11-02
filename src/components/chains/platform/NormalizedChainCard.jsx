@@ -6,11 +6,11 @@
 import { useState, useEffect } from "react";
 
 const C = {
-  navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  border: "#e2e8f0", bg: "#f8fafc", card: "#ffffff",
-  text: "#0f172a", muted: "#64748b", slate: "#334155",
-  green: "#16a34a", greenBg: "#f0fdf4",
-  blue: "#2563eb", blueBg: "#eff6ff",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  border: "#D9D6CE", bg: "#F4F2ED", card: "#ffffff",
+  text: "#0E1F3A", muted: "#3A4A66", slate: "#3A4A66",
+  green: "#2E7D46", greenBg: "#f0fdf4",
+  blue: "#F26522", blueBg: "#FDF0E9",
 };
 
 function getRFQCart() {
@@ -47,7 +47,7 @@ export default function NormalizedChainCard({ product, onView, onConfigure, onCo
         background: C.card,
         borderRadius: 10,
         border: "1px solid " + (hovered ? C.navyLight : C.border),
-        boxShadow: hovered ? "0 6px 20px rgba(15,35,64,0.12)" : "0 1px 4px rgba(15,35,64,0.05)",
+        boxShadow: hovered ? "0 6px 20px rgba(14,31,58,0.12)" : "0 1px 4px rgba(14,31,58,0.05)",
         transition: "all 0.18s",
         display: "flex",
         flexDirection: "column",
@@ -60,7 +60,7 @@ export default function NormalizedChainCard({ product, onView, onConfigure, onCo
 
       {/* Image */}
       {(product.image || product.image_url) && (
-        <div onClick={() => onView(product)} style={{ background: C.bg, borderBottom: "1px solid #f1f5f9", height: 100, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", overflow: "hidden" }}>
+        <div onClick={() => onView(product)} style={{ background: C.bg, borderBottom: "1px solid #ECEAE4", height: 100, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", overflow: "hidden" }}>
           <img src={product.image || product.image_url} alt={chainNumber} style={{ maxHeight: 88, maxWidth: "86%", objectFit: "contain" }} onError={e => e.target.parentElement.style.display = "none"} />
         </div>
       )}
@@ -86,21 +86,21 @@ export default function NormalizedChainCard({ product, onView, onConfigure, onCo
         {/* Badges */}
         <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
           {sourceCount > 0 && <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 3, background: "#f0fdf4", color: C.green, border: "1px solid #bbf7d0", fontWeight: 700 }}>{sourceCount} source{sourceCount > 1 ? "s" : ""}</span>}
-          {hasAttachments && <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 3, background: C.blueBg, color: C.blue, border: "1px solid #bfdbfe" }}>Att.</span>}
-          {hasSprockets && <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 3, background: C.blueBg, color: C.blue, border: "1px solid #bfdbfe" }}>Spkt.</span>}
-          {hasPins && <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 3, background: C.blueBg, color: C.blue, border: "1px solid #bfdbfe" }}>Pins</span>}
+          {hasAttachments && <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 3, background: C.blueBg, color: C.blue, border: "1px solid #F8C9B0" }}>Att.</span>}
+          {hasSprockets && <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 3, background: C.blueBg, color: C.blue, border: "1px solid #F8C9B0" }}>Spkt.</span>}
+          {hasPins && <span style={{ fontSize: 10, padding: "1px 6px", borderRadius: 3, background: C.blueBg, color: C.blue, border: "1px solid #F8C9B0" }}>Pins</span>}
         </div>
       </div>
 
       {/* Actions */}
-      <div style={{ borderTop: "1px solid " + C.bg, padding: "8px 12px", background: hovered ? "#f1f5f9" : C.card, display: "flex", alignItems: "center", gap: 6, justifyContent: "space-between" }}>
+      <div style={{ borderTop: "1px solid " + C.bg, padding: "8px 12px", background: hovered ? "#ECEAE4" : C.card, display: "flex", alignItems: "center", gap: 6, justifyContent: "space-between" }}>
         <span onClick={() => onView(product)} style={{ fontSize: 11, fontWeight: 600, color: C.navyMid, cursor: "pointer", whiteSpace: "nowrap" }}>
           View Details ›
         </span>
         <div style={{ display: "flex", gap: 5 }}>
           {onCompare && (
             <button onClick={e => { e.stopPropagation(); onCompare(product); }}
-              style={{ padding: "3px 7px", borderRadius: 5, fontSize: 10, fontWeight: 700, cursor: "pointer", border: inCompare ? "1px solid #7c3aed" : "1px solid #cbd5e1", background: inCompare ? "#ede9fe" : C.bg, color: inCompare ? "#7c3aed" : C.muted }}>
+              style={{ padding: "3px 7px", borderRadius: 5, fontSize: 10, fontWeight: 700, cursor: "pointer", border: inCompare ? "1px solid #3A4A66" : "1px solid #C9C5BB", background: inCompare ? "#ECEAE4" : C.bg, color: inCompare ? "#3A4A66" : C.muted }}>
               {inCompare ? "✓" : "Cmp"}
             </button>
           )}

@@ -5,10 +5,10 @@ import BeltSchematic from "./BeltSchematic";
 import UniKingTearSheet from "./UnkingTearSheet";
 
 const C = {
-  navy: "#0F2340", navyMid: "#1A3A5C", gold: "#C9A84C",
-  green: "#16a34a", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a"
+  navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522",
+  green: "#2E7D46", border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A"
 };
-const INTRALOX_RED = "#E31837";
+const INTRALOX_RED = "#F26522";
 const INTRALOX_LOGO = "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/64536dc1d_intralox-logo-box-194a1e40631d2cf9cd7d463fa5afc04b.svg";
 const LOGO = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png";
 
@@ -60,7 +60,7 @@ function Header({ step, onClose }) {
         </div>
         <div style={{ fontSize: 12, color: C.muted }}>Build your RFQ line item step by step</div>
       </div>
-      <button onClick={onClose} style={{ background: "#f1f5f9", border: "1px solid #e2e8f0", color: C.muted, cursor: "pointer", borderRadius: 8, padding: "6px 12px", fontSize: 13, fontWeight: 700 }}>✕</button>
+      <button onClick={onClose} style={{ background: "#ECEAE4", border: "1px solid #D9D6CE", color: C.muted, cursor: "pointer", borderRadius: 8, padding: "6px 12px", fontSize: 13, fontWeight: 700 }}>✕</button>
     </div>
   );
 }
@@ -69,7 +69,7 @@ function ProgressBar({ step }) {
   return (
     <div style={{ display: "flex", gap: 4, padding: "14px 24px 0" }}>
       {STEPS.map((_, n) => (
-        <div key={n} style={{ flex: 1, height: 4, borderRadius: 4, background: n <= step ? C.navyMid : "#e2e8f0", transition: "background 0.2s" }} />
+        <div key={n} style={{ flex: 1, height: 4, borderRadius: 4, background: n <= step ? C.navyMid : "#D9D6CE", transition: "background 0.2s" }} />
       ))}
     </div>
   );
@@ -92,9 +92,9 @@ function StepHeader({ number, title, subtitle }) {
 function NavButtons({ step, onBack, onNext, canNext = true, nextLabel = "Next →" }) {
   return (
     <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
-      {step > 0 && <button onClick={onBack} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>}
+      {step > 0 && <button onClick={onBack} style={{ background: "#ECEAE4", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>}
       <button onClick={onNext} disabled={!canNext}
-        style={{ flex: 1, background: canNext ? C.navyMid : "#e5e7eb", color: canNext ? "#fff" : C.muted, border: "none", borderRadius: 8, padding: "12px 24px", cursor: canNext ? "pointer" : "default", fontSize: 13, fontWeight: 700 }}>
+        style={{ flex: 1, background: canNext ? C.navyMid : "#D9D6CE", color: canNext ? "#fff" : C.muted, border: "none", borderRadius: 8, padding: "12px 24px", cursor: canNext ? "pointer" : "default", fontSize: 13, fontWeight: 700 }}>
         {nextLabel}
       </button>
     </div>
@@ -107,7 +107,7 @@ function SLabel({ children }) {
 
 function Opt({ label, sub, selected, onClick }) {
   return (
-    <button onClick={onClick} style={{ background: selected ? C.navyMid : "#f1f5f9", color: selected ? "#fff" : C.text, border: `2px solid ${selected ? C.navyMid : C.border}`, borderRadius: 10, padding: "10px 14px", cursor: "pointer", textAlign: "left", fontSize: 13, fontWeight: selected ? 700 : 400, transition: "all 0.15s" }}>
+    <button onClick={onClick} style={{ background: selected ? C.navyMid : "#ECEAE4", color: selected ? "#fff" : C.text, border: `2px solid ${selected ? C.navyMid : C.border}`, borderRadius: 10, padding: "10px 14px", cursor: "pointer", textAlign: "left", fontSize: 13, fontWeight: selected ? 700 : 400, transition: "all 0.15s" }}>
       {label}
       {sub && <div style={{ fontSize: 11, color: selected ? "rgba(255,255,255,0.7)" : C.muted, marginTop: 2 }}>{sub}</div>}
     </button>
@@ -175,7 +175,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
 
   // Units toggle pill
   const UnitToggle = () => (
-    <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#f1f5f9", borderRadius: 20, padding: "3px 6px", marginBottom: 12, width: "fit-content" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#ECEAE4", borderRadius: 20, padding: "3px 6px", marginBottom: 12, width: "fit-content" }}>
       <span style={{ fontSize: 10, color: C.muted, marginRight: 2 }}>Units:</span>
       {["inches", "mm"].map(u => (
         <button key={u} onClick={() => setUnits(u)}
@@ -427,10 +427,10 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
             <input type="number" value={config.beltWidth} onChange={e => set("beltWidth", e.target.value)}
               placeholder={units === "mm" ? `e.g. ${minMm || 76}` : `e.g. ${minIn || 3}`}
               style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: `1px solid ${C.border}`, fontSize: 14, outline: "none" }} />
-            <div style={{ background: "#f1f5f9", borderRadius: 8, padding: "10px 14px", fontSize: 13, fontWeight: 700, color: C.navyMid, whiteSpace: "nowrap" }}>{units}</div>
+            <div style={{ background: "#ECEAE4", borderRadius: 8, padding: "10px 14px", fontSize: 13, fontWeight: 700, color: C.navyMid, whiteSpace: "nowrap" }}>{units}</div>
           </div>
           {validationMsg && (
-            <div style={{ marginTop: 8, padding: "8px 12px", background: validationMsg.ok ? "#f0fdf4" : "#fef2f2", borderRadius: 7, fontSize: 12, fontWeight: 600, color: validationMsg.ok ? "#16a34a" : "#dc2626" }}>
+            <div style={{ marginTop: 8, padding: "8px 12px", background: validationMsg.ok ? "#f0fdf4" : "#fef2f2", borderRadius: 7, fontSize: 12, fontWeight: 600, color: validationMsg.ok ? "#2E7D46" : "#C62828" }}>
               {validationMsg.msg}
             </div>
           )}
@@ -460,7 +460,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
             {LENGTH_UNITS.map(u => <option key={u} value={u}>{u}</option>)}
           </select>
         </div>
-        <div style={{ marginTop: 8, fontSize: 12, color: C.muted, background: "#eff6ff", borderRadius: 6, padding: "8px 12px" }}>
+        <div style={{ marginTop: 8, fontSize: 12, color: C.muted, background: "#FDF0E9", borderRadius: 6, padding: "8px 12px" }}>
           ℹ Total belt running length = conveyor length × 2 + sprocket/nosebar allowance. Intralox must confirm before ordering.
         </div>
         <NavButtons step={step} onBack={back} onNext={next} canNext={true} />
@@ -519,7 +519,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
           <div style={{ fontSize: 12, color: C.muted, marginBottom: 4 }}>
             Friction top belts have rubber or polyurethane inserts. The insert does not extend to the belt edge — the indent defines the clear width on each side.
           </div>
-          <div style={{ background: "#eff6ff", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#1e40af", marginBottom: 14 }}>
+          <div style={{ background: "#FDF0E9", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#0E1F3A", marginBottom: 14 }}>
             ℹ Intralox catalog: Minimum indent without sideguards is <strong>1.3 in (33 mm)</strong>. Indent options and placement must be specified.
           </div>
           <SLabel>Friction Top Indent Option</SLabel>
@@ -552,7 +552,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
               ✓ {catalogFlights.length} catalog-confirmed flight type{catalogFlights.length !== 1 ? "s" : ""} for {series?.name}
             </div>
             {flightData.seriesNote && (
-              <div style={{ background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#0369a1", marginBottom: 12 }}>
+              <div style={{ background: "#FDF0E9", border: "1px solid #bae6fd", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#0E1F3A", marginBottom: 12 }}>
                 {flightData.seriesNote}
               </div>
             )}
@@ -562,7 +562,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
                   style={{ background: config.flightType === ft.key ? C.navyMid : "#fff", border: `2px solid ${config.flightType === ft.key ? C.navyMid : C.border}`, borderRadius: 10, padding: 0, cursor: "pointer", textAlign: "left", overflow: "hidden", transition: "all 0.15s" }}>
                   <div style={{ display: "flex", gap: 0 }}>
                     {ft.image && (
-                      <div style={{ width: 80, flexShrink: 0, background: "#f0f4f8", overflow: "hidden" }}>
+                      <div style={{ width: 80, flexShrink: 0, background: "#F4F2ED", overflow: "hidden" }}>
                         <img src={ft.image} alt={ft.name} style={{ width: "100%", height: 72, objectFit: "cover" }} onError={e => e.target.style.display = "none"} />
                       </div>
                     )}
@@ -570,10 +570,10 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
                       <div style={{ fontSize: 13, fontWeight: 800, color: config.flightType === ft.key ? "#fff" : C.navyMid }}>{ft.name}</div>
                       <div style={{ fontSize: 11, color: config.flightType === ft.key ? "rgba(255,255,255,0.7)" : C.muted, marginTop: 2, lineHeight: 1.5 }}>{ft.description?.slice(0, 120)}</div>
                       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 6 }}>
-                        <span style={{ fontSize: 10, background: config.flightType === ft.key ? "rgba(255,255,255,0.15)" : "#eef3f8", color: config.flightType === ft.key ? "#fff" : C.navyMid, padding: "1px 7px", borderRadius: 8, fontWeight: 600 }}>
+                        <span style={{ fontSize: 10, background: config.flightType === ft.key ? "rgba(255,255,255,0.15)" : "#F4F2ED", color: config.flightType === ft.key ? "#fff" : C.navyMid, padding: "1px 7px", borderRadius: 8, fontWeight: 600 }}>
                           Heights: {ft.availableHeightsIn.join('",')}"{ft.customHeightAvailable ? " + custom" : ""}
                         </span>
-                        <span style={{ fontSize: 10, background: config.flightType === ft.key ? "rgba(255,255,255,0.15)" : "#f1f5f9", color: config.flightType === ft.key ? "#fff" : C.muted, padding: "1px 7px", borderRadius: 8 }}>
+                        <span style={{ fontSize: 10, background: config.flightType === ft.key ? "rgba(255,255,255,0.15)" : "#ECEAE4", color: config.flightType === ft.key ? "#fff" : C.muted, padding: "1px 7px", borderRadius: 8 }}>
                           {ft.materials.slice(0, 3).join(", ")}
                         </span>
                       </div>
@@ -602,14 +602,14 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))", gap: 8, marginBottom: 12 }}>
               {(selectedFlightType?.availableHeightsIn || []).map(h => (
                 <button key={h} onClick={() => set("flightHeightIn", String(h))}
-                  style={{ background: config.flightHeightIn === String(h) ? C.navyMid : "#f1f5f9", color: config.flightHeightIn === String(h) ? "#fff" : C.text, border: `2px solid ${config.flightHeightIn === String(h) ? C.navyMid : C.border}`, borderRadius: 10, padding: "14px 8px", cursor: "pointer", textAlign: "center", fontWeight: 700 }}>
+                  style={{ background: config.flightHeightIn === String(h) ? C.navyMid : "#ECEAE4", color: config.flightHeightIn === String(h) ? "#fff" : C.text, border: `2px solid ${config.flightHeightIn === String(h) ? C.navyMid : C.border}`, borderRadius: 10, padding: "14px 8px", cursor: "pointer", textAlign: "center", fontWeight: 700 }}>
                   <div style={{ fontSize: 18 }}>{h}"</div>
                   <div style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>{selectedFlightType.availableHeightsMm?.[selectedFlightType.availableHeightsIn.indexOf(h)] ?? Math.round(h * 25.4)} mm</div>
                 </button>
               ))}
               {selectedFlightType?.customHeightAvailable && (
                 <button onClick={() => set("flightHeightIn", "custom")}
-                  style={{ background: config.flightHeightIn === "custom" ? C.gold : "#f1f5f9", color: config.flightHeightIn === "custom" ? C.navy : C.muted, border: `2px solid ${config.flightHeightIn === "custom" ? C.gold : C.border}`, borderRadius: 10, padding: "14px 8px", cursor: "pointer", textAlign: "center", fontWeight: 700 }}>
+                  style={{ background: config.flightHeightIn === "custom" ? C.gold : "#ECEAE4", color: config.flightHeightIn === "custom" ? C.navy : C.muted, border: `2px solid ${config.flightHeightIn === "custom" ? C.gold : C.border}`, borderRadius: 10, padding: "14px 8px", cursor: "pointer", textAlign: "center", fontWeight: 700 }}>
                   <div style={{ fontSize: 14 }}>Custom</div>
                   <div style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }}>Specify</div>
                 </button>
@@ -641,7 +641,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
               <button onClick={() => set("flightHeightIn", "")} style={{ background: "none", border: "none", color: C.navyMid, cursor: "pointer", fontSize: 12, fontWeight: 600 }}>← Height</button>
             </div>
             <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>Indent Selection — {selectedFlightType?.name}</div>
-            <div style={{ background: "#eff6ff", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#1e40af", marginBottom: 12 }}>
+            <div style={{ background: "#FDF0E9", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#0E1F3A", marginBottom: 12 }}>
               ℹ The indent is the clear distance from the belt edge to the edge of the flight module.<br/>
               <strong>Catalog minimum: 1.3" (33 mm) without sideguards.</strong>
             </div>
@@ -714,7 +714,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
               <BeltSchematic config={config} series={series} beltStyle={beltStyle} units={units} />
               <div style={{ fontSize: 15, fontWeight: 800, color: C.navyMid, marginBottom: 12 }}>Flight Configuration Summary</div>
               <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10, padding: "14px 16px", marginBottom: 14 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: "#166534", marginBottom: 8 }}>✓ Flight configured:</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#2E7D46", marginBottom: 8 }}>✓ Flight configured:</div>
                 {[
                   ["Type", selectedFlightType?.name],
                   ["Height", heightLabel],
@@ -733,7 +733,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
               ))}
               {selectedFlightType?.cadUrl && (
                 <a href={selectedFlightType.cadUrl} target="_blank" rel="noreferrer"
-                  style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "#E31837", fontWeight: 600, marginBottom: 12, textDecoration: "none" }}>
+                  style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "#F26522", fontWeight: 600, marginBottom: 12, textDecoration: "none" }}>
                   📐 View CAD drawings for {selectedFlightType.name} ↗
                 </a>
               )}
@@ -794,7 +794,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
                 <div>
                   <div style={{ fontSize: 12, fontWeight: 700, color: C.green, marginBottom: 8 }}>✓ Catalog-confirmed sideguard options for {series?.name}:</div>
                   {sgOpts.map((sg, i) => (
-                    <div key={i} style={{ background: "#f8fafc", border: `1px solid ${C.border}`, borderRadius: 8, padding: "12px 14px", marginBottom: 8 }}>
+                    <div key={i} style={{ background: "#F4F2ED", border: `1px solid ${C.border}`, borderRadius: 8, padding: "12px 14px", marginBottom: 8 }}>
                       <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid }}>{sg.name}</div>
                       <div style={{ fontSize: 12, color: C.muted }}>{sg.notes}</div>
                     </div>
@@ -848,7 +848,7 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
         <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
           {["Belts", "Sets", "Each"].map(u => (
             <button key={u} onClick={() => set("quantityUnit", u)}
-              style={{ flex: 1, background: config.quantityUnit === u ? C.navyMid : "#f1f5f9", color: config.quantityUnit === u ? "#fff" : C.text, border: `2px solid ${config.quantityUnit === u ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+              style={{ flex: 1, background: config.quantityUnit === u ? C.navyMid : "#ECEAE4", color: config.quantityUnit === u ? "#fff" : C.text, border: `2px solid ${config.quantityUnit === u ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
               {u}
             </button>
           ))}
@@ -880,13 +880,13 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
         {config.uploads.length > 0 && (
           <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 12 }}>
             {config.uploads.map((f, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "#f8fafc", borderRadius: 8, border: `1px solid ${C.border}` }}>
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "#F4F2ED", borderRadius: 8, border: `1px solid ${C.border}` }}>
                 <span style={{ fontSize: 18 }}>{f.type.startsWith("image/") ? "🖼️" : "📄"}</span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 600, color: C.navyMid, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</div>
                   <div style={{ fontSize: 11, color: C.muted }}>{(f.size / 1024).toFixed(0)} KB</div>
                 </div>
-                <button onClick={() => set("uploads", config.uploads.filter((_, j) => j !== i))} style={{ background: "none", border: "none", color: "#9ca3af", cursor: "pointer", fontSize: 20 }}>×</button>
+                <button onClick={() => set("uploads", config.uploads.filter((_, j) => j !== i))} style={{ background: "none", border: "none", color: "#8A94A6", cursor: "pointer", fontSize: 20 }}>×</button>
               </div>
             ))}
           </div>
@@ -986,36 +986,36 @@ export default function IntraloxConfigurator({ initialSeries, initialStyle, onCo
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Segoe UI',Arial,sans-serif;color:#111;background:#fff;font-size:13px;}
 @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
-.no-print{padding:12px 24px;background:#f8fafc;border-bottom:1px solid #e2e8f0;display:flex;gap:10px;align-items:center;}
+.no-print{padding:12px 24px;background:#F4F2ED;border-bottom:1px solid #D9D6CE;display:flex;gap:10px;align-items:center;}
 @media print{.no-print{display:none!important;}}
 .btn{padding:8px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;}
-.btn-primary{background:#0f2340;color:#fff;}
-.btn-secondary{background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;}
-.header{background:#0f2340;color:#fff;padding:22px 32px;display:flex;align-items:flex-start;justify-content:space-between;}
-.intralox-badge{display:inline-block;background:#E31837;border-radius:4px;padding:3px 8px;font-size:9px;font-weight:800;color:#fff;letter-spacing:.5px;margin-bottom:6px;}
+.btn-primary{background:#0E1F3A;color:#fff;}
+.btn-secondary{background:#ECEAE4;color:#3A4A66;border:1px solid #D9D6CE;}
+.header{background:#0E1F3A;color:#fff;padding:22px 32px;display:flex;align-items:flex-start;justify-content:space-between;}
+.intralox-badge{display:inline-block;background:#F26522;border-radius:4px;padding:3px 8px;font-size:9px;font-weight:800;color:#fff;letter-spacing:.5px;margin-bottom:6px;}
 .uniking-logo{max-height:28px;filter:brightness(0) invert(1);opacity:0.9;display:block;margin-top:4px;}
-.accent-bar{height:4px;background:linear-gradient(90deg,#E31837 0%,#C9A84C 50%,#0f2340 100%);}
+.accent-bar{height:4px;background:linear-gradient(90deg,#F26522 0%,#F26522 50%,#0E1F3A 100%);}
 .body{padding:24px 32px;}
-h1{font-size:20px;font-weight:900;color:#0f2340;margin-bottom:2px;}
-.subtitle{font-size:12px;color:#64748b;margin-bottom:18px;}
+h1{font-size:20px;font-weight:900;color:#0E1F3A;margin-bottom:2px;}
+.subtitle{font-size:12px;color:#3A4A66;margin-bottom:18px;}
 table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:18px;}
-thead tr{background:#0f2340;}
+thead tr{background:#0E1F3A;}
 thead th{padding:8px 12px;color:#fff;font-weight:700;text-align:left;}
-tbody tr:nth-child(even){background:#f8fafc;}
-tbody td{padding:8px 12px;border-bottom:1px solid #e5e7eb;}
-tbody td:first-child{font-weight:600;color:#0f2340;width:38%;}
+tbody tr:nth-child(even){background:#F4F2ED;}
+tbody td{padding:8px 12px;border-bottom:1px solid #D9D6CE;}
+tbody td:first-child{font-weight:600;color:#0E1F3A;width:38%;}
 .warn{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:10px 14px;font-size:11px;color:#92400e;margin:14px 0;}
-.strength-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:10px 14px;font-size:12px;color:#166534;margin-bottom:14px;}
+.strength-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:10px 14px;font-size:12px;color:#2E7D46;margin-bottom:14px;}
 .unknown-box{background:#fef3c7;border:1px solid #fde68a;border-radius:6px;padding:8px 12px;font-size:11px;color:#92400e;margin-bottom:10px;}
-.footer{margin-top:20px;padding-top:12px;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;}
-.rfq-ref{background:#0f2340;color:#fff;border-radius:6px;padding:8px 16px;font-size:11px;font-weight:700;display:inline-block;margin-bottom:14px;}
+.footer{margin-top:20px;padding-top:12px;border-top:1px solid #D9D6CE;display:flex;justify-content:space-between;font-size:10px;color:#8A94A6;}
+.rfq-ref{background:#0E1F3A;color:#fff;border-radius:6px;padding:8px 16px;font-size:11px;font-weight:700;display:inline-block;margin-bottom:14px;}
 </style>
 </head>
 <body>
 <div class="no-print">
   <button class="btn btn-primary" onclick="window.print()">🖨 Print / Save as PDF</button>
   <button class="btn btn-secondary" onclick="window.close()">Close</button>
-  <span style="font-size:11px;color:#64748b;margin-left:8px;">Use your browser's Print dialog to save as PDF. Select "Save as PDF" as the destination.</span>
+  <span style="font-size:11px;color:#3A4A66;margin-left:8px;">Use your browser's Print dialog to save as PDF. Select "Save as PDF" as the destination.</span>
 </div>
 <div class="header">
   <div>
@@ -1047,8 +1047,8 @@ ${fields.map(([k, v]) => `      <tr><td>${k}</td><td>${v?.includes("To be confir
     </tbody>
   </table>
 
-  ${config.applicationDescription ? `<div style="margin-bottom:14px;padding:10px 14px;background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0;font-size:12px;"><strong>Application Description:</strong> ${config.applicationDescription}</div>` : ""}
-  ${config.uploads?.length > 0 ? `<div style="margin-bottom:14px;font-size:12px;color:#334155;"><strong>Attached Files:</strong> ${config.uploads.map(f => f.name).join(", ")}</div>` : ""}
+  ${config.applicationDescription ? `<div style="margin-bottom:14px;padding:10px 14px;background:#F4F2ED;border-radius:6px;border:1px solid #D9D6CE;font-size:12px;"><strong>Application Description:</strong> ${config.applicationDescription}</div>` : ""}
+  ${config.uploads?.length > 0 ? `<div style="margin-bottom:14px;font-size:12px;color:#3A4A66;"><strong>Attached Files:</strong> ${config.uploads.map(f => f.name).join(", ")}</div>` : ""}
 
   <div class="rfq-ref">📋 Add to RFQ: rfq@unikingcanada.com</div>
 
@@ -1122,7 +1122,7 @@ ${fields.map(([k, v]) => `      <tr><td>${k}</td><td>${v?.includes("To be confir
 
           <div style={{ background: C.bg, borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden", marginBottom: 14 }}>
             {fields.map(([k, v], i) => (
-              <div key={k} style={{ display: "flex", gap: 12, padding: "8px 14px", background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: i < fields.length - 1 ? `1px solid ${C.border}` : "none" }}>
+              <div key={k} style={{ display: "flex", gap: 12, padding: "8px 14px", background: i % 2 === 0 ? "#F4F2ED" : "#fff", borderBottom: i < fields.length - 1 ? `1px solid ${C.border}` : "none" }}>
                 <span style={{ fontSize: 12, color: C.muted, fontWeight: 600, width: 150, flexShrink: 0 }}>{k}</span>
                 <span style={{ fontSize: 12, color: v?.includes("To be confirmed") ? "#92400e" : C.text, flex: 1, fontStyle: v?.includes("To be confirmed") ? "italic" : "normal" }}>{v}</span>
               </div>
@@ -1130,7 +1130,7 @@ ${fields.map(([k, v]) => `      <tr><td>${k}</td><td>${v?.includes("To be confir
           </div>
 
           {beltRow && (
-            <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#166534", marginBottom: 12 }}>
+            <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#2E7D46", marginBottom: 12 }}>
               ✓ Catalog-confirmed strength: {beltRow.strengthLbfFt?.toLocaleString()} lbf/ft · Temp: {beltRow.tempF}°F / {beltRow.tempC}°C
             </div>
           )}
@@ -1142,7 +1142,7 @@ ${fields.map(([k, v]) => `      <tr><td>${k}</td><td>${v?.includes("To be confir
           )}
 
           {config.uploads.length > 0 && (
-            <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#1e40af", marginBottom: 12 }}>
+            <div style={{ background: "#FDF0E9", border: "1px solid #F8C9B0", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#0E1F3A", marginBottom: 12 }}>
               📎 {config.uploads.length} file{config.uploads.length !== 1 ? "s" : ""} attached
             </div>
           )}
@@ -1152,7 +1152,7 @@ ${fields.map(([k, v]) => `      <tr><td>${k}</td><td>${v?.includes("To be confir
           </div>
 
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <button onClick={back} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 16px", cursor: "pointer", fontSize: 13 }}>← Back</button>
+            <button onClick={back} style={{ background: "#ECEAE4", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 16px", cursor: "pointer", fontSize: 13 }}>← Back</button>
             <button onClick={() => setShowTearSheet(true)} style={{ flex: 1, padding: "11px", background: C.gold, color: C.navy, border: "none", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 800 }}>📄 View / Print Tear Sheet</button>
             <button onClick={handleAddRFQ} style={{ flex: 2, padding: "11px", background: C.green, color: "#fff", border: "none", borderRadius: 10, cursor: "pointer", fontSize: 14, fontWeight: 800, minWidth: "100%" }}>Add to RFQ ✓</button>
           </div>

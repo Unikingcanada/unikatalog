@@ -1,4 +1,4 @@
-const C = { navy: "#0F2340", navyMid: "#1A3A5C", gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", text: "#0f172a", bg: "#f8fafc" };
+const C = { navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522", border: "#D9D6CE", muted: "#3A4A66", text: "#0E1F3A", bg: "#F4F2ED" };
 
 const FEATURES = [
   { icon: "⚡", title: "Positive Gripping Action", desc: "Hardened tooth tips penetrate material surface for positive, slip-free grip — even on wet, muddy, or ice-covered logs." },
@@ -43,9 +43,9 @@ export default function SharpTopIntro({ onExplore }) {
       </div>
 
       {/* Normalization note */}
-      <div style={{ padding: "12px 32px", background: "#f0f9ff", borderTop: `1px solid #bae6fd`, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+      <div style={{ padding: "12px 32px", background: "#FDF0E9", borderTop: `1px solid #bae6fd`, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
         <span style={{ fontSize: 13 }}>ℹ️</span>
-        <span style={{ fontSize: 12, color: "#0369a1", lineHeight: 1.6 }}>
+        <span style={{ fontSize: 12, color: "#0E1F3A", lineHeight: 1.6 }}>
           <strong>Brand-Neutral Catalog:</strong> This catalog is normalized by chain size and configuration — not by brand.
           Viking, Summit, and Connexus chains with the same specifications are the same product.
           Select the chain number and configuration that matches your application.

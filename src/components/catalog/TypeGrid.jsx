@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 const C = {
-  navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  card: "#ffffff", border: "#e2e8f0", text: "#0f172a", muted: "#64748b",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  card: "#ffffff", border: "#D9D6CE", text: "#0E1F3A", muted: "#3A4A66",
 };
 
 const CHAIN_SUBTYPE_KEYS = new Set([
@@ -75,19 +75,19 @@ export default function TypeGrid({ types, counts, onSelect, allData }) {
                  display: "flex",
                  flexDirection: "column",
                  overflow: "hidden",
-                 boxShadow: isHov ? "0 6px 24px rgba(0,60,91,0.15)" : "0 1px 4px rgba(0,60,91,0.05)",
+                 boxShadow: isHov ? "0 6px 24px rgba(14,31,58,0.15)" : "0 1px 4px rgba(14,31,58,0.05)",
                  transform: isHov ? "translateY(-2px)" : "none",
                }}>
               {/* Image */}
               {img && (
-                <div style={{ height: 140, overflow: "hidden", position: "relative", background: "#e2e8f0", flexShrink: 0 }}>
+                <div style={{ height: 140, overflow: "hidden", position: "relative", background: "#D9D6CE", flexShrink: 0 }}>
                   <img
                     src={img}
                     alt={t.label}
                     style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.3s", transform: isHov ? "scale(1.06)" : "scale(1)" }}
                     onError={(e) => { e.target.parentElement.style.display = "none"; }}
                   />
-                  <div style={{ position: "absolute", inset: 0, background: isHov ? "rgba(15,35,64,0.45)" : "rgba(15,35,64,0.18)", transition: "background 0.18s" }} />
+                  <div style={{ position: "absolute", inset: 0, background: isHov ? "rgba(14,31,58,0.45)" : "rgba(14,31,58,0.18)", transition: "background 0.18s" }} />
                 </div>
               )}
               {/* Content */}

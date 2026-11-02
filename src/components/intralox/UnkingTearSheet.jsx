@@ -9,10 +9,10 @@ import BeltSchematic from "./BeltSchematic";
 import { jsPDF } from "jspdf";
 
 const UNIKING_LOGO = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png";
-const INTRALOX_RED = "#E31837";
-const NAVY = "#0F2340";
-const NAVY_MID = "#1A3A5C";
-const GOLD = "#C9A84C";
+const INTRALOX_RED = "#F26522";
+const NAVY = "#0E1F3A";
+const NAVY_MID = "#0E1F3A";
+const GOLD = "#F26522";
 
 export default function UniKingTearSheet({ config, series, beltStyle, fields, beltRow, units, onClose }) {
   const printRef = useRef();
@@ -91,7 +91,7 @@ export default function UniKingTearSheet({ config, series, beltStyle, fields, be
 
   return (
     <div style={{
-      position: "fixed", inset: 0, background: "rgba(10,20,40,0.82)", zIndex: 9999,
+      position: "fixed", inset: 0, background: "rgba(14,31,58,0.82)", zIndex: 9999,
       display: "flex", flexDirection: "column", alignItems: "center",
       overflowY: "auto", padding: "20px 16px",
     }}>
@@ -107,7 +107,7 @@ export default function UniKingTearSheet({ config, series, beltStyle, fields, be
           padding: "8px 18px", cursor: "pointer", fontSize: 13, fontWeight: 800,
         }}>🖨 Print</button>
         <button onClick={handleDownloadPDF} style={{
-          background: "#1e40af", color: "#fff", border: "none", borderRadius: 8,
+          background: "#0E1F3A", color: "#fff", border: "none", borderRadius: 8,
           padding: "8px 18px", cursor: "pointer", fontSize: 13, fontWeight: 700,
         }}>⬇ Download PDF</button>
         <button onClick={onClose} style={{
@@ -156,20 +156,20 @@ export default function UniKingTearSheet({ config, series, beltStyle, fields, be
                 <img
                   src={beltStyle?.image || series?.image}
                   alt={beltStyle?.label || series?.name}
-                  style={{ width: "100%", height: 140, objectFit: "cover", borderRadius: 8, border: "1.5px solid #e2e8f0" }}
+                  style={{ width: "100%", height: 140, objectFit: "cover", borderRadius: 8, border: "1.5px solid #D9D6CE" }}
                 />
               ) : (
                 <div style={{
-                  width: "100%", height: 140, background: "#f0f4f8", borderRadius: 8,
+                  width: "100%", height: 140, background: "#F4F2ED", borderRadius: 8,
                   border: "1.5px dashed #c8d4e0", display: "flex", alignItems: "center",
                   justifyContent: "center", flexDirection: "column", gap: 6,
                 }}>
                   <div style={{ fontSize: 28, opacity: 0.25 }}>🔩</div>
-                  <div style={{ fontSize: 9, color: "#94a3b8", textAlign: "center", padding: "0 10px" }}>Image to be added by Uniking</div>
+                  <div style={{ fontSize: 9, color: "#8A94A6", textAlign: "center", padding: "0 10px" }}>Image to be added by Uniking</div>
                 </div>
               )}
               {/* Series key specs below image */}
-              <div style={{ marginTop: 10, background: "#f8fafc", borderRadius: 6, padding: "8px 10px", border: "1px solid #e2e8f0" }}>
+              <div style={{ marginTop: 10, background: "#F4F2ED", borderRadius: 6, padding: "8px 10px", border: "1px solid #D9D6CE" }}>
                 {[
                   ["Pitch", series?.pitch_in && series.pitch_in !== "To be confirmed by Uniking" ? `${series.pitch_in}" (${series.pitch_mm}mm)` : "TBC"],
                   ["Type", series?.beltType],
@@ -178,7 +178,7 @@ export default function UniKingTearSheet({ config, series, beltStyle, fields, be
                   ["Catalog", series?.catalogPage ? `p.${series.catalogPage}` : "—"],
                 ].map(([k, v]) => (
                   <div key={k} style={{ display: "flex", justifyContent: "space-between", fontSize: 10, marginBottom: 3 }}>
-                    <span style={{ color: "#64748b", fontWeight: 600 }}>{k}:</span>
+                    <span style={{ color: "#3A4A66", fontWeight: 600 }}>{k}:</span>
                     <span style={{ color: NAVY_MID, fontWeight: 700 }}>{v}</span>
                   </div>
                 ))}
@@ -200,10 +200,10 @@ export default function UniKingTearSheet({ config, series, beltStyle, fields, be
               background: "#f0fdf4", border: "1.5px solid #86efac", borderRadius: 8,
               padding: "10px 16px", marginBottom: 14, display: "flex", gap: 24,
             }}>
-              <span style={{ fontSize: 11, color: "#166534", fontWeight: 600 }}>✓ Catalog-Confirmed Data:</span>
-              <span style={{ fontSize: 11, color: "#166534" }}>Strength: <strong>{beltRow.strengthLbfFt?.toLocaleString()} lbf/ft ({beltRow.strengthNm?.toLocaleString()} N/m)</strong></span>
-              <span style={{ fontSize: 11, color: "#166534" }}>Temp: <strong>{beltRow.tempF}°F / {beltRow.tempC}°C</strong></span>
-              <span style={{ fontSize: 11, color: "#166534" }}>Mass: <strong>{beltRow.massLbFt2} lb/ft²</strong></span>
+              <span style={{ fontSize: 11, color: "#2E7D46", fontWeight: 600 }}>✓ Catalog-Confirmed Data:</span>
+              <span style={{ fontSize: 11, color: "#2E7D46" }}>Strength: <strong>{beltRow.strengthLbfFt?.toLocaleString()} lbf/ft ({beltRow.strengthNm?.toLocaleString()} N/m)</strong></span>
+              <span style={{ fontSize: 11, color: "#2E7D46" }}>Temp: <strong>{beltRow.tempF}°F / {beltRow.tempC}°C</strong></span>
+              <span style={{ fontSize: 11, color: "#2E7D46" }}>Mass: <strong>{beltRow.massLbFt2} lb/ft²</strong></span>
             </div>
           )}
 
@@ -219,11 +219,11 @@ export default function UniKingTearSheet({ config, series, beltStyle, fields, be
               </thead>
               <tbody>
                 {fields.map(([k, v], i) => (
-                  <tr key={k} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff" }}>
-                    <td style={{ padding: "7px 12px", fontWeight: 700, color: NAVY_MID, borderBottom: "1px solid #f1f5f9" }}>{k}</td>
+                  <tr key={k} style={{ background: i % 2 === 0 ? "#F4F2ED" : "#fff" }}>
+                    <td style={{ padding: "7px 12px", fontWeight: 700, color: NAVY_MID, borderBottom: "1px solid #ECEAE4" }}>{k}</td>
                     <td style={{
-                      padding: "7px 12px", borderBottom: "1px solid #f1f5f9",
-                      color: v?.includes("To be confirmed") ? "#92400e" : "#0f172a",
+                      padding: "7px 12px", borderBottom: "1px solid #ECEAE4",
+                      color: v?.includes("To be confirmed") ? "#92400e" : "#0E1F3A",
                       fontStyle: v?.includes("To be confirmed") ? "italic" : "normal",
                     }}>{v}</td>
                   </tr>
@@ -238,7 +238,7 @@ export default function UniKingTearSheet({ config, series, beltStyle, fields, be
               <div style={{ fontSize: 11, fontWeight: 700, color: NAVY_MID, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 6 }}>Applications</div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
                 {[...(beltStyle?.applications || []), ...(series?.applications || [])].slice(0, 8).map((a, i) => (
-                  <span key={i} style={{ background: "#eef3f8", color: NAVY_MID, fontSize: 10, fontWeight: 600, padding: "3px 9px", borderRadius: 10 }}>{a}</span>
+                  <span key={i} style={{ background: "#F4F2ED", color: NAVY_MID, fontSize: 10, fontWeight: 600, padding: "3px 9px", borderRadius: 10 }}>{a}</span>
                 ))}
               </div>
             </div>

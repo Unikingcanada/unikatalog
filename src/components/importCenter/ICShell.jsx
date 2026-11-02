@@ -32,7 +32,7 @@ export default function ICShell({ children }) {
         <div style={{ fontSize: 13, color: S.muted }}>
           This page is restricted to Uniking admin users only.
         </div>
-        <div style={{ marginTop: 16, fontSize: 12, color: "#94a3b8" }}>
+        <div style={{ marginTop: 16, fontSize: 12, color: "#8A94A6" }}>
           Signed in as: {user?.email || "unknown"} · Role: {user?.role || "none"}
         </div>
       </div>
@@ -71,11 +71,11 @@ export default function ICShell({ children }) {
   );
 }
 
-const navy = "#0C2340";
+const navy = "#0E1F3A";
 const S = {
   navy,
-  muted: "#64748b",
-  page: { minHeight: "100vh", background: "#f1f5f9", fontFamily: "'Inter','Segoe UI',sans-serif" },
+  muted: "#3A4A66",
+  page: { minHeight: "100vh", background: "#ECEAE4", fontFamily: "'Inter','Segoe UI',sans-serif" },
   topbar: {
     background: navy,
     padding: "12px 28px",
@@ -88,5 +88,5 @@ const S = {
   topSep: { color: "rgba(255,255,255,0.2)", fontSize: 14 },
   topTitle: { fontSize: 14, fontWeight: 700, color: "#fff" },
   content: { maxWidth: 1440, margin: "0 auto", padding: "28px clamp(12px,3vw,32px)" },
-  center: { textAlign: "center", padding: "80px 20px", color: "#64748b" },
+  center: { textAlign: "center", padding: "80px 20px", color: "#3A4A66" },
 };

@@ -9,9 +9,9 @@ import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 
 const ACTION_COLORS = {
-  "Merge":      { bg: "#eff6ff", border: "#93c5fd", text: "#1d4ed8", dot: "#3b82f6" },
-  "Skip":       { bg: "#fef2f2", border: "#fca5a5", text: "#dc2626", dot: "#ef4444" },
-  "Create New": { bg: "#f0fdf4", border: "#86efac", text: "#166534", dot: "#22c55e" },
+  "Merge":      { bg: "#FDF0E9", border: "#F8C9B0", text: "#0E1F3A", dot: "#F26522" },
+  "Skip":       { bg: "#fef2f2", border: "#fca5a5", text: "#C62828", dot: "#ef4444" },
+  "Create New": { bg: "#f0fdf4", border: "#86efac", text: "#2E7D46", dot: "#22c55e" },
 };
 
 export default function AIResolveButton({ record, onApplyDecision }) {
@@ -98,14 +98,14 @@ Respond with a JSON object only, no markdown:
             padding: "5px 13px", borderRadius: 7, fontSize: 11, fontWeight: 700,
             cursor: loading ? "default" : "pointer",
             border: "1px solid #a78bfa",
-            background: loading ? "#f5f3ff" : "#ede9fe",
-            color: "#6d28d9",
+            background: loading ? "#f5f3ff" : "#ECEAE4",
+            color: "#3A4A66",
             transition: "all 0.15s",
           }}
         >
           {loading ? (
             <>
-              <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", border: "2px solid #a78bfa", borderTopColor: "#6d28d9", animation: "spin 0.7s linear infinite" }} />
+              <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", border: "2px solid #a78bfa", borderTopColor: "#3A4A66", animation: "spin 0.7s linear infinite" }} />
               Analyzing…
             </>
           ) : (
@@ -116,7 +116,7 @@ Respond with a JSON object only, no markdown:
 
       {/* Error */}
       {error && (
-        <div style={{ fontSize: 10, color: "#dc2626", marginTop: 6 }}>{error}</div>
+        <div style={{ fontSize: 10, color: "#C62828", marginTop: 6 }}>{error}</div>
       )}
 
       {/* Result panel */}
@@ -126,7 +126,7 @@ Respond with a JSON object only, no markdown:
           borderRadius: 8, padding: "10px 14px", marginTop: 0,
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
-            <span style={{ fontSize: 10, fontWeight: 800, color: "#6d28d9", textTransform: "uppercase", letterSpacing: 0.5 }}>
+            <span style={{ fontSize: 10, fontWeight: 800, color: "#3A4A66", textTransform: "uppercase", letterSpacing: 0.5 }}>
               ✦ AI Recommendation
             </span>
             <span style={{
@@ -139,7 +139,7 @@ Respond with a JSON object only, no markdown:
             </span>
           </div>
 
-          <p style={{ fontSize: 11, color: "#334155", lineHeight: 1.6, margin: "0 0 10px" }}>
+          <p style={{ fontSize: 11, color: "#3A4A66", lineHeight: 1.6, margin: "0 0 10px" }}>
             {result.justification}
           </p>
 
@@ -157,7 +157,7 @@ Respond with a JSON object only, no markdown:
               onClick={() => setResult(null)}
               style={{
                 padding: "4px 10px", borderRadius: 6, fontSize: 10, fontWeight: 600, cursor: "pointer",
-                border: "1px solid #e2e8f0", background: "#fff", color: "#94a3b8",
+                border: "1px solid #D9D6CE", background: "#fff", color: "#8A94A6",
               }}
             >
               Re-analyze

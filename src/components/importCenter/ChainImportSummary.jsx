@@ -7,15 +7,15 @@ import React, { useState } from "react";
 import { AlertCircle, CheckCircle2, Info, AlertTriangle, Download, Send } from "lucide-react";
 
 const C = {
-  navy: "#003c5b",
-  navyMid: "#1A3A5C",
-  green: "#16a34a",
-  red: "#dc2626",
+  navy: "#0E1F3A",
+  navyMid: "#0E1F3A",
+  green: "#2E7D46",
+  red: "#C62828",
   orange: "#f59e0b",
-  text: "#0f172a",
-  muted: "#64748b",
-  border: "#e2e8f0",
-  bg: "#f8fafc",
+  text: "#0E1F3A",
+  muted: "#3A4A66",
+  border: "#D9D6CE",
+  bg: "#F4F2ED",
 };
 
 export default function ChainImportSummary({
@@ -226,7 +226,7 @@ export default function ChainImportSummary({
       </div>
 
       {/* Confirmation Checkbox */}
-      <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 10, padding: 14, marginBottom: 24 }}>
+      <div style={{ background: "#FDF0E9", border: "1px solid #F8C9B0", borderRadius: 10, padding: 14, marginBottom: 24 }}>
         <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer" }}>
           <input
             type="checkbox"

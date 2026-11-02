@@ -14,9 +14,9 @@ import { getChainAuditBreakdown } from "@/lib/chainCountHelpers";
 import { base44 } from "@/api/base44Client";
 
 const C = {
-  navy: "#003c5b", navyMid: "#1A3A5C",
-  border: "#e2e8f0", bg: "#f8fafc", card: "#ffffff",
-  text: "#0f172a", muted: "#64748b",
+  navy: "#0E1F3A", navyMid: "#0E1F3A",
+  border: "#D9D6CE", bg: "#F4F2ED", card: "#ffffff",
+  text: "#0E1F3A", muted: "#3A4A66",
 };
 
 export default function ChainCountDebugPanel() {
@@ -73,12 +73,12 @@ export default function ChainCountDebugPanel() {
 
             <div style={{ padding: "10px", background: "#fef2f2", borderRadius: 4, border: "1px solid #fca5a5" }}>
               <div style={{ fontSize: 10, color: "#991b1b", fontWeight: 700, textTransform: "uppercase" }}>Duplicate DB Records</div>
-              <div style={{ fontSize: 18, fontWeight: 900, color: "#dc2626" }}>{audit.duplicateDbRecords.toLocaleString()}</div>
+              <div style={{ fontSize: 18, fontWeight: 900, color: "#C62828" }}>{audit.duplicateDbRecords.toLocaleString()}</div>
             </div>
 
             <div style={{ padding: "10px", background: "#f0fdf4", borderRadius: 4, border: "1px solid #86efac" }}>
-              <div style={{ fontSize: 10, color: "#166534", fontWeight: 700, textTransform: "uppercase" }}>Visible Active Chains</div>
-              <div style={{ fontSize: 18, fontWeight: 900, color: "#16a34a" }}>{audit.totalUniqueActiveChains.toLocaleString()}</div>
+              <div style={{ fontSize: 10, color: "#2E7D46", fontWeight: 700, textTransform: "uppercase" }}>Visible Active Chains</div>
+              <div style={{ fontSize: 18, fontWeight: 900, color: "#2E7D46" }}>{audit.totalUniqueActiveChains.toLocaleString()}</div>
             </div>
           </div>
 
@@ -109,11 +109,11 @@ export default function ChainCountDebugPanel() {
             <div style={{ fontSize: 10, color: C.muted, fontWeight: 700, textTransform: "uppercase", marginBottom: 6 }}>Categorization (of {audit.totalUniqueActiveChains} visible chains)</div>
             <div style={{ display: "flex", gap: 12 }}>
               <div>
-                <div style={{ fontSize: 11, color: "#166534" }}>✓ Categorized: <strong>{audit.categorized}</strong></div>
+                <div style={{ fontSize: 11, color: "#2E7D46" }}>✓ Categorized: <strong>{audit.categorized}</strong></div>
               </div>
               {audit.uncategorized > 0 && (
                 <div>
-                  <div style={{ fontSize: 11, color: "#dc2626" }}>✗ Uncategorized: <strong>{audit.uncategorized}</strong></div>
+                  <div style={{ fontSize: 11, color: "#C62828" }}>✗ Uncategorized: <strong>{audit.uncategorized}</strong></div>
                 </div>
               )}
             </div>

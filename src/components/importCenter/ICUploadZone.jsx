@@ -36,9 +36,9 @@ export default function ICUploadZone({ onFilesSelected }) {
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         style={{
-          border: `2px dashed ${dragging ? "#3b82f6" : "#cbd5e1"}`,
+          border: `2px dashed ${dragging ? "#F26522" : "#C9C5BB"}`,
           borderRadius: 14,
-          background: dragging ? "#eff6ff" : "#fafafa",
+          background: dragging ? "#FDF0E9" : "#fafafa",
           padding: "48px 24px",
           textAlign: "center",
           cursor: "pointer",
@@ -46,23 +46,23 @@ export default function ICUploadZone({ onFilesSelected }) {
         }}
       >
         <div style={{ fontSize: 48, marginBottom: 12 }}>📂</div>
-        <div style={{ fontSize: 15, fontWeight: 800, color: "#0C2340", marginBottom: 6 }}>
+        <div style={{ fontSize: 15, fontWeight: 800, color: "#0E1F3A", marginBottom: 6 }}>
           {dragging ? "Drop files here" : "Drag & drop catalog files"}
         </div>
-        <div style={{ fontSize: 12, color: "#64748b", marginBottom: 16 }}>
+        <div style={{ fontSize: 12, color: "#3A4A66", marginBottom: 16 }}>
           Supports JSON, CSV, XLSX · Multiple files allowed · Large catalogs supported
         </div>
         <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
           {[".json", ".csv", ".xlsx"].map(ext => (
             <span key={ext} style={{
-              background: "#e2e8f0", color: "#475569", borderRadius: 6,
+              background: "#D9D6CE", color: "#3A4A66", borderRadius: 6,
               padding: "3px 10px", fontSize: 11, fontWeight: 700, fontFamily: "monospace",
             }}>{ext}</span>
           ))}
         </div>
         <div style={{ marginTop: 16 }}>
           <span style={{
-            display: "inline-block", background: "#0C2340", color: "#fff",
+            display: "inline-block", background: "#0E1F3A", color: "#fff",
             padding: "8px 20px", borderRadius: 8, fontSize: 12, fontWeight: 700,
           }}>Browse Files</span>
         </div>

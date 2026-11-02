@@ -8,10 +8,10 @@ import BeltSchematic from "@/components/intralox/BeltSchematic";
 import UniKingTearSheet from "@/components/intralox/UnkingTearSheet";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
-  border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", green: "#16a34a", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522",
+  border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", green: "#2E7D46", text: "#0E1F3A",
 };
-const SP_BLUE = "#0057A8";
+const SP_BLUE = "#0E1F3A";
 
 const STEP = { SERIES: 0, STYLE: 1, MATERIAL: 2, DIMENSIONS: 3, ATTACHMENTS: 4, REVIEW: 5 };
 const STEP_LABELS = ["Series", "Style", "Material", "Dimensions", "Attachments", "Review"];
@@ -35,7 +35,7 @@ function Header({ onClose }) {
         </div>
         <div style={{ fontSize: 12, color: C.muted }}>Build your RFQ line item step by step</div>
       </div>
-      <button onClick={onClose} style={{ background: "#f1f5f9", border: "1px solid #e2e8f0", color: C.muted, borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>✕</button>
+      <button onClick={onClose} style={{ background: "#ECEAE4", border: "1px solid #D9D6CE", color: C.muted, borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>✕</button>
     </div>
   );
 }
@@ -44,7 +44,7 @@ function ProgressBar({ step }) {
   return (
     <div style={{ display: "flex", gap: 4, padding: "14px 24px 0" }}>
       {STEP_LABELS.map((_, i) => (
-        <div key={i} style={{ flex: 1, height: 4, borderRadius: 4, background: i <= step ? C.navyMid : "#e2e8f0", transition: "background 0.2s" }} />
+        <div key={i} style={{ flex: 1, height: 4, borderRadius: 4, background: i <= step ? C.navyMid : "#D9D6CE", transition: "background 0.2s" }} />
       ))}
     </div>
   );
@@ -69,7 +69,7 @@ const label = { fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 6
 const select = { width: "100%", padding: "9px 12px", border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12, color: C.text, background: "#fff", marginBottom: 14, outline: "none" };
 const input = { width: "100%", padding: "9px 12px", border: `1px solid ${C.border}`, borderRadius: 8, fontSize: 12, color: C.text, background: "#fff", marginBottom: 14, outline: "none", boxSizing: "border-box" };
 const nextBtn = { width: "100%", padding: "12px", background: SP_BLUE, color: "#fff", border: "none", borderRadius: 10, cursor: "pointer", fontSize: 14, fontWeight: 800, marginTop: 6 };
-const backBtn = { background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 16px", cursor: "pointer", fontSize: 13 };
+const backBtn = { background: "#ECEAE4", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 16px", cursor: "pointer", fontSize: 13 };
 
 export default function SystemPlastConfigurator({ initialSeries, initialStyle, onComplete, onClose }) {
   const [step, setStep] = useState(initialSeries ? (initialStyle ? STEP.MATERIAL : STEP.STYLE) : STEP.SERIES);
@@ -189,7 +189,7 @@ export default function SystemPlastConfigurator({ initialSeries, initialStyle, o
                   return (
                     <button key={i} onClick={() => { set("material", mat.material); set("pinMaterial", mat.pinMaterial || ""); }}
                       style={{
-                        background: sel ? "#eef3f8" : "#fff", border: `2px solid ${sel ? SP_BLUE : C.border}`,
+                        background: sel ? "#F4F2ED" : "#fff", border: `2px solid ${sel ? SP_BLUE : C.border}`,
                         borderRadius: 10, padding: "12px 14px", cursor: "pointer", textAlign: "left",
                       }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
@@ -208,7 +208,7 @@ export default function SystemPlastConfigurator({ initialSeries, initialStyle, o
                 })}
                 <button onClick={() => { set("material", "UNKNOWN"); set("pinMaterial", ""); }}
                   style={{
-                    background: config.material === "UNKNOWN" ? "#eef3f8" : "#fff",
+                    background: config.material === "UNKNOWN" ? "#F4F2ED" : "#fff",
                     border: `2px solid ${config.material === "UNKNOWN" ? SP_BLUE : C.border}`,
                     borderRadius: 10, padding: "12px 14px", cursor: "pointer", textAlign: "left",
                   }}>
@@ -503,7 +503,7 @@ export default function SystemPlastConfigurator({ initialSeries, initialStyle, o
           <StepHeader number={6} title="Review & Submit" subtitle="Confirm your configuration before adding to RFQ" />
           <div style={{ background: C.bg, borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden", marginBottom: 14 }}>
             {fields.map(([k, v], i) => (
-              <div key={k} style={{ display: "flex", gap: 12, padding: "8px 14px", background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: i < fields.length - 1 ? `1px solid ${C.border}` : "none" }}>
+              <div key={k} style={{ display: "flex", gap: 12, padding: "8px 14px", background: i % 2 === 0 ? "#F4F2ED" : "#fff", borderBottom: i < fields.length - 1 ? `1px solid ${C.border}` : "none" }}>
                 <span style={{ fontSize: 12, color: C.muted, fontWeight: 600, width: 160, flexShrink: 0 }}>{k}</span>
                 <span style={{ fontSize: 12, color: v?.includes("To be confirmed") ? "#92400e" : C.text, flex: 1, fontStyle: v?.includes("To be confirmed") ? "italic" : "normal" }}>{v}</span>
               </div>
@@ -511,13 +511,13 @@ export default function SystemPlastConfigurator({ initialSeries, initialStyle, o
           </div>
 
           {beltRow && (
-            <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#166534", marginBottom: 12 }}>
+            <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#2E7D46", marginBottom: 12 }}>
               ✓ Catalog-confirmed: Max load {beltRow.strengthNm?.toLocaleString()} N/m ({beltRow.strengthLbsFt?.toLocaleString()} lbs/ft) · Temp {beltRow.tempC}
             </div>
           )}
 
           {config.uploads?.length > 0 && (
-            <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#1e40af", marginBottom: 12 }}>
+            <div style={{ background: "#FDF0E9", border: "1px solid #F8C9B0", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#0E1F3A", marginBottom: 12 }}>
               📎 {config.uploads.length} file{config.uploads.length !== 1 ? "s" : ""} attached
             </div>
           )}

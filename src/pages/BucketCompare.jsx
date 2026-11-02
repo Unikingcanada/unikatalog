@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { getCompareItems, removeCompareItem, clearCompare } from "@/lib/bucketCompareState";
 import AppLayout from "@/components/layout/AppLayout";
 
-const NAVY = "#1a3a5c";
-const SUP_COLOR = { "Maxi-Lift": "#b45309", "Tapco": "#1d4ed8", "4B": "#b91c1c" };
-const SUP_BG    = { "Maxi-Lift": "#fffbeb", "Tapco": "#eff6ff",  "4B": "#fef2f2" };
+const NAVY = "#0E1F3A";
+const SUP_COLOR = { "Maxi-Lift": "#B8860B", "Tapco": "#0E1F3A", "4B": "#C62828" };
+const SUP_BG    = { "Maxi-Lift": "#fffbeb", "Tapco": "#FDF0E9",  "4B": "#fef2f2" };
 
 const ROWS = [
   { key: "supplier",          label: "Supplier",                unit: "",        highlight: null },
@@ -65,7 +65,7 @@ function exportComparison(items) {
 
   const colHeaders = items.map(item => `
     <th>
-      <div class="sup-pill" style="background:${SUP_BG[item.supplier]||"#f3f4f6"};color:${SUP_COLOR[item.supplier]||NAVY}">${item.supplier}</div>
+      <div class="sup-pill" style="background:${SUP_BG[item.supplier]||"#F4F2ED"};color:${SUP_COLOR[item.supplier]||NAVY}">${item.supplier}</div>
       <div class="col-style">${item.styleName}</div>
       <div class="col-size">${item.sizeNominal}${item.sizeMetric ? ` / ${item.sizeMetric}` : ""}</div>
       <div class="col-mat">${item.material}</div>
@@ -80,30 +80,30 @@ function exportComparison(items) {
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Segoe UI',Arial,sans-serif;color:#111;background:#fff;}
-.header{background:#0f2340;color:#fff;padding:20px 32px;display:flex;justify-content:space-between;align-items:center;}
-.accent{height:4px;background:linear-gradient(90deg,#2563eb,#1a3a5c);}
+.header{background:#0E1F3A;color:#fff;padding:20px 32px;display:flex;justify-content:space-between;align-items:center;}
+.accent{height:4px;background:linear-gradient(90deg,#F26522,#0E1F3A);}
 .body{padding:24px 32px;}
-h2{font-size:20px;font-weight:900;color:#0f2340;margin-bottom:4px;}
-.sub{font-size:12px;color:#6b7280;margin-bottom:20px;}
+h2{font-size:20px;font-weight:900;color:#0E1F3A;margin-bottom:4px;}
+.sub{font-size:12px;color:#3A4A66;margin-bottom:20px;}
 table{width:100%;border-collapse:collapse;font-size:11px;}
-thead th{background:#0f2340;color:#fff;padding:10px 12px;text-align:center;border:1px solid #2563eb;}
+thead th{background:#0E1F3A;color:#fff;padding:10px 12px;text-align:center;border:1px solid #F26522;}
 thead th:first-child{text-align:left;}
 .sup-pill{display:inline-block;padding:2px 8px;border-radius:99px;font-size:9px;font-weight:700;margin-bottom:3px;}
 .col-style{font-size:12px;font-weight:700;color:#fff;margin-bottom:2px;}
 .col-size{font-size:10px;color:rgba(255,255,255,0.7);}
 .col-mat{font-size:9px;color:rgba(255,255,255,0.5);}
-tbody tr:nth-child(even){background:#f8fafc;}
-tbody td{padding:8px 12px;border:1px solid #e5e7eb;text-align:center;}
-.row-label{text-align:left;font-weight:600;color:#1a3a5c;background:#f8fafc;white-space:nowrap;}
-.unit{margin-left:4px;font-weight:400;font-size:9px;color:#94a3b8;}
-.footer{margin-top:20px;font-size:10px;color:#94a3b8;border-top:1px solid #e5e7eb;padding-top:12px;}
+tbody tr:nth-child(even){background:#F4F2ED;}
+tbody td{padding:8px 12px;border:1px solid #D9D6CE;text-align:center;}
+.row-label{text-align:left;font-weight:600;color:#0E1F3A;background:#F4F2ED;white-space:nowrap;}
+.unit{margin-left:4px;font-weight:400;font-size:9px;color:#8A94A6;}
+.footer{margin-top:20px;font-size:10px;color:#8A94A6;border-top:1px solid #D9D6CE;padding-top:12px;}
 .no-print{margin:12px 32px;display:flex;gap:10px;}
 .btn{padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;}
 @media print{.no-print{display:none!important;}}
 </style></head><body>
 <div class="no-print">
-  <button class="btn" style="background:#0f2340;color:#fff;" onclick="window.print()">Print / Save PDF</button>
-  <button class="btn" style="background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;" onclick="window.close()">Close</button>
+  <button class="btn" style="background:#0E1F3A;color:#fff;" onclick="window.print()">Print / Save PDF</button>
+  <button class="btn" style="background:#ECEAE4;color:#3A4A66;border:1px solid #D9D6CE;" onclick="window.close()">Close</button>
 </div>
 <div class="header">
   <div>
@@ -153,7 +153,7 @@ export default function BucketCompare() {
         <div style={{ maxWidth: 700, margin: "80px auto", textAlign: "center", padding: "0 24px", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>⚖️</div>
           <div style={{ fontSize: 22, fontWeight: 900, color: NAVY, marginBottom: 10 }}>No buckets selected for comparison yet</div>
-          <div style={{ fontSize: 14, color: "#6b7280", lineHeight: 1.7, marginBottom: 28 }}>
+          <div style={{ fontSize: 14, color: "#3A4A66", lineHeight: 1.7, marginBottom: 28 }}>
             Browse the catalog and click <b>"Compare"</b> on any size row to get started. You can compare up to 6 buckets across any supplier, style, and material.
           </div>
           <button onClick={() => navigate("/ElevatorBuckets")}
@@ -173,13 +173,13 @@ export default function BucketCompare() {
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 22, fontWeight: 900, color: NAVY }}>Bucket Comparison</div>
-            <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>{items.length} buckets selected — up to 6 supported</div>
+            <div style={{ fontSize: 12, color: "#8A94A6", marginTop: 2 }}>{items.length} buckets selected — up to 6 supported</div>
           </div>
           <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
             {/* Highlight toggle */}
-            <label style={{ display: "flex", alignItems: "center", gap: 7, cursor: "pointer", fontSize: 12, color: "#374151", fontWeight: 600 }}>
+            <label style={{ display: "flex", alignItems: "center", gap: 7, cursor: "pointer", fontSize: 12, color: "#3A4A66", fontWeight: 600 }}>
               <div onClick={() => setHighlightDiff(!highlightDiff)}
-                style={{ width: 36, height: 20, borderRadius: 10, background: highlightDiff ? "#2563eb" : "#d1d5db", position: "relative", transition: "background 0.2s", cursor: "pointer", flexShrink: 0 }}>
+                style={{ width: 36, height: 20, borderRadius: 10, background: highlightDiff ? "#F26522" : "#C9C5BB", position: "relative", transition: "background 0.2s", cursor: "pointer", flexShrink: 0 }}>
                 <div style={{ position: "absolute", top: 2, left: highlightDiff ? 18 : 2, width: 16, height: 16, borderRadius: "50%", background: "#fff", transition: "left 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.3)" }} />
               </div>
               Highlight Differences
@@ -189,14 +189,14 @@ export default function BucketCompare() {
               Export Comparison ↗
             </button>
             <button onClick={() => { clearCompare(); navigate("/ElevatorBuckets"); }}
-              style={{ padding: "8px 14px", borderRadius: 8, border: "1px solid #e5e7eb", background: "#f8fafc", color: "#64748b", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+              style={{ padding: "8px 14px", borderRadius: 8, border: "1px solid #D9D6CE", background: "#F4F2ED", color: "#3A4A66", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
               Clear All
             </button>
           </div>
         </div>
 
         {/* Comparison table */}
-        <div style={{ overflowX: "auto", borderRadius: 14, border: "1px solid #e5e7eb", background: "#fff" }}>
+        <div style={{ overflowX: "auto", borderRadius: 14, border: "1px solid #D9D6CE", background: "#fff" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12, tableLayout: "fixed" }}>
             <colgroup>
               <col style={{ width: 200 }} />
@@ -209,11 +209,11 @@ export default function BucketCompare() {
                 </th>
                 {items.map(item => {
                   const sc = SUP_COLOR[item.supplier] || NAVY;
-                  const sb = SUP_BG[item.supplier] || "#f3f4f6";
+                  const sb = SUP_BG[item.supplier] || "#F4F2ED";
                   return (
                     <th key={item.id} style={{ padding: "10px 12px", textAlign: "center", borderRight: "1px solid rgba(255,255,255,0.1)", verticalAlign: "top", position: "relative" }}>
                       <button onClick={() => handleRemove(item.id)}
-                        style={{ position: "absolute", top: 6, right: 8, background: "rgba(255,255,255,0.12)", border: "none", color: "#94a3b8", borderRadius: 99, width: 20, height: 20, cursor: "pointer", fontSize: 13, lineHeight: 1 }}>×</button>
+                        style={{ position: "absolute", top: 6, right: 8, background: "rgba(255,255,255,0.12)", border: "none", color: "#8A94A6", borderRadius: 99, width: 20, height: 20, cursor: "pointer", fontSize: 13, lineHeight: 1 }}>×</button>
                       <span style={{ display: "inline-block", fontSize: 9, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: sb, color: sc, marginBottom: 5 }}>{item.supplier}</span>
                       <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginBottom: 3 }}>{item.styleName}</div>
                       <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)" }}>{item.sizeNominal}{item.sizeMetric ? ` / ${item.sizeMetric}` : ""}</div>
@@ -231,23 +231,23 @@ export default function BucketCompare() {
 
                 return (
                   <tr key={row.key}
-                    style={{ borderBottom: "1px solid #f1f5f9", background: rowMuted ? "#fafafa" : (ri % 2 === 0 ? "#fff" : "#f8fafc") }}>
-                    <td style={{ padding: "10px 16px", fontWeight: 700, color: rowMuted ? "#9ca3af" : NAVY, fontSize: 12, borderRight: "1px solid #e5e7eb", whiteSpace: "nowrap" }}>
+                    style={{ borderBottom: "1px solid #ECEAE4", background: rowMuted ? "#fafafa" : (ri % 2 === 0 ? "#fff" : "#F4F2ED") }}>
+                    <td style={{ padding: "10px 16px", fontWeight: 700, color: rowMuted ? "#8A94A6" : NAVY, fontSize: 12, borderRight: "1px solid #D9D6CE", whiteSpace: "nowrap" }}>
                       {row.label}
-                      {row.unit && <span style={{ marginLeft: 5, fontSize: 10, fontWeight: 400, color: "#9ca3af" }}>{row.unit}</span>}
+                      {row.unit && <span style={{ marginLeft: 5, fontSize: 10, fontWeight: 400, color: "#8A94A6" }}>{row.unit}</span>}
                     </td>
                     {items.map((item, ci) => {
                       const hl = highlights[ci];
                       let cellBg = "transparent";
-                      let cellColor = rowMuted ? "#9ca3af" : "#374151";
-                      if (hl === "best") { cellBg = "#dcfce7"; cellColor = "#15803d"; }
+                      let cellColor = rowMuted ? "#8A94A6" : "#3A4A66";
+                      if (hl === "best") { cellBg = "#dcfce7"; cellColor = "#2E7D46"; }
                       if (hl === "worst") { cellBg = "#fff7ed"; cellColor = "#c2410c"; }
 
                       return (
-                        <td key={item.id} style={{ padding: "10px 12px", textAlign: "center", background: cellBg, color: cellColor, fontWeight: hl ? 700 : 500, fontSize: 12, borderRight: "1px solid #f1f5f9" }}>
+                        <td key={item.id} style={{ padding: "10px 12px", textAlign: "center", background: cellBg, color: cellColor, fontWeight: hl ? 700 : 500, fontSize: 12, borderRight: "1px solid #ECEAE4" }}>
                           {fmt(item[row.key])}
                           {row.unit && item[row.key] != null && item[row.key] !== "" && (
-                            <span style={{ fontSize: 10, color: hl === "best" ? "#15803d" : hl === "worst" ? "#c2410c" : "#9ca3af", marginLeft: 3 }}>{row.unit}</span>
+                            <span style={{ fontSize: 10, color: hl === "best" ? "#2E7D46" : hl === "worst" ? "#c2410c" : "#8A94A6", marginLeft: 3 }}>{row.unit}</span>
                           )}
                         </td>
                       );
@@ -261,7 +261,7 @@ export default function BucketCompare() {
 
         {/* Add more hint */}
         {items.length < 6 && (
-          <div style={{ marginTop: 16, padding: "14px 20px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 10, fontSize: 13, color: "#0369a1" }}>
+          <div style={{ marginTop: 16, padding: "14px 20px", background: "#FDF0E9", border: "1px solid #bae6fd", borderRadius: 10, fontSize: 13, color: "#0E1F3A" }}>
             <b>Add more buckets:</b> Navigate back to any supplier's spec table and click "Compare" on any size row to add it here. Up to {6 - items.length} more can be added.
           </div>
         )}

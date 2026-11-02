@@ -5,11 +5,11 @@
 import { useState } from "react";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C",
-  gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A",
+  gold: "#F26522", border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
 };
 
-export default function ChainProductCard({ product, accentColor = "#0C2340", onViewDetails }) {
+export default function ChainProductCard({ product, accentColor = "#0E1F3A", onViewDetails }) {
   const [hov, setHov] = useState(false);
   const [added, setAdded] = useState(false);
 
@@ -51,14 +51,14 @@ export default function ChainProductCard({ product, accentColor = "#0C2340", onV
         overflow: "hidden",
         cursor: "pointer",
         transition: "all 0.16s",
-        boxShadow: hov ? "0 6px 24px rgba(12,35,64,0.12)" : "0 1px 3px rgba(0,0,0,0.04)",
+        boxShadow: hov ? "0 6px 24px rgba(14,31,58,0.12)" : "0 1px 3px rgba(0,0,0,0.04)",
         transform: hov ? "translateY(-2px)" : "none",
         display: "flex",
         flexDirection: "column",
       }}
     >
       {/* Image */}
-      <div style={{ height: 110, background: "#f1f5f9", overflow: "hidden", position: "relative" }}>
+      <div style={{ height: 110, background: "#ECEAE4", overflow: "hidden", position: "relative" }}>
         {product.image ? (
           <img src={product.image} alt={product.chain_number}
             style={{ width: "100%", height: "100%", objectFit: "cover", transition: "opacity 0.15s", opacity: hov ? 1 : 0.85 }} />
@@ -86,11 +86,11 @@ export default function ChainProductCard({ product, accentColor = "#0C2340", onV
         {/* Specs mini-summary */}
         {product.specs?.pitch_in && product.specs.pitch_in !== "Missing Data – Needs Mapping" && (
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
-            <span style={{ fontSize: 10, fontWeight: 600, background: "#f1f5f9", color: C.navyMid, padding: "2px 7px", borderRadius: 6 }}>
+            <span style={{ fontSize: 10, fontWeight: 600, background: "#ECEAE4", color: C.navyMid, padding: "2px 7px", borderRadius: 6 }}>
               Pitch: {product.specs.pitch_in}"
             </span>
             {product.specs.avg_ultimate_lbs && (
-              <span style={{ fontSize: 10, fontWeight: 600, background: "#f1f5f9", color: C.navyMid, padding: "2px 7px", borderRadius: 6 }}>
+              <span style={{ fontSize: 10, fontWeight: 600, background: "#ECEAE4", color: C.navyMid, padding: "2px 7px", borderRadius: 6 }}>
                 Strength: {product.specs.avg_ultimate_lbs} lb
               </span>
             )}
@@ -112,7 +112,7 @@ export default function ChainProductCard({ product, accentColor = "#0C2340", onV
           View Details
         </button>
         <button onClick={addRFQ}
-          style={{ flex: 1, padding: "8px", background: added ? "#16a34a" : C.gold, color: added ? "#fff" : C.navy, border: "none", borderRadius: 8, cursor: "pointer", fontSize: 11, fontWeight: 700, transition: "background 0.2s" }}>
+          style={{ flex: 1, padding: "8px", background: added ? "#2E7D46" : C.gold, color: added ? "#fff" : C.navy, border: "none", borderRadius: 8, cursor: "pointer", fontSize: 11, fontWeight: 700, transition: "background 0.2s" }}>
           {added ? "✓ Added" : "+ RFQ"}
         </button>
       </div>

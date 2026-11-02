@@ -38,7 +38,7 @@ const ROLLBACKABLE = ["Committed", "Partially Committed"];
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 function StatusPill({ status }) {
-  const color = SESSION_STATUS_COLORS[status] || "#94a3b8";
+  const color = SESSION_STATUS_COLORS[status] || "#8A94A6";
   return (
     <span style={{ display: "inline-flex", alignItems: "center", gap: 4, background: `${color}18`, color, border: `1px solid ${color}55`, borderRadius: 99, padding: "3px 9px", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap" }}>
       <span style={{ width: 6, height: 6, borderRadius: "50%", background: color, flexShrink: 0 }} />
@@ -57,26 +57,26 @@ function QuickActions({ session, onSelect, navigate, onExportFailed }) {
   return (
     <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }} onClick={e => e.stopPropagation()}>
       {/* Open */}
-      <button onClick={() => onSelect(session)} style={qBtn("#eff6ff", "#1d4ed8", "#bfdbfe")}>Open →</button>
+      <button onClick={() => onSelect(session)} style={qBtn("#FDF0E9", "#0E1F3A", "#F8C9B0")}>Open →</button>
 
       {/* Commit Staged */}
       {status === "Staged" && (
-        <button onClick={() => onSelect(session)} style={qBtn("#0C2340", "#fff", "none")}>▶ Commit</button>
+        <button onClick={() => onSelect(session)} style={qBtn("#0E1F3A", "#fff", "none")}>▶ Commit</button>
       )}
 
       {/* Continue Commit */}
       {(status === "Partially Committed" || status === "Committing") && (
-        <button onClick={() => onSelect(session)} style={qBtn("#0C2340", "#fff", "none")}>↺ Continue</button>
+        <button onClick={() => onSelect(session)} style={qBtn("#0E1F3A", "#fff", "none")}>↺ Continue</button>
       )}
 
       {/* Resume Review */}
       {status === "Pending Review" && (
-        <button onClick={() => onSelect(session)} style={qBtn("#0C2340", "#fff", "none")}>▶ Resume</button>
+        <button onClick={() => onSelect(session)} style={qBtn("#0E1F3A", "#fff", "none")}>▶ Resume</button>
       )}
 
       {/* Retry Failed */}
       {hasFailed && (
-        <button onClick={() => navigate(sessionPath)} style={qBtn("#fef2f2", "#dc2626", "#fca5a5")}>↺ Retry</button>
+        <button onClick={() => navigate(sessionPath)} style={qBtn("#fef2f2", "#C62828", "#fca5a5")}>↺ Retry</button>
       )}
 
       {/* Rollback */}
@@ -86,7 +86,7 @@ function QuickActions({ session, onSelect, navigate, onExportFailed }) {
 
       {/* Export Failed */}
       {hasFailed && (
-        <button onClick={() => onExportFailed(session)} style={qBtn("#f8fafc", "#475569", "#e2e8f0")}>↓ Failed</button>
+        <button onClick={() => onExportFailed(session)} style={qBtn("#F4F2ED", "#3A4A66", "#D9D6CE")}>↓ Failed</button>
       )}
     </div>
   );
@@ -169,8 +169,8 @@ export default function ICSessionList({ sessions, loading, onSelect, onNew }) {
       {/* ── Header ── */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18, flexWrap: "wrap", gap: 10 }}>
         <div>
-          <div style={{ fontSize: 20, fontWeight: 900, color: "#0C2340" }}>Import Sessions</div>
-          <div style={{ fontSize: 12, color: "#64748b", marginTop: 2 }}>
+          <div style={{ fontSize: 20, fontWeight: 900, color: "#0E1F3A" }}>Import Sessions</div>
+          <div style={{ fontSize: 12, color: "#3A4A66", marginTop: 2 }}>
             {sessions.length} total · {displayed.length} shown
           </div>
         </div>
@@ -182,14 +182,14 @@ export default function ICSessionList({ sessions, loading, onSelect, onNew }) {
         {STATUS_FILTERS.map(f => {
           const cnt = f === "All" ? sessions.length : (statusCounts[f] || 0);
           const active = statusFilter === f;
-          const color = f !== "All" ? (SESSION_STATUS_COLORS[f] || "#94a3b8") : "#0C2340";
+          const color = f !== "All" ? (SESSION_STATUS_COLORS[f] || "#8A94A6") : "#0E1F3A";
           return (
             <button key={f} onClick={() => setPersistedFilter(f)}
               style={{
                 padding: "5px 12px", borderRadius: 99, cursor: "pointer", fontSize: 11, fontWeight: 700,
-                border: active ? `1.5px solid ${color}` : "1px solid #e2e8f0",
+                border: active ? `1.5px solid ${color}` : "1px solid #D9D6CE",
                 background: active ? `${color}18` : "#fff",
-                color: active ? color : "#64748b",
+                color: active ? color : "#3A4A66",
                 transition: "all 0.12s",
               }}>
               {f} <span style={{ opacity: 0.7 }}>({cnt})</span>
@@ -204,17 +204,17 @@ export default function ICSessionList({ sessions, loading, onSelect, onNew }) {
           value={search}
           onChange={e => setPersistedSearch(e.target.value)}
           placeholder="Search by session ID, manufacturer, entity, catalog…"
-          style={{ flex: 1, minWidth: 220, padding: "8px 12px", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 12, color: "#1e293b", outline: "none" }}
+          style={{ flex: 1, minWidth: 220, padding: "8px 12px", border: "1px solid #D9D6CE", borderRadius: 8, fontSize: 12, color: "#0E1F3A", outline: "none" }}
         />
         <select
           value={sort}
           onChange={e => setPersistedSort(e.target.value)}
-          style={{ padding: "8px 12px", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 12, color: "#334155", background: "#fff", cursor: "pointer", outline: "none" }}>
+          style={{ padding: "8px 12px", border: "1px solid #D9D6CE", borderRadius: 8, fontSize: 12, color: "#3A4A66", background: "#fff", cursor: "pointer", outline: "none" }}>
           {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
         {(search || statusFilter !== "All" || sort !== "newest") && (
           <button onClick={() => { setPersistedFilter("All"); setPersistedSearch(""); setPersistedSort("newest"); }}
-            style={{ padding: "8px 12px", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 11, fontWeight: 700, color: "#64748b", background: "#f8fafc", cursor: "pointer" }}>
+            style={{ padding: "8px 12px", border: "1px solid #D9D6CE", borderRadius: 8, fontSize: 11, fontWeight: 700, color: "#3A4A66", background: "#F4F2ED", cursor: "pointer" }}>
             ✕ Clear
           </button>
         )}
@@ -222,18 +222,18 @@ export default function ICSessionList({ sessions, loading, onSelect, onNew }) {
 
       {/* ── Table ── */}
       {loading ? (
-        <div style={{ textAlign: "center", padding: "48px 0", color: "#64748b" }}>Loading sessions…</div>
+        <div style={{ textAlign: "center", padding: "48px 0", color: "#3A4A66" }}>Loading sessions…</div>
       ) : sessions.length === 0 ? (
         <div style={emptyBox}>
           <div style={{ fontSize: 40, marginBottom: 12 }}>📦</div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: "#0C2340", marginBottom: 6 }}>No import sessions yet</div>
-          <div style={{ fontSize: 12, color: "#64748b", marginBottom: 20 }}>Start a new import session to ingest catalog data into UniKatalog.</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: "#0E1F3A", marginBottom: 6 }}>No import sessions yet</div>
+          <div style={{ fontSize: 12, color: "#3A4A66", marginBottom: 20 }}>Start a new import session to ingest catalog data into UniKatalog.</div>
           <button onClick={onNew} style={btnPrimary}>Start First Import</button>
         </div>
       ) : displayed.length === 0 ? (
         <div style={{ ...emptyBox, padding: "40px 20px" }}>
           <div style={{ fontSize: 32, marginBottom: 10 }}>🔍</div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: "#0C2340", marginBottom: 4 }}>No sessions match your filters</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: "#0E1F3A", marginBottom: 4 }}>No sessions match your filters</div>
           <button onClick={() => { setPersistedFilter("All"); setPersistedSearch(""); }}
             style={{ ...btnPrimary, fontSize: 11, padding: "7px 16px", marginTop: 12 }}>Clear Filters</button>
         </div>
@@ -247,21 +247,21 @@ export default function ICSessionList({ sessions, loading, onSelect, onNew }) {
                 ? new Date(s.uploaded_at).toLocaleDateString()
                 : s.created_date ? new Date(s.created_date).toLocaleDateString() : "—";
               return (
-                <div key={s.id} style={{ background: "#fff", borderRadius: 10, border: "1px solid #e2e8f0", padding: "14px 16px", marginBottom: 10 }}>
+                <div key={s.id} style={{ background: "#fff", borderRadius: 10, border: "1px solid #D9D6CE", padding: "14px 16px", marginBottom: 10 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-                    <div style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 800, color: "#0C2340" }}>{s.session_id || s.id?.slice(0, 8)}</div>
+                    <div style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 800, color: "#0E1F3A" }}>{s.session_id || s.id?.slice(0, 8)}</div>
                     <StatusPill status={s.import_status || "Uploading"} />
                   </div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: "#1e293b" }}>{s.manufacturer || "—"}</div>
-                  {s.source_catalog && <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 4 }}>{s.source_catalog}</div>}
-                  <div style={{ fontSize: 11, color: "#64748b", fontFamily: "monospace", marginBottom: 8 }}>{s.entity_targets?.[0] || "—"}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#0E1F3A" }}>{s.manufacturer || "—"}</div>
+                  {s.source_catalog && <div style={{ fontSize: 11, color: "#8A94A6", marginBottom: 4 }}>{s.source_catalog}</div>}
+                  <div style={{ fontSize: 11, color: "#3A4A66", fontFamily: "monospace", marginBottom: 8 }}>{s.entity_targets?.[0] || "—"}</div>
                   <div style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 10, fontSize: 12 }}>
-                    <span><strong style={{ color: "#334155" }}>Rows:</strong> {(s.total_rows || 0).toLocaleString()}</span>
-                    <span><strong style={{ color: "#166534" }}>Written:</strong> {(s.rows_written || 0).toLocaleString()}</span>
-                    <span style={{ color: hasFailed ? "#dc2626" : "#94a3b8", fontWeight: hasFailed ? 800 : 400 }}>
+                    <span><strong style={{ color: "#3A4A66" }}>Rows:</strong> {(s.total_rows || 0).toLocaleString()}</span>
+                    <span><strong style={{ color: "#2E7D46" }}>Written:</strong> {(s.rows_written || 0).toLocaleString()}</span>
+                    <span style={{ color: hasFailed ? "#C62828" : "#8A94A6", fontWeight: hasFailed ? 800 : 400 }}>
                       <strong>Failed:</strong> {s.failed_rows || 0}
                     </span>
-                    <span style={{ color: "#94a3b8" }}>{dateStr}</span>
+                    <span style={{ color: "#8A94A6" }}>{dateStr}</span>
                   </div>
                   <QuickActions session={s} onSelect={onSelect} navigate={navigate} onExportFailed={handleExportFailed} />
                 </div>
@@ -271,11 +271,11 @@ export default function ICSessionList({ sessions, loading, onSelect, onNew }) {
 
           {/* ── Desktop table (>= 768px) ── */}
           <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }} className="ic-desktop-table">
-            <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", overflow: "hidden", minWidth: 900 }}>
+            <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", overflow: "hidden", minWidth: 900 }}>
               {/* Column headers */}
               <div style={rowGrid(true)}>
                 {["Session ID", "Manufacturer · Catalog", "Target", "Status", "Rows", "Written", "Failed", "Date", "Actions"].map((h, i) => (
-                  <div key={i} style={{ fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.5px" }}>{h}</div>
+                  <div key={i} style={{ fontSize: 10, fontWeight: 800, color: "#8A94A6", textTransform: "uppercase", letterSpacing: "0.5px" }}>{h}</div>
                 ))}
               </div>
 
@@ -289,24 +289,24 @@ export default function ICSessionList({ sessions, loading, onSelect, onNew }) {
                   <div key={s.id}
                     style={{ ...rowGrid(false), background: i % 2 === 0 ? "#fff" : "#fafafa", cursor: "pointer", transition: "background 0.1s" }}
                     onClick={() => onSelect(s)}
-                    onMouseEnter={e => e.currentTarget.style.background = "#f0f9ff"}
+                    onMouseEnter={e => e.currentTarget.style.background = "#FDF0E9"}
                     onMouseLeave={e => e.currentTarget.style.background = i % 2 === 0 ? "#fff" : "#fafafa"}
                   >
-                    <div style={{ fontFamily: "monospace", fontSize: 11, color: "#0C2340", fontWeight: 700 }}>
+                    <div style={{ fontFamily: "monospace", fontSize: 11, color: "#0E1F3A", fontWeight: 700 }}>
                       {s.session_id || s.id?.slice(0, 8)}
                     </div>
                     <div>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: "#1e293b" }}>{s.manufacturer || "—"}</div>
-                      {s.source_catalog && <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 1 }}>{s.source_catalog}</div>}
+                      <div style={{ fontSize: 12, fontWeight: 600, color: "#0E1F3A" }}>{s.manufacturer || "—"}</div>
+                      {s.source_catalog && <div style={{ fontSize: 10, color: "#8A94A6", marginTop: 1 }}>{s.source_catalog}</div>}
                     </div>
-                    <div style={{ fontSize: 11, color: "#64748b", fontFamily: "monospace" }}>{s.entity_targets?.[0] || "—"}</div>
+                    <div style={{ fontSize: 11, color: "#3A4A66", fontFamily: "monospace" }}>{s.entity_targets?.[0] || "—"}</div>
                     <div><StatusPill status={s.import_status || "Uploading"} /></div>
-                    <div style={{ fontSize: 12, color: "#334155" }}>{(s.total_rows || 0).toLocaleString()}</div>
-                    <div style={{ fontSize: 12, color: "#166534", fontWeight: 700 }}>{(s.rows_written || 0).toLocaleString()}</div>
-                    <div style={{ fontSize: 12, color: hasFailed ? "#dc2626" : "#94a3b8", fontWeight: hasFailed ? 800 : 400 }}>
+                    <div style={{ fontSize: 12, color: "#3A4A66" }}>{(s.total_rows || 0).toLocaleString()}</div>
+                    <div style={{ fontSize: 12, color: "#2E7D46", fontWeight: 700 }}>{(s.rows_written || 0).toLocaleString()}</div>
+                    <div style={{ fontSize: 12, color: hasFailed ? "#C62828" : "#8A94A6", fontWeight: hasFailed ? 800 : 400 }}>
                       {s.failed_rows || 0}
                     </div>
-                    <div style={{ fontSize: 11, color: "#64748b" }}>{dateStr}</div>
+                    <div style={{ fontSize: 11, color: "#3A4A66" }}>{dateStr}</div>
                     <div>
                       <QuickActions session={s} onSelect={onSelect} navigate={navigate} onExportFailed={handleExportFailed} />
                     </div>
@@ -328,16 +328,16 @@ function rowGrid(isHeader) {
     gridTemplateColumns: "120px 1fr 120px 160px 55px 70px 55px 80px 1fr",
     gap: 10, alignItems: "center",
     padding: "10px 18px",
-    borderBottom: isHeader ? "2px solid #e2e8f0" : "1px solid #f1f5f9",
+    borderBottom: isHeader ? "2px solid #D9D6CE" : "1px solid #ECEAE4",
   };
 }
 
 const btnPrimary = {
-  background: "#0C2340", color: "#fff", border: "none", borderRadius: 8,
+  background: "#0E1F3A", color: "#fff", border: "none", borderRadius: 8,
   padding: "9px 18px", fontSize: 12, fontWeight: 700, cursor: "pointer",
 };
 
 const emptyBox = {
-  background: "#fff", borderRadius: 12, border: "1px dashed #cbd5e1",
+  background: "#fff", borderRadius: 12, border: "1px dashed #C9C5BB",
   padding: "60px 20px", textAlign: "center",
 };

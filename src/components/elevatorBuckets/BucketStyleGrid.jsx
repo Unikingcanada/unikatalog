@@ -1,26 +1,26 @@
 // Bucket style grid with category tabs + material pills + product images
 import { useState } from "react";
 
-const NAVY = "#1a3a5c";
+const NAVY = "#0E1F3A";
 
 const MAT_STYLES = {
-  "Polyethylene": { bg: "#dbeafe", color: "#1d4ed8" },
-  "Nylon":        { bg: "#f3f4f6", color: "#374151" },
-  "Urethane":     { bg: "#fef3c7", color: "#b45309" },
-  "Carbon Steel": { bg: "#e5e7eb", color: "#374151" },
-  "Mild Steel":   { bg: "#e5e7eb", color: "#374151" },
+  "Polyethylene": { bg: "#FDF0E9", color: "#0E1F3A" },
+  "Nylon":        { bg: "#F4F2ED", color: "#3A4A66" },
+  "Urethane":     { bg: "#fef3c7", color: "#B8860B" },
+  "Carbon Steel": { bg: "#D9D6CE", color: "#3A4A66" },
+  "Mild Steel":   { bg: "#D9D6CE", color: "#3A4A66" },
   "Stainless Steel": { bg: "#e0e7ff", color: "#3730a3" },
   "Ductile Iron": { bg: "#fde8d8", color: "#92400e" },
-  "Aluminum":     { bg: "#e0f2fe", color: "#0369a1" },
+  "Aluminum":     { bg: "#FDF0E9", color: "#0E1F3A" },
   "Nylathane":    { bg: "#ccfbf1", color: "#0f766e" },
-  "Nyrim":        { bg: "#ede9fe", color: "#6d28d9" },
+  "Nyrim":        { bg: "#ECEAE4", color: "#3A4A66" },
 };
 
 function getMat(m) {
   for (const [k, v] of Object.entries(MAT_STYLES)) {
     if (m.toLowerCase().includes(k.toLowerCase())) return v;
   }
-  return { bg: "#f1f5f9", color: "#334155" };
+  return { bg: "#ECEAE4", color: "#3A4A66" };
 }
 
 function parseMaterials(rec) {
@@ -58,7 +58,7 @@ function BucketCard({ rec, onClick }) {
       style={{
         background: "#fff",
         borderRadius: 14,
-        border: `1px solid ${hov ? "#b45309" : "#e5e7eb"}`,
+        border: `1px solid ${hov ? "#B8860B" : "#D9D6CE"}`,
         cursor: "pointer",
         overflow: "hidden",
         display: "flex", flexDirection: "column",
@@ -68,7 +68,7 @@ function BucketCard({ rec, onClick }) {
       }}>
       <div style={{ height: 3, background: `linear-gradient(90deg, ${NAVY}, #2d5986)` }} />
       {/* Image */}
-      <div style={{ background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", height: 130, overflow: "hidden", position: "relative" }}>
+      <div style={{ background: "#F4F2ED", display: "flex", alignItems: "center", justifyContent: "center", height: 130, overflow: "hidden", position: "relative" }}>
         {rec.image_url ? (
           <img src={rec.image_url} alt={rec.series}
             style={{ maxHeight: 115, maxWidth: "88%", objectFit: "contain", padding: 8 }}
@@ -77,29 +77,29 @@ function BucketCard({ rec, onClick }) {
         {/* SVG placeholder shown if no image or image fails */}
         <div style={{ display: rec.image_url ? "none" : "flex", width: "100%", height: "100%", alignItems: "center", justifyContent: "center" }}>
           <svg width="80" height="64" viewBox="0 0 80 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="8" y="16" width="64" height="44" rx="4" fill="#e2e8f0" stroke="#cbd5e1" strokeWidth="1.5"/>
-            <rect x="20" y="4" width="40" height="16" rx="3" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="1.5"/>
-            <text x="40" y="44" textAnchor="middle" fontSize="9" fill="#94a3b8" fontFamily="Arial">Bucket</text>
-            <text x="40" y="55" textAnchor="middle" fontSize="7" fill="#94a3b8" fontFamily="Arial">No Image</text>
+            <rect x="8" y="16" width="64" height="44" rx="4" fill="#D9D6CE" stroke="#C9C5BB" strokeWidth="1.5"/>
+            <rect x="20" y="4" width="40" height="16" rx="3" fill="#C9C5BB" stroke="#8A94A6" strokeWidth="1.5"/>
+            <text x="40" y="44" textAnchor="middle" fontSize="9" fill="#8A94A6" fontFamily="Arial">Bucket</text>
+            <text x="40" y="55" textAnchor="middle" fontSize="7" fill="#8A94A6" fontFamily="Arial">No Image</text>
           </svg>
         </div>
         {/* Category badge */}
         <div style={{ position: "absolute", top: 8, left: 8 }}>
-          <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 99, background: isAg ? "#d1fae5" : "#dbeafe", color: isAg ? "#065f46" : "#1d4ed8" }}>
+          <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 99, background: isAg ? "#d1fae5" : "#FDF0E9", color: isAg ? "#065f46" : "#0E1F3A" }}>
             {isAg ? "AG" : "IND"}
           </span>
         </div>
         {isPending && (
           <div style={{ position: "absolute", top: 8, right: 8 }}>
-            <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 99, background: "#fef3c7", color: "#b45309" }}>Specs Soon</span>
+            <span style={{ fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 99, background: "#fef3c7", color: "#B8860B" }}>Specs Soon</span>
           </div>
         )}
       </div>
       {/* Body */}
       <div style={{ padding: "12px 14px 8px", flex: 1 }}>
         <div style={{ fontSize: 13, fontWeight: 900, color: NAVY, lineHeight: 1.25, marginBottom: 4 }}>{rec.styleName || rec.series}</div>
-        {rec.discharge_type && <div style={{ fontSize: 11, color: "#6b7280", marginBottom: 6 }}>{rec.discharge_type}</div>}
-        {rec.application && <div style={{ fontSize: 11, color: "#6b7280", lineHeight: 1.5, marginBottom: 8, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{rec.application}</div>}
+        {rec.discharge_type && <div style={{ fontSize: 11, color: "#3A4A66", marginBottom: 6 }}>{rec.discharge_type}</div>}
+        {rec.application && <div style={{ fontSize: 11, color: "#3A4A66", lineHeight: 1.5, marginBottom: 8, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{rec.application}</div>}
         {/* Material pills */}
         {mats.length > 0 && (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
@@ -111,8 +111,8 @@ function BucketCard({ rec, onClick }) {
         )}
       </div>
       {/* Footer */}
-      <div style={{ padding: "8px 14px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #f9fafb" }}>
-        <span style={{ fontSize: 10, color: "#9ca3af" }}>{sizeCount > 0 ? `${sizeCount} sizes` : rec.bucket_sizes || ""}</span>
+      <div style={{ padding: "8px 14px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #F4F2ED" }}>
+        <span style={{ fontSize: 10, color: "#8A94A6" }}>{sizeCount > 0 ? `${sizeCount} sizes` : rec.bucket_sizes || ""}</span>
         <span style={{ fontSize: 11, color: NAVY, fontWeight: 800 }}>View Specs →</span>
       </div>
     </div>
@@ -146,10 +146,10 @@ export default function BucketStyleGrid({ supplier, buckets, onSelectStyle, onBa
         <button onClick={onBack} className="uk-btn-back">← Suppliers</button>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 20, fontWeight: 900, color: NAVY }}>{supplier}</div>
-          <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 2 }}>{supplierBuckets.length} styles available</div>
+          <div style={{ fontSize: 12, color: "#8A94A6", marginTop: 2 }}>{supplierBuckets.length} styles available</div>
         </div>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search styles..."
-          style={{ padding: "8px 14px", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 13, outline: "none", width: 200 }} />
+          style={{ padding: "8px 14px", border: "1px solid #D9D6CE", borderRadius: 8, fontSize: 13, outline: "none", width: 200 }} />
       </div>
 
       {/* Category tabs */}
@@ -158,12 +158,12 @@ export default function BucketStyleGrid({ supplier, buckets, onSelectStyle, onBa
           Agricultural {agBuckets.length > 0 && <span style={{ marginLeft: 5, fontSize: 10, background: "#d1fae5", color: "#065f46", borderRadius: 99, padding: "1px 7px", fontWeight: 700 }}>{agBuckets.length}</span>}
         </button>
         <button className={`uk-tab-btn${activeTab === "ind" ? " active" : ""}`} onClick={() => setTab("ind")} style={{ opacity: indBuckets.length === 0 ? 0.4 : 1 }}>
-          Industrial {indBuckets.length > 0 && <span style={{ marginLeft: 5, fontSize: 10, background: "#dbeafe", color: "#1d4ed8", borderRadius: 99, padding: "1px 7px", fontWeight: 700 }}>{indBuckets.length}</span>}
+          Industrial {indBuckets.length > 0 && <span style={{ marginLeft: 5, fontSize: 10, background: "#FDF0E9", color: "#0E1F3A", borderRadius: 99, padding: "1px 7px", fontWeight: 700 }}>{indBuckets.length}</span>}
         </button>
       </div>
 
       {filtered.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "60px 20px", color: "#9ca3af" }}>
+        <div style={{ textAlign: "center", padding: "60px 20px", color: "#8A94A6" }}>
           <div style={{ fontSize: 32, marginBottom: 10 }}>🪣</div>
           <div style={{ fontSize: 13 }}>{search ? "No styles match your search." : "No styles in this category — check the other tab or contact Uniking."}</div>
         </div>

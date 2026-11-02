@@ -5,33 +5,33 @@
 
 export const COLORS = {
   // Primary
-  navy: "#003c5b",
-  navyMid: "#1A3A5C",
-  navyLight: "#2A5080",
+  navy: "#0E1F3A",
+  navyMid: "#0E1F3A",
+  navyLight: "#3A4A66",
   
   // Accent
-  gold: "#C9A84C",
-  goldLight: "#e8c96d",
+  gold: "#F26522",
+  goldLight: "#F26522",
   
   // Status
-  green: "#16a34a",
+  green: "#2E7D46",
   greenBg: "#f0fdf4",
-  red: "#dc2626",
+  red: "#C62828",
   redBg: "#fee2e2",
   orange: "#c2410c",
   orangeBg: "#ffedd5",
-  blue: "#2563eb",
-  blueBg: "#eff6ff",
+  blue: "#F26522",
+  blueBg: "#FDF0E9",
   
   // Neutral
-  background: "#f8fafc",
+  background: "#F4F2ED",
   card: "#ffffff",
-  border: "#e2e8f0",
-  text: "#0f172a",
-  textMid: "#1e293b",
-  muted: "#64748b",
-  mutedLight: "#94a3b8",
-  slate: "#334155",
+  border: "#D9D6CE",
+  text: "#0E1F3A",
+  textMid: "#0E1F3A",
+  muted: "#3A4A66",
+  mutedLight: "#8A94A6",
+  slate: "#3A4A66",
 };
 
 export const TYPOGRAPHY = {
@@ -108,10 +108,10 @@ export const BORDER_RADIUS = {
 };
 
 export const SHADOWS = {
-  sm: "0 1px 3px rgba(0,60,91,0.05)",
-  md: "0 2px 8px rgba(0,60,91,0.08)",
-  lg: "0 4px 16px rgba(0,60,91,0.12)",
-  xl: "0 6px 24px rgba(0,60,91,0.15)",
+  sm: "0 1px 3px rgba(14,31,58,0.05)",
+  md: "0 2px 8px rgba(14,31,58,0.08)",
+  lg: "0 4px 16px rgba(14,31,58,0.12)",
+  xl: "0 6px 24px rgba(14,31,58,0.15)",
 };
 
 // Helper function to merge typography styles

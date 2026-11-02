@@ -9,11 +9,11 @@ export default function ReviewStats({ records }) {
   const rejected = records.filter(r => r.review_status === "Rejected").length;
 
   const stats = [
-    { label: "Total Records", value: total,    color: "#1a3a5c", bg: "#eff6ff" },
-    { label: "Pending Review", value: pending,  color: "#b45309", bg: "#fffbeb" },
-    { label: "Critical Flags", value: critical, color: "#b91c1c", bg: "#fef2f2" },
-    { label: "Approved",       value: approved, color: "#16a34a", bg: "#f0fdf4" },
-    { label: "Rejected",       value: rejected, color: "#6b7280", bg: "#f8fafc" },
+    { label: "Total Records", value: total,    color: "#0E1F3A", bg: "#FDF0E9" },
+    { label: "Pending Review", value: pending,  color: "#B8860B", bg: "#fffbeb" },
+    { label: "Critical Flags", value: critical, color: "#C62828", bg: "#fef2f2" },
+    { label: "Approved",       value: approved, color: "#2E7D46", bg: "#f0fdf4" },
+    { label: "Rejected",       value: rejected, color: "#3A4A66", bg: "#F4F2ED" },
   ];
 
   return (

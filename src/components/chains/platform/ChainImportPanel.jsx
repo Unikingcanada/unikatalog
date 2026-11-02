@@ -24,20 +24,20 @@ import { getEquivalencyStats } from "@/lib/chainEquivalencyEngine";
 import { NORMALIZED_CHAINS } from "@/lib/chainNormalizedDictionary";
 
 const C = {
-  navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  bg: "#f8fafc", card: "#ffffff", border: "#e2e8f0",
-  text: "#0f172a", muted: "#64748b", slate: "#334155",
-  green: "#16a34a", greenBg: "#f0fdf4",
-  amber: "#d97706", amberBg: "#fffbeb",
-  red: "#dc2626", redBg: "#fef2f2",
-  blue: "#2563eb", blueBg: "#eff6ff",
-  purple: "#7c3aed", purpleBg: "#ede9fe",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  bg: "#F4F2ED", card: "#ffffff", border: "#D9D6CE",
+  text: "#0E1F3A", muted: "#3A4A66", slate: "#3A4A66",
+  green: "#2E7D46", greenBg: "#f0fdf4",
+  amber: "#B8860B", amberBg: "#fffbeb",
+  red: "#C62828", redBg: "#fef2f2",
+  blue: "#F26522", blueBg: "#FDF0E9",
+  purple: "#3A4A66", purpleBg: "#ECEAE4",
 };
 
 const STATUS_CONFIG = {
   [IMPORT_STATUS.MERGED]:          { color: C.green,  bg: C.greenBg,  icon: "✓", label: "Merged" },
   [IMPORT_STATUS.NEW_CANDIDATE]:   { color: C.blue,   bg: C.blueBg,   icon: "★", label: "New Candidate" },
-  [IMPORT_STATUS.DUPLICATE_SKIP]:  { color: C.muted,  bg: "#f1f5f9",  icon: "—", label: "Duplicate" },
+  [IMPORT_STATUS.DUPLICATE_SKIP]:  { color: C.muted,  bg: "#ECEAE4",  icon: "—", label: "Duplicate" },
   [IMPORT_STATUS.CONFLICT]:        { color: C.amber,  bg: C.amberBg,  icon: "⚠", label: "Conflict" },
 };
 
@@ -110,7 +110,7 @@ function ImportSimulator() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-      <div style={{ background: C.blueBg, border: "1px solid #bfdbfe", borderRadius: 8, padding: "12px 16px", fontSize: 12, color: "#1e40af" }}>
+      <div style={{ background: C.blueBg, border: "1px solid #F8C9B0", borderRadius: 8, padding: "12px 16px", fontSize: 12, color: "#0E1F3A" }}>
         <strong>Import Simulator</strong> — paste manufacturer catalog records as JSON. The engine will match each record to the normalized dictionary, detect duplicates, flag conflicts, and show what actions would be applied. No data is written — this is a preview only.
       </div>
 
@@ -174,7 +174,7 @@ function ImportSimulator() {
       )}
 
       {results && results.map((r, i) => {
-        const cfg = STATUS_CONFIG[r.status] || { color: C.muted, bg: "#f1f5f9", icon: "?", label: r.status };
+        const cfg = STATUS_CONFIG[r.status] || { color: C.muted, bg: "#ECEAE4", icon: "?", label: r.status };
         const fmt = formatImportResultSummary(r);
         const isExpanded = expandedIdx === i;
 
@@ -194,7 +194,7 @@ function ImportSimulator() {
               </div>
               <div style={{ display: "flex", gap: 8, flexShrink: 0, alignItems: "center" }}>
                 {r.conflicts.length > 0 && <Badge label={`${r.conflicts.length} conflicts`} color={C.amber} bg={C.amberBg} />}
-                {r.warnings.length > 0 && <Badge label={`${r.warnings.length} warnings`} color={C.muted} bg="#f1f5f9" />}
+                {r.warnings.length > 0 && <Badge label={`${r.warnings.length} warnings`} color={C.muted} bg="#ECEAE4" />}
                 <span style={{ fontSize: 11, color: C.muted }}>{isExpanded ? "▲" : "▼"}</span>
               </div>
             </div>
@@ -254,7 +254,7 @@ function ImportSimulator() {
 
                 {/* New candidate — show suggested chain structure */}
                 {r.status === IMPORT_STATUS.NEW_CANDIDATE && r.actions[0]?.suggested_chain_id && (
-                  <div style={{ background: C.blueBg, border: "1px solid #93c5fd", borderRadius: 8, padding: "12px 14px" }}>
+                  <div style={{ background: C.blueBg, border: "1px solid #F8C9B0", borderRadius: 8, padding: "12px 14px" }}>
                     <div style={{ fontSize: 11, fontWeight: 700, color: C.blue, textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 8 }}>
                       Suggested New Normalized Chain
                     </div>

@@ -5,8 +5,8 @@
 import { useState } from "react";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", border: "#e2e8f0",
-  muted: "#64748b", bg: "#f8fafc", green: "#16a34a", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", border: "#D9D6CE",
+  muted: "#3A4A66", bg: "#F4F2ED", green: "#2E7D46", text: "#0E1F3A",
 };
 const EUROBELT_BLUE = "#0066B3";
 
@@ -33,8 +33,8 @@ function ModelCard({ model, series, onAddRFQ }) {
         }}>
         <div style={{ fontSize: 13, fontWeight: 800, color: C.navyMid }}>{model.label}</div>
         <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
-          <span style={{ background: "#eef3f8", color: C.navyMid, fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 7 }}>{model.surface}</span>
-          {model.openArea && model.openArea !== "0%" && <span style={{ background: "#f0fdf4", color: "#166534", fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 7 }}>{model.openArea} open</span>}
+          <span style={{ background: "#F4F2ED", color: C.navyMid, fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 7 }}>{model.surface}</span>
+          {model.openArea && model.openArea !== "0%" && <span style={{ background: "#f0fdf4", color: "#2E7D46", fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 7 }}>{model.openArea} open</span>}
         </div>
         <p style={{ fontSize: 11, color: C.muted, lineHeight: 1.5, margin: 0 }}>{model.description}</p>
         <div style={{ display: "flex", gap: 10, fontSize: 10, color: C.muted, marginTop: 2 }}>
@@ -43,7 +43,7 @@ function ModelCard({ model, series, onAddRFQ }) {
           {model.rollerDia_mm && <span>Roller: <strong>Ø{model.rollerDia_mm} mm</strong></span>}
         </div>
         <div style={{ display: "flex", gap: 6, marginTop: 4 }}>
-          <button onClick={() => setShowDetails(true)} style={{ flex: 1, padding: "7px", background: "#f1f5f9", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 10, fontWeight: 700, color: C.navyMid }}>Specs & Materials</button>
+          <button onClick={() => setShowDetails(true)} style={{ flex: 1, padding: "7px", background: "#ECEAE4", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 10, fontWeight: 700, color: C.navyMid }}>Specs & Materials</button>
           <button onClick={() => onAddRFQ({ ...model, series: series.name })} style={{ flex: 1, padding: "7px", background: C.navyMid, border: "none", borderRadius: 6, cursor: "pointer", fontSize: 10, fontWeight: 800, color: "#fff" }}>+ Add to RFQ</button>
         </div>
       </div>
@@ -127,7 +127,7 @@ function ModelDetailsModal({ model, series, onClose, onAddRFQ }) {
             <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Special requirements, flights, sideguards…" rows={2} style={{ width: "100%", padding: "8px 12px", border: `1.5px solid ${C.border}`, borderRadius: 8, fontSize: 12, color: C.text, resize: "vertical" }} />
           </div>
           <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={onClose} style={{ flex: 1, padding: "10px", background: "#f1f5f9", color: C.navyMid, border: "none", borderRadius: 9, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Cancel</button>
+            <button onClick={onClose} style={{ flex: 1, padding: "10px", background: "#ECEAE4", color: C.navyMid, border: "none", borderRadius: 9, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Cancel</button>
             <button onClick={handleAdd} style={{ flex: 2, padding: "10px", background: C.navyMid, color: "#fff", border: "none", borderRadius: 9, cursor: "pointer", fontSize: 12, fontWeight: 800 }}>+ Add to RFQ Cart</button>
           </div>
         </div>
@@ -219,7 +219,7 @@ export default function EurobeltSeriesDetail({ series, onBack }) {
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {series.sprockets.map((sp, i) => (
                   <div key={i} style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, display: "flex", alignItems: "center", gap: 12, padding: "12px 16px" }}>
-                    <div style={{ width: 48, height: 48, flexShrink: 0, background: "#f0f4f8", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>⚙️</div>
+                    <div style={{ width: 48, height: 48, flexShrink: 0, background: "#F4F2ED", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>⚙️</div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 13, fontWeight: 800, color: C.navyMid }}>{sp.name}</div>
                       <div style={{ fontSize: 11, color: C.muted }}>Material: <strong>{sp.material}</strong> · Bore: <strong>{sp.bore}</strong></div>

@@ -21,7 +21,7 @@ export default function AuthGate({ children }) {
   if (status === "checking" || status === "redirecting") {
     return (
       <div style={{
-        minHeight: "100vh", background: "#0C2340",
+        minHeight: "100vh", background: "#0E1F3A",
         display: "flex", alignItems: "center", justifyContent: "center",
         flexDirection: "column", gap: 20, fontFamily: "'Inter','Segoe UI',sans-serif",
       }}>

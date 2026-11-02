@@ -9,7 +9,7 @@ import SharpTopIntro from "./SharpTopIntro";
 import SharpTopProductCard from "./SharpTopProductCard";
 import SharpTopProductDetail from "./SharpTopProductDetail";
 
-const C = { navy: "#0F2340", navyMid: "#1A3A5C", gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", text: "#0f172a", bg: "#f8fafc" };
+const C = { navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522", border: "#D9D6CE", muted: "#3A4A66", text: "#0E1F3A", bg: "#F4F2ED" };
 
 function SubcategoryGrid({ onSelect }) {
   const [hovered, setHovered] = useState(null);
@@ -40,7 +40,7 @@ function SubcategoryGrid({ onSelect }) {
                 border: `1px solid ${isHov ? C.navyMid : C.border}`,
                 borderRadius: 10, cursor: "pointer", transition: "all 0.18s",
                 display: "flex", flexDirection: "column", overflow: "hidden",
-                boxShadow: isHov ? "0 6px 24px rgba(15,35,64,0.14)" : "0 1px 4px rgba(15,35,64,0.05)",
+                boxShadow: isHov ? "0 6px 24px rgba(14,31,58,0.14)" : "0 1px 4px rgba(14,31,58,0.05)",
               }}
             >
               <div style={{ padding: "18px 20px", flex: 1 }}>
@@ -49,7 +49,7 @@ function SubcategoryGrid({ onSelect }) {
                 <div style={{ fontSize: 12, color: isHov ? "rgba(255,255,255,0.65)" : C.muted, lineHeight: 1.6, marginBottom: 10 }}>{sub.description}</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
                   {sub.pitches.map(p => (
-                    <span key={p} style={{ fontSize: 10, padding: "2px 8px", borderRadius: 10, background: isHov ? "rgba(255,255,255,0.15)" : "#f1f5f9", color: isHov ? "rgba(255,255,255,0.85)" : C.muted, fontWeight: 600 }}>{p}</span>
+                    <span key={p} style={{ fontSize: 10, padding: "2px 8px", borderRadius: 10, background: isHov ? "rgba(255,255,255,0.15)" : "#ECEAE4", color: isHov ? "rgba(255,255,255,0.85)" : C.muted, fontWeight: 600 }}>{p}</span>
                   ))}
                 </div>
               </div>

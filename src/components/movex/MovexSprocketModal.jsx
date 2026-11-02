@@ -6,8 +6,8 @@
 import { useState, useMemo } from "react";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
-  border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", green: "#16a34a", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522",
+  border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", green: "#2E7D46", text: "#0E1F3A",
 };
 const MOVEX_RED = "#E63946";
 
@@ -123,7 +123,7 @@ export default function MovexSprocketModal({ sprocket, series, onClose, onAddToR
         <div style={{ padding: "18px 22px" }}>
           {/* Image + quick specs */}
           <div style={{ display: "flex", gap: 14, marginBottom: 16 }}>
-            <div style={{ width: 120, height: 100, flexShrink: 0, background: "#f0f4f8", borderRadius: 8, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: 120, height: 100, flexShrink: 0, background: "#F4F2ED", borderRadius: 8, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
               {sprocket.image ? (
                 <img src={sprocket.image} alt={sprocket.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => { e.target.style.display = "none"; e.target.parentElement.innerHTML = "⚙️"; e.target.parentElement.style.fontSize = "32px"; }} />
               ) : (
@@ -263,7 +263,7 @@ export default function MovexSprocketModal({ sprocket, series, onClose, onAddToR
 
           {/* Summary */}
           {canAdd && (
-            <div style={{ background: "#eef3f8", borderRadius: 8, padding: "10px 14px", marginBottom: 14, fontSize: 11 }}>
+            <div style={{ background: "#F4F2ED", borderRadius: 8, padding: "10px 14px", marginBottom: 14, fontSize: 11 }}>
               <span style={{ fontWeight: 700, color: C.navyMid }}>Your selection: </span>
               <span style={{ color: C.text }}>
                 {[
@@ -279,13 +279,13 @@ export default function MovexSprocketModal({ sprocket, series, onClose, onAddToR
 
           {/* Actions */}
           <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={onClose} style={{ flex: 1, padding: "11px", background: "#f1f5f9", color: C.navyMid, border: "none", borderRadius: 9, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Cancel</button>
+            <button onClick={onClose} style={{ flex: 1, padding: "11px", background: "#ECEAE4", color: C.navyMid, border: "none", borderRadius: 9, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Cancel</button>
             <button
               onClick={handleAdd}
               disabled={!canAdd || added}
               style={{
                 flex: 2, padding: "11px", border: "none", borderRadius: 9, cursor: canAdd && !added ? "pointer" : "default",
-                background: added ? C.green : canAdd ? C.navyMid : "#cbd5e1",
+                background: added ? C.green : canAdd ? C.navyMid : "#C9C5BB",
                 color: "#fff", fontSize: 12, fontWeight: 800,
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
               }}>

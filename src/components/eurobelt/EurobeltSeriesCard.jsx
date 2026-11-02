@@ -4,8 +4,8 @@
 import { useState } from "react";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", border: "#e2e8f0",
-  muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", border: "#D9D6CE",
+  muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
 };
 const EUROBELT_BLUE = "#0066B3";
 
@@ -19,10 +19,10 @@ export default function EurobeltSeriesCard({ series, onViewSeries }) {
       style={{
         background: "#fff", borderRadius: 12, border: `2px solid ${hov ? EUROBELT_BLUE : C.border}`,
         overflow: "hidden", cursor: "pointer", transition: "all 0.16s",
-        boxShadow: hov ? "0 6px 20px rgba(12,35,64,0.1)" : "0 1px 4px rgba(0,0,0,0.05)",
+        boxShadow: hov ? "0 6px 20px rgba(14,31,58,0.1)" : "0 1px 4px rgba(0,0,0,0.05)",
         transform: hov ? "translateY(-2px)" : "none",
       }}>
-      <div style={{ height: 130, overflow: "hidden", background: "#f0f4f8", position: "relative" }}>
+      <div style={{ height: 130, overflow: "hidden", background: "#F4F2ED", position: "relative" }}>
         {series.image ? (
           <img src={series.image} alt={series.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => { e.target.style.display = "none"; }} />
         ) : (
@@ -38,10 +38,10 @@ export default function EurobeltSeriesCard({ series, onViewSeries }) {
           {series.description?.slice(0, 85)}{series.description?.length > 85 ? "…" : ""}
         </div>
         <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 8 }}>
-          <span style={{ background: "#eef3f8", color: C.navyMid, fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 7 }}>
+          <span style={{ background: "#F4F2ED", color: C.navyMid, fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 7 }}>
             {series.pitch_mm} mm ({series.pitch_in}")
           </span>
-          <span style={{ background: "#f1f5f9", color: C.muted, fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 7 }}>
+          <span style={{ background: "#ECEAE4", color: C.muted, fontSize: 9, fontWeight: 600, padding: "2px 7px", borderRadius: 7 }}>
             {styleCount} model{styleCount !== 1 ? "s" : ""}
           </span>
         </div>

@@ -102,12 +102,12 @@ export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityCh
   const mappedCount = sourceHeaders.filter(h => mapping[h]).length;
 
   return (
-    <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", overflow: "hidden" }}>
+    <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", overflow: "hidden" }}>
       {/* Header */}
-      <div style={{ padding: "16px 20px", borderBottom: "1px solid #e2e8f0", display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
+      <div style={{ padding: "16px 20px", borderBottom: "1px solid #D9D6CE", display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
         <div>
-          <div style={{ fontSize: 14, fontWeight: 800, color: "#0C2340" }}>Column Mapping</div>
-          <div style={{ fontSize: 11, color: "#64748b", marginTop: 1 }}>
+          <div style={{ fontSize: 14, fontWeight: 800, color: "#0E1F3A" }}>Column Mapping</div>
+          <div style={{ fontSize: 11, color: "#3A4A66", marginTop: 1 }}>
             {mappedCount}/{sourceHeaders.length} columns mapped → {entityTarget}
           </div>
         </div>
@@ -124,7 +124,7 @@ export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityCh
         {/* Load saved mapping */}
         {savedMappings.filter(m => m.entity_target === entityTarget).length > 0 && (
           <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
-            <span style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Load:</span>
+            <span style={{ fontSize: 11, color: "#3A4A66", fontWeight: 600 }}>Load:</span>
             {savedMappings.filter(m => m.entity_target === entityTarget).slice(0,5).map(m => (
               <button key={m.id} onClick={() => handleLoad(m)} style={pillBtn}>
                 {m.mapping_name}
@@ -133,7 +133,7 @@ export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityCh
           </div>
         )}
 
-        {loadMsg && <span style={{ fontSize: 11, color: "#16a34a", fontWeight: 700 }}>{loadMsg}</span>}
+        {loadMsg && <span style={{ fontSize: 11, color: "#2E7D46", fontWeight: 700 }}>{loadMsg}</span>}
 
         {/* Save mapping */}
         <div style={{ marginLeft: "auto", display: "flex", gap: 6, alignItems: "center" }}>
@@ -147,7 +147,7 @@ export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityCh
                 autoFocus
                 onKeyDown={e => e.key === 'Enter' && handleSave()}
               />
-              <button onClick={handleSave} style={{ ...pillBtn, background: "#0C2340", color: "#fff" }}>Save</button>
+              <button onClick={handleSave} style={{ ...pillBtn, background: "#0E1F3A", color: "#fff" }}>Save</button>
               <button onClick={() => setSavingName(false)} style={pillBtn}>Cancel</button>
             </>
           ) : (
@@ -167,7 +167,7 @@ export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityCh
       <div style={{ overflowX: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
           <thead>
-            <tr style={{ background: "#f8fafc" }}>
+            <tr style={{ background: "#F4F2ED" }}>
               <th style={th}>#</th>
               <th style={th}>Source Column</th>
               <th style={th}>→ Entity Field</th>
@@ -180,13 +180,13 @@ export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityCh
               const fields = ENTITY_FIELDS[entityTarget] || [];
               const isMapped = !!mapping[h];
               return (
-                <tr key={h} style={{ background: i % 2 === 0 ? "#fff" : "#fafafa", borderBottom: "1px solid #f1f5f9" }}>
-                  <td style={td}><span style={{ color: "#94a3b8", fontFamily: "monospace" }}>{i + 1}</span></td>
+                <tr key={h} style={{ background: i % 2 === 0 ? "#fff" : "#fafafa", borderBottom: "1px solid #ECEAE4" }}>
+                  <td style={td}><span style={{ color: "#8A94A6", fontFamily: "monospace" }}>{i + 1}</span></td>
                   <td style={td}>
                     <span style={{
                       fontFamily: "monospace", fontSize: 11,
                       background: isMapped ? "#f0fdf4" : "#fff7ed",
-                      color: isMapped ? "#166534" : "#9a3412",
+                      color: isMapped ? "#2E7D46" : "#9a3412",
                       padding: "2px 8px", borderRadius: 4, border: `1px solid ${isMapped ? "#86efac" : "#fed7aa"}`,
                     }}>{h}</span>
                   </td>
@@ -211,12 +211,12 @@ export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityCh
                   </td>
                   <td style={td}>
                     {mapping[h] ? (
-                      <span style={{ fontSize: 10, color: "#1d4ed8", fontFamily: "monospace" }}>
+                      <span style={{ fontSize: 10, color: "#0E1F3A", fontFamily: "monospace" }}>
                         → {mapping[h]}
-                        {transforms[h] ? <span style={{ color: "#7c3aed" }}> ({transforms[h]})</span> : null}
+                        {transforms[h] ? <span style={{ color: "#3A4A66" }}> ({transforms[h]})</span> : null}
                       </span>
                     ) : (
-                      <span style={{ fontSize: 10, color: "#94a3b8", fontStyle: "italic" }}>not mapped</span>
+                      <span style={{ fontSize: 10, color: "#8A94A6", fontStyle: "italic" }}>not mapped</span>
                     )}
                   </td>
                 </tr>
@@ -227,8 +227,8 @@ export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityCh
       </div>
 
       {/* Apply buttons */}
-      <div style={{ padding: "14px 20px", borderTop: "1px solid #e2e8f0", display: "flex", justifyContent: "flex-end", gap: 10, flexWrap: "wrap" }}>
-        <span style={{ fontSize: 12, color: "#64748b", alignSelf: "center" }}>
+      <div style={{ padding: "14px 20px", borderTop: "1px solid #D9D6CE", display: "flex", justifyContent: "flex-end", gap: 10, flexWrap: "wrap" }}>
+        <span style={{ fontSize: 12, color: "#3A4A66", alignSelf: "center" }}>
           {mappedCount} of {sourceHeaders.length} columns mapped
         </span>
         {onDryRun && entityTarget === "Normalized_Chains" && (
@@ -236,9 +236,9 @@ export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityCh
             onClick={() => onDryRun(mapping, transforms)}
             disabled={mappedCount === 0}
             style={{
-              background: mappedCount === 0 ? "#f1f5f9" : "#fff7ed",
-              color: mappedCount === 0 ? "#94a3b8" : "#c2410c",
-              border: mappedCount === 0 ? "1px solid #e2e8f0" : "1px solid #fed7aa",
+              background: mappedCount === 0 ? "#ECEAE4" : "#fff7ed",
+              color: mappedCount === 0 ? "#8A94A6" : "#c2410c",
+              border: mappedCount === 0 ? "1px solid #D9D6CE" : "1px solid #fed7aa",
               borderRadius: 8, padding: "9px 22px",
               fontSize: 12, fontWeight: 700, cursor: mappedCount === 0 ? "default" : "pointer",
             }}
@@ -251,8 +251,8 @@ export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityCh
           onClick={() => onMappingReady(mapping, transforms)}
           disabled={mappedCount === 0}
           style={{
-            background: mappedCount === 0 ? "#e2e8f0" : "#0C2340",
-            color: mappedCount === 0 ? "#94a3b8" : "#fff",
+            background: mappedCount === 0 ? "#D9D6CE" : "#0E1F3A",
+            color: mappedCount === 0 ? "#8A94A6" : "#fff",
             border: "none", borderRadius: 8, padding: "9px 22px",
             fontSize: 12, fontWeight: 700, cursor: mappedCount === 0 ? "default" : "pointer",
           }}
@@ -265,12 +265,12 @@ export default function ICColumnMapper({ sourceHeaders, entityTarget, onEntityCh
 }
 
 const selectStyle = {
-  padding: "5px 10px", border: "1px solid #e2e8f0", borderRadius: 6,
-  fontSize: 11, color: "#1e293b", background: "#fff", cursor: "pointer", outline: "none",
+  padding: "5px 10px", border: "1px solid #D9D6CE", borderRadius: 6,
+  fontSize: 11, color: "#0E1F3A", background: "#fff", cursor: "pointer", outline: "none",
 };
 const pillBtn = {
-  padding: "4px 12px", border: "1px solid #e2e8f0", borderRadius: 99,
-  background: "#f8fafc", color: "#475569", fontSize: 11, fontWeight: 600, cursor: "pointer",
+  padding: "4px 12px", border: "1px solid #D9D6CE", borderRadius: 99,
+  background: "#F4F2ED", color: "#3A4A66", fontSize: 11, fontWeight: 600, cursor: "pointer",
 };
-const th = { padding: "8px 12px", textAlign: "left", fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #e2e8f0" };
+const th = { padding: "8px 12px", textAlign: "left", fontSize: 10, fontWeight: 800, color: "#8A94A6", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #D9D6CE" };
 const td = { padding: "7px 12px" };

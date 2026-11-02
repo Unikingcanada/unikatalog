@@ -7,8 +7,8 @@ import { CHAIN_CATEGORIES, CHAIN_PRODUCTS, searchChainProducts } from "@/lib/cha
 import PageHeader from "@/components/ui/PageHeader";
 
 const C = {
-  navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  gold: "#F26522", border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
 };
 
 export default function ChainCatalogHome({ onSelectCategory, onSelectProduct, onBack }) {
@@ -124,16 +124,16 @@ export default function ChainCatalogHome({ onSelectCategory, onSelectProduct, on
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "24px clamp(12px,4vw,40px) 80px" }}>
 
           {/* Platform CTA */}
-          <div style={{ background: "linear-gradient(135deg, #0C2340 0%, #1A3A5C 100%)", borderRadius: 12, padding: "20px 24px", marginBottom: 28, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+          <div style={{ background: "linear-gradient(135deg, #0E1F3A 0%, #0E1F3A 100%)", borderRadius: 12, padding: "20px 24px", marginBottom: 28, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
             <div>
-              <div style={{ color: "#C9A84C", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 4 }}>New</div>
+              <div style={{ color: "#F26522", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", marginBottom: 4 }}>New</div>
               <div style={{ color: "#fff", fontSize: 16, fontWeight: 800, marginBottom: 4 }}>Normalized Chain Procurement Platform</div>
               <div style={{ color: "rgba(255,255,255,0.65)", fontSize: 12, lineHeight: 1.5 }}>
                 18 chain families · Brand-neutral · Configurator · Specs + Attachments + Sprockets
               </div>
             </div>
             <button onClick={() => onSelectCategory({ key: "__platform__" })}
-              style={{ padding: "10px 22px", background: "#C9A84C", color: "#0C2340", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 800, fontSize: 13, whiteSpace: "nowrap" }}>
+              style={{ padding: "10px 22px", background: "#F26522", color: "#0E1F3A", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 800, fontSize: 13, whiteSpace: "nowrap" }}>
               Open Chain Platform →
             </button>
           </div>
@@ -182,7 +182,7 @@ function CategoryCard({ category, onClick }) {
         overflow: "hidden",
         cursor: "pointer",
         transition: "all 0.18s",
-        boxShadow: hov ? "0 6px 22px rgba(0,60,91,0.13)" : "0 1px 4px rgba(0,0,0,0.04)",
+        boxShadow: hov ? "0 6px 22px rgba(14,31,58,0.13)" : "0 1px 4px rgba(0,0,0,0.04)",
         transform: hov ? "translateY(-2px)" : "none",
         display: "flex",
         flexDirection: "column",
@@ -193,7 +193,7 @@ function CategoryCard({ category, onClick }) {
 
       {/* Image */}
       {category.image && (
-        <div style={{ height: 90, overflow: "hidden", background: "#f8fafc" }}>
+        <div style={{ height: 90, overflow: "hidden", background: "#F4F2ED" }}>
           <img src={category.image} alt={category.label}
             style={{ width: "100%", height: "100%", objectFit: "cover", opacity: hov ? 1 : 0.85, transition: "opacity 0.15s" }} />
         </div>
@@ -213,7 +213,7 @@ function CategoryCard({ category, onClick }) {
             <span key={sub.key} style={{ fontSize: 10, fontWeight: 600, background: `${category.color}12`, color: category.color, padding: "2px 7px", borderRadius: 8 }}>{sub.label}</span>
           ))}
           {(category.subcategories?.length || 0) > 4 && (
-            <span style={{ fontSize: 10, fontWeight: 600, background: "#f1f5f9", color: C.muted, padding: "2px 7px", borderRadius: 8 }}>+{category.subcategories.length - 4} more</span>
+            <span style={{ fontSize: 10, fontWeight: 600, background: "#ECEAE4", color: C.muted, padding: "2px 7px", borderRadius: 8 }}>+{category.subcategories.length - 4} more</span>
           )}
         </div>
       </div>
@@ -232,7 +232,7 @@ function ChainSearchCard({ product, onView, onAddRFQ }) {
     <div style={{ background: "#fff", borderRadius: 12, border: `1px solid ${C.border}`, overflow: "hidden", cursor: "pointer" }} onClick={onView}>
       <div style={{ display: "flex", gap: 0 }}>
         {product.image && (
-          <div style={{ width: 70, flexShrink: 0, background: "#f8fafc" }}>
+          <div style={{ width: 70, flexShrink: 0, background: "#F4F2ED" }}>
             <img src={product.image} alt={product.chain_number} style={{ width: "100%", height: 70, objectFit: "cover" }} />
           </div>
         )}

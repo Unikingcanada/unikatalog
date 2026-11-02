@@ -1,10 +1,10 @@
 import { useState } from "react";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
-  border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", green: "#16a34a", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522",
+  border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", green: "#2E7D46", text: "#0E1F3A",
 };
-const SP_BLUE = "#0057A8";
+const SP_BLUE = "#0E1F3A";
 const SP_SMART_GUIDE_URL = "https://www.systemplastsmartguide.com/INT/Smart-Guide/";
 
 function TabButton({ label, active, onClick }) {
@@ -27,9 +27,9 @@ function StyleCard({ style, onViewSpecs, onConfigure }) {
       style={{
         background: "#fff", borderRadius: 12, border: `2px solid ${hov ? C.navyMid : C.border}`,
         overflow: "hidden", transition: "all 0.16s", display: "flex", flexDirection: "column",
-        boxShadow: hov ? "0 6px 20px rgba(12,35,64,0.1)" : "0 1px 4px rgba(0,0,0,0.05)",
+        boxShadow: hov ? "0 6px 20px rgba(14,31,58,0.1)" : "0 1px 4px rgba(0,0,0,0.05)",
       }}>
-      <div style={{ height: 120, overflow: "hidden", background: "#eef3f8", position: "relative", flexShrink: 0 }}>
+      <div style={{ height: 120, overflow: "hidden", background: "#F4F2ED", position: "relative", flexShrink: 0 }}>
         {style.image ? (
           <img src={style.image} alt={style.label}
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
@@ -40,17 +40,17 @@ function StyleCard({ style, onViewSpecs, onConfigure }) {
             <div style={{ fontSize: 8, textAlign: "center", padding: "0 8px" }}>Image pending</div>
           </div>
         )}
-        {hasBeltData && <div style={{ position: "absolute", top: 6, right: 6, background: "#16a34a", color: "#fff", fontSize: 8, fontWeight: 700, padding: "2px 5px", borderRadius: 5 }}>✓ Data</div>}
+        {hasBeltData && <div style={{ position: "absolute", top: 6, right: 6, background: "#2E7D46", color: "#fff", fontSize: 8, fontWeight: 700, padding: "2px 5px", borderRadius: 5 }}>✓ Data</div>}
         {isMissing && <div style={{ position: "absolute", top: 6, right: 6, background: "#f59e0b", color: "#fff", fontSize: 8, fontWeight: 700, padding: "2px 5px", borderRadius: 5 }}>⚠ TBC</div>}
       </div>
       <div style={{ padding: "10px 12px", flex: 1, display: "flex", flexDirection: "column" }}>
         <div style={{ fontSize: 12, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>{style.label}</div>
         <div style={{ display: "flex", gap: 4, marginBottom: 6, flexWrap: "wrap" }}>
           {style.openArea && style.openArea !== "N/A" && (
-            <span style={{ background: "#eef3f8", color: C.navyMid, fontSize: 9, fontWeight: 600, padding: "1px 6px", borderRadius: 7 }}>{style.openArea} open</span>
+            <span style={{ background: "#F4F2ED", color: C.navyMid, fontSize: 9, fontWeight: 600, padding: "1px 6px", borderRadius: 7 }}>{style.openArea} open</span>
           )}
           {style.surface && (
-            <span style={{ background: "#f1f5f9", color: C.muted, fontSize: 9, padding: "1px 6px", borderRadius: 7 }}>{style.surface?.slice(0, 22)}</span>
+            <span style={{ background: "#ECEAE4", color: C.muted, fontSize: 9, padding: "1px 6px", borderRadius: 7 }}>{style.surface?.slice(0, 22)}</span>
           )}
         </div>
         <p style={{ fontSize: 10, color: C.muted, lineHeight: 1.5, margin: "0 0 8px", flex: 1 }}>
@@ -61,14 +61,14 @@ function StyleCard({ style, onViewSpecs, onConfigure }) {
             <div style={{ fontSize: 9, color: C.muted, fontWeight: 600, marginBottom: 2 }}>Materials:</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
               {style.beltData.slice(0, 3).map((r, i) => (
-                <span key={i} style={{ fontSize: 8, background: "#f0fdf4", color: "#166534", padding: "1px 5px", borderRadius: 5, fontWeight: 600 }}>{r.material}</span>
+                <span key={i} style={{ fontSize: 8, background: "#f0fdf4", color: "#2E7D46", padding: "1px 5px", borderRadius: 5, fontWeight: 600 }}>{r.material}</span>
               ))}
-              {style.beltData.length > 3 && <span style={{ fontSize: 8, background: "#f1f5f9", color: C.muted, padding: "1px 5px", borderRadius: 5 }}>+{style.beltData.length - 3}</span>}
+              {style.beltData.length > 3 && <span style={{ fontSize: 8, background: "#ECEAE4", color: C.muted, padding: "1px 5px", borderRadius: 5 }}>+{style.beltData.length - 3}</span>}
             </div>
           </div>
         )}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 5, marginTop: "auto" }}>
-          <button onClick={() => onViewSpecs(style)} style={{ padding: "7px", background: "#f1f5f9", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 10, fontWeight: 700, color: C.navyMid }}>
+          <button onClick={() => onViewSpecs(style)} style={{ padding: "7px", background: "#ECEAE4", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 10, fontWeight: 700, color: C.navyMid }}>
             View Details
           </button>
           <button onClick={() => onConfigure(style)} style={{ padding: "7px", background: SP_BLUE, border: "none", borderRadius: 6, cursor: "pointer", fontSize: 10, fontWeight: 800, color: "#fff" }}>
@@ -139,7 +139,7 @@ function SpecsModal({ series, style, onConfigure, onClose }) {
                   </thead>
                   <tbody>
                     {style.beltData.map((row, i) => (
-                      <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff" }}>
+                      <tr key={i} style={{ background: i % 2 === 0 ? "#F4F2ED" : "#fff" }}>
                         <td style={{ padding: "5px 8px", fontWeight: 700, color: C.navyMid }}>{row.label || row.material}</td>
                         <td style={{ padding: "5px 8px", color: C.muted }}>{row.pinMaterial}</td>
                         <td style={{ padding: "5px 8px" }}>{row.strengthNm?.toLocaleString()}</td>
@@ -171,7 +171,7 @@ function SpecsModal({ series, style, onConfigure, onClose }) {
             <div style={{ marginBottom: 12 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.7px", marginBottom: 6 }}>Applications</div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                {style.applications.map(a => <span key={a} style={{ background: "#eef3f8", color: C.navyMid, fontSize: 10, fontWeight: 600, padding: "3px 8px", borderRadius: 9 }}>{a}</span>)}
+                {style.applications.map(a => <span key={a} style={{ background: "#F4F2ED", color: C.navyMid, fontSize: 10, fontWeight: 600, padding: "3px 8px", borderRadius: 9 }}>{a}</span>)}
               </div>
             </div>
           )}
@@ -188,7 +188,7 @@ function SpecsModal({ series, style, onConfigure, onClose }) {
           </div>
 
           <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={onClose} style={{ flex: 1, padding: "10px", background: "#f1f5f9", color: C.navyMid, border: "none", borderRadius: 9, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Close</button>
+            <button onClick={onClose} style={{ flex: 1, padding: "10px", background: "#ECEAE4", color: C.navyMid, border: "none", borderRadius: 9, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Close</button>
             <button onClick={() => { onClose(); onConfigure(style); }} style={{ flex: 2, padding: "10px", background: SP_BLUE, color: "#fff", border: "none", borderRadius: 9, cursor: "pointer", fontSize: 12, fontWeight: 800 }}>
               Configure This Belt →
             </button>
@@ -239,7 +239,7 @@ export default function SystemPlastSeriesDetail({ series, onConfigure, onBack, o
   return (
     <div>
       {/* Header */}
-      <div style={{ background: `linear-gradient(135deg, ${C.navy}, #0057A8)`, padding: "20px 24px" }}>
+      <div style={{ background: `linear-gradient(135deg, ${C.navy}, #0E1F3A)`, padding: "20px 24px" }}>
         <button onClick={onBack} style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", borderRadius: 7, padding: "5px 12px", cursor: "pointer", fontSize: 12, marginBottom: 12 }}>← Back</button>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
           <div style={{ background: "rgba(255,255,255,0.2)", borderRadius: 5, padding: "3px 8px" }}>
@@ -254,7 +254,7 @@ export default function SystemPlastSeriesDetail({ series, onConfigure, onBack, o
         <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: "0 0 12px", maxWidth: 600 }}>{series.description}</p>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           {series.pitch_in && (
-            <span style={{ background: "rgba(201,168,76,0.2)", color: C.gold, padding: "4px 10px", borderRadius: 16, fontSize: 11, fontWeight: 700 }}>Pitch: {series.pitch_in}" ({series.pitch_mm} mm)</span>
+            <span style={{ background: "rgba(242,101,34,0.2)", color: C.gold, padding: "4px 10px", borderRadius: 16, fontSize: 11, fontWeight: 700 }}>Pitch: {series.pitch_in}" ({series.pitch_mm} mm)</span>
           )}
           {series.thickness_mm && (
             <span style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)", padding: "4px 10px", borderRadius: 16, fontSize: 11 }}>H: {series.thickness_mm} mm</span>
@@ -269,7 +269,7 @@ export default function SystemPlastSeriesDetail({ series, onConfigure, onBack, o
         </div>
       </div>
 
-      {rfqMsg && <div style={{ background: "#16a34a", color: "#fff", padding: "10px 20px", fontSize: 13, fontWeight: 700, textAlign: "center" }}>✓ {rfqMsg}</div>}
+      {rfqMsg && <div style={{ background: "#2E7D46", color: "#fff", padding: "10px 20px", fontSize: 13, fontWeight: 700, textAlign: "center" }}>✓ {rfqMsg}</div>}
 
       {/* Tabs */}
       <div style={{ background: "#fff", borderBottom: `1px solid ${C.border}`, padding: "0 20px", display: "flex", gap: 2, overflowX: "auto" }}>
@@ -311,7 +311,7 @@ export default function SystemPlastSeriesDetail({ series, onConfigure, onBack, o
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {series.sprockets.map((sp, i) => (
                   <div key={i} style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, display: "flex", alignItems: "center", gap: 12, padding: "12px 16px" }}>
-                    <div style={{ width: 48, height: 40, flexShrink: 0, background: "#eef3f8", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>⚙️</div>
+                    <div style={{ width: 48, height: 40, flexShrink: 0, background: "#F4F2ED", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>⚙️</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 13, fontWeight: 800, color: C.navyMid }}>{sp.name}</div>
                       <div style={{ fontSize: 11, color: C.muted, marginTop: 1 }}>
@@ -355,7 +355,7 @@ export default function SystemPlastSeriesDetail({ series, onConfigure, onBack, o
                     <div style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden" }}>
                       {items.map((acc, i) => (
                         <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderBottom: i < items.length - 1 ? `1px solid ${C.border}` : "none" }}>
-                          <div style={{ width: 40, height: 36, flexShrink: 0, background: "#f1f5f9", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>
+                          <div style={{ width: 40, height: 36, flexShrink: 0, background: "#ECEAE4", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>
                             {acc.type === "flight" ? "🔧" : acc.type === "track" ? "🛤️" : acc.type === "sideguard" ? "🛡️" : acc.type === "special" ? "⚙️" : "📦"}
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
@@ -420,7 +420,7 @@ export default function SystemPlastSeriesDetail({ series, onConfigure, onBack, o
                     </thead>
                     <tbody>
                       {style.beltData.map((row, i) => (
-                        <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff" }}>
+                        <tr key={i} style={{ background: i % 2 === 0 ? "#F4F2ED" : "#fff" }}>
                           <td style={{ padding: "6px 9px", fontWeight: 700, color: C.navyMid }}>{row.label || row.material}</td>
                           <td style={{ padding: "6px 9px", color: C.muted }}>{row.pinMaterial}</td>
                           <td style={{ padding: "6px 9px" }}>{row.strengthNm?.toLocaleString()}</td>

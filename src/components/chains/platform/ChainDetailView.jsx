@@ -8,11 +8,11 @@ import { base44 } from "@/api/base44Client";
 import ChainDetailTabs from "./ChainDetailTabs";
 
 const C = {
-  navy: "#003c5b", navyMid: "#1A3A5C",
-  border: "#e2e8f0", bg: "#f8fafc", card: "#ffffff",
-  text: "#0f172a", muted: "#64748b", slate: "#334155",
-  green: "#16a34a", greenBg: "#f0fdf4",
-  blue: "#2563eb", blueBg: "#eff6ff",
+  navy: "#0E1F3A", navyMid: "#0E1F3A",
+  border: "#D9D6CE", bg: "#F4F2ED", card: "#ffffff",
+  text: "#0E1F3A", muted: "#3A4A66", slate: "#3A4A66",
+  green: "#2E7D46", greenBg: "#f0fdf4",
+  blue: "#F26522", blueBg: "#FDF0E9",
 };
 
 function getRFQCart() {
@@ -77,7 +77,7 @@ export default function ChainDetailView({ product, familyLabel, onBack, onConfig
   return (
     <div>
       {/* Back button */}
-      <button onClick={onBack} style={{ background: "#f1f5f9", border: "1px solid " + C.border, color: C.slate, borderRadius: 7, padding: "6px 14px", cursor: "pointer", fontSize: 12, fontWeight: 600, marginBottom: 16 }}>
+      <button onClick={onBack} style={{ background: "#ECEAE4", border: "1px solid " + C.border, color: C.slate, borderRadius: 7, padding: "6px 14px", cursor: "pointer", fontSize: 12, fontWeight: 600, marginBottom: 16 }}>
         ← Back
       </button>
 
@@ -119,7 +119,7 @@ export default function ChainDetailView({ product, familyLabel, onBack, onConfig
           {/* Actions */}
           <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-end", flexShrink: 0 }}>
             <button onClick={handleAddRFQ}
-              style={{ padding: "10px 20px", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 800, fontSize: 13, whiteSpace: "nowrap", background: rfqAdded ? "#f0fdf4" : "#16a34a", color: rfqAdded ? "#16a34a" : "#fff", transition: "all 0.15s" }}>
+              style={{ padding: "10px 20px", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 800, fontSize: 13, whiteSpace: "nowrap", background: rfqAdded ? "#f0fdf4" : "#2E7D46", color: rfqAdded ? "#2E7D46" : "#fff", transition: "all 0.15s" }}>
               {rfqAdded ? "✓ In RFQ" : "+ Add to RFQ"}
             </button>
             {onConfigure && (

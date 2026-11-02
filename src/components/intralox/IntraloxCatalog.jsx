@@ -10,7 +10,7 @@ import BackButton from "@/components/shared/BackButton";
 import { COLORS, TYPOGRAPHY } from "@/lib/designSystem";
 
 const C = COLORS;
-const INTRALOX_RED = "#E31837";
+const INTRALOX_RED = "#F26522";
 const INTRALOX_LOGO = "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/64536dc1d_intralox-logo-box-194a1e40631d2cf9cd7d463fa5afc04b.svg";
 const MPB_MANUAL_URL = "https://assets-us-01.kc-usercontent.com/19eb64b5-1815-003a-d268-e7109927ccad/b2679b1e-559b-4919-b559-6992adc8b1f3/5012156.4%202026%20MPB%20Engineering%20Manual.pdf";
 
@@ -23,11 +23,11 @@ const TABS = [
 
 function BeltTypeTag({ type }) {
   const cfg = {
-    "Straight-Running": { bg: "#e0f2fe", color: "#0369a1" },
+    "Straight-Running": { bg: "#FDF0E9", color: "#0E1F3A" },
     "Radius":           { bg: "#fce7f3", color: "#be185d" },
-    "Spiral":           { bg: "#ede9fe", color: "#7c3aed" },
+    "Spiral":           { bg: "#ECEAE4", color: "#3A4A66" },
     "Belt Support Tool":{ bg: "#d1fae5", color: "#065f46" },
-  }[type] || { bg: "#f1f5f9", color: "#334155" };
+  }[type] || { bg: "#ECEAE4", color: "#3A4A66" };
   return (
     <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20, background: cfg.bg, color: cfg.color, letterSpacing: "0.3px" }}>
       {type}
@@ -49,19 +49,19 @@ function SupportToolCard({ tool, onGoRFQ }) {
   }
   return (
     <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ background: "#fff", borderRadius: 12, border: `2px solid ${hov ? C.navyMid : C.border}`, padding: "18px 20px", transition: "all 0.15s", boxShadow: hov ? "0 4px 16px rgba(15,35,64,0.10)" : "none" }}>
+      style={{ background: "#fff", borderRadius: 12, border: `2px solid ${hov ? C.navyMid : C.border}`, padding: "18px 20px", transition: "all 0.15s", boxShadow: hov ? "0 4px 16px rgba(14,31,58,0.10)" : "none" }}>
       <BeltTypeTag type="Belt Support Tool" />
       <div style={{ fontSize: 15, fontWeight: 800, color: C.text, marginTop: 10, marginBottom: 6 }}>{tool.name}</div>
       <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.7, marginBottom: 12 }}>{tool.description}</div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 14 }}>
         {tool.applications.map(a => (
-          <span key={a} style={{ fontSize: 10, background: "#f1f5f9", color: C.navyMid, padding: "2px 8px", borderRadius: 10, fontWeight: 600 }}>{a}</span>
+          <span key={a} style={{ fontSize: 10, background: "#ECEAE4", color: C.navyMid, padding: "2px 8px", borderRadius: 10, fontWeight: 600 }}>{a}</span>
         ))}
       </div>
       <div style={{ fontSize: 11, color: C.muted, marginBottom: 14 }}>📄 2026 Catalog page {tool.catalogPage}</div>
       <div style={{ display: "flex", gap: 8 }}>
         <a href={tool.techChartUrl} target="_blank" rel="noreferrer"
-          style={{ flex: 1, padding: "8px", textAlign: "center", background: "#f1f5f9", color: C.navyMid, borderRadius: 8, fontSize: 11, fontWeight: 700, textDecoration: "none" }}>
+          style={{ flex: 1, padding: "8px", textAlign: "center", background: "#ECEAE4", color: C.navyMid, borderRadius: 8, fontSize: 11, fontWeight: 700, textDecoration: "none" }}>
           View Manual
         </a>
         <button onClick={addRFQ}
@@ -218,7 +218,7 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
                     transition: "all 0.15s",
                   }}>
                   {tab.label}
-                  <span style={{ marginLeft: 6, fontSize: 10, fontWeight: 600, background: activeTab === tab.key ? INTRALOX_RED : "#f1f5f9", color: activeTab === tab.key ? "#fff" : C.muted, padding: "1px 6px", borderRadius: 10 }}>
+                  <span style={{ marginLeft: 6, fontSize: 10, fontWeight: 600, background: activeTab === tab.key ? INTRALOX_RED : "#ECEAE4", color: activeTab === tab.key ? "#fff" : C.muted, padding: "1px 6px", borderRadius: 10 }}>
                     {tab.count}
                   </span>
                 </button>

@@ -6,8 +6,8 @@ import { CHAIN_PRODUCTS, getProductsByCategory } from "@/lib/chainCatalogData";
 import ChainProductCard from "./ChainProductCard";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  gold: "#F26522", border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
 };
 
 export default function ChainCategoryView({ category, onBack, onSelectProduct }) {

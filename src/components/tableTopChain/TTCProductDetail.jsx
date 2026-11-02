@@ -7,9 +7,9 @@ import { MATERIALS, getMaterialsForProduct } from "@/lib/tableTopChainData";
 import TTCRFQModal from "./TTCRFQModal";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
-  border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
-  plastic: "#0057A8", steel: "#374151", green: "#16a34a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522",
+  border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
+  plastic: "#0E1F3A", steel: "#3A4A66", green: "#2E7D46",
 };
 
 const TYPE_LABELS = {
@@ -41,7 +41,7 @@ function MaterialRow({ mat, onAddRFQ }) { // onAddRFQ called with no args — op
           {mat.badge && (
             <span style={{
               fontSize: 9, fontWeight: 700, padding: "1px 6px", borderRadius: 8,
-              background: "#dbeafe", color: "#1d4ed8", display: "inline-block", width: "fit-content",
+              background: "#FDF0E9", color: "#0E1F3A", display: "inline-block", width: "fit-content",
             }}>{mat.badge}</span>
           )}
         </div>
@@ -49,7 +49,7 @@ function MaterialRow({ mat, onAddRFQ }) { // onAddRFQ called with no args — op
       <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}` }}>
         <span style={{
           fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 6,
-          background: mat.category === "Steel" ? "#f1f5f9" : "#eff6ff",
+          background: mat.category === "Steel" ? "#ECEAE4" : "#FDF0E9",
           color: mat.category === "Steel" ? C.steel : C.plastic,
         }}>{mat.category}</span>
       </td>
@@ -62,12 +62,12 @@ function MaterialRow({ mat, onAddRFQ }) { // onAddRFQ called with no args — op
         <span style={{
           fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 6,
           background: mat.availability === "Standard" ? "#dcfce7" : "#fef9c3",
-          color: mat.availability === "Standard" ? "#166534" : "#713f12",
+          color: mat.availability === "Standard" ? "#2E7D46" : "#713f12",
         }}>{mat.availability}</span>
       </td>
       <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}`, fontSize: 10 }}>
         {isExclusive ? (
-          <span style={{ color: "#7c3aed", fontWeight: 700, background: "#f5f3ff", padding: "2px 7px", borderRadius: 6 }}>{mat.brand}</span>
+          <span style={{ color: "#3A4A66", fontWeight: 700, background: "#f5f3ff", padding: "2px 7px", borderRadius: 6 }}>{mat.brand}</span>
         ) : isMulti ? (
           <span style={{ color: C.muted, fontStyle: "italic" }}>Multiple manufacturers</span>
         ) : (
@@ -194,7 +194,7 @@ export default function TTCProductDetail({ product, onBack, onAddRFQ }) {
               <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, marginBottom: 8 }}>APPLICATIONS</div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
                 {product.applications.map((app, i) => (
-                  <span key={i} style={{ fontSize: 11, color: C.navyMid, background: "#eef3f8", padding: "3px 10px", borderRadius: 10, fontWeight: 600 }}>{app}</span>
+                  <span key={i} style={{ fontSize: 11, color: C.navyMid, background: "#F4F2ED", padding: "3px 10px", borderRadius: 10, fontWeight: 600 }}>{app}</span>
                 ))}
               </div>
               {product.widths?.length > 0 && (
@@ -202,7 +202,7 @@ export default function TTCProductDetail({ product, onBack, onAddRFQ }) {
                   <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, marginBottom: 6, marginTop: 14 }}>AVAILABLE WIDTHS</div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
                     {product.widths.map((w, i) => (
-                      <span key={i} style={{ fontSize: 11, color: C.text, background: "#f8fafc", border: `1px solid ${C.border}`, padding: "3px 9px", borderRadius: 8 }}>{w}</span>
+                      <span key={i} style={{ fontSize: 11, color: C.text, background: "#F4F2ED", border: `1px solid ${C.border}`, padding: "3px 9px", borderRadius: 8 }}>{w}</span>
                     ))}
                   </div>
                 </>
@@ -300,8 +300,8 @@ export default function TTCProductDetail({ product, onBack, onAddRFQ }) {
           }}>
             <span style={{ fontSize: 16 }}>✅</span>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#166534" }}>Added to RFQ Cart</div>
-              <div style={{ fontSize: 11, color: "#166534" }}>{addedCount} item{addedCount > 1 ? "s" : ""} added. Go to RFQ Cart to review and submit.</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#2E7D46" }}>Added to RFQ Cart</div>
+              <div style={{ fontSize: 11, color: "#2E7D46" }}>{addedCount} item{addedCount > 1 ? "s" : ""} added. Go to RFQ Cart to review and submit.</div>
             </div>
           </div>
         )}

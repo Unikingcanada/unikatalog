@@ -76,20 +76,20 @@ export default function ImportCenter() {
       {/* Page header */}
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 14, flexWrap: "wrap" }}>
-          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#0C2340", margin: 0 }}>Import Center</h1>
-          <span style={{ fontSize: 11, fontWeight: 700, background: "#fef2f2", color: "#dc2626", border: "1px solid #fca5a5", borderRadius: 99, padding: "2px 10px" }}>
+          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#0E1F3A", margin: 0 }}>Import Center</h1>
+          <span style={{ fontSize: 11, fontWeight: 700, background: "#fef2f2", color: "#C62828", border: "1px solid #fca5a5", borderRadius: 99, padding: "2px 10px" }}>
             ADMIN INFRASTRUCTURE
           </span>
         </div>
-        <p style={{ fontSize: 13, color: "#64748b", margin: "6px 0 0", maxWidth: 700 }}>
+        <p style={{ fontSize: 13, color: "#3A4A66", margin: "6px 0 0", maxWidth: 700 }}>
           Industrial-scale governed ingestion for UniKatalog. Upload → Stage → Validate → Diff → Commit.
           All writes are isolated in staging and require explicit admin commit. Full rollback on every session.
         </p>
       </div>
 
       {/* Architecture notice (AI placeholder) */}
-      <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderLeft: "4px solid #8b5cf6", borderRadius: 8, padding: "10px 16px", marginBottom: 24, fontSize: 11, color: "#475569" }}>
-        <strong style={{ color: "#6d28d9" }}>🔮 AI Extension Points Reserved:</strong>{" "}
+      <div style={{ background: "#F4F2ED", border: "1px solid #D9D6CE", borderLeft: "4px solid #3A4A66", borderRadius: 8, padding: "10px 16px", marginBottom: 24, fontSize: 11, color: "#3A4A66" }}>
+        <strong style={{ color: "#3A4A66" }}>🔮 AI Extension Points Reserved:</strong>{" "}
         Auto-field mapping · Equivalency suggestions · Duplicate merge recommendations · Confidence scoring — architectured, not yet active.
       </div>
 
@@ -102,7 +102,7 @@ export default function ImportCenter() {
             style={{
               ...tabBtnStyle,
               ...(activeTab === t.key ? tabActiveSt : {}),
-              ...(t.action ? { color: (activeTab === t.key) ? "#fff" : "#1d4ed8" } : {}),
+              ...(t.action ? { color: (activeTab === t.key) ? "#fff" : "#0E1F3A" } : {}),
             }}>
             {t.label}
             {t.key === "sessions" && sessions.length > 0 && (
@@ -183,29 +183,29 @@ function SavedMappingsView({ mappings, loading, onDelete }) {
   return (
     <div>
       <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 20, fontWeight: 900, color: "#0C2340" }}>Saved Column Mappings</div>
-        <div style={{ fontSize: 12, color: "#64748b", marginTop: 2 }}>Reusable per-manufacturer column mappings — loaded automatically in the import workflow.</div>
+        <div style={{ fontSize: 20, fontWeight: 900, color: "#0E1F3A" }}>Saved Column Mappings</div>
+        <div style={{ fontSize: 12, color: "#3A4A66", marginTop: 2 }}>Reusable per-manufacturer column mappings — loaded automatically in the import workflow.</div>
       </div>
 
       {loading ? (
-        <div style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>Loading mappings…</div>
+        <div style={{ textAlign: "center", padding: "40px", color: "#3A4A66" }}>Loading mappings…</div>
       ) : mappings.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "60px", color: "#64748b", background: "#fff", borderRadius: 12, border: "1px dashed #e2e8f0" }}>
+        <div style={{ textAlign: "center", padding: "60px", color: "#3A4A66", background: "#fff", borderRadius: 12, border: "1px dashed #D9D6CE" }}>
           <div style={{ fontSize: 36, marginBottom: 10 }}>🗂</div>
           <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>No saved mappings yet</div>
           <div style={{ fontSize: 12 }}>Save a mapping during the import workflow to reuse it here.</div>
         </div>
       ) : (
-        <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", overflow: "hidden" }}>
+        <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", overflow: "hidden" }}>
           {mappings.map((m, i) => (
-            <div key={m.id} style={{ padding: "14px 20px", borderBottom: i < mappings.length - 1 ? "1px solid #f1f5f9" : "none", display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
+            <div key={m.id} style={{ padding: "14px 20px", borderBottom: i < mappings.length - 1 ? "1px solid #ECEAE4" : "none", display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#0C2340" }}>{m.mapping_name}</div>
-                <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#0E1F3A" }}>{m.mapping_name}</div>
+                <div style={{ fontSize: 11, color: "#3A4A66", marginTop: 2 }}>
                   {m.manufacturer || "Any"} → {m.entity_target} · {Object.keys(m.mapping_rules || {}).length} columns · Used {m.times_used || 0}×
                 </div>
                 {m.source_columns?.length > 0 && (
-                  <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 4 }}>
+                  <div style={{ fontSize: 10, color: "#8A94A6", marginTop: 4 }}>
                     Columns: {m.source_columns.slice(0, 8).join(" · ")}{m.source_columns.length > 8 ? ` +${m.source_columns.length - 8} more` : ""}
                   </div>
                 )}
@@ -217,7 +217,7 @@ function SavedMappingsView({ mappings, loading, onDelete }) {
                   setDeletingId(null);
                 }}
                 disabled={deletingId === m.id}
-                style={{ padding: "5px 12px", borderRadius: 6, border: "1px solid #fca5a5", background: "#fef2f2", color: "#dc2626", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                style={{ padding: "5px 12px", borderRadius: 6, border: "1px solid #fca5a5", background: "#fef2f2", color: "#C62828", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
                 {deletingId === m.id ? "Deleting…" : "Delete"}
               </button>
             </div>
@@ -231,19 +231,19 @@ function SavedMappingsView({ mappings, loading, onDelete }) {
 // ─── Styles ────────────────────────────────────────────────────────────────────
 
 const tabBarStyle = {
-  display: "flex", gap: 0, borderBottom: "2px solid #e2e8f0", overflowX: "auto",
+  display: "flex", gap: 0, borderBottom: "2px solid #D9D6CE", overflowX: "auto",
 };
 const tabBtnStyle = {
   padding: "10px 20px", border: "none", background: "none",
-  cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#64748b",
+  cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#3A4A66",
   borderBottom: "2px solid transparent", marginBottom: -2, whiteSpace: "nowrap",
   transition: "all 0.15s",
 };
 const tabActiveSt = {
-  color: "#0C2340", borderBottomColor: "#0C2340", background: "none",
+  color: "#0E1F3A", borderBottomColor: "#0E1F3A", background: "none",
 };
 const backBtn = {
-  background: "#f1f5f9", border: "1px solid #e2e8f0", color: "#334155",
+  background: "#ECEAE4", border: "1px solid #D9D6CE", color: "#3A4A66",
   borderRadius: 7, padding: "6px 14px", cursor: "pointer", fontSize: 12, fontWeight: 600,
   marginBottom: 20, display: "inline-block",
 };

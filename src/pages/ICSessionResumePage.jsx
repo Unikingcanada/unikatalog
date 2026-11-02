@@ -19,7 +19,7 @@ import * as XLSX from "xlsx";
 
 // ── Status pill ───────────────────────────────────────────────────────────────
 function SessionStatusPill({ status }) {
-  const color = SESSION_STATUS_COLORS[status] || "#94a3b8";
+  const color = SESSION_STATUS_COLORS[status] || "#8A94A6";
   return (
     <span style={{
       display: "inline-flex", alignItems: "center", gap: 5,
@@ -53,11 +53,11 @@ function JsonBlock({ label, data, defaultOpen = false }) {
   return (
     <div style={{ marginTop: 6 }}>
       <button onClick={() => setOpen(o => !o)}
-        style={{ background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 5, padding: "3px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "#475569" }}>
+        style={{ background: "#ECEAE4", border: "1px solid #D9D6CE", borderRadius: 5, padding: "3px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "#3A4A66" }}>
         {open ? "▾" : "▸"} {label}
       </button>
       {open && (
-        <pre style={{ fontFamily: "monospace", fontSize: 11, whiteSpace: "pre-wrap", wordBreak: "break-all", background: "#0f172a", color: "#94a3b8", borderRadius: 7, padding: "10px 14px", marginTop: 6, maxHeight: 240, overflowY: "auto", border: "1px solid #1e293b" }}>
+        <pre style={{ fontFamily: "monospace", fontSize: 11, whiteSpace: "pre-wrap", wordBreak: "break-all", background: "#0E1F3A", color: "#8A94A6", borderRadius: 7, padding: "10px 14px", marginTop: 6, maxHeight: 240, overflowY: "auto", border: "1px solid #0E1F3A" }}>
           {JSON.stringify(data, null, 2)}
         </pre>
       )}
@@ -96,16 +96,16 @@ function EditRetryModal({ record, entityTarget, onClose, onSaved }) {
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
       <div style={{ background: "#fff", borderRadius: 12, width: "100%", maxWidth: 640, maxHeight: "85vh", overflowY: "auto", padding: 24 }}>
-        <div style={{ fontSize: 15, fontWeight: 900, color: "#0C2340", marginBottom: 4 }}>Edit & Retry</div>
-        <div style={{ fontSize: 11, color: "#64748b", marginBottom: 14 }}>
+        <div style={{ fontSize: 15, fontWeight: 900, color: "#0E1F3A", marginBottom: 4 }}>Edit & Retry</div>
+        <div style={{ fontSize: 11, color: "#3A4A66", marginBottom: 14 }}>
           Chain: <strong>{record.mapped_data?.chain_id || "—"}</strong> · Row {record.row_index}
         </div>
         <textarea
           value={editedData}
           onChange={e => setEditedData(e.target.value)}
-          style={{ width: "100%", height: 320, fontFamily: "monospace", fontSize: 11, padding: 12, border: "1px solid #e2e8f0", borderRadius: 8, resize: "vertical", boxSizing: "border-box", color: "#1e293b" }}
+          style={{ width: "100%", height: 320, fontFamily: "monospace", fontSize: 11, padding: 12, border: "1px solid #D9D6CE", borderRadius: 8, resize: "vertical", boxSizing: "border-box", color: "#0E1F3A" }}
         />
-        {err && <div style={{ color: "#dc2626", fontSize: 11, fontWeight: 700, marginTop: 6 }}>⚠ {err}</div>}
+        {err && <div style={{ color: "#C62828", fontSize: 11, fontWeight: 700, marginTop: 6 }}>⚠ {err}</div>}
         <div style={{ display: "flex", gap: 10, marginTop: 14, justifyContent: "flex-end" }}>
           <button onClick={onClose} style={btnSecondary}>Cancel</button>
           <button onClick={handleSave} disabled={saving} style={btnPrimary}>
@@ -385,7 +385,7 @@ export default function ICSessionResumePage() {
   if (loading) {
     return (
       <ICShell>
-        <div style={{ textAlign: "center", padding: "80px 20px", color: "#64748b" }}>
+        <div style={{ textAlign: "center", padding: "80px 20px", color: "#3A4A66" }}>
           <div style={{ fontSize: 32, marginBottom: 12 }}>⏳</div>
           <div style={{ fontSize: 15, fontWeight: 700 }}>Loading session {id}…</div>
         </div>
@@ -396,7 +396,7 @@ export default function ICSessionResumePage() {
   if (!session) {
     return (
       <ICShell>
-        <div style={{ textAlign: "center", padding: "80px 20px", color: "#64748b" }}>
+        <div style={{ textAlign: "center", padding: "80px 20px", color: "#3A4A66" }}>
           <div style={{ fontSize: 32, marginBottom: 12 }}>🔍</div>
           <div style={{ fontSize: 15, fontWeight: 700 }}>Session not found: {id}</div>
           <button onClick={() => navigate("/admin/import-center")} style={{ ...btnPrimary, marginTop: 16 }}>
@@ -417,10 +417,10 @@ export default function ICSessionResumePage() {
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 14, marginBottom: 24 }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-            <h1 style={{ fontSize: 22, fontWeight: 900, color: "#0C2340", margin: 0 }}>{session.session_id || id}</h1>
+            <h1 style={{ fontSize: 22, fontWeight: 900, color: "#0E1F3A", margin: 0 }}>{session.session_id || id}</h1>
             <SessionStatusPill status={session.import_status} />
           </div>
-          <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>
+          <div style={{ fontSize: 12, color: "#3A4A66", marginTop: 4 }}>
             {session.manufacturer} · {session.source_catalog} · Target: <strong>{entityTarget}</strong>
             {session.uploaded_at && ` · Uploaded ${new Date(session.uploaded_at).toLocaleDateString()}`}
           </div>
@@ -430,21 +430,21 @@ export default function ICSessionResumePage() {
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
           {hasFailed && (
             <>
-              <button onClick={handleRetryFailed} style={btnAction("#f0fdf4","#166534","#86efac")}>↺ Retry All Failed</button>
-              <button onClick={() => handleExport("xlsx","failed")} style={btnAction("#eff6ff","#1d4ed8","#93c5fd")}>↓ Export Failed XLSX</button>
+              <button onClick={handleRetryFailed} style={btnAction("#f0fdf4","#2E7D46","#86efac")}>↺ Retry All Failed</button>
+              <button onClick={() => handleExport("xlsx","failed")} style={btnAction("#FDF0E9","#0E1F3A","#F8C9B0")}>↓ Export Failed XLSX</button>
               <button onClick={() => handleExport("csv","failed")} style={btnAction("#ecfdf5","#065f46","#6ee7b7")}>↓ Export Failed CSV</button>
             </>
           )}
           {isResumable && (
             <button onClick={handleCommit} disabled={committing}
-              style={{ background: committing ? "#e2e8f0" : "#0C2340", color: committing ? "#94a3b8" : "#fff", border: "none", borderRadius: 8, padding: "9px 20px", fontSize: 12, fontWeight: 800, cursor: committing ? "default" : "pointer" }}>
+              style={{ background: committing ? "#D9D6CE" : "#0E1F3A", color: committing ? "#8A94A6" : "#fff", border: "none", borderRadius: 8, padding: "9px 20px", fontSize: 12, fontWeight: 800, cursor: committing ? "default" : "pointer" }}>
               {committing ? "⏳ Committing…" : "🚀 Continue Commit"}
             </button>
           )}
           {canRollback && (
             <button
               onClick={() => navigate("/admin/import-center", { state: { tab: "rollback" } })}
-              style={btnAction("#fef2f2","#dc2626","#fca5a5")}>
+              style={btnAction("#fef2f2","#C62828","#fca5a5")}>
               ↩ Rollback
             </button>
           )}
@@ -453,12 +453,12 @@ export default function ICSessionResumePage() {
 
       {/* Progress / action message */}
       {progress && (
-        <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 8, padding: "9px 16px", marginBottom: 16, fontSize: 12, color: "#1d4ed8", fontWeight: 600 }}>
+        <div style={{ background: "#FDF0E9", border: "1px solid #F8C9B0", borderRadius: 8, padding: "9px 16px", marginBottom: 16, fontSize: 12, color: "#0E1F3A", fontWeight: 600 }}>
           ⏳ {progress}
         </div>
       )}
       {actionMsg && (
-        <div style={{ background: actionMsg.isError ? "#fef2f2" : "#f0fdf4", border: `1px solid ${actionMsg.isError ? "#fca5a5" : "#86efac"}`, borderRadius: 8, padding: "9px 16px", marginBottom: 16, fontSize: 12, color: actionMsg.isError ? "#dc2626" : "#166534", fontWeight: 700 }}>
+        <div style={{ background: actionMsg.isError ? "#fef2f2" : "#f0fdf4", border: `1px solid ${actionMsg.isError ? "#fca5a5" : "#86efac"}`, borderRadius: 8, padding: "9px 16px", marginBottom: 16, fontSize: 12, color: actionMsg.isError ? "#C62828" : "#2E7D46", fontWeight: 700 }}>
           {actionMsg.text}
         </div>
       )}
@@ -472,12 +472,12 @@ export default function ICSessionResumePage() {
             <div style={{ fontSize: 12, fontWeight: 800, color: "#92400e" }}>
               Incomplete — {records.length} of {session.total_rows} rows staged
             </div>
-            <div style={{ fontSize: 11, color: "#b45309" }}>
+            <div style={{ fontSize: 11, color: "#B8860B" }}>
               {session.total_rows - records.length} rows are missing. Resume will reprocess them from the stored payload.
             </div>
           </div>
           <button onClick={handleResumeStaging}
-            style={{ padding: "7px 14px", borderRadius: 7, border: "none", background: "#0C2340", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+            style={{ padding: "7px 14px", borderRadius: 7, border: "none", background: "#0E1F3A", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
             ▶ Resume from Stored Payload
           </button>
         </div>
@@ -485,25 +485,25 @@ export default function ICSessionResumePage() {
 
       {/* Staging resume progress */}
       {stagingProgress && (
-        <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+        <div style={{ background: "#FDF0E9", border: "1px solid #F8C9B0", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-            <div style={{ width: 14, height: 14, border: "2px solid #bfdbfe", borderTopColor: "#1d4ed8", borderRadius: "50%", animation: "spin 0.8s linear infinite", flexShrink: 0 }} />
+            <div style={{ width: 14, height: 14, border: "2px solid #F8C9B0", borderTopColor: "#0E1F3A", borderRadius: "50%", animation: "spin 0.8s linear infinite", flexShrink: 0 }} />
             <div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#1d4ed8" }}>Resuming — {stagingProgress.msg}</div>
-              <div style={{ fontSize: 11, color: "#3b82f6" }}>{stagingProgress.staged.toLocaleString()} / {stagingProgress.total.toLocaleString()} staged</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#0E1F3A" }}>Resuming — {stagingProgress.msg}</div>
+              <div style={{ fontSize: 11, color: "#F26522" }}>{stagingProgress.staged.toLocaleString()} / {stagingProgress.total.toLocaleString()} staged</div>
             </div>
             <button onClick={() => { cancelStagingRef.current = true; setStagingProgress(null); showMsg("Resume cancelled."); }}
-              style={{ marginLeft: "auto", padding: "4px 10px", borderRadius: 6, border: "1px solid #93c5fd", background: "#fff", color: "#1d4ed8", fontSize: 10, fontWeight: 700, cursor: "pointer" }}>
+              style={{ marginLeft: "auto", padding: "4px 10px", borderRadius: 6, border: "1px solid #F8C9B0", background: "#fff", color: "#0E1F3A", fontSize: 10, fontWeight: 700, cursor: "pointer" }}>
               Cancel
             </button>
           </div>
-          <div style={{ background: "#dbeafe", borderRadius: 99, height: 6, overflow: "hidden" }}>
-            <div style={{ height: "100%", background: "linear-gradient(90deg,#3b82f6,#8b5cf6)", width: stagingProgress.pct + "%", transition: "width 0.4s ease", borderRadius: 99 }} />
+          <div style={{ background: "#FDF0E9", borderRadius: 99, height: 6, overflow: "hidden" }}>
+            <div style={{ height: "100%", background: "linear-gradient(90deg,#F26522,#3A4A66)", width: stagingProgress.pct + "%", transition: "width 0.4s ease", borderRadius: 99 }} />
           </div>
         </div>
       )}
       {stagingError && (
-        <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8, padding: "9px 16px", marginBottom: 14, fontSize: 11, color: "#dc2626", fontWeight: 700 }}>
+        <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8, padding: "9px 16px", marginBottom: 14, fontSize: 11, color: "#C62828", fontWeight: 700 }}>
           ⚠ {stagingError}
         </div>
       )}
@@ -511,30 +511,30 @@ export default function ICSessionResumePage() {
       {/* Stats */}
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 24 }}>
         {[
-          { label: "Total Rows",      value: session.total_rows || records.length, color: "#0C2340" },
-          { label: "Staged",          value: session.rows_staged || records.length, color: "#8b5cf6" },
+          { label: "Total Rows",      value: session.total_rows || records.length, color: "#0E1F3A" },
+          { label: "Staged",          value: session.rows_staged || records.length, color: "#3A4A66" },
           { label: "Written",         value: session.rows_written || counts.Committed || 0, color: "#22c55e" },
           { label: "Failed",          value: session.failed_rows || counts.Failed || 0, color: "#ef4444" },
-          { label: "Duplicates",      value: session.duplicates_skipped || counts.Duplicate || 0, color: "#94a3b8" },
+          { label: "Duplicates",      value: session.duplicates_skipped || counts.Duplicate || 0, color: "#8A94A6" },
           { label: "Flags",           value: session.flags_generated || 0, color: "#f59e0b" },
         ].map(s => (
-          <div key={s.label} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "12px 16px", minWidth: 90, flex: 1, textAlign: "center" }}>
+          <div key={s.label} style={{ background: "#fff", border: "1px solid #D9D6CE", borderRadius: 10, padding: "12px 16px", minWidth: 90, flex: 1, textAlign: "center" }}>
             <div style={{ fontSize: 20, fontWeight: 900, color: s.color }}>{Number(s.value).toLocaleString()}</div>
-            <div style={{ fontSize: 10, color: "#64748b", fontWeight: 600, marginTop: 2 }}>{s.label}</div>
+            <div style={{ fontSize: 10, color: "#3A4A66", fontWeight: 600, marginTop: 2 }}>{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* View toggle */}
-      <div style={{ display: "flex", gap: 0, borderBottom: "2px solid #e2e8f0", marginBottom: 20 }}>
+      <div style={{ display: "flex", gap: 0, borderBottom: "2px solid #D9D6CE", marginBottom: 20 }}>
         {[
           { key: VIEW_REVIEW, label: "🔍 Review & Commit" },
           { key: VIEW_DEBUG,  label: "🐛 Debug Records" },
         ].map(v => (
           <button key={v.key} onClick={() => setView(v.key)}
             style={{ padding: "9px 20px", border: "none", background: "none", cursor: "pointer", fontSize: 13, fontWeight: 700,
-              color: view === v.key ? "#0C2340" : "#64748b",
-              borderBottom: view === v.key ? "2px solid #0C2340" : "2px solid transparent",
+              color: view === v.key ? "#0E1F3A" : "#3A4A66",
+              borderBottom: view === v.key ? "2px solid #0E1F3A" : "2px solid transparent",
               marginBottom: -2 }}>
             {v.label}
           </button>
@@ -564,7 +564,7 @@ export default function ICSessionResumePage() {
                 const active = statusFilter === f;
                 return (
                   <button key={f} onClick={() => setStatusFilter(f)}
-                    style={{ padding: "5px 12px", borderRadius: 99, border: `1px solid ${active ? "#0C2340" : "#e2e8f0"}`, background: active ? "#0C2340" : "#fff", color: active ? "#fff" : "#64748b", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                    style={{ padding: "5px 12px", borderRadius: 99, border: `1px solid ${active ? "#0E1F3A" : "#D9D6CE"}`, background: active ? "#0E1F3A" : "#fff", color: active ? "#fff" : "#3A4A66", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
                     {f} <span style={{ opacity: 0.7 }}>({cnt})</span>
                   </button>
                 );
@@ -577,12 +577,12 @@ export default function ICSessionResumePage() {
           </div>
 
           {/* Records table */}
-          <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", overflow: "hidden" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "24px 1fr 70px 80px 1fr 90px 110px", gap: 12, padding: "8px 16px", background: "#f8fafc", borderBottom: "1px solid #e2e8f0", fontSize: 10, fontWeight: 800, color: "#64748b", textTransform: "uppercase" }}>
+          <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", overflow: "hidden" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "24px 1fr 70px 80px 1fr 90px 110px", gap: 12, padding: "8px 16px", background: "#F4F2ED", borderBottom: "1px solid #D9D6CE", fontSize: 10, fontWeight: 800, color: "#3A4A66", textTransform: "uppercase" }}>
               <span /><span>Chain ID</span><span>Row #</span><span>Status</span><span>Conflict Detail</span><span>Decision</span><span>Timestamp</span>
             </div>
             {filteredRecords.length === 0 ? (
-              <div style={{ padding: "40px 20px", textAlign: "center", color: "#94a3b8", fontSize: 13 }}>No records match this filter.</div>
+              <div style={{ padding: "40px 20px", textAlign: "center", color: "#8A94A6", fontSize: 13 }}>No records match this filter.</div>
             ) : (
               filteredRecords.map((r, i) => (
                 <DebugRecordRow
@@ -601,7 +601,7 @@ export default function ICSessionResumePage() {
 
       {/* Session notes */}
       {session.notes && (
-        <div style={{ marginTop: 20, background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, padding: "10px 14px", fontSize: 11, color: "#64748b", fontFamily: "monospace" }}>
+        <div style={{ marginTop: 20, background: "#F4F2ED", border: "1px solid #D9D6CE", borderRadius: 8, padding: "10px 14px", fontSize: 11, color: "#3A4A66", fontFamily: "monospace" }}>
           {session.notes}
         </div>
       )}
@@ -626,29 +626,29 @@ function DebugRecordRow({ record, index, entityTarget, onRetry, onEditRetry }) {
   const ts = record.committed_at || record.updated_date;
 
   return (
-    <div style={{ borderBottom: "1px solid #f1f5f9" }}>
+    <div style={{ borderBottom: "1px solid #ECEAE4" }}>
       <div onClick={() => setExpanded(o => !o)}
-        style={{ display: "grid", gridTemplateColumns: "24px 1fr 70px 80px 1fr 90px 110px", gap: 12, alignItems: "center", padding: "10px 16px", cursor: "pointer", background: expanded ? "#f8fafc" : "#fff" }}>
-        <span style={{ fontSize: 11, color: "#94a3b8" }}>{expanded ? "▾" : "▸"}</span>
-        <span style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#0C2340" }}>{chainId}</span>
-        <span style={{ fontSize: 11, color: "#64748b" }}>#{record.row_index ?? index}</span>
+        style={{ display: "grid", gridTemplateColumns: "24px 1fr 70px 80px 1fr 90px 110px", gap: 12, alignItems: "center", padding: "10px 16px", cursor: "pointer", background: expanded ? "#F4F2ED" : "#fff" }}>
+        <span style={{ fontSize: 11, color: "#8A94A6" }}>{expanded ? "▾" : "▸"}</span>
+        <span style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#0E1F3A" }}>{chainId}</span>
+        <span style={{ fontSize: 11, color: "#3A4A66" }}>#{record.row_index ?? index}</span>
         <RecordPill status={record.record_status} />
-        <span style={{ fontSize: 11, color: record.conflict_detail ? "#dc2626" : "#94a3b8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {record.conflict_detail || <em style={{ color: "#cbd5e1" }}>—</em>}
+        <span style={{ fontSize: 11, color: record.conflict_detail ? "#C62828" : "#8A94A6", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          {record.conflict_detail || <em style={{ color: "#C9C5BB" }}>—</em>}
         </span>
-        <span style={{ fontSize: 11, color: "#64748b" }}>{record.commit_decision || "—"}</span>
-        <span style={{ fontSize: 10, color: "#94a3b8" }}>{ts ? new Date(ts).toLocaleString() : "—"}</span>
+        <span style={{ fontSize: 11, color: "#3A4A66" }}>{record.commit_decision || "—"}</span>
+        <span style={{ fontSize: 10, color: "#8A94A6" }}>{ts ? new Date(ts).toLocaleString() : "—"}</span>
       </div>
 
       {expanded && (
-        <div style={{ background: "#f8fafc", padding: "12px 20px 16px", borderTop: "1px solid #e2e8f0" }}>
+        <div style={{ background: "#F4F2ED", padding: "12px 20px 16px", borderTop: "1px solid #D9D6CE" }}>
           {record.conflict_detail && (
             <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 7, padding: "8px 12px", marginBottom: 10, fontSize: 11, color: "#991b1b", fontFamily: "monospace" }}>
               ⚠ {record.conflict_detail}
             </div>
           )}
           {record.production_record_id && (
-            <div style={{ fontSize: 11, color: "#64748b", marginBottom: 8 }}>
+            <div style={{ fontSize: 11, color: "#3A4A66", marginBottom: 8 }}>
               <strong>Production Record ID:</strong>{" "}
               <span style={{ fontFamily: "monospace" }}>{record.production_record_id}</span>
             </div>
@@ -659,11 +659,11 @@ function DebugRecordRow({ record, index, entityTarget, onRetry, onEditRetry }) {
           {(record.record_status === "Failed" || record.record_status === "Conflict" || record.record_status === "Invalid") && (
             <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
               <button onClick={e => { e.stopPropagation(); onRetry(record); }}
-                style={btnAction("#f0fdf4","#166534","#86efac")}>
+                style={btnAction("#f0fdf4","#2E7D46","#86efac")}>
                 ↺ Retry Record
               </button>
               <button onClick={e => { e.stopPropagation(); onEditRetry(record); }}
-                style={btnAction("#eff6ff","#1d4ed8","#93c5fd")}>
+                style={btnAction("#FDF0E9","#0E1F3A","#F8C9B0")}>
                 ✏ Edit & Retry
               </button>
             </div>
@@ -676,15 +676,15 @@ function DebugRecordRow({ record, index, entityTarget, onRetry, onEditRetry }) {
 
 // ── Shared button styles ──────────────────────────────────────────────────────
 const btnPrimary = {
-  background: "#0C2340", color: "#fff", border: "none", borderRadius: 8,
+  background: "#0E1F3A", color: "#fff", border: "none", borderRadius: 8,
   padding: "8px 18px", fontSize: 12, fontWeight: 700, cursor: "pointer",
 };
 const btnSecondary = {
-  background: "#f8fafc", color: "#475569", border: "1px solid #e2e8f0",
+  background: "#F4F2ED", color: "#3A4A66", border: "1px solid #D9D6CE",
   borderRadius: 7, padding: "7px 16px", fontSize: 12, fontWeight: 600, cursor: "pointer",
 };
 const btnBack = {
-  background: "#f1f5f9", border: "1px solid #e2e8f0", color: "#334155",
+  background: "#ECEAE4", border: "1px solid #D9D6CE", color: "#3A4A66",
   borderRadius: 7, padding: "6px 14px", cursor: "pointer", fontSize: 12, fontWeight: 600,
 };
 function btnAction(bg, color, border) {

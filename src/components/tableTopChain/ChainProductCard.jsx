@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MATERIALS } from "@/lib/tableTopChainData";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", muted: "#64748b", border: "#e2e8f0", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", muted: "#3A4A66", border: "#D9D6CE", bg: "#F4F2ED", text: "#0E1F3A",
 };
 
 export default function ChainProductCard({ product, onViewDetails, onAddRFQ }) {
@@ -10,7 +10,7 @@ export default function ChainProductCard({ product, onViewDetails, onAddRFQ }) {
   const [imgErr, setImgErr] = useState(false);
 
   const isPlas = product.chainType === "Plastic";
-  const accentColor = isPlas ? "#0057A8" : "#374151";
+  const accentColor = isPlas ? "#0E1F3A" : "#3A4A66";
   const materialList = (product.materials || []).map(m => MATERIALS[m]).filter(Boolean);
 
   return (
@@ -21,13 +21,13 @@ export default function ChainProductCard({ product, onViewDetails, onAddRFQ }) {
         background: "#fff", borderRadius: 14,
         border: `2px solid ${hov ? accentColor : C.border}`,
         overflow: "hidden", transition: "all 0.17s",
-        boxShadow: hov ? `0 10px 30px ${isPlas ? "rgba(0,87,168,0.12)" : "rgba(55,65,81,0.12)"}` : "0 1px 4px rgba(0,0,0,0.05)",
+        boxShadow: hov ? `0 10px 30px ${isPlas ? "rgba(14,31,58,0.12)" : "rgba(55,65,81,0.12)"}` : "0 1px 4px rgba(0,0,0,0.05)",
         transform: hov ? "translateY(-3px)" : "none",
         display: "flex", flexDirection: "column",
       }}
     >
       {/* Image */}
-      <div style={{ height: 150, background: "#f1f5f9", overflow: "hidden", position: "relative", flexShrink: 0 }}>
+      <div style={{ height: 150, background: "#ECEAE4", overflow: "hidden", position: "relative", flexShrink: 0 }}>
         {!imgErr ? (
           <img
             src={product.image}
@@ -64,14 +64,14 @@ export default function ChainProductCard({ product, onViewDetails, onAddRFQ }) {
             </span>
           ))}
           {materialList.length > 3 && (
-            <span style={{ fontSize: 8, background: "#f1f5f9", color: C.muted, padding: "2px 6px", borderRadius: 6 }}>+{materialList.length - 3} more</span>
+            <span style={{ fontSize: 8, background: "#ECEAE4", color: C.muted, padding: "2px 6px", borderRadius: 6 }}>+{materialList.length - 3} more</span>
           )}
         </div>
 
         {/* Applications */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
           {(product.applications || []).slice(0, 2).map(a => (
-            <span key={a} style={{ fontSize: 8, background: "#f8fafc", color: C.muted, padding: "1px 5px", borderRadius: 5 }}>{a}</span>
+            <span key={a} style={{ fontSize: 8, background: "#F4F2ED", color: C.muted, padding: "1px 5px", borderRadius: 5 }}>{a}</span>
           ))}
         </div>
 
@@ -79,7 +79,7 @@ export default function ChainProductCard({ product, onViewDetails, onAddRFQ }) {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 7, marginTop: 4 }}>
           <button
             onClick={() => onViewDetails(product)}
-            style={{ padding: "8px", background: "#f1f5f9", border: "none", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 700, color: C.navyMid }}
+            style={{ padding: "8px", background: "#ECEAE4", border: "none", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 700, color: C.navyMid }}
           >
             View Details
           </button>

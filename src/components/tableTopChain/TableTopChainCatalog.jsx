@@ -9,9 +9,9 @@ import TTCProductDetail from "./TTCProductDetail";
 import TTCRFQModal from "./TTCRFQModal";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
-  border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
-  plastic: "#0057A8", steel: "#374151",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522",
+  border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
+  plastic: "#0E1F3A", steel: "#3A4A66",
 };
 
 const TYPE_LABELS = {
@@ -70,7 +70,7 @@ function QuickRFQToast({ item, onDismiss }) {
     }}>
       <span style={{ fontSize: 22, flexShrink: 0 }}>✅</span>
       <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#166534", marginBottom: 2 }}>Added to RFQ</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#2E7D46", marginBottom: 2 }}>Added to RFQ</div>
         <div style={{ fontSize: 11, color: "#4b7a5c", lineHeight: 1.5 }}>{item?.name}</div>
       </div>
       <button onClick={onDismiss} style={{ background: "none", border: "none", cursor: "pointer", color: C.muted, fontSize: 16, padding: 0, flexShrink: 0 }}>✕</button>

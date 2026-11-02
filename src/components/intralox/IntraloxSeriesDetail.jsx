@@ -2,11 +2,11 @@ import { useState } from "react";
 import { getSeriesCADDownloads, getSeriesFlightData } from "@/lib/intraloxFlightData";
 
 const C = {
-  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b",
-  bg: "#f8fafc", green: "#16a34a", text: "#0f172a"
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  gold: "#F26522", border: "#D9D6CE", muted: "#3A4A66",
+  bg: "#F4F2ED", green: "#2E7D46", text: "#0E1F3A"
 };
-const INTRALOX_RED = "#E31837";
+const INTRALOX_RED = "#F26522";
 const INTRALOX_LOGO = "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/64536dc1d_intralox-logo-box-194a1e40631d2cf9cd7d463fa5afc04b.svg";
 
 function TabButton({ label, active, onClick }) {
@@ -29,11 +29,11 @@ function BeltStyleCard({ style, onViewSpecs, onConfigure }) {
     <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
         background: "#fff", borderRadius: 12, border: `2px solid ${hov ? C.navyMid : C.border}`,
-        overflow: "hidden", transition: "all 0.16s", boxShadow: hov ? "0 6px 20px rgba(15,35,64,0.1)" : "0 1px 4px rgba(0,0,0,0.05)",
+        overflow: "hidden", transition: "all 0.16s", boxShadow: hov ? "0 6px 20px rgba(14,31,58,0.1)" : "0 1px 4px rgba(0,0,0,0.05)",
         display: "flex", flexDirection: "column"
       }}>
       {/* Image */}
-      <div style={{ height: 140, overflow: "hidden", background: "#f0f4f8", position: "relative", flexShrink: 0 }}>
+      <div style={{ height: 140, overflow: "hidden", background: "#F4F2ED", position: "relative", flexShrink: 0 }}>
         {style.image ? (
           <img src={style.image} alt={style.label}
             style={{ width: "100%", height: "100%", objectFit: "cover", transform: hov ? "scale(1.03)" : "scale(1)", transition: "transform 0.3s" }}
@@ -47,7 +47,7 @@ function BeltStyleCard({ style, onViewSpecs, onConfigure }) {
         )}
         {/* Data quality badge */}
         {hasCatalogData && (
-          <div style={{ position: "absolute", top: 8, right: 8, background: "#16a34a", color: "#fff", fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 6 }}>
+          <div style={{ position: "absolute", top: 8, right: 8, background: "#2E7D46", color: "#fff", fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 6 }}>
             ✓ Data
           </div>
         )}
@@ -62,12 +62,12 @@ function BeltStyleCard({ style, onViewSpecs, onConfigure }) {
         <div style={{ fontSize: 13, fontWeight: 800, color: C.navyMid, marginBottom: 4 }}>{style.label}</div>
         <div style={{ display: "flex", gap: 5, marginBottom: 6, flexWrap: "wrap" }}>
           {style.openArea && style.openArea !== "To be confirmed by Uniking" && (
-            <span style={{ background: "#eef3f8", color: C.navyMid, fontSize: 10, fontWeight: 600, padding: "1px 7px", borderRadius: 8 }}>
+            <span style={{ background: "#F4F2ED", color: C.navyMid, fontSize: 10, fontWeight: 600, padding: "1px 7px", borderRadius: 8 }}>
               {style.openArea} open area
             </span>
           )}
           {style.surface && style.surface !== "To be confirmed by Uniking" && (
-            <span style={{ background: "#f1f5f9", color: C.muted, fontSize: 10, padding: "1px 7px", borderRadius: 8 }}>
+            <span style={{ background: "#ECEAE4", color: C.muted, fontSize: 10, padding: "1px 7px", borderRadius: 8 }}>
               {style.surface}
             </span>
           )}
@@ -80,19 +80,19 @@ function BeltStyleCard({ style, onViewSpecs, onConfigure }) {
             <div style={{ fontSize: 10, color: C.muted, fontWeight: 600, marginBottom: 2 }}>Materials:</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
               {style.beltData.slice(0, 3).map((r, i) => (
-                <span key={i} style={{ fontSize: 9, background: "#f0fdf4", color: "#166534", padding: "1px 6px", borderRadius: 6, fontWeight: 600 }}>
+                <span key={i} style={{ fontSize: 9, background: "#f0fdf4", color: "#2E7D46", padding: "1px 6px", borderRadius: 6, fontWeight: 600 }}>
                   {r.material.split(" ")[0]}
                 </span>
               ))}
               {style.beltData.length > 3 && (
-                <span style={{ fontSize: 9, background: "#f1f5f9", color: C.muted, padding: "1px 6px", borderRadius: 6 }}>+{style.beltData.length - 3}</span>
+                <span style={{ fontSize: 9, background: "#ECEAE4", color: C.muted, padding: "1px 6px", borderRadius: 6 }}>+{style.beltData.length - 3}</span>
               )}
             </div>
           </div>
         )}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginTop: "auto" }}>
           <button onClick={() => onViewSpecs(style)}
-            style={{ padding: "7px", background: "#f1f5f9", border: "none", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 700, color: C.navyMid }}>
+            style={{ padding: "7px", background: "#ECEAE4", border: "none", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 700, color: C.navyMid }}>
             View Details
           </button>
           <button onClick={() => onConfigure(style)}
@@ -107,13 +107,13 @@ function BeltStyleCard({ style, onViewSpecs, onConfigure }) {
 
 function SprocketRow({ sprocket, onAddRFQ }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", background: "#fff", borderBottom: "1px solid #f1f5f9" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", background: "#fff", borderBottom: "1px solid #ECEAE4" }}>
       {sprocket.image ? (
         <img src={sprocket.image} alt={sprocket.name}
-          style={{ width: 52, height: 40, objectFit: "cover", borderRadius: 6, background: "#f8fafc", flexShrink: 0 }}
+          style={{ width: 52, height: 40, objectFit: "cover", borderRadius: 6, background: "#F4F2ED", flexShrink: 0 }}
           onError={e => e.target.style.display = "none"} />
       ) : (
-        <div style={{ width: 52, height: 40, background: "#f1f5f9", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>⚙️</div>
+        <div style={{ width: 52, height: 40, background: "#ECEAE4", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>⚙️</div>
       )}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid }}>{sprocket.name}</div>
@@ -138,13 +138,13 @@ function SprocketRow({ sprocket, onAddRFQ }) {
 
 function AccessoryRow({ acc, onAddRFQ }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", background: "#fff", borderBottom: "1px solid #f1f5f9" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", background: "#fff", borderBottom: "1px solid #ECEAE4" }}>
       {acc.image ? (
         <img src={acc.image} alt={acc.name}
-          style={{ width: 70, height: 52, objectFit: "cover", borderRadius: 6, background: "#f8fafc", flexShrink: 0 }}
+          style={{ width: 70, height: 52, objectFit: "cover", borderRadius: 6, background: "#F4F2ED", flexShrink: 0 }}
           onError={e => { e.target.style.display = "none"; }} />
       ) : (
-        <div style={{ width: 70, height: 52, background: "#f1f5f9", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>
+        <div style={{ width: 70, height: 52, background: "#ECEAE4", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>
           {acc.type === "flight" ? "🔧" : acc.type === "sideguard" ? "🛡️" : "🔩"}
         </div>
       )}
@@ -231,7 +231,7 @@ function SpecsModal({ series, style, onConfigure, onClose }) {
                   </thead>
                   <tbody>
                     {style.beltData.map((row, i) => (
-                      <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff" }}>
+                      <tr key={i} style={{ background: i % 2 === 0 ? "#F4F2ED" : "#fff" }}>
                         <td style={{ padding: "6px 10px", fontWeight: 600, color: C.navyMid }}>{row.material}</td>
                         <td style={{ padding: "6px 10px", color: C.muted }}>{row.rodMaterial}</td>
                         <td style={{ padding: "6px 10px" }}>{row.strengthLbfFt?.toLocaleString()}</td>
@@ -266,7 +266,7 @@ function SpecsModal({ series, style, onConfigure, onClose }) {
               <div style={{ fontSize: 11, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 8 }}>Applications</div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                 {style.applications.map(a => (
-                  <span key={a} style={{ background: "#eef3f8", color: C.navyMid, fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 10 }}>{a}</span>
+                  <span key={a} style={{ background: "#F4F2ED", color: C.navyMid, fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 10 }}>{a}</span>
                 ))}
               </div>
             </div>
@@ -289,7 +289,7 @@ function SpecsModal({ series, style, onConfigure, onClose }) {
           </div>
 
           <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={onClose} style={{ flex: 1, padding: "11px", background: "#f1f5f9", color: C.navyMid, border: "none", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Close</button>
+            <button onClick={onClose} style={{ flex: 1, padding: "11px", background: "#ECEAE4", color: C.navyMid, border: "none", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Close</button>
             <button onClick={() => { onClose(); onConfigure(style); }}
               style={{ flex: 2, padding: "11px", background: C.navyMid, color: "#fff", border: "none", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 800 }}>
               Configure This Belt →
@@ -357,7 +357,7 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
         <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: "0 0 12px", maxWidth: 600 }}>{series.description}</p>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
           {series.pitch_in && series.pitch_in !== "To be confirmed by Uniking" && (
-            <span style={{ background: "rgba(201,168,76,0.25)", color: C.gold, padding: "4px 10px", borderRadius: 16, fontSize: 11, fontWeight: 700 }}>Pitch: {series.pitch_in}" ({series.pitch_mm} mm)</span>
+            <span style={{ background: "rgba(242,101,34,0.25)", color: C.gold, padding: "4px 10px", borderRadius: 16, fontSize: 11, fontWeight: 700 }}>Pitch: {series.pitch_in}" ({series.pitch_mm} mm)</span>
           )}
           {series.min_width_in && <span style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)", padding: "4px 10px", borderRadius: 16, fontSize: 11 }}>Min width: {series.min_width_in}"</span>}
           {series.width_increment_in && <span style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.8)", padding: "4px 10px", borderRadius: 16, fontSize: 11 }}>Width incr: {series.width_increment_in}"</span>}
@@ -368,7 +368,7 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
 
       {/* RFQ toast */}
       {rfqMsg && (
-        <div style={{ background: "#16a34a", color: "#fff", padding: "10px 20px", fontSize: 13, fontWeight: 700, textAlign: "center" }}>
+        <div style={{ background: "#2E7D46", color: "#fff", padding: "10px 20px", fontSize: 13, fontWeight: 700, textAlign: "center" }}>
           ✓ {rfqMsg}
         </div>
       )}
@@ -421,7 +421,7 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
                         <img src={sp.image} alt={sp.name} style={{ width: "100%", height: 80, objectFit: "cover" }} onError={e => e.target.style.display = "none"} />
                       </div>
                     ) : (
-                      <div style={{ width: 100, height: 80, flexShrink: 0, background: "#f0f4f8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>⚙️</div>
+                      <div style={{ width: 100, height: 80, flexShrink: 0, background: "#F4F2ED", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>⚙️</div>
                     )}
                     <div style={{ padding: "10px 14px", flex: 1, display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
                       <div style={{ flex: 1, minWidth: 200 }}>
@@ -469,7 +469,7 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: C.navyMid, marginBottom: 4 }}>Flights & Attachments — {series.name}</div>
             {flightData.seriesNote && (
-              <div style={{ background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#0369a1", marginBottom: 12 }}>
+              <div style={{ background: "#FDF0E9", border: "1px solid #bae6fd", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#0E1F3A", marginBottom: 12 }}>
                 {flightData.seriesNote}
               </div>
             )}
@@ -479,7 +479,7 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
                   <div key={ft.key} style={{ background: "#fff", borderRadius: 12, border: `1px solid ${C.border}`, overflow: "hidden" }}>
                     <div style={{ display: "flex" }}>
                       {ft.image && (
-                        <div style={{ width: 90, flexShrink: 0, background: "#f0f4f8" }}>
+                        <div style={{ width: 90, flexShrink: 0, background: "#F4F2ED" }}>
                           <img src={ft.image} alt={ft.name} style={{ width: "100%", height: 90, objectFit: "cover" }} onError={e => e.target.style.display = "none"} />
                         </div>
                       )}
@@ -495,14 +495,14 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
                         </div>
                         <div style={{ fontSize: 12, color: C.muted, marginTop: 3, lineHeight: 1.5 }}>{ft.description}</div>
                         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
-                          <span style={{ fontSize: 10, background: "#eef3f8", color: C.navyMid, padding: "2px 8px", borderRadius: 8, fontWeight: 600 }}>
+                          <span style={{ fontSize: 10, background: "#F4F2ED", color: C.navyMid, padding: "2px 8px", borderRadius: 8, fontWeight: 600 }}>
                             Heights: {ft.availableHeightsIn.join('", ')}"{ft.customHeightAvailable ? " + custom" : ""}
                           </span>
-                          <span style={{ fontSize: 10, background: "#f1f5f9", color: C.muted, padding: "2px 8px", borderRadius: 8 }}>
+                          <span style={{ fontSize: 10, background: "#ECEAE4", color: C.muted, padding: "2px 8px", borderRadius: 8 }}>
                             Min indent: {ft.minIndentIn}"
                           </span>
                           {ft.materials.slice(0, 4).map(m => (
-                            <span key={m} style={{ fontSize: 10, background: "#f0fdf4", color: "#166534", padding: "2px 8px", borderRadius: 8 }}>{m}</span>
+                            <span key={m} style={{ fontSize: 10, background: "#f0fdf4", color: "#2E7D46", padding: "2px 8px", borderRadius: 8 }}>{m}</span>
                           ))}
                         </div>
                         {ft.notes?.length > 0 && ft.notes.map((n, ni) => (
@@ -588,7 +588,7 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
                     </thead>
                     <tbody>
                       {style.beltData.map((row, i) => (
-                        <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff" }}>
+                        <tr key={i} style={{ background: i % 2 === 0 ? "#F4F2ED" : "#fff" }}>
                           <td style={{ padding: "7px 10px", fontWeight: 700, color: C.navyMid }}>{row.material}</td>
                           <td style={{ padding: "7px 10px", color: C.muted }}>{row.rodMaterial}</td>
                           <td style={{ padding: "7px 10px" }}>{row.strengthLbfFt?.toLocaleString()}</td>
@@ -639,7 +639,7 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
                   🔗 Intralox Belt Finder — {series.name}
                 </a>
                 <a href="https://www.intralox.com/resources/calclab" target="_blank" rel="noreferrer"
-                  style={{ background: "#f1f5f9", color: C.navyMid, padding: "9px 18px", borderRadius: 8, fontWeight: 700, fontSize: 12, textDecoration: "none", border: `1px solid ${C.border}` }}>
+                  style={{ background: "#ECEAE4", color: C.navyMid, padding: "9px 18px", borderRadius: 8, fontWeight: 700, fontSize: 12, textDecoration: "none", border: `1px solid ${C.border}` }}>
                   🧮 CalcLab
                 </a>
               </div>
@@ -664,12 +664,12 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
                     <div style={{ padding: "8px 0" }}>
                       {group.files.map((f, fi) => (
                         <a key={fi} href={f.url} target="_blank" rel="noreferrer" download={f.type === "DXF"}
-                          style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 14px", textDecoration: "none", borderBottom: fi < group.files.length - 1 ? `1px solid #f1f5f9` : "none" }}
-                          onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
+                          style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 14px", textDecoration: "none", borderBottom: fi < group.files.length - 1 ? `1px solid #ECEAE4` : "none" }}
+                          onMouseEnter={e => e.currentTarget.style.background = "#F4F2ED"}
                           onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
                           <span style={{ fontSize: 18, flexShrink: 0 }}>{f.type === "DXF" ? "📐" : "🔗"}</span>
                           <span style={{ flex: 1, fontSize: 12, color: C.navyMid, fontWeight: 600 }}>{f.label}</span>
-                          <span style={{ fontSize: 10, background: f.type === "DXF" ? "#eef3f8" : "#f0fdf4", color: f.type === "DXF" ? C.navyMid : "#166534", padding: "2px 8px", borderRadius: 8, fontWeight: 700, flexShrink: 0 }}>
+                          <span style={{ fontSize: 10, background: f.type === "DXF" ? "#F4F2ED" : "#f0fdf4", color: f.type === "DXF" ? C.navyMid : "#2E7D46", padding: "2px 8px", borderRadius: 8, fontWeight: 700, flexShrink: 0 }}>
                             {f.type}
                           </span>
                           <span style={{ fontSize: 11, color: INTRALOX_RED, fontWeight: 600, flexShrink: 0 }}>⬇</span>
@@ -691,7 +691,7 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
                 </a>
               </div>
             )}
-            <div style={{ marginTop: 14, background: "#f8fafc", borderRadius: 8, border: `1px solid ${C.border}`, padding: "12px 14px" }}>
+            <div style={{ marginTop: 14, background: "#F4F2ED", borderRadius: 8, border: `1px solid ${C.border}`, padding: "12px 14px" }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 6 }}>Engineering Manual & Resources</div>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <a href={series.techChartUrl} target="_blank" rel="noreferrer"
@@ -703,7 +703,7 @@ export default function IntraloxSeriesDetail({ series, onConfigure, onBack, onGo
                   🔗 Intralox Belt Finder
                 </a>
                 <a href="https://www.intralox.com/resources/calclab" target="_blank" rel="noreferrer"
-                  style={{ background: "#f1f5f9", color: C.navyMid, padding: "8px 16px", borderRadius: 7, fontWeight: 700, fontSize: 12, textDecoration: "none", border: `1px solid ${C.border}` }}>
+                  style={{ background: "#ECEAE4", color: C.navyMid, padding: "8px 16px", borderRadius: 7, fontWeight: 700, fontSize: 12, textDecoration: "none", border: `1px solid ${C.border}` }}>
                   🧮 CalcLab Engineering Tool
                 </a>
               </div>

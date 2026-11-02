@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { MacChainProduct } from "@/api/entities";
 
-const UNIKING_RED = "#C41E3A";
+const UNIKING_RED = "#F26522";
 const UNIKING_DARK = "#1a1a1a";
-const UNIKING_GRAY = "#f5f5f5";
-const UNIKING_BORDER = "#e0e0e0";
+const UNIKING_GRAY = "#F4F2ED";
+const UNIKING_BORDER = "#D9D6CE";
 
 const CHAIN_CATEGORIES = [
   {
@@ -69,33 +69,33 @@ function printTearSheet(p) {
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Segoe UI',Arial,sans-serif;color:#1a1a1a;background:#fff}
-  .header{background:#1a1a1a;color:#fff;padding:18px 32px;display:flex;align-items:center;gap:18px;border-bottom:4px solid #C41E3A}
-  .logo-box{width:48px;height:48px;background:#C41E3A;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;color:#fff;flex-shrink:0}
+  .header{background:#1a1a1a;color:#fff;padding:18px 32px;display:flex;align-items:center;gap:18px;border-bottom:4px solid #F26522}
+  .logo-box{width:48px;height:48px;background:#F26522;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;color:#fff;flex-shrink:0}
   .header-text{flex:1}
-  .header-title{font-size:13px;color:#aaa;letter-spacing:2px;text-transform:uppercase}
+  .header-title{font-size:13px;color:#8A94A6;letter-spacing:2px;text-transform:uppercase}
   .header-part{font-size:26px;font-weight:800}
-  .header-type{font-size:12px;color:#C41E3A;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
-  .contact{font-size:11px;color:#aaa;text-align:right;line-height:1.7}
+  .header-type{font-size:12px;color:#F26522;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+  .contact{font-size:11px;color:#8A94A6;text-align:right;line-height:1.7}
   .body{padding:28px 32px}
   .top-row{display:flex;gap:28px;margin-bottom:24px}
   .images{display:flex;flex-direction:column;gap:12px;flex:0 0 280px}
-  .main-img{max-width:280px;max-height:220px;object-fit:contain;border:1px solid #e0e0e0;border-radius:8px;padding:12px;background:#f5f5f5}
-  .diag-img{max-width:280px;max-height:140px;object-fit:contain;border:1px solid #e0e0e0;border-radius:8px;padding:10px;background:#f5f5f5}
+  .main-img{max-width:280px;max-height:220px;object-fit:contain;border:1px solid #D9D6CE;border-radius:8px;padding:12px;background:#F4F2ED}
+  .diag-img{max-width:280px;max-height:140px;object-fit:contain;border:1px solid #D9D6CE;border-radius:8px;padding:10px;background:#F4F2ED}
   .info{flex:1}
-  .category-label{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
-  .industry{font-size:13px;color:#555;background:#f5f5f5;border-radius:6px;padding:8px 12px;margin-bottom:14px}
+  .category-label{font-size:11px;color:#8A94A6;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+  .industry{font-size:13px;color:#555;background:#F4F2ED;border-radius:6px;padding:8px 12px;margin-bottom:14px}
   ul{padding-left:20px;margin-bottom:16px}
   li{font-size:13px;color:#444;line-height:1.9}
-  .section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#999;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #e0e0e0}
+  .section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#8A94A6;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #D9D6CE}
   table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px}
   th{background:#1a1a1a;color:#fff;padding:9px 14px;text-align:left;font-weight:600;font-size:11px;white-space:nowrap}
-  td{padding:9px 14px;white-space:nowrap;border-bottom:1px solid #e0e0e0}
+  td{padding:9px 14px;white-space:nowrap;border-bottom:1px solid #D9D6CE}
   tr.even td{background:#fff}
-  tr.odd td{background:#f5f5f5}
-  td.bold{font-weight:700;color:#C41E3A}
-  .footer{margin-top:32px;padding:16px 32px;border-top:2px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center}
-  .footer-note{font-size:11px;color:#999}
-  .footer-brand{font-size:12px;color:#C41E3A;font-weight:700}
+  tr.odd td{background:#F4F2ED}
+  td.bold{font-weight:700;color:#F26522}
+  .footer{margin-top:32px;padding:16px 32px;border-top:2px solid #D9D6CE;display:flex;justify-content:space-between;align-items:center}
+  .footer-note{font-size:11px;color:#8A94A6}
+  .footer-brand{font-size:12px;color:#F26522;font-weight:700}
   @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style></head>
 <body>
@@ -143,7 +143,7 @@ function ProductDetail({ product: p, onBack }) {
   return (
     <div style={{ paddingTop: 24 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, paddingBottom: 16, borderBottom: `1px solid ${UNIKING_BORDER}` }}>
-        <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#666", display: "flex", alignItems: "center", gap: 6 }}>
+        <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#3A4A66", display: "flex", alignItems: "center", gap: 6 }}>
           ← Back to {p.category}
         </button>
         <button onClick={() => printTearSheet(p)}
@@ -176,10 +176,10 @@ function ProductDetail({ product: p, onBack }) {
 
         {/* Info */}
         <div>
-          <div style={{ fontSize: 11, color: "#999", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 4 }}>{p.category}</div>
+          <div style={{ fontSize: 11, color: "#8A94A6", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 4 }}>{p.category}</div>
           <div style={{ fontSize: 28, fontWeight: 800, marginBottom: 12 }}>{p.part_number}</div>
           {p.industry && (
-            <div style={{ fontSize: 13, color: "#666", background: UNIKING_GRAY, borderRadius: 6, padding: "8px 14px", marginBottom: 16, display: "inline-block" }}>
+            <div style={{ fontSize: 13, color: "#3A4A66", background: UNIKING_GRAY, borderRadius: 6, padding: "8px 14px", marginBottom: 16, display: "inline-block" }}>
               <strong>Industry:</strong> {p.industry}
             </div>
           )}
@@ -188,7 +188,7 @@ function ProductDetail({ product: p, onBack }) {
           )}
           {p.features?.length > 0 && (
             <div>
-              <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#999", marginBottom: 10 }}>Features</div>
+              <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#8A94A6", marginBottom: 10 }}>Features</div>
               <ul style={{ paddingLeft: 20, margin: 0 }}>
                 {p.features.map((f, i) => <li key={i} style={{ fontSize: 13, color: "#444", lineHeight: 2 }}>{f}</li>)}
               </ul>
@@ -281,21 +281,21 @@ function ProductList({ catKey, catInfo, onBack }) {
 
   return (
     <div style={{ paddingTop: 28 }}>
-      <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#666", marginBottom: 20, display: "flex", alignItems: "center", gap: 6 }}>
+      <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#3A4A66", marginBottom: 20, display: "flex", alignItems: "center", gap: 6 }}>
         ← Back to Chain Types
       </button>
       <div style={{ marginBottom: 28, paddingBottom: 16, borderBottom: `1px solid ${UNIKING_BORDER}` }}>
         <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 6 }}>{catInfo.label}</div>
-        <div style={{ fontSize: 14, color: "#666", lineHeight: 1.6, maxWidth: 700 }}>{catInfo.desc}</div>
+        <div style={{ fontSize: 14, color: "#3A4A66", lineHeight: 1.6, maxWidth: 700 }}>{catInfo.desc}</div>
         {!loading && products.length > 0 && (
-          <div style={{ fontSize: 12, color: "#999", marginTop: 8 }}>{products.length} product{products.length !== 1 ? "s" : ""} — click a card for full specifications</div>
+          <div style={{ fontSize: 12, color: "#8A94A6", marginTop: 8 }}>{products.length} product{products.length !== 1 ? "s" : ""} — click a card for full specifications</div>
         )}
       </div>
 
       {loading ? (
-        <div style={{ textAlign: "center", padding: "60px 0", color: "#999" }}>Loading...</div>
+        <div style={{ textAlign: "center", padding: "60px 0", color: "#8A94A6" }}>Loading...</div>
       ) : products.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "60px 0", color: "#999" }}>No products found.</div>
+        <div style={{ textAlign: "center", padding: "60px 0", color: "#8A94A6" }}>No products found.</div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))", gap: 16 }}>
           {products.map(p => (
@@ -312,7 +312,7 @@ function ProductList({ catKey, catInfo, onBack }) {
               <div style={{ padding: "12px 14px" }}>
                 <div style={{ fontWeight: 700, fontSize: 14, color: UNIKING_RED, marginBottom: 4 }}>{p.part_number}</div>
                 {p.subcategory && <div style={{ fontSize: 12, color: "#777", marginBottom: 2 }}>{p.subcategory}</div>}
-                {p.industry && <div style={{ fontSize: 11, color: "#aaa", lineHeight: 1.4 }}>{p.industry}</div>}
+                {p.industry && <div style={{ fontSize: 11, color: "#8A94A6", lineHeight: 1.4 }}>{p.industry}</div>}
               </div>
             </div>
           ))}
@@ -333,12 +333,12 @@ function SpecialAppView({ onBack }) {
 
   return (
     <div style={{ paddingTop: 28 }}>
-      <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#666", marginBottom: 20 }}>
+      <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#3A4A66", marginBottom: 20 }}>
         ← Back to Chain Types
       </button>
       <div style={{ marginBottom: 32, paddingBottom: 16, borderBottom: `1px solid ${UNIKING_BORDER}` }}>
         <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>{cat.label}</div>
-        <div style={{ fontSize: 14, color: "#666", lineHeight: 1.7, maxWidth: 700 }}>{cat.desc}</div>
+        <div style={{ fontSize: 14, color: "#3A4A66", lineHeight: 1.7, maxWidth: 700 }}>{cat.desc}</div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 16 }}>
         {cat.subcategories.map(sub => (
@@ -384,18 +384,18 @@ function SubcatProductList({ catKey, subcatKey, subcatLabel, onBack }) {
 
   return (
     <div style={{ paddingTop: 28 }}>
-      <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#666", marginBottom: 20 }}>
+      <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "#3A4A66", marginBottom: 20 }}>
         ← Back to Special Application Chain
       </button>
       <div style={{ marginBottom: 28, paddingBottom: 16, borderBottom: `1px solid ${UNIKING_BORDER}` }}>
         <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 6 }}>{subcatLabel}</div>
         {!loading && products.length > 0 && (
-          <div style={{ fontSize: 12, color: "#999", marginTop: 8 }}>{products.length} product{products.length !== 1 ? "s" : ""} — click a card for full specifications</div>
+          <div style={{ fontSize: 12, color: "#8A94A6", marginTop: 8 }}>{products.length} product{products.length !== 1 ? "s" : ""} — click a card for full specifications</div>
         )}
       </div>
 
       {loading ? (
-        <div style={{ textAlign: "center", padding: "60px 0", color: "#999" }}>Loading...</div>
+        <div style={{ textAlign: "center", padding: "60px 0", color: "#8A94A6" }}>Loading...</div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))", gap: 16 }}>
           {products.map(p => (
@@ -411,7 +411,7 @@ function SubcatProductList({ catKey, subcatKey, subcatLabel, onBack }) {
               )}
               <div style={{ padding: "12px 14px" }}>
                 <div style={{ fontWeight: 700, fontSize: 14, color: UNIKING_RED, marginBottom: 4 }}>{p.part_number}</div>
-                {p.industry && <div style={{ fontSize: 11, color: "#aaa", lineHeight: 1.4 }}>{p.industry}</div>}
+                {p.industry && <div style={{ fontSize: 11, color: "#8A94A6", lineHeight: 1.4 }}>{p.industry}</div>}
               </div>
             </div>
           ))}
@@ -449,13 +449,13 @@ export default function SpecialChains() {
       <div style={{ background: UNIKING_DARK, color: "#fff", padding: "18px 32px", display: "flex", alignItems: "center", gap: 16, borderBottom: `3px solid ${UNIKING_RED}` }}>
         <div style={{ width: 40, height: 40, background: UNIKING_RED, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 18 }}>U</div>
         <div>
-          <div style={{ fontSize: 11, color: "#aaa", letterSpacing: 2, textTransform: "uppercase" }}>Uniking Canada — Product Catalog</div>
+          <div style={{ fontSize: 11, color: "#8A94A6", letterSpacing: 2, textTransform: "uppercase" }}>Uniking Canada — Product Catalog</div>
           <div style={{ fontSize: 20, fontWeight: 700 }}>
             {selectedCategory ? (catInfo?.label || selectedCategory) : "Steel Pintle, Long Link & Special Application Chain"}
           </div>
         </div>
         <div style={{ flex: 1 }} />
-        <a href="/" style={{ color: "#aaa", textDecoration: "none", fontSize: 13 }}>← Back to Catalog</a>
+        <a href="/" style={{ color: "#8A94A6", textDecoration: "none", fontSize: 13 }}>← Back to Catalog</a>
       </div>
 
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px 48px" }}>
@@ -464,7 +464,7 @@ export default function SpecialChains() {
           <div style={{ padding: "64px 0 48px" }}>
             <div style={{ textAlign: "center", marginBottom: 48 }}>
               <div style={{ fontSize: 30, fontWeight: 800, marginBottom: 12 }}>Select a Chain Type</div>
-              <div style={{ fontSize: 15, color: "#666", maxWidth: 620, margin: "0 auto", lineHeight: 1.7 }}>
+              <div style={{ fontSize: 15, color: "#3A4A66", maxWidth: 620, margin: "0 auto", lineHeight: 1.7 }}>
                 Mac Chain specialty chains for a wide range of demanding conveying, processing, and sorting applications.
               </div>
             </div>
@@ -475,7 +475,7 @@ export default function SpecialChains() {
                   onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 6px 24px rgba(0,0,0,0.12)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
                   onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.transform = "none"; }}>
                   <div style={{ fontWeight: 800, fontSize: 16, color: UNIKING_DARK, marginBottom: 10 }}>{cat.label}</div>
-                  <div style={{ fontSize: 13, color: "#666", lineHeight: 1.6 }}>{cat.desc}</div>
+                  <div style={{ fontSize: 13, color: "#3A4A66", lineHeight: 1.6 }}>{cat.desc}</div>
                 </button>
               ))}
             </div>

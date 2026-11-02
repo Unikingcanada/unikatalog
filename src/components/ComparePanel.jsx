@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 const C = {
-  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  gold: "#F26522", border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
 };
 
 function CompareTable({ products, onClose }) {
@@ -76,7 +76,7 @@ function CompareTable({ products, onClose }) {
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse", minWidth: cols * COL_MIN + 180 }}>
             <thead>
-              <tr style={{ background: "#f8fafc", borderBottom: "2px solid " + C.border }}>
+              <tr style={{ background: "#F4F2ED", borderBottom: "2px solid " + C.border }}>
                 <th style={{ padding: "14px 16px", textAlign: "left", fontSize: 11, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", width: 160, minWidth: 140 }}>Specification</th>
                 {products.map((p, i) => (
                   <th key={i} style={{ padding: "14px 16px", textAlign: "left", minWidth: COL_MIN, borderLeft: "1px solid " + C.border }}>
@@ -94,13 +94,13 @@ function CompareTable({ products, onClose }) {
               {baseRows.map((row, ri) => {
                 const diff = isDifferent(row.values);
                 return (
-                  <tr key={row.key} style={{ background: diff ? "#fffbeb" : ri % 2 === 0 ? "#fff" : "#f8fafc", borderBottom: "1px solid " + C.border }}>
+                  <tr key={row.key} style={{ background: diff ? "#fffbeb" : ri % 2 === 0 ? "#fff" : "#F4F2ED", borderBottom: "1px solid " + C.border }}>
                     <td style={{ padding: "9px 16px", fontSize: 12, color: C.muted, fontWeight: 600 }}>
                       {diff && <span style={{ marginRight: 5, fontSize: 10 }}>⚡</span>}
                       {row.label}
                     </td>
                     {row.values.map((v, ci) => (
-                      <td key={ci} style={{ padding: "9px 16px", fontSize: 13, color: v ? C.text : "#cbd5e1", borderLeft: "1px solid " + C.border, fontWeight: diff && v ? 600 : 400 }}>
+                      <td key={ci} style={{ padding: "9px 16px", fontSize: 13, color: v ? C.text : "#C9C5BB", borderLeft: "1px solid " + C.border, fontWeight: diff && v ? 600 : 400 }}>
                         {v ? String(v) : "—"}
                       </td>
                     ))}
@@ -119,13 +119,13 @@ function CompareTable({ products, onClose }) {
               {specRows.map((row, ri) => {
                 const diff = isDifferent(row.values);
                 return (
-                  <tr key={row.key} style={{ background: diff ? "#fffbeb" : ri % 2 === 0 ? "#fff" : "#f8fafc", borderBottom: "1px solid " + C.border }}>
+                  <tr key={row.key} style={{ background: diff ? "#fffbeb" : ri % 2 === 0 ? "#fff" : "#F4F2ED", borderBottom: "1px solid " + C.border }}>
                     <td style={{ padding: "9px 16px", fontSize: 12, color: C.muted, fontWeight: 600 }}>
                       {diff && <span style={{ marginRight: 5, fontSize: 10 }}>⚡</span>}
                       {row.key}
                     </td>
                     {row.values.map((v, ci) => (
-                      <td key={ci} style={{ padding: "9px 16px", fontSize: 13, color: (v != null && v !== "" && v !== "N/A") ? C.text : "#cbd5e1", borderLeft: "1px solid " + C.border, fontWeight: diff && v ? 600 : 400 }}>
+                      <td key={ci} style={{ padding: "9px 16px", fontSize: 13, color: (v != null && v !== "" && v !== "N/A") ? C.text : "#C9C5BB", borderLeft: "1px solid " + C.border, fontWeight: diff && v ? 600 : 400 }}>
                         {(v != null && v !== "" && v !== "N/A") ? String(v) : "—"}
                       </td>
                     ))}
@@ -136,7 +136,7 @@ function CompareTable({ products, onClose }) {
           </table>
         </div>
 
-        <div style={{ padding: "14px 24px", borderTop: "1px solid " + C.border, background: "#f8fafc", borderRadius: "0 0 14px 14px", display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ padding: "14px 24px", borderTop: "1px solid " + C.border, background: "#F4F2ED", borderRadius: "0 0 14px 14px", display: "flex", alignItems: "center", gap: 8 }}>
           <span style={{ fontSize: 11, color: C.muted }}>⚡ = values differ between products</span>
           <button onClick={onClose} style={{ marginLeft: "auto", padding: "8px 20px", background: C.navy, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 700, fontSize: 13 }}>Close</button>
         </div>

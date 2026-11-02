@@ -23,12 +23,12 @@ import {
 } from "@/lib/chainWave2ImportEngine";
 
 const C = {
-  navy: "#1a3a5c", muted: "#64748b", border: "#e2e8f0",
-  bg: "#f8fafc", card: "#fff",
-  green: "#16a34a", greenBg: "#f0fdf4",
-  amber: "#d97706", amberBg: "#fffbeb",
-  red: "#dc2626", redBg: "#fef2f2",
-  blue: "#2563eb", blueBg: "#eff6ff",
+  navy: "#0E1F3A", muted: "#3A4A66", border: "#D9D6CE",
+  bg: "#F4F2ED", card: "#fff",
+  green: "#2E7D46", greenBg: "#f0fdf4",
+  amber: "#B8860B", amberBg: "#fffbeb",
+  red: "#C62828", redBg: "#fef2f2",
+  blue: "#F26522", blueBg: "#FDF0E9",
 };
 
 const ENTITY_OPTIONS = [
@@ -80,16 +80,16 @@ function ColumnMapTable({ entityName }) {
   if (!map) return null;
   const unique = [...new Set(Object.values(map))];
   return (
-    <div style={{ background: C.blueBg, border: "1px solid #bfdbfe", borderRadius: 6, padding: "10px 14px", fontSize: 11 }}>
+    <div style={{ background: C.blueBg, border: "1px solid #F8C9B0", borderRadius: 6, padding: "10px 14px", fontSize: 11 }}>
       <div style={{ fontWeight: 700, color: C.blue, marginBottom: 6 }}>Expected fields for {entityName}:</div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
         {unique.map(f => (
-          <span key={f} style={{ background: "#fff", border: "1px solid #bfdbfe", borderRadius: 4, padding: "2px 7px", color: C.blue, fontFamily: "monospace", fontSize: 10 }}>
+          <span key={f} style={{ background: "#fff", border: "1px solid #F8C9B0", borderRadius: 4, padding: "2px 7px", color: C.blue, fontFamily: "monospace", fontSize: 10 }}>
             {f}
           </span>
         ))}
       </div>
-      <div style={{ marginTop: 6, color: "#1e40af", fontSize: 10 }}>
+      <div style={{ marginTop: 6, color: "#0E1F3A", fontSize: 10 }}>
         Column headers are auto-remapped — common variations accepted. Use exact field names above for guaranteed mapping.
       </div>
     </div>
@@ -108,8 +108,8 @@ function ValidationReport({ report }) {
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         <CountBadge count={report.total} color={C.navy} label="Total Rows" />
         <CountBadge count={report.readyToCommit.length} color={C.green} bg={C.greenBg} label="Ready to Write" />
-        <CountBadge count={report.skipped.length} color={C.muted} bg="#f1f5f9" label="Duplicates Skipped" />
-        <CountBadge count={report.autoFlags.length} color={report.autoFlags.length > 0 ? C.amber : C.muted} bg={report.autoFlags.length > 0 ? C.amberBg : "#f1f5f9"} label="Auto-Flags" />
+        <CountBadge count={report.skipped.length} color={C.muted} bg="#ECEAE4" label="Duplicates Skipped" />
+        <CountBadge count={report.autoFlags.length} color={report.autoFlags.length > 0 ? C.amber : C.muted} bg={report.autoFlags.length > 0 ? C.amberBg : "#ECEAE4"} label="Auto-Flags" />
         <CountBadge count={report.errors.length} color={report.errors.length > 0 ? C.red : C.green} bg={report.errors.length > 0 ? C.redBg : C.greenBg} label="Errors" />
       </div>
 
@@ -162,7 +162,7 @@ function ValidationReport({ report }) {
                       <span style={{ fontSize: 12, fontWeight: 700, color: C.navy }}>{f.flag_type}</span>
                       <span style={{ fontSize: 11, color: C.muted }}>chain_id: <strong style={{ color: C.navy }}>{f.chain_id}</strong></span>
                     </div>
-                    <div style={{ fontSize: 11, color: "#374151", lineHeight: 1.5 }}>{f.description}</div>
+                    <div style={{ fontSize: 11, color: "#3A4A66", lineHeight: 1.5 }}>{f.description}</div>
                   </div>
                 );
               })}
@@ -173,7 +173,7 @@ function ValidationReport({ report }) {
 
       {/* Duplicates */}
       {report.duplicates.length > 0 && (
-        <div style={{ background: "#f1f5f9", border: "1px solid " + C.border, borderRadius: 8, overflow: "hidden" }}>
+        <div style={{ background: "#ECEAE4", border: "1px solid " + C.border, borderRadius: 8, overflow: "hidden" }}>
           <button onClick={() => setShowDupes(p => !p)}
             style={{ width: "100%", padding: "10px 14px", background: "none", border: "none", cursor: "pointer", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: 1 }}>
@@ -206,7 +206,7 @@ function ValidationReport({ report }) {
           {showReady && (
             <div style={{ padding: "0 14px 12px", maxHeight: 260, overflowY: "auto" }}>
               {report.readyToCommit.slice(0, 50).map((r, i) => (
-                <div key={i} style={{ fontSize: 11, fontFamily: "monospace", color: "#166534", padding: "2px 0", borderBottom: "1px solid #bbf7d0" }}>
+                <div key={i} style={{ fontSize: 11, fontFamily: "monospace", color: "#2E7D46", padding: "2px 0", borderBottom: "1px solid #bbf7d0" }}>
                   {JSON.stringify(r).slice(0, 120)}
                 </div>
               ))}
@@ -230,7 +230,7 @@ function CommitResult({ result }) {
       </div>
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 10 }}>
         <CountBadge count={result.committed} color={C.green} bg={C.greenBg} label="Written" />
-        <CountBadge count={result.skipped} color={C.muted} bg="#f1f5f9" label="Skipped" />
+        <CountBadge count={result.skipped} color={C.muted} bg="#ECEAE4" label="Skipped" />
         <CountBadge count={result.flagsCreated} color={C.amber} bg={C.amberBg} label="Flags Written" />
       </div>
       {result.errors.length > 0 && (
@@ -300,7 +300,7 @@ export default function Wave2ImportPanel() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20, fontFamily: "'Inter','Segoe UI',sans-serif" }}>
       {/* Info banner */}
-      <div style={{ background: C.blueBg, border: "1px solid #bfdbfe", borderRadius: 8, padding: "12px 16px", fontSize: 12, color: "#1e40af", lineHeight: 1.6 }}>
+      <div style={{ background: C.blueBg, border: "1px solid #F8C9B0", borderRadius: 8, padding: "12px 16px", fontSize: 12, color: "#0E1F3A", lineHeight: 1.6 }}>
         <strong>Wave 2 Bulk Import</strong> — paste CSV or JSON, select target entity, validate, then commit.
         Duplicate detection, relationship validation, and auto review-flag generation run automatically before any data is written.
         Nothing is written until you click <strong>Commit</strong>.
@@ -358,12 +358,12 @@ export default function Wave2ImportPanel() {
       {/* Action buttons */}
       <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
         <button onClick={handleValidate} disabled={!rawInput.trim() || validating}
-          style={{ padding: "10px 24px", borderRadius: 8, border: "none", background: !rawInput.trim() || validating ? "#e2e8f0" : C.navy, color: !rawInput.trim() || validating ? C.muted : "#fff", fontSize: 13, fontWeight: 700, cursor: !rawInput.trim() || validating ? "default" : "pointer" }}>
+          style={{ padding: "10px 24px", borderRadius: 8, border: "none", background: !rawInput.trim() || validating ? "#D9D6CE" : C.navy, color: !rawInput.trim() || validating ? C.muted : "#fff", fontSize: 13, fontWeight: 700, cursor: !rawInput.trim() || validating ? "default" : "pointer" }}>
           {validating ? "Validating…" : "Validate →"}
         </button>
         {canCommit && (
           <button onClick={handleCommit} disabled={committing}
-            style={{ padding: "10px 24px", borderRadius: 8, border: "none", background: committing ? "#e2e8f0" : C.green, color: committing ? C.muted : "#fff", fontSize: 13, fontWeight: 700, cursor: committing ? "default" : "pointer" }}>
+            style={{ padding: "10px 24px", borderRadius: 8, border: "none", background: committing ? "#D9D6CE" : C.green, color: committing ? C.muted : "#fff", fontSize: 13, fontWeight: 700, cursor: committing ? "default" : "pointer" }}>
             {committing ? "Committing…" : `Commit ${report.readyToCommit.length} Records →`}
           </button>
         )}

@@ -1,5 +1,5 @@
 // Hero + 4 section tiles: Buckets / Belts / Hardware / Splices
-const NAVY = "#1a3a5c";
+const NAVY = "#0E1F3A";
 
 const TILES = [
   {
@@ -7,7 +7,7 @@ const TILES = [
     icon: "🪣",
     label: "Buckets",
     desc: "Agricultural & industrial elevator buckets — Maxi-Lift, Tapco, 4B",
-    color: "#b45309", bg: "#fffbeb", border: "#fde68a", accentBar: "linear-gradient(90deg,#b45309,#f59e0b)",
+    color: "#B8860B", bg: "#fffbeb", border: "#fde68a", accentBar: "linear-gradient(90deg,#B8860B,#f59e0b)",
   },
   {
     key: "belts",
@@ -21,14 +21,14 @@ const TILES = [
     icon: "🔩",
     label: "Hardware",
     desc: "Elevator bolts — Norway, Fanged, Easifit, Euro DIN, REF 70, nuts & washers",
-    color: "#4338ca", bg: "#ede9fe", border: "#a5b4fc", accentBar: "linear-gradient(90deg,#4338ca,#818cf8)",
+    color: "#4338ca", bg: "#ECEAE4", border: "#a5b4fc", accentBar: "linear-gradient(90deg,#4338ca,#818cf8)",
   },
   {
     key: "splices",
     icon: "🔗",
     label: "Splices",
     desc: "Mechanical belt splices — Vise, Gripwell, Supergrip, Braime Clamp",
-    color: "#0369a1", bg: "#e0f2fe", border: "#7dd3fc", accentBar: "linear-gradient(90deg,#0369a1,#38bdf8)",
+    color: "#0E1F3A", bg: "#FDF0E9", border: "#7dd3fc", accentBar: "linear-gradient(90deg,#0E1F3A,#38bdf8)",
   },
 ];
 
@@ -64,8 +64,8 @@ export default function ElevSectionNav({ onSelect }) {
               {t.icon}
             </div>
             <div>
-              <div style={{ fontSize: 17, fontWeight: 900, color: "#0f172a", marginBottom: 6 }}>{t.label}</div>
-              <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6 }}>{t.desc}</div>
+              <div style={{ fontSize: 17, fontWeight: 900, color: "#0E1F3A", marginBottom: 6 }}>{t.label}</div>
+              <div style={{ fontSize: 12, color: "#3A4A66", lineHeight: 1.6 }}>{t.desc}</div>
             </div>
             <div style={{ marginTop: "auto", fontSize: 12, fontWeight: 700, color: t.color }}>Browse {t.label} →</div>
           </div>

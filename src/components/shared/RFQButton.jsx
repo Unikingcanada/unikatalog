@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 
 const C = {
-  green: "#16a34a",
+  green: "#2E7D46",
   greenBg: "#f0fdf4",
-  blue: "#2563eb",
-  blueBg: "#eff6ff",
-  border: "#cbd5e1",
+  blue: "#F26522",
+  blueBg: "#FDF0E9",
+  border: "#C9C5BB",
 };
 
 function getRFQCart() {
