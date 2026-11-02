@@ -49,10 +49,18 @@ const KEY_FIELDS = {
   Chain_Attachments: ["chain_id", "code_key", "attachment_code", "side", "sort_order"], Chain_Media: ["chain_id", "media_type", "url"],
 };
 
+/** Nulls inside arrays/objects (e.g. a drawing_legend entry with no dimension key) are rejected by
+ *  Base44, which is what kept 14 chains out on the first live run. Store them as "" instead. */
+function fillNested(v) {
+  if (Array.isArray(v)) return v.map((x) => (x === null || x === undefined ? "" : fillNested(x)));
+  if (v && typeof v === "object") return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, x === null || x === undefined ? "" : fillNested(x)]));
+  return v;
+}
+
 /** Drop null/undefined keys so typed fields are simply left empty. */
 function clean(row) {
   const o = {};
-  for (const [k, v] of Object.entries(row)) if (v !== null && v !== undefined) o[k] = v;
+  for (const [k, v] of Object.entries(row)) if (v !== null && v !== undefined) o[k] = fillNested(v);
   // "Other" carries no information and is not in older Chain_Attachments schemas' enum,
   // which made whole batches fail on the first live run. Leave the field empty instead.
   if (o.attachment_type === "Other") delete o.attachment_type;
