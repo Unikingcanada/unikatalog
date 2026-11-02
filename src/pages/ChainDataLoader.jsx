@@ -36,7 +36,37 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 function clean(row) {
   const o = {};
   for (const [k, v] of Object.entries(row)) if (v !== null && v !== undefined) o[k] = v;
+  // "Other" carries no information and is not in older Chain_Attachments schemas' enum,
+  // which made whole batches fail on the first live run. Leave the field empty instead.
+  if (o.attachment_type === "Other") delete o.attachment_type;
   return o;
+}
+
+const statusOf = (e) => e?.status || e?.response?.status || e?.statusCode || null;
+const errText = (e) => {
+  const d = e?.response?.data || e?.data;
+  return [statusOf(e), e?.message, d ? JSON.stringify(d).slice(0, 300) : ""].filter(Boolean).join(" ");
+};
+
+/**
+ * Create rows; on a rejected batch, split it until the bad rows are isolated, so one bad row
+ * cannot block the rest. Returns the number created; rejected rows are pushed to `failures`.
+ */
+async function createRobust(ent, rows, label, log, failures) {
+  try {
+    await withRetry(() => ent.bulkCreate(rows), label, log, rows.length > 1 ? 4 : 2);
+    return rows.length;
+  } catch (e) {
+    if (rows.length === 1) {
+      failures.push({ chain_id: rows[0].chain_id, code: rows[0].attachment_code || rows[0].url || "", error: errText(e) });
+      if (failures.length <= 5) log(`  ✗ rejected ${rows[0].chain_id}: ${errText(e)}`);
+      return 0;
+    }
+    const mid = Math.ceil(rows.length / 2);
+    log(`  splitting ${label} (${rows.length} rows) to isolate rejected rows`);
+    return (await createRobust(ent, rows.slice(0, mid), label + "a", log, failures)) +
+      (await createRobust(ent, rows.slice(mid), label + "b", log, failures));
+  }
 }
 
 async function withRetry(fn, label, log, tries = 4) {
@@ -44,6 +74,8 @@ async function withRetry(fn, label, log, tries = 4) {
   for (let i = 0; i < tries; i++) {
     try { return await fn(); } catch (e) {
       last = e;
+      const st = statusOf(e);
+      if (st && st >= 400 && st < 500 && st !== 408 && st !== 429) throw e; // validation errors: no point retrying
       const wait = 1000 * 2 ** i;
       log(`  ↻ ${label} failed (${e?.message || e}); retry ${i + 1}/${tries - 1} in ${wait / 1000}s`);
       if (i < tries - 1) await sleep(wait);
@@ -102,6 +134,7 @@ export default function ChainDataLoader() {
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState({}); // entity -> {done,total,phase}
   const [verify, setVerify] = useState(null);
+  const [rejected, setRejected] = useState({});
   const [logLines, setLogLines] = useState([]);
   const logRef = useRef(null);
   const log = (s) => setLogLines((l) => [...l.slice(-400), `${new Date().toLocaleTimeString()}  ${s}`]);
@@ -165,7 +198,7 @@ export default function ChainDataLoader() {
   // 3. replace
   async function doReplace() {
     if (!pkgOk || !backupInfo || confirmText !== "REPLACE") return;
-    setRunning(true); setVerify(null);
+    setRunning(true); setVerify(null); setRejected({});
     try {
       for (const p of PLAN) {
         const rows = pkg.data[p.entity].map(clean);
@@ -175,14 +208,16 @@ export default function ChainDataLoader() {
         const removed = await emptyEntity(p.entity, log);
         log(`  removed ${removed}`);
         log(`${p.entity}: loading ${rows.length} rows in batches of ${BATCH}…`);
-        let done = 0;
+        let done = 0, created = 0;
+        const failures = [];
         for (let i = 0; i < rows.length; i += BATCH) {
           const chunk = rows.slice(i, i + BATCH);
-          await withRetry(() => ent.bulkCreate(chunk), `${p.entity} batch ${i / BATCH + 1}`, log);
+          created += await createRobust(ent, chunk, `${p.entity} batch ${i / BATCH + 1}`, log, failures);
           done += chunk.length;
           setProgress((s) => ({ ...s, [p.entity]: { phase: "loading", done, total: rows.length } }));
         }
-        log(`  ${p.entity}: ${done} created`);
+        log(`  ${p.entity}: ${created} created${failures.length ? `, ${failures.length} REJECTED (first: ${failures[0].error})` : ""}`);
+        if (failures.length) setRejected((r) => ({ ...r, [p.entity]: failures }));
       }
       clearChainCache();
       await doVerify();
@@ -284,6 +319,15 @@ export default function ChainDataLoader() {
                 ))}
               </tbody>
             </table>
+            {Object.keys(rejected).length > 0 && (
+              <div style={{ marginTop: 10, fontSize: 12, color: "#b91c1c" }}>
+                Rejected by Base44: {Object.entries(rejected).map(([k, v]) => `${k} ${v.length}`).join(" · ")}. First error: {Object.values(rejected)[0][0].error}
+                <div><button style={{ ...btn(true), marginTop: 6, padding: "6px 10px", fontSize: 12 }} onClick={() => {
+                  const blob = new Blob([JSON.stringify(rejected, null, 1)], { type: "application/json" });
+                  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "chain-loader-rejected.json"; a.click();
+                }}>Download rejected rows</button></div>
+              </div>
+            )}
             <div style={{ marginTop: 10, fontSize: 12 }}>
               Spot check: {verify.spot.map((s) => <span key={s.chain_id} style={{ marginRight: 12, color: s.ok ? "#16a34a" : "#b91c1c" }}>{s.chain_id} {s.ok ? "✓" : "✗"} ({s.detail})</span>)}
             </div>
