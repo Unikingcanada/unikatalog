@@ -187,10 +187,15 @@ export default function MovexConfigurator({ initialSeries, initialStyle, onCompl
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {seriesData?.styles?.map(s => (
             <button key={s.key} onClick={() => { set("styleKey", s.key); set("material", ""); set("pinMaterial", ""); setTimeout(next, 120); }}
-              style={{ background: config.styleKey === s.key ? C.navyMid : "#fff", border: "2px solid " + (config.styleKey === s.key ? C.navyMid : C.border), borderRadius: 10, padding: "12px 16px", cursor: "pointer", textAlign: "left", transition: "all 0.15s" }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: config.styleKey === s.key ? "#fff" : C.text }}>{s.label}</div>
-              <div style={{ fontSize: 11, color: config.styleKey === s.key ? "rgba(255,255,255,0.7)" : C.muted, marginTop: 2 }}>
-                Open Area: {s.openArea} · {s.surface}{s.applications?.length ? " · " + s.applications.slice(0, 2).join(", ") : ""}
+              style={{ background: config.styleKey === s.key ? C.navyMid : "#fff", border: "2px solid " + (config.styleKey === s.key ? C.navyMid : C.border), borderRadius: 10, padding: "12px 16px", cursor: "pointer", textAlign: "left", display: "flex", gap: 12, transition: "all 0.15s" }}>
+              <div style={{ flexShrink: 0, width: 48, height: 40, borderRadius: 6, overflow: "hidden", background: "#f0f4f8" }}>
+                {(s.image || seriesData?.image) && <img src={s.image || seriesData.image} alt={s.label} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => e.target.style.display = "none"} />}
+              </div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: config.styleKey === s.key ? "#fff" : C.text }}>{s.label}</div>
+                <div style={{ fontSize: 11, color: config.styleKey === s.key ? "rgba(255,255,255,0.7)" : C.muted, marginTop: 2 }}>
+                  Open Area: {s.openArea} · {s.surface}{s.applications?.length ? " · " + s.applications.slice(0, 2).join(", ") : ""}
+                </div>
               </div>
             </button>
           ))}
