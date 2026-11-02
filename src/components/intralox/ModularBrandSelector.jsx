@@ -33,6 +33,17 @@ const BRANDS = [
     features: ["8 mm to 63.5 mm Pitch", "NGevo Material", "Raised Rib (2500RR)", "Anti-Slip (2508/2630)", "Magnetic Chainbelt", "Smart Guide Rev.005"],
   },
   {
+    key: "eurobelt",
+    name: "Eurobelt",
+    tagline: "Spanish Craftsmanship — Since 1972",
+    description: "Eurobelt (AFHER EUROBELT, S.A.) manufactures plastic modular belts in Spain since 1972. 16 series from 12 mm to 50 mm pitch — straight, sideflexing, and no-rod Quickbelts. 15+ material options including detectable and flame-retardant.",
+    logo: "https://www.eurobelt.com/wp-content/uploads/2024/05/arrow-right-to-arc.svg",
+    logoBg: "#fff",
+    accentColor: "#0066B3",
+    available: true,
+    features: ["12 mm to 50 mm Pitch", "16 Belt Series", "Sideflexing Belts", "No-Rod Quickbelts (Q50)", "Detectable & Flame Retardant Materials"],
+  },
+  {
     key: "rexnord",
     name: "Rexnord",
     tagline: "Modular Conveyor Belts & Components",

@@ -6,6 +6,7 @@ import IntraloxConfigurator from "./IntraloxConfigurator";
 import ModularBrandSelector from "./ModularBrandSelector";
 import MovexCatalog from "@/components/movex/MovexCatalog";
 import SystemPlastCatalog from "@/components/systemPlast/SystemPlastCatalog";
+import EurobeltCatalog from "@/components/eurobelt/EurobeltCatalog";
 import BackButton from "@/components/shared/BackButton";
 import { COLORS, TYPOGRAPHY } from "@/lib/designSystem";
 
@@ -127,6 +128,11 @@ export default function IntraloxCatalog({ onBack, onGoRFQ, skipBrandSelector = f
   // System Plast catalog
   if (brand === "systemplast") {
     return <SystemPlastCatalog onBack={() => setBrand(null)} onGoRFQ={onGoRFQ} />;
+  }
+
+  // Eurobelt catalog
+  if (brand === "eurobelt") {
+    return <EurobeltCatalog onBack={() => setBrand(null)} />;
   }
 
   const tabSeries = { straight: STRAIGHT_SERIES, radius: RADIUS_SERIES, spiral: SPIRAL_SERIES, tools: [] }[activeTab] || [];
