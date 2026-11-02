@@ -1,4 +1,5 @@
 import { useState } from "react";
+import MovexSprocketModal from "./MovexSprocketModal";
 
 const C = {
   navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
@@ -206,6 +207,7 @@ function SpecsModal({ series, style, onConfigure, onClose }) {
 export default function MovexSeriesDetail({ series, onConfigure, onBack, onGoRFQ }) {
   const [activeTab, setActiveTab] = useState("styles");
   const [viewingStyle, setViewingStyle] = useState(null);
+  const [viewingSprocket, setViewingSprocket] = useState(null);
   const [rfqMsg, setRfqMsg] = useState(null);
 
   const tabs = [
@@ -217,24 +219,28 @@ export default function MovexSeriesDetail({ series, onConfigure, onBack, onGoRFQ
 
   function addToRFQ(item) {
     const cart = JSON.parse(localStorage.getItem("uniking_rfq_cart") || "[]");
+    const isConfiguredSprocket = item._configured;
     cart.push({
       cartId: `movex_${item.name?.replace(/\s/g, "_")}_${Date.now()}`,
       id: `movex_${Date.now()}`,
-      _source: "movex_component",
-      series: `${series.name} — ${item.name}`,
+      _source: isConfiguredSprocket ? "movex_sprocket" : "movex_component",
+      series: isConfiguredSprocket ? item.series : `${series.name} — ${item.name}`,
       name: item.name,
       type: item.type || "Movex Component",
       style: series.name,
-      category: "Modular Belting — Movex",
+      category: isConfiguredSprocket ? "Modular Belting — Movex — Sprocket" : "Modular Belting — Movex",
       image_url: item.image || "",
       materials: item.material || "",
-      quantity: 1,
-      unit: "Each",
-      notes: item.notes || "",
+      teeth: item.teeth,
+      boreShape: item.boreShape,
+      boreSize: item.boreSize,
+      quantity: item.quantity || 1,
+      unit: item.unit || "Each",
+      notes: item._configSummary ? `${item._configSummary}${item.notes ? " · " + item.notes : ""}` : (item.notes || ""),
     });
     localStorage.setItem("uniking_rfq_cart", JSON.stringify(cart));
     window.dispatchEvent(new Event("rfq_cart_updated"));
-    setRfqMsg(`${item.name} added to RFQ cart`);
+    setRfqMsg(`${item.name}${item._configSummary ? ` (${item._configSummary})` : ""} added to RFQ cart`);
     setTimeout(() => setRfqMsg(null), 3000);
   }
 
@@ -305,11 +311,15 @@ export default function MovexSeriesDetail({ series, onConfigure, onBack, onGoRFQ
         {activeTab === "sprockets" && (
           <div>
             <div style={{ fontSize: 14, fontWeight: 700, color: C.navyMid, marginBottom: 4 }}>Compatible Sprockets — {series.name}</div>
-            <div style={{ fontSize: 12, color: C.muted, marginBottom: 12 }}>Sprockets compatible with {series.name}. Click "+ RFQ" to add to your quote.</div>
+            <div style={{ fontSize: 12, color: C.muted, marginBottom: 12 }}>Sprockets compatible with {series.name}. Click <strong>View & Configure</strong> to select teeth, bore shape, bore size, material, and quantity before adding to your RFQ.</div>
             {series.sprockets?.length > 0 ? (
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {series.sprockets.map((sp, i) => (
-                  <div key={i} style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden", display: "flex", alignItems: "center", gap: 12, padding: "12px 16px" }}>
+                  <div key={i} onClick={() => setViewingSprocket(sp)}
+                    style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden", display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", cursor: "pointer", transition: "border-color 0.15s, box-shadow 0.15s" }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = C.navyMid; e.currentTarget.style.boxShadow = "0 4px 14px rgba(12,35,64,0.1)"; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "none"; }}
+                  >
                     <div style={{ width: 56, height: 48, flexShrink: 0, background: "#f0f4f8", borderRadius: 6, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
                       {sp.image ? <img src={sp.image} alt={sp.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => { e.target.style.display = "none"; e.target.parentElement.innerHTML = "⚙️"; e.target.parentElement.style.fontSize = "20px"; }} /> : <span style={{ fontSize: 20 }}>⚙️</span>}
                     </div>
@@ -322,9 +332,9 @@ export default function MovexSeriesDetail({ series, onConfigure, onBack, onGoRFQ
                       </div>
                       {sp.notes && <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>{sp.notes.slice(0, 80)}</div>}
                     </div>
-                    <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-                      {sp.url && <a href={sp.url} target="_blank" rel="noreferrer" style={{ color: MOVEX_RED, fontSize: 11, fontWeight: 700, textDecoration: "none" }}>Movex ↗</a>}
-                      <button onClick={() => addToRFQ(sp)} style={{ padding: "6px 12px", background: C.navy, color: "#fff", border: "none", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 800, whiteSpace: "nowrap" }}>+ RFQ</button>
+                    <div style={{ display: "flex", gap: 8, flexShrink: 0, alignItems: "center" }}>
+                      {sp.url && <a href={sp.url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()} style={{ color: MOVEX_RED, fontSize: 11, fontWeight: 700, textDecoration: "none" }}>Movex ↗</a>}
+                      <button onClick={e => { e.stopPropagation(); setViewingSprocket(sp); }} style={{ padding: "7px 14px", background: C.navy, color: "#fff", border: "none", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 800, whiteSpace: "nowrap" }}>⚙️ View & Configure</button>
                     </div>
                   </div>
                 ))}
@@ -477,6 +487,15 @@ export default function MovexSeriesDetail({ series, onConfigure, onBack, onGoRFQ
         <SpecsModal series={series} style={viewingStyle}
           onConfigure={s => onConfigure(s, series)}
           onClose={() => setViewingStyle(null)} />
+      )}
+
+      {viewingSprocket && (
+        <MovexSprocketModal
+          sprocket={viewingSprocket}
+          series={series}
+          onClose={() => setViewingSprocket(null)}
+          onAddToRFQ={addToRFQ}
+        />
       )}
     </div>
   );
