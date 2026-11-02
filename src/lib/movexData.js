@@ -7,7 +7,7 @@
 export const MOVEX_LOGO = "https://wpbackend.movexii.com/wp-content/uploads/2024/11/logo_bianco.svg";
 export const MOVEX_LOGO_DARK = "https://wpbackend.movexii.com/wp-content/uploads/2024/09/logoMovex-1.svg";
 export const MOVEX_CATALOG_URL = "https://wpbackend.movexii.com/wp-content/uploads/2024/11/Movex_Conveyor_modular_belts_and_chains_Catalog_Digital_Imperial.pdf";
-export const MOVEX_BLUELINE_URL = "https://www.caldic-techniek.be/assets/uploads/2025/07/Blueline-catalogue-2025.pdf";
+export const MOVEX_BLUELINE_URL = "https://wpbackend.movexii.com/wp-content/uploads/2026/03/Movex_Blueline_ModularBeltsAndSporckets_Digital_V6.pdf";
 export const MOVEX_WEBSITE = "https://www.movexii.com/en/prodcat/modular-belts";
 
 const IMG = {
@@ -54,6 +54,13 @@ export const MOVEX_MATERIALS = {
   PFX:  { label: "PFX — Extra Performance PBT",       abbr: "PFX",  color: "Natural",     tempC: "-40 to +130", tempF: "-40 to 266",  notes: "Extra performance PBT for demanding dry run applications." },
   POM:  { label: "POM — Acetal Resin (Standard)",     abbr: "POM",  color: "White/Cyan",  tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "Standard acetal resin (BluLub® treated). For food contact." },
   BluLub: { label: "BluLub® — Self-Lubricating POM",  abbr: "BL",   color: "White/Cyan",  tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "Proprietary BluLub® self-lubricating POM for reduced friction." },
+  LFC:  { label: "LFC — Low Friction Acetal (Cyan)",   abbr: "LFC",  color: "RAL 5005 Cyan", tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "Cyan low-friction acetal. FDA/EU compliant for food contact." },
+  LFB:  { label: "LFB — Low Friction Acetal (Blue)",   abbr: "LFB",  color: "Blue",        tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "Blue low-friction acetal for visual identification. FDA/EU compliant." },
+  LFW:  { label: "LFW — Low Friction Acetal (White)",  abbr: "LFW",  color: "White",       tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "White low-friction acetal. FDA/EU compliant for food contact." },
+  PKC:  { label: "PKC — Polyketone (Cyan)",            abbr: "PKC",  color: "Cyan",       tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "Polyketone for red meat processing. 12% lighter, 3x impact resistance vs POM. FDA/EU compliant." },
+  PKW:  { label: "PKW — Polyketone (White)",           abbr: "PKW",  color: "White",      tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "White polyketone for primary red meat processing. FDA/EU compliant." },
+  MDX:  { label: "MDX — Metal Detectable X-Ray POM",   abbr: "MDX",  color: "White/Cyan", tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "X-ray detectable POM. BRC/IFS/FDA/HACCP compliant. Available on all Blueline series." },
+  PKX:  { label: "PKX — Polyketone (Food/Meat)",       abbr: "PKX",  color: "White",      tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "Polyketone for primary red meat. No food contamination, high impact/chemical resistance. FDA/EU compliant." },
 };
 
 const S520_SPROCKETS = [
