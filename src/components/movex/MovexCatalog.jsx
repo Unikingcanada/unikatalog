@@ -28,6 +28,7 @@ const FILTER_PITCH = [
   { key: "12.7mm", label: "12.7 mm (0.5\")" },
   { key: "19.05mm", label: "19.05 mm (0.75\")" },
   { key: "25.4mm", label: "25.4 mm (1\")" },
+  { key: "27.2mm", label: "27.2 mm (1.07\")" },
   { key: "50.8mm", label: "50.8 mm (2\")" },
 ];
 
@@ -44,6 +45,7 @@ function getFilteredSeries(typeFilter, pitchFilter) {
       (pitchFilter === "12.7mm" && pitchMm === 12.7) ||
       (pitchFilter === "19.05mm" && pitchMm === 19.05) ||
       (pitchFilter === "25.4mm" && pitchMm === 25.4) ||
+      (pitchFilter === "27.2mm" && pitchMm === 27.2) ||
       (pitchFilter === "50.8mm" && pitchMm === 50.8);
     return matchType && matchPitch;
   });
