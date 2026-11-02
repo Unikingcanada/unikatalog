@@ -4,11 +4,11 @@
   "properties": {
     "chain_id": {
       "type": "string",
-      "description": "Foreign key \u2014 references Normalized_Chains.chain_id"
+      "description": "Foreign key — references Normalized_Chains.chain_id"
     },
     "attachment_code": {
       "type": "string",
-      "description": "Standard attachment code \u2014 e.g. A1, A2, K1, K2, SA1, SA2"
+      "description": "Standard attachment code — e.g. A1, A2, K1, K2, SA1, SA2"
     },
     "attachment_type": {
       "type": "string",
@@ -21,7 +21,8 @@
         "K Attachment",
         "G Attachment",
         "D Attachment",
-        "Custom / Special"
+        "Custom / Special",
+        "Other"
       ],
       "description": "Attachment type classification"
     },
@@ -52,7 +53,7 @@
     },
     "spacing_note": {
       "type": "string",
-      "description": "Spacing availability note \u2014 e.g. Every link, Every other link, Custom"
+      "description": "Spacing availability note — e.g. Every link, Every other link, Custom"
     },
     "image_url": {
       "type": "string",
@@ -70,6 +71,45 @@
     "notes": {
       "type": "string",
       "description": "Additional notes on availability or custom options"
+    },
+    "code_key": {
+      "type": "string",
+      "description": "Key into attachment_codes (one drawing per code)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Customer description"
+    },
+    "holes_per_lug": {
+      "type": "number",
+      "description": "Holes per lug"
+    },
+    "platform_width_in": {
+      "type": "number",
+      "description": "Platform / lug width (in)"
+    },
+    "overall_width_over_attachments_in": {
+      "type": "number",
+      "description": "Overall width over the attachments (in)"
+    },
+    "lettered_dims_in": {
+      "type": "object",
+      "description": "Letter -> value (in) for this chain, as published"
+    },
+    "legend": {
+      "type": "array",
+      "items": {
+        "type": "array"
+      },
+      "description": "[[letter, meaning]] of the attachment drawing"
+    },
+    "drawing_listed_only": {
+      "type": "boolean",
+      "description": "Catalogue lists the code but no drawing/dimensions yet: show in a compact list, not a card"
+    },
+    "sort_order": {
+      "type": "number",
+      "description": "Display order"
     }
   },
   "required": [

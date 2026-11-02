@@ -4,7 +4,7 @@
   "properties": {
     "chain_id": {
       "type": "string",
-      "description": "Unique normalized chain identifier \u2014 e.g. ANSI-40, WH78, 667-PINTLE"
+      "description": "Unique normalized chain identifier — e.g. ANSI-40, WH78, 667-PINTLE"
     },
     "chain_family": {
       "type": "string",
@@ -32,15 +32,15 @@
     },
     "chain_number": {
       "type": "string",
-      "description": "Standard chain number \u2014 e.g. 40, 80H, C2060H, WH78, 667"
+      "description": "Standard chain number — e.g. 40, 80H, C2060H, WH78, 667"
     },
     "display_name": {
       "type": "string",
-      "description": "Full normalized display name \u2014 e.g. ANSI 40 Roller Chain"
+      "description": "Full normalized display name — e.g. ANSI 40 Roller Chain"
     },
     "standard": {
       "type": "string",
-      "description": "Applicable standard \u2014 e.g. ANSI B29.1, ISO 606, DIN 8188"
+      "description": "Applicable standard — e.g. ANSI B29.1, ISO 606, DIN 8188"
     },
     "pitch_in": {
       "type": "string",
@@ -64,14 +64,14 @@
       "items": {
         "type": "string"
       },
-      "description": "Industry and application tags \u2014 e.g. Agriculture, Mining, Food Grade"
+      "description": "Industry and application tags — e.g. Agriculture, Mining, Food Grade"
     },
     "materials_available": {
       "type": "array",
       "items": {
         "type": "string"
       },
-      "description": "Confirmed available materials / coatings \u2014 e.g. Carbon Steel, Stainless Steel, Nickel Plated"
+      "description": "Confirmed available materials / coatings — e.g. Carbon Steel, Stainless Steel, Nickel Plated"
     },
     "options_upgrades": {
       "type": "string",
@@ -104,6 +104,62 @@
     "uniking_notes": {
       "type": "string",
       "description": "Internal Uniking notes, engineering comments, sourcing notes, or application guidance"
+    },
+    "catalog_group": {
+      "type": "string",
+      "description": "Website group (31 groups from the Version X master), e.g. Welded Steel Mill Chain"
+    },
+    "series": {
+      "type": "string",
+      "description": "Series line shown under the designation"
+    },
+    "construction": {
+      "type": "string",
+      "description": "Construction template, e.g. Welded Offset Sidebar"
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Other numbers that find this chain in search (old maker-coded names, interchanges). Search only, never displayed as brands."
+    },
+    "materials": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Evidence-based materials/finishes: {code,name,class,description}. Configurator offers only these + custom."
+    },
+    "variants": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Other catalogued versions {name,kind}"
+    },
+    "attachment_coverage": {
+      "type": "string",
+      "description": "Catalogued | Made to order | None by design"
+    },
+    "attachment_count": {
+      "type": "number",
+      "description": "Number of catalogue-evidenced attachments"
+    },
+    "image_match": {
+      "type": "string",
+      "description": "series | family | render — how closely the photo matches"
+    },
+    "drawing_title": {
+      "type": "string",
+      "description": "Reference drawing title"
+    },
+    "drawing_legend": {
+      "type": "array",
+      "items": {
+        "type": "array"
+      },
+      "description": "[[letter, meaning]] for the reference drawing"
     }
   },
   "required": [

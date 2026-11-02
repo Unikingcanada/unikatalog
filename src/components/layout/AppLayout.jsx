@@ -152,6 +152,9 @@ export default function AppLayout({ children, hideHeader = false, onBack = null 
                   onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
                   🔍 Chain Review
                 </Link>
+                <Link to="/admin/chain-data-loader" onClick={() => setAdminMenuOpen(false)} style={{ display: "block", padding: "9px 14px", fontSize: 12, fontWeight: 600, color: "#0C2340", textDecoration: "none" }}>
+                  ⛓ Chain Data Loader (W58)
+                </Link>
                 <Link to="/admin/users" onClick={() => setAdminMenuOpen(false)} style={{ display: "block", padding: "9px 14px", fontSize: 12, fontWeight: 600, color: "#0C2340", textDecoration: "none" }}
                   onMouseEnter={e => e.currentTarget.style.background = "#f8fafc"}
                   onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
