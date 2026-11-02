@@ -126,7 +126,7 @@ export default function MovexCatalog({ onBack }) {
             </div>
             <h1 style={{ color: "#fff", fontSize: 26, fontWeight: 900, margin: "0 0 6px" }}>Movex Modular Belt Catalog</h1>
             <p style={{ color: "rgba(255,255,255,0.65)", fontSize: 13, maxWidth: 560, lineHeight: 1.6, margin: 0 }}>
-              {MOVEX_SERIES.length} belt series covering 8 mm to 50.8 mm pitch. Straight-running, sideflexing, and Blueline® food-grade variants. Source: 2024 Movex Imperial Catalog + Blueline® V4 2025.
+              {MOVEX_SERIES.length} belt series covering 8 mm to 50.8 mm pitch. Straight-running, sideflexing, and Blueline® food-grade variants. Source: 2024 Movex Imperial Catalog + Blueline® V6 2026.
             </p>
           </div>
           <div style={{ display: "flex", gap: 10, flexDirection: "column", alignItems: "flex-end" }}>
@@ -239,7 +239,7 @@ export default function MovexCatalog({ onBack }) {
       {/* Footer disclaimer */}
       <div style={{ background: "#fff", borderTop: `1px solid ${C.border}`, padding: "16px 28px" }}>
         <div style={{ fontSize: 11, color: C.muted, maxWidth: 800 }}>
-          <strong>Source:</strong> Movex Conveyor Modular Belts & Chains Catalog (Imperial, 2024) + Blueline® Modular Belts & Sprockets V4 (2025).
+          <strong>Source:</strong> Movex Conveyor Modular Belts & Chains Catalog (Imperial, 2024) + Blueline® Modular Belts & Sprockets V6 (2026).
           All specifications sourced from official Movex publications. Items marked "Missing Data – Needs Mapping" exist in catalog but have not yet been fully entered.
           Final belt selection and specifications must be confirmed by Uniking before production.
         </div>

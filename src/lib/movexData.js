@@ -45,6 +45,59 @@ const IMG = {
   S590_FTT:  "https://movexps.publifarm.com/img/p/8/7/1/5/8715-large_default.jpg",
 };
 
+// ── Blueline® product images (from movexii.com product catalog) ────────────────
+const BL = {
+  // 7870 series (8 mm pitch)
+  S7870_FT: "https://movexps.publifarm.com/img/p/1/0/7/9/0/10790-large_default.jpg",
+  S7870_FG: "https://movexps.publifarm.com/img/p/1/0/6/3/4/10634-large_default.jpg",
+  S7870_DT: "https://movexps.publifarm.com/img/p/1/0/6/3/5/10635-large_default.jpg",
+  S7870_CT: "https://movexps.publifarm.com/img/p/1/0/6/3/6/10636-large_default.jpg",
+  S7870_NS: "https://movexps.publifarm.com/img/p/1/0/6/3/7/10637-large_default.jpg",
+  // 7185 series (12.7 mm pitch)
+  S7185_FG: "https://movexps.publifarm.com/img/p/1/0/6/5/5/10655-large_default.jpg",
+  // 7220 series (12.7 mm pitch)
+  S7220_FT: "https://movexps.publifarm.com/img/p/1/0/6/5/6/10656-large_default.jpg",
+  S7220_GT: "https://movexps.publifarm.com/img/p/1/0/6/5/7/10657-large_default.jpg",
+  // 7233 series (12.7 mm pitch)
+  S7233_FG:    "https://movexps.publifarm.com/img/p/1/0/6/5/8/10658-large_default.jpg",
+  S7233_FGGT:  "https://movexps.publifarm.com/img/p/1/0/6/5/9/10659-large_default.jpg",
+  // 7234 series (12.7 mm pitch)
+  S7234_NT: "https://movexps.publifarm.com/img/p/1/0/6/6/0/10660-large_default.jpg",
+  // 7510 series (25.4 mm pitch)
+  S7510_FT: "https://movexps.publifarm.com/img/p/1/0/6/3/8/10638-large_default.jpg",
+  S7510_NT: "https://movexps.publifarm.com/img/p/1/0/6/4/0/10640-large_default.jpg",
+  S7510_DT: "https://movexps.publifarm.com/img/p/1/0/6/4/1/10641-large_default.jpg",
+  S7510_MT: "https://movexps.publifarm.com/img/p/1/0/6/4/2/10642-large_default.jpg",
+  // 7520 series (25.4 mm pitch)
+  S7520_FT: "https://movexps.publifarm.com/img/p/1/0/6/4/5/10645-large_default.jpg",
+  S7520_FG: "https://movexps.publifarm.com/img/p/1/0/6/4/7/10647-large_default.jpg",
+  // 7585 series (25.7 mm pitch)
+  S7585_FG: "https://movexps.publifarm.com/img/p/1/0/6/4/4/10644-large_default.jpg",
+  // 7010 series (50.8 mm pitch)
+  S7010_FT:   "https://movexps.publifarm.com/img/p/1/0/6/4/8/10648-large_default.jpg",
+  S7010_HDFT: "https://movexps.publifarm.com/img/p/1/0/6/4/9/10649-large_default.jpg",
+  S7010_CT:   "https://movexps.publifarm.com/img/p/1/0/6/5/0/10650-large_default.jpg",
+  S7010_NT:   "https://movexps.publifarm.com/img/p/1/0/6/5/1/10651-large_default.jpg",
+  S7010_PT:   "https://movexps.publifarm.com/img/p/1/0/6/5/2/10652-large_default.jpg",
+  S7010_HDPT: "https://movexps.publifarm.com/img/p/1/0/6/5/3/10653-large_default.jpg",
+  // 7540/7544 sideflexing series (25.4 mm pitch)
+  S7540_RFG:  "https://movexps.publifarm.com/img/p/1/0/1/3/6/10136-large_default.jpg",
+  S7544_TRFG: "https://movexps.publifarm.com/img/p/1/0/1/3/7/10137-large_default.jpg",
+  S7544_TRGT: "https://movexps.publifarm.com/img/p/1/0/1/3/8/10138-large_default.jpg",
+  // Sprockets
+  SP_7870:         "https://movexps.publifarm.com/img/p/1/1/2/0/1/11201-medium_default.jpg",
+  SP_7220_7234:    "https://movexps.publifarm.com/img/p/1/1/1/7/2/11172-medium_default.jpg",
+  SP_7510_7520:    "https://movexps.publifarm.com/img/p/1/1/2/0/5/11205-medium_default.jpg",
+  SP_7510_7520_M:  "https://movexps.publifarm.com/img/p/1/1/1/6/3/11163-medium_default.jpg",
+  SP_7540_7544:    "https://movexps.publifarm.com/img/p/1/1/1/6/5/11165-medium_default.jpg",
+  SP_7540_7544_M:  "https://movexps.publifarm.com/img/p/1/1/1/6/6/11166-medium_default.jpg",
+  SP_7544_SUP:     "https://movexps.publifarm.com/img/p/1/1/2/0/6/11206-medium_default.jpg",
+  SP_7010_7290:    "https://movexps.publifarm.com/img/p/1/1/2/0/7/11207-medium_default.jpg",
+  SP_7010_7290_M:  "https://movexps.publifarm.com/img/p/1/1/1/7/0/11170-medium_default.jpg",
+  SP_ZERO_CONTACT: "https://movexps.publifarm.com/img/p/1/1/1/5/8/11158-medium_default.jpg",
+  SP_ZERO_PRO:     "https://movexps.publifarm.com/img/p/1/1/1/6/0/11160-medium_default.jpg",
+};
+
 export const MOVEX_MATERIALS = {
   LFA:  { label: "LFA — Low Friction Acetal",         abbr: "LFA",  color: "White",       tempC: "-30 to +80",  tempF: "-22 to 176",  notes: "General purpose, low friction acetal resin. FDA-compliant." },
   LFB:  { label: "LFB — Low Friction Acetal (Blue)",  abbr: "LFB",  color: "Blue",        tempC: "-30 to +80",  tempF: "-22 to 176",  notes: "Blue-tinted LFA for visual identification. FDA-compliant." },
@@ -55,7 +108,6 @@ export const MOVEX_MATERIALS = {
   POM:  { label: "POM — Acetal Resin (Standard)",     abbr: "POM",  color: "White/Cyan",  tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "Standard acetal resin (BluLub® treated). For food contact." },
   BluLub: { label: "BluLub® — Self-Lubricating POM",  abbr: "BL",   color: "White/Cyan",  tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "Proprietary BluLub® self-lubricating POM for reduced friction." },
   LFC:  { label: "LFC — Low Friction Acetal (Cyan)",   abbr: "LFC",  color: "RAL 5005 Cyan", tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "Cyan low-friction acetal. FDA/EU compliant for food contact." },
-  LFB:  { label: "LFB — Low Friction Acetal (Blue)",   abbr: "LFB",  color: "Blue",        tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "Blue low-friction acetal for visual identification. FDA/EU compliant." },
   LFW:  { label: "LFW — Low Friction Acetal (White)",  abbr: "LFW",  color: "White",       tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "White low-friction acetal. FDA/EU compliant for food contact." },
   PKC:  { label: "PKC — Polyketone (Cyan)",            abbr: "PKC",  color: "Cyan",       tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "Polyketone for red meat processing. 12% lighter, 3x impact resistance vs POM. FDA/EU compliant." },
   PKW:  { label: "PKW — Polyketone (White)",           abbr: "PKW",  color: "White",      tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "White polyketone for primary red meat processing. FDA/EU compliant." },
@@ -63,11 +115,12 @@ export const MOVEX_MATERIALS = {
   PKX:  { label: "PKX — Polyketone (Food/Meat)",       abbr: "PKX",  color: "White",      tempC: "-40 to +80",  tempF: "-40 to 176",  notes: "Polyketone for primary red meat. No food contamination, high impact/chemical resistance. FDA/EU compliant." },
 };
 
+const SP_520_MACHINED = "https://movexps.publifarm.com/img/p/1/1/0/5/6/11056-medium_default.jpg";
+const SP_520_MOLDED = "https://movexps.publifarm.com/img/p/1/1/0/5/8/11058-medium_default.jpg";
+
 const S520_SPROCKETS = [
-  { name: "520 Sprocket 12T", teeth: 12, bore: "Square / Round", material: "Polyamide (PA)", notes: "Standard sprocket for 520 series.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
-  { name: "520 Sprocket 14T", teeth: 14, bore: "Square / Round", material: "Polyamide (PA)", notes: "14-tooth option.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
-  { name: "520 Sprocket 17T", teeth: 17, bore: "Square / Round", material: "Polyamide (PA)", notes: "17-tooth for higher speeds.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
-  { name: "520 Sprocket 21T", teeth: 21, bore: "Square / Round", material: "Polyamide (PA)", notes: "21-tooth for large shafts.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
+  { name: "520 Split Machined Sprocket", teeth: "12-21T options", bore: "Square / Round", material: "Polyamide (PA)", notes: "Machined sprocket for 520/521/522 series. Available in 12-21 tooth configurations.", image: SP_520_MACHINED, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/520-split-machined-sprocketm" },
+  { name: "520 Split Molded Sprocket", teeth: "12-21T options", bore: "Square / Round", material: "Polyamide (PA)", notes: "Molded sprocket for 520/521/522 series. Cost-effective alternative.", image: SP_520_MOLDED, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/520-split-molded-sprocketm" },
 ];
 
 const S520_ACCESSORIES = [
@@ -250,9 +303,8 @@ export const MOVEX_SERIES = [
     applications: ["Meat & poultry processing", "Food processing", "Heavy industrial", "Seafood processing", "Dairy"],
     advantages: ["1/2-inch pitch food-processing strength", "Heavy-duty construction", "Multiple surface styles", "FDA-compliant options", "Rib version for inclines"],
     sprockets: [
-      { name: "525 Sprocket 8T",  teeth: 8,  bore: "Square / Round", material: "Polyamide (PA)", notes: "Standard sprocket for 525 series.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
-      { name: "525 Sprocket 10T", teeth: 10, bore: "Square / Round", material: "Polyamide (PA)", notes: "10-tooth option for 525 series.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
-      { name: "525 Sprocket 12T", teeth: 12, bore: "Square / Round", material: "Polyamide (PA)", notes: "12-tooth for 525 series.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
+      { name: "525-530 Machined Sprocket", teeth: "8-16T options", bore: "Square / Round", material: "Polyamide (PA)", notes: "Machined sprocket for 525/530 series. 8-16 tooth options.", image: "https://movexps.publifarm.com/img/p/1/1/1/1/3/11113-medium_default.jpg", url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/525-530-machined-sprocketm" },
+      { name: "525-530 Molded Sprocket", teeth: "8-16T options", bore: "Square / Round", material: "Polyamide (PA)", notes: "Molded sprocket for 525/530 series.", image: "https://movexps.publifarm.com/img/p/1/1/1/1/5/11115-medium_default.jpg", url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/525-530-molded-sprocketm" },
     ],
     accessories: S525_ACCESSORIES, techChartUrl: MOVEX_CATALOG_URL, catalogPageRef: "152",
     min_width_mm: 85, min_width_in: 3.35, width_increment_mm: 85, width_increment_in: 3.35, fixation: "Snap-in Clip",
@@ -306,10 +358,8 @@ export const MOVEX_SERIES = [
     applications: ["Food processing", "Beverage packaging", "General conveying", "Accumulation", "Inclines"],
     advantages: ["Industry-standard 1/2-inch pitch", "Multiple surface styles", "LBP variant for accumulation", "PRO LBP for heavy accumulation"],
     sprockets: [
-      { name: "530 Sprocket 8T",  teeth: 8,  bore: "Square / Round", material: "Polyamide (PA)", notes: "Standard sprocket for 530 series.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
-      { name: "530 Sprocket 10T", teeth: 10, bore: "Square / Round", material: "Polyamide (PA)", notes: "10-tooth for 530 series.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
-      { name: "530 Sprocket 12T", teeth: 12, bore: "Square / Round", material: "Polyamide (PA)", notes: "12-tooth for 530 series.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
-      { name: "530 Sprocket 16T", teeth: 16, bore: "Square / Round", material: "Polyamide (PA)", notes: "16-tooth for high-speed applications.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
+      { name: "525-530 Machined Sprocket", teeth: "8-16T options", bore: "Square / Round", material: "Polyamide (PA)", notes: "Machined sprocket for 525/530 series. 8-16 tooth options.", image: "https://movexps.publifarm.com/img/p/1/1/1/1/3/11113-medium_default.jpg", url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/525-530-machined-sprocketm" },
+      { name: "525-530 Molded Sprocket", teeth: "8-16T options", bore: "Square / Round", material: "Polyamide (PA)", notes: "Molded sprocket for 525/530 series.", image: "https://movexps.publifarm.com/img/p/1/1/1/1/5/11115-medium_default.jpg", url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/525-530-molded-sprocketm" },
     ],
     accessories: S530_ACCESSORIES, techChartUrl: MOVEX_CATALOG_URL, catalogPageRef: "163",
     min_width_mm: 85, min_width_in: 3.35, width_increment_mm: 85, width_increment_in: 3.35, fixation: "Snap-in Clip",
@@ -369,9 +419,8 @@ export const MOVEX_SERIES = [
     applications: ["Food processing", "General conveying", "Inclines (Flight Top)", "Magnetic product handling"],
     advantages: ["3/4-inch pitch medium-duty", "Flight Top for inclines", "Magnetic variant", "PRO Magnetic version"],
     sprockets: [
-      { name: "550 Sprocket 6T",  teeth: 6,  bore: "Square / Round", material: "Polyamide (PA)", notes: "6-tooth sprocket for 550 series.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
-      { name: "550 Sprocket 8T",  teeth: 8,  bore: "Square / Round", material: "Polyamide (PA)", notes: "8-tooth for 550 series.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
-      { name: "550 Sprocket 10T", teeth: 10, bore: "Square / Round", material: "Polyamide (PA)", notes: "10-tooth for 550 series.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
+      { name: "550 Split Machined Sprocket", teeth: "6-10T options", bore: "Square / Round", material: "Polyamide (PA)", notes: "Machined sprocket for 550 series. 6-10 tooth options.", image: "https://movexps.publifarm.com/img/p/1/1/0/6/0/11060-medium_default.jpg", url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/550-split-machined-sprocketm" },
+      { name: "550 Split Molded Sprocket", teeth: "6-10T options", bore: "Square / Round", material: "Polyamide (PA)", notes: "Molded sprocket for 550 series.", image: "https://movexps.publifarm.com/img/p/1/1/0/6/1/11061-medium_default.jpg", url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/550-split-molded-sprocketm" },
     ],
     accessories: S550_ACCESSORIES, techChartUrl: MOVEX_CATALOG_URL, catalogPageRef: "176",
     min_width_mm: 85, min_width_in: 3.35, width_increment_mm: 85, width_increment_in: 3.35, fixation: "Snap-in Clip",
@@ -419,9 +468,7 @@ export const MOVEX_SERIES = [
     applications: ["Food processing", "Meat & poultry processing", "Seafood processing", "Direct food contact"],
     advantages: ["Blueline® food-grade design", "3/4-inch pitch", "Flush Grid for drainage", "One Track Belt version"],
     sprockets: [
-      { name: "590 Sprocket 6T",  teeth: 6,  bore: "Square / Round", material: "Polyamide (PA)", notes: "Standard sprocket for 590 series.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
-      { name: "590 Sprocket 8T",  teeth: 8,  bore: "Square / Round", material: "Polyamide (PA)", notes: "8-tooth for 590 series.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
-      { name: "590 Sprocket 10T", teeth: 10, bore: "Square / Round", material: "Polyamide (PA)", notes: "10-tooth for 590 series.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" },
+      { name: "590 Split Machined Sprocket", teeth: "6-10T options", bore: "Square / Round", material: "Polyamide (PA)", notes: "Machined sprocket for 590 series. 6-10 tooth options.", image: "https://movexps.publifarm.com/img/p/1/1/0/7/6/11076-medium_default.jpg", url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/590-split-machined-sprocketm" },
     ],
     accessories: S590_ACCESSORIES, techChartUrl: MOVEX_CATALOG_URL, catalogPageRef: "185",
     min_width_mm: 76, min_width_in: 3.0, width_increment_mm: 76, width_increment_in: 3.0, fixation: "Snap-in Clip",
@@ -451,11 +498,11 @@ export const MOVEX_SERIES = [
   {
     id: "S7870", name: "Series 7870 (Blueline®)", beltType: "Straight-Running",
     pitch_mm: 8, pitch_in: 0.315, catalogPage: 195,
-    image: "https://movexps.publifarm.com/img/p/8/7/1/3/8713-large_default.jpg",
-    description: "Blueline® Series 7870 — finest pitch (8 mm) in Movex range. BluLub® self-lubricating POM. Pin Sphere® AUTLOCK for easy maintenance.",
+    image: BL.S7870_FT,
+    description: "Blueline® Series 7870 — finest pitch (8 mm) in Movex range. BluLub® self-lubricating POM. Pin Sphere® AUTOLOCK for easy maintenance.",
     applications: ["Ultra-tight product transfers", "Food processing", "Bakery", "Meat & poultry", "Seafood"],
-    advantages: ["Smallest pitch (8 mm) in Movex range", "BluLub® self-lubricating POM", "Pin Sphere® AUTLOCK", "Flush Grid, Diamond Top, Non-slip variants"],
-    sprockets: [{ name: "7870 Sprocket", teeth: "Missing Data", bore: "Missing Data", material: "Polyamide (PA)", notes: "Contact Uniking for 7870 sprocket details.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" }],
+    advantages: ["Smallest pitch (8 mm) in Movex range", "BluLub® self-lubricating POM", "Pin Sphere® AUTOLOCK", "Flush Grid, Diamond Top, Non-slip variants"],
+    sprockets: [{ name: "7870 Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7870 sprocket — compatible with all 7870 belt styles.", image: BL.SP_7870, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7870-sprocketm" }],
     accessories: [
       { name: "7870 Nosebar Art-Nr. 22818 (Narrow)", type: "nosebar", image: null, notes: "Art-Nr. 22818.", url: "https://www.movexii.com/en/prodcat/modular-belts" },
       { name: "7870 Nosebar Art-Nr. 22819 (Wide)", type: "nosebar", image: null, notes: "Art-Nr. 22819.", url: "https://www.movexii.com/en/prodcat/modular-belts" },
@@ -465,7 +512,7 @@ export const MOVEX_SERIES = [
     min_width_mm: 76.2, min_width_in: 3.0, width_increment_mm: 76.2, width_increment_in: 3.0, fixation: "Pin Sphere® AUTLOCK",
     styles: [
       { key: "flat_top", label: "7870 FT — Flat Top", openArea: "0%", surface: "Closed / Smooth",
-        image: "https://movexps.publifarm.com/img/p/8/7/1/3/8713-large_default.jpg",
+        image: BL.S7870_FT,
         description: "Ultra-fine 8 mm pitch flat top. BluLub® self-lubricating POM. Pin Sphere® AUTOLOCK for easy installation and quick maintenance.",
         applications: ["Ultra-tight transfers", "Food processing", "Bakery", "Meat & poultry", "Seafood"],
         beltData: [
@@ -473,7 +520,7 @@ export const MOVEX_SERIES = [
           { material: "LFA", label: "LFA — Low Friction Acetal (White)", pinMaterial: "PBT Pin", strengthNm: 3000, strengthLbsFt: 205, massKgM2: 5.4, massLbFt2: 1.11, tempC: "-40 to +93", tempF: "-40 to 199" },
         ],
         notes: ["8 mm pitch, H=6 mm — finest in Movex range.", "Backflex radius min.: 7.5 mm. Pin dia.: 3 mm.", "Pin Sphere® AUTOLOCK fixation.", "Min width 50.8 mm (2.0\"). Width increment 25.4 mm (1\")."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "flush_grid", label: "7870 FG — Flush Grid", openArea: "25%", surface: "Open Grid", image: null,
+      { key: "flush_grid", label: "7870 FG — Flush Grid", openArea: "25%", surface: "Open Grid", image: BL.S7870_FG,
         description: "7870 Flush Grid with 25% open surface for drainage and airflow.",
         applications: ["Drainage", "Food processing", "Washing", "Cooling"],
         beltData: [
@@ -481,7 +528,7 @@ export const MOVEX_SERIES = [
           { material: "LFA", label: "LFA — Low Friction Acetal (White)", pinMaterial: "PBT Pin", strengthNm: 3000, strengthLbsFt: 205, massKgM2: 5.1, massLbFt2: 1.04, tempC: "-40 to +80", tempF: "-40 to 176" },
         ],
         notes: ["25% open surface. 8 mm pitch, H=6 mm.", "Backflex radius min.: 7.5 mm. Pin dia.: 3 mm.", "Pin Sphere® AUTOLOCK fixation."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "diamond_top", label: "7870 DT — Diamond Top", openArea: "0%", surface: "Diamond Pattern", image: null,
+      { key: "diamond_top", label: "7870 DT — Diamond Top", openArea: "0%", surface: "Diamond Pattern", image: BL.S7870_DT,
         description: "Diamond-pattern top for grip on inclines and declines.",
         applications: ["Grip conveying", "Inclines", "Declines"],
         beltData: [
@@ -489,14 +536,14 @@ export const MOVEX_SERIES = [
           { material: "LFA", label: "LFA — Low Friction Acetal (White)", pinMaterial: "PBT Pin", strengthNm: 3000, strengthLbsFt: 205, massKgM2: 5.7, massLbFt2: 1.17, tempC: "-40 to +80", tempF: "-40 to 176" },
         ],
         notes: ["Diamond top pattern for grip. 8 mm pitch, H=6 mm.", "Backflex radius min.: 7.5 mm. Pin dia.: 3 mm.", "Pin Sphere® AUTOLOCK fixation."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "cone_top", label: "7870 CT — Cone Top", openArea: "0%", surface: "Cone / Grip", image: null,
+      { key: "cone_top", label: "7870 CT — Cone Top", openArea: "0%", surface: "Cone / Grip", image: BL.S7870_CT,
         description: "Raised cones for superior grip on inclines and declines at 8 mm pitch.",
         applications: ["Incline conveying", "Decline conveying", "Product orientation"],
         beltData: [
           { material: "POM", label: "POM — Acetal Resin (Cyan RAL 5005)", pinMaterial: "PBT Pin", strengthNm: 3000, strengthLbsFt: 205, massKgM2: 5.9, massLbFt2: 1.21, tempC: "-40 to +80", tempF: "-40 to 176" },
         ],
         notes: ["Cone top for grip. 8 mm pitch, H=6 mm.", "Backflex radius min.: 7.5 mm. Pin dia.: 3 mm.", "Pin Sphere® AUTOLOCK fixation."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "non_slip", label: "7870 NS — Non-Slip", openArea: "0%", surface: "Non-Slip / Friction", image: null,
+      { key: "non_slip", label: "7870 NS — Non-Slip", openArea: "0%", surface: "Non-Slip / Friction", image: BL.S7870_NS,
         description: "Non-slip surface for maximum grip in friction-critical applications.",
         applications: ["Maximum grip inclines", "Friction-critical applications"],
         beltData: [
@@ -509,76 +556,89 @@ export const MOVEX_SERIES = [
   // ── BLUELINE® 7220 (12.7 mm)
   {
     id: "S7220", name: "Series 7220 (Blueline®)", beltType: "Straight-Running",
-    pitch_mm: 12.7, pitch_in: 0.50, catalogPage: 200, image: null,
-    description: "Blueline® 7220 — 1/2-inch pitch food-grade straight-running belt.",
+    pitch_mm: 12.7, pitch_in: 0.50, catalogPage: 200, image: BL.S7220_FT,
+    description: "Blueline® 7220 — 1/2-inch pitch food-grade straight-running belt. H=10 mm. Self-Locking Pin fixation.",
     applications: ["Food processing", "Meat & poultry", "Bakery", "Packaging"],
-    advantages: ["1/2-inch pitch food grade", "Flat Top and Grip Top variants", "Food-safe materials"],
-    sprockets: [{ name: "7220 Sprocket", teeth: "Missing Data", bore: "Missing Data", material: "Polyamide (PA)", notes: "Contact Uniking.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" }],
+    advantages: ["1/2-inch pitch food grade", "Flat Top and Grip Top variants", "Self-Locking Pin fixation", "Food-safe materials"],
+    sprockets: [{ name: "7220 Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7185-7220-7233-7234 one-piece molded sprocket.", image: BL.SP_7220_7234, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7185-7220-7233-7234-one-piece-molded-sprocketm" }],
     accessories: [{ name: "7220 Nosebar", type: "nosebar", image: null, notes: "Contact Uniking.", url: "https://www.movexii.com/en/prodcat/modular-belts" }],
-    techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "200 (Imperial) / p.13 Blueline",
-    width_increment_mm: 25.4, width_increment_in: 1.0, fixation: "Missing Data – Needs Mapping",
+    techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "200 (Imperial) / p.15 Blueline",
+    min_width_mm: 50, min_width_in: 2.0, width_increment_mm: 50, width_increment_in: 2.0, fixation: "Self-Locking Pin",
     styles: [
-      { key: "flat_top", label: "7220 FT — Flat Top", openArea: "0%", surface: "Closed / Smooth", image: null,
-        description: "Blueline® 7220 flat top at 1/2-inch pitch.",
-        applications: ["Food processing", "Meat & poultry"], beltData: "Missing Data – Needs Mapping",
-        notes: ["1/2-inch pitch Blueline® food grade."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "grip_top", label: "7220 GT — Grip Top", openArea: "0%", surface: "Closed / Grip", image: null,
-        description: "7220 grip top for food processing inclines.",
-        applications: ["Food processing inclines", "Grip conveying"], beltData: "Missing Data – Needs Mapping",
-        notes: ["Grip top variant."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
+      { key: "flat_top", label: "7220 FT — Flat Top", openArea: "0%", surface: "Closed / Smooth", image: BL.S7220_FT,
+        description: "Blueline® 7220 flat top at 1/2-inch pitch. H=10 mm. Self-Locking Pin fixation.",
+        applications: ["Food processing", "Meat & poultry"], beltData: "To be confirmed by Uniking",
+        notes: ["1/2-inch pitch Blueline® food grade. Self-Locking Pin."], url: "https://www.movexii.com/en/p/modular-belts/7220-flat-top" },
+      { key: "grip_top", label: "7220 GT — Grip Top", openArea: "0%", surface: "Closed / Grip", image: BL.S7220_GT,
+        description: "7220 grip top for food processing inclines. TPE rubber inserts.",
+        applications: ["Food processing inclines", "Grip conveying"], beltData: "To be confirmed by Uniking",
+        notes: ["Grip top variant. TPE rubber inserts."], url: "https://www.movexii.com/en/p/modular-belts/7220-grip-top" },
     ],
   },
 
   // ── BLUELINE® 7233 (12.7 mm flush grid)
   {
     id: "S7233", name: "Series 7233 (Blueline®)", beltType: "Straight-Running",
-    pitch_mm: 12.7, pitch_in: 0.50, catalogPage: 203, image: null,
-    description: "Blueline® 7233 — 1/2-inch pitch flush grid for drainage-critical food processing.",
+    pitch_mm: 12.7, pitch_in: 0.50, catalogPage: 203, image: BL.S7233_FG,
+    description: "Blueline® 7233 — 1/2-inch pitch flush grid with 25% open surface for drainage-critical food processing. H=10 mm. Reinforced edges design. Self-Locking Pin.",
     applications: ["Drainage-critical food processing", "Washing", "Seafood processing", "Dip tank lines"],
-    advantages: ["Flush grid for maximum drainage", "Food-grade design", "Grip Top variant for wet inclines"],
-    sprockets: [{ name: "7233 Sprocket", teeth: "Missing Data", bore: "Missing Data", material: "Polyamide (PA)", notes: "Contact Uniking.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" }],
+    advantages: ["25% open surface flush grid", "Reinforced edges design", "Self-Locking Pin fixation", "Grip Top variant for wet inclines"],
+    sprockets: [{ name: "7233 Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7185-7220-7233-7234 one-piece molded sprocket.", image: BL.SP_7220_7234, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7185-7220-7233-7234-one-piece-molded-sprocketm" }],
     accessories: [{ name: "7233 Nosebar", type: "nosebar", image: null, notes: "Contact Uniking.", url: "https://www.movexii.com/en/prodcat/modular-belts" }],
-    techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "203 (Imperial) / p.16 Blueline",
-    width_increment_mm: 25.4, width_increment_in: 1.0, fixation: "Missing Data – Needs Mapping",
+    techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "203 (Imperial) / p.19 Blueline",
+    min_width_mm: 50, min_width_in: 2.0, width_increment_mm: 50, width_increment_in: 2.0, fixation: "Self-Locking Pin",
     styles: [
-      { key: "flush_grid", label: "7233 FG — Flush Grid", openArea: "~40%", surface: "Open Grid", image: null,
-        description: "7233 flush grid for drainage at 1/2-inch pitch.",
-        applications: ["Washing/rinsing", "Seafood processing", "Dip tanks"], beltData: "Missing Data – Needs Mapping",
-        notes: ["~40% open area flush grid."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "flush_grid_grip_top", label: "7233 FG GT — Flush Grid Grip Top", openArea: "~40%", surface: "Open Grid / Grip", image: null,
-        description: "7233 flush grid with grip top for wet inclines.",
-        applications: ["Wet inclines with drainage"], beltData: "Missing Data – Needs Mapping",
-        notes: ["Flush grid + grip top combined."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
+      { key: "flush_grid", label: "7233 FG — Flush Grid", openArea: "25%", surface: "Open Grid", image: BL.S7233_FG,
+        description: "7233 flush grid with 25% open surface for drainage. H=10 mm. Reinforced edges. Backflex radius min.: 25 mm. Pin dia.: 5 mm.",
+        applications: ["Washing/rinsing", "Seafood processing", "Dip tanks"],
+        beltData: [
+          { material: "POM", label: "POM — Acetal Resin (Cyan/White)", pinMaterial: "PBT Pin", strengthNm: 18000, strengthLbsFt: 1233, massKgM2: 9.2, massLbFt2: 1.89, tempC: "-40 to +60", tempF: "-40 to 140" },
+          { material: "POM", label: "POM — Acetal Resin (Cyan/White)", pinMaterial: "PE Pin",  strengthNm: 7000,  strengthLbsFt: 480,  massKgM2: 8.7, massLbFt2: 1.78, tempC: "+5 to +60",  tempF: "41 to 140" },
+          { material: "POM", label: "POM — Acetal Resin (Cyan/White)", pinMaterial: "PP Pin",  strengthNm: 16000, strengthLbsFt: 1096, massKgM2: 8.5, massLbFt2: 1.74, tempC: "+5 to +60",  tempF: "41 to 140" },
+          { material: "PP",  label: "PP — Polypropylene (Cyan/White)",  pinMaterial: "PP Pin",  strengthNm: 11000, strengthLbsFt: 754,  massKgM2: 6.3, massLbFt2: 1.29, tempC: "+5 to +60",  tempF: "41 to 140" },
+        ],
+        notes: ["25% open surface. Reinforced edges design.", "Backflex radius min.: 25 mm. Pin dia.: 5 mm.", "Self-Locking Pin fixation."], url: "https://www.movexii.com/en/p/modular-belts/7233-flush-grid" },
+      { key: "flush_grid_grip_top", label: "7233 FG GT — Flush Grid Grip Top", openArea: "25%", surface: "Open Grid / Grip", image: BL.S7233_FGGT,
+        description: "7233 flush grid with TPE rubber grip top for wet inclines. H=10 mm. Backflex radius min.: 25 mm. Pin dia.: 5 mm.",
+        applications: ["Wet inclines with drainage"],
+        beltData: [
+          { material: "POM", label: "POM — Acetal Resin (Cyan/White)", pinMaterial: "PBT Pin", strengthNm: 18000, strengthLbsFt: 1233, massKgM2: 9.2, massLbFt2: 1.89, tempC: "-40 to +60", tempF: "-40 to 140" },
+          { material: "POM", label: "POM — Acetal Resin (Cyan/White)", pinMaterial: "PE Pin",  strengthNm: 7000,  strengthLbsFt: 480,  massKgM2: 8.7, massLbFt2: 1.78, tempC: "+5 to +60",  tempF: "41 to 140" },
+        ],
+        notes: ["Flush grid + TPE rubber grip top. Reinforced edges.", "Backflex radius min.: 25 mm. Pin dia.: 5 mm.", "Self-Locking Pin fixation."], url: "https://www.movexii.com/en/p/modular-belts/7233-flush-grid-and-grip-top" },
     ],
   },
 
   // ── BLUELINE® 7234 (12.7 mm nub top)
   {
     id: "S7234", name: "Series 7234 (Blueline®)", beltType: "Straight-Running",
-    pitch_mm: 12.7, pitch_in: 0.50, catalogPage: 206, image: null,
-    description: "Blueline® 7234 — 1/2-inch pitch nub top for product release. Reduces adhesion for sticky items.",
+    pitch_mm: 12.7, pitch_in: 0.50, catalogPage: 206, image: BL.S7234_NT,
+    description: "Blueline® 7234 — 1/2-inch pitch nub top for product release. Reduces adhesion for sticky items. H=10 mm. Self-Locking Pin.",
     applications: ["Sticky food products", "Cheese handling", "Meat processing", "Reduced adhesion applications"],
-    advantages: ["Nub top for product release", "Reduced adhesion area", "1/2-inch pitch food grade"],
-    sprockets: [{ name: "7234 Sprocket", teeth: "Missing Data", bore: "Missing Data", material: "Polyamide (PA)", notes: "Contact Uniking.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" }],
+    advantages: ["Nub top for product release", "Reduced adhesion area", "1/2-inch pitch food grade", "Self-Locking Pin fixation"],
+    sprockets: [{ name: "7234 Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7185-7220-7233-7234 one-piece molded sprocket.", image: BL.SP_7220_7234, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7185-7220-7233-7234-one-piece-molded-sprocketm" }],
     accessories: [{ name: "7234 Nosebar", type: "nosebar", image: null, notes: "Contact Uniking.", url: "https://www.movexii.com/en/prodcat/modular-belts" }],
-    techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "206 (Imperial) / p.19 Blueline",
-    width_increment_mm: 25.4, width_increment_in: 1.0, fixation: "Missing Data – Needs Mapping",
+    techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "206 (Imperial) / p.21 Blueline",
+    min_width_mm: 50, min_width_in: 2.0, width_increment_mm: 50, width_increment_in: 2.0, fixation: "Self-Locking Pin",
     styles: [
-      { key: "nub_top", label: "7234 NT — Nub Top", openArea: "0% (reduced contact)", surface: "Nub / Reduced Contact", image: null,
-        description: "Nub top for product release at 1/2-inch pitch.",
-        applications: ["Sticky products", "Cheese handling", "Meat processing"], beltData: "Missing Data – Needs Mapping",
-        notes: ["Raised nubs reduce adhesion."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
+      { key: "nub_top", label: "7234 NT — Nub Top", openArea: "0% (reduced contact)", surface: "Nub / Reduced Contact", image: BL.S7234_NT,
+        description: "Nub top for product release at 1/2-inch pitch. H=10 mm. Backflex radius min.: 25 mm. Pin dia.: 5 mm.",
+        applications: ["Sticky products", "Cheese handling", "Meat processing"], beltData: "To be confirmed by Uniking",
+        notes: ["Raised nubs reduce adhesion.", "Backflex radius min.: 25 mm. Pin dia.: 5 mm.", "Self-Locking Pin fixation."], url: "https://www.movexii.com/en/p/modular-belts/7234-nub-top" },
     ],
   },
 
   // ── BLUELINE® 7510 (25.4 mm)
   {
     id: "S7510", name: "Series 7510 (Blueline®)", beltType: "Straight-Running",
-    pitch_mm: 25.4, pitch_in: 1.0, catalogPage: 208, image: null,
-    description: "Blueline® 7510 — 1-inch pitch food-grade belt. Flat Top, Nub Top, Diamond Top, Metal Top.",
+    pitch_mm: 25.4, pitch_in: 1.0, catalogPage: 208, image: BL.S7510_FT,
+    description: "Blueline® 7510 — 1-inch pitch food-grade belt. Flat Top, Nub Top, Diamond Top, Mesh Top.",
     applications: ["Bakery", "Food processing", "Meat & poultry", "Seafood"],
     advantages: ["1-inch pitch food-grade", "Multiple surface styles", "Nub Top for release", "Diamond Top for grip"],
-    sprockets: [{ name: "7510 Sprocket", teeth: "Missing Data", bore: "Missing Data", material: "Polyamide (PA)", notes: "Contact Uniking.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" }],
+    sprockets: [
+      { name: "7510 Split Machined Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7510-7520-7585 split machined sprocket.", image: BL.SP_7510_7520, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7510-7520-7585-split-machined-sprocketm" },
+      { name: "7510 One-Piece Molded Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7510-7520-7585 one-piece molded sprocket.", image: BL.SP_7510_7520_M, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7510-7520-7585-one-piece-molded-sprocketm" },
+    ],
     accessories: [
       { name: "7510 Nosebar", type: "nosebar", image: null, notes: "Contact Uniking.", url: "https://www.movexii.com/en/prodcat/modular-belts" },
       { name: "7510 Straight Flight", type: "flight", image: null, notes: "Straight flight for 7510.", url: "https://www.movexii.com/en/prodcat/accessories" },
@@ -587,21 +647,24 @@ export const MOVEX_SERIES = [
     techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "208 (Imperial) / p.25 Blueline",
     width_increment_mm: 25.4, width_increment_in: 1.0, fixation: "Missing Data – Needs Mapping",
     styles: [
-      { key: "flat_top",    label: "7510 FT — Flat Top",    openArea: "0%",               surface: "Closed / Smooth",         image: null, description: "Blueline® 1-inch pitch flat top.",        applications: ["Food processing", "Bakery"], beltData: "Missing Data – Needs Mapping", notes: ["1-inch pitch Blueline®."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "nub_top",     label: "7510 NT — Nub Top",     openArea: "0% (reduced)",      surface: "Nub / Reduced Contact",    image: null, description: "1-inch nub top for sticky products.",     applications: ["Sticky products", "Meat"],  beltData: "Missing Data – Needs Mapping", notes: ["Raised nubs reduce adhesion."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "diamond_top", label: "7510 DT — Diamond Top", openArea: "0%",               surface: "Diamond Pattern",          image: null, description: "1-inch diamond top for grip.",            applications: ["Inclines", "Grip"],         beltData: "Missing Data – Needs Mapping", notes: ["Diamond pattern grip."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "metal_top",   label: "7510 MT — Metal Top",   openArea: "0%",               surface: "Metal Top",                image: null, description: "1-inch metal top for special applications.", applications: ["Special surface requirements"], beltData: "Missing Data – Needs Mapping", notes: ["Metal top surface."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
+      { key: "flat_top",    label: "7510 FT — Flat Top",    openArea: "0%",               surface: "Closed / Smooth",         image: BL.S7510_FT, description: "Blueline® 1-inch pitch flat top.",        applications: ["Food processing", "Bakery"], beltData: "To be confirmed by Uniking", notes: ["1-inch pitch Blueline®."], url: "https://www.movexii.com/en/p/modular-belts/7510-flat-top" },
+      { key: "nub_top",     label: "7510 NT — Nub Top",     openArea: "0% (reduced)",      surface: "Nub / Reduced Contact",    image: BL.S7510_NT, description: "1-inch nub top for sticky products.",     applications: ["Sticky products", "Meat"],  beltData: "To be confirmed by Uniking", notes: ["Raised nubs reduce adhesion."], url: "https://www.movexii.com/en/p/modular-belts/7510-nub-top" },
+      { key: "diamond_top", label: "7510 DT — Diamond Top", openArea: "0%",               surface: "Diamond Pattern",          image: BL.S7510_DT, description: "1-inch diamond top for grip.",            applications: ["Inclines", "Grip"],         beltData: "To be confirmed by Uniking", notes: ["Diamond pattern grip."], url: "https://www.movexii.com/en/p/modular-belts/7510-diamond-top" },
+      { key: "metal_top",   label: "7510 MT — Mesh Top",   openArea: "0%",               surface: "Mesh Top",                image: BL.S7510_MT, description: "1-inch mesh top for special applications.", applications: ["Special surface requirements"], beltData: "To be confirmed by Uniking", notes: ["Mesh top surface."], url: "https://www.movexii.com/en/p/modular-belts/7510-mesh-top" },
     ],
   },
 
   // ── BLUELINE® 7520 (25.4 mm flush grid)
   {
     id: "S7520", name: "Series 7520 (Blueline®)", beltType: "Straight-Running",
-    pitch_mm: 25.4, pitch_in: 1.0, catalogPage: 211, image: null,
+    pitch_mm: 25.4, pitch_in: 1.0, catalogPage: 211, image: BL.S7520_FT,
     description: "Blueline® 7520 — 1-inch pitch flat top and flush grid food-grade belt.",
     applications: ["Food processing with drainage", "Washing", "Blanching", "Bakery"],
     advantages: ["1-inch pitch food-grade", "Flush Grid for drainage", "Flat Top variant"],
-    sprockets: [{ name: "7520 Sprocket", teeth: "Missing Data", bore: "Missing Data", material: "Polyamide (PA)", notes: "Contact Uniking.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" }],
+    sprockets: [
+      { name: "7520 Split Machined Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7510-7520-7585 split machined sprocket.", image: BL.SP_7510_7520, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7510-7520-7585-split-machined-sprocketm" },
+      { name: "7520 One-Piece Molded Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7510-7520-7585 one-piece molded sprocket.", image: BL.SP_7510_7520_M, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7510-7520-7585-one-piece-molded-sprocketm" },
+    ],
     accessories: [
       { name: "7520 Nosebar", type: "nosebar", image: null, notes: "Contact Uniking.", url: "https://www.movexii.com/en/prodcat/modular-belts" },
       { name: "7520 Straight Flight", type: "flight", image: null, notes: "Straight flight for 7520.", url: "https://www.movexii.com/en/prodcat/accessories" },
@@ -609,19 +672,22 @@ export const MOVEX_SERIES = [
     techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "211 (Imperial) / p.31 Blueline",
     width_increment_mm: 25.4, width_increment_in: 1.0, fixation: "Missing Data – Needs Mapping",
     styles: [
-      { key: "flat_top",   label: "7520 FT — Flat Top",   openArea: "0%",    surface: "Closed / Smooth", image: null, description: "Blueline® 7520 flat top at 1-inch pitch.", applications: ["Food processing", "Bakery"], beltData: "Missing Data – Needs Mapping", notes: ["1-inch pitch."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "flush_grid", label: "7520 FG — Flush Grid", openArea: "~40%",  surface: "Open Grid",        image: null, description: "7520 flush grid for drainage.",             applications: ["Drainage", "Washing"],         beltData: "Missing Data – Needs Mapping", notes: ["~40% open area."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
+      { key: "flat_top",   label: "7520 FT — Flat Top",   openArea: "0%",    surface: "Closed / Smooth", image: BL.S7520_FT, description: "Blueline® 7520 flat top at 1-inch pitch.", applications: ["Food processing", "Bakery"], beltData: "To be confirmed by Uniking", notes: ["1-inch pitch."], url: "https://www.movexii.com/en/p/modular-belts/7520-flat-top" },
+      { key: "flush_grid", label: "7520 FG — Flush Grid", openArea: "~40%",  surface: "Open Grid",        image: BL.S7520_FG, description: "7520 flush grid for drainage.",             applications: ["Drainage", "Washing"],         beltData: "To be confirmed by Uniking", notes: ["~40% open area."], url: "https://www.movexii.com/en/p/modular-belts/7520-flush-grid" },
     ],
   },
 
   // ── BLUELINE® 7010 (50.8 mm)
   {
     id: "S7010", name: "Series 7010 (Blueline®)", beltType: "Straight-Running",
-    pitch_mm: 50.8, pitch_in: 2.0, catalogPage: 213, image: null,
+    pitch_mm: 50.8, pitch_in: 2.0, catalogPage: 213, image: BL.S7010_FT,
     description: "Blueline® 7010 — 2-inch pitch heavy-duty food-grade belt. Flat Top, Cone Top, Nub Top, Perforated Top.",
     applications: ["Heavy food processing", "Meat & poultry", "Bulk conveying"],
     advantages: ["2-inch pitch heavy duty", "Multiple surface styles", "Cone Top for grip", "Perforated Top for drainage"],
-    sprockets: [{ name: "7010 Sprocket", teeth: "Missing Data", bore: "Missing Data", material: "Polyamide (PA)", notes: "Contact Uniking.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" }],
+    sprockets: [
+      { name: "7010 Split Machined Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7010-7290-7293 split machined sprocket.", image: BL.SP_7010_7290, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7010-7290-7293-split-machined-sprocketm" },
+      { name: "7010 One-Piece Molded Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7010-7290-7293 one-piece molded sprocket.", image: BL.SP_7010_7290_M, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7010-7290-7293-one-piece-molded-sprocketm" },
+    ],
     accessories: [
       { name: "7010 Nosebar", type: "nosebar", image: null, notes: "Contact Uniking.", url: "https://www.movexii.com/en/prodcat/modular-belts" },
       { name: "7010 Straight Flight", type: "flight", image: null, notes: "Straight flight for 7010.", url: "https://www.movexii.com/en/prodcat/accessories" },
@@ -643,10 +709,10 @@ export const MOVEX_SERIES = [
           { material: "LFC", label: "LFC — Low Friction Acetal (Cyan)", pinMaterial: "PE Pin",  strengthNm: 10000, strengthLbsFt: 685,  massKgM2: 13.5, massLbFt2: 2.8, tempC: "-40 to +80", tempF: "-40 to 176" },
         ],
         notes: ["2-inch (50.8 mm) pitch heavy duty. Back flex radius: 50 mm (1.969\").", "Self-Locking Pin fixation. Mold-to-width in 9.375 mm increments.", "Quick Fit sprocket: +20% higher max working load vs standard.", "PKX material available for red meat processing."], url: "https://www.movexii.com/en/p/modular-belts/7010-flat-top-mold-to-width" },
-      { key: "cone_top",       label: "7010 CT — Cone Top",        openArea: "0%",    surface: "Cone / Grip",          image: null, description: "2-inch cone top for inclines.",       applications: ["Heavy inclines"],               beltData: "To be confirmed by Uniking", notes: ["Cone top for grip. 2-inch pitch."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "nub_top",        label: "7010 NT — Nub Top",         openArea: "0%",    surface: "Nub / Reduced Contact",image: null, description: "2-inch nub top for product release.", applications: ["Sticky heavy products"],         beltData: "To be confirmed by Uniking", notes: ["Nub top for product release. 2-inch pitch."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "perforated_top", label: "7010 PT — Perforated Top",  openArea: "~20%",  surface: "Perforated",           image: null, description: "2-inch perforated top for drainage.", applications: ["Partial drainage", "Washing"],   beltData: "To be confirmed by Uniking", notes: ["~20% open area. 2-inch pitch."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "hd_perforated_top", label: "7010 HD PT — Heavy Duty Perforated Top", openArea: "~20%", surface: "Perforated / Heavy Duty", image: null, description: "Heavy-duty perforated top for demanding drainage applications.", applications: ["Heavy drainage", "Washing"], beltData: "To be confirmed by Uniking", notes: ["NEW in V6 catalog. Heavy-duty perforated. 2-inch pitch."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
+      { key: "cone_top",       label: "7010 CT — Cone Top",        openArea: "0%",    surface: "Cone / Grip",          image: BL.S7010_CT, description: "2-inch cone top for inclines.",       applications: ["Heavy inclines"],               beltData: "To be confirmed by Uniking", notes: ["Cone top for grip. 2-inch pitch."], url: "https://www.movexii.com/en/p/modular-belts/7010-cone-top" },
+      { key: "nub_top",        label: "7010 NT — Nub Top",         openArea: "0%",    surface: "Nub / Reduced Contact",image: BL.S7010_NT, description: "2-inch nub top for product release.", applications: ["Sticky heavy products"],         beltData: "To be confirmed by Uniking", notes: ["Nub top for product release. 2-inch pitch."], url: "https://www.movexii.com/en/p/modular-belts/7010-nub-top" },
+      { key: "perforated_top", label: "7010 PT — Perforated Top",  openArea: "~20%",  surface: "Perforated",           image: BL.S7010_PT, description: "2-inch perforated top for drainage.", applications: ["Partial drainage", "Washing"],   beltData: "To be confirmed by Uniking", notes: ["~20% open area. 2-inch pitch."], url: "https://www.movexii.com/en/p/modular-belts/7010-perforated-top" },
+      { key: "hd_perforated_top", label: "7010 HD PT — Heavy Duty Perforated Top", openArea: "~20%", surface: "Perforated / Heavy Duty", image: BL.S7010_HDPT, description: "Heavy-duty perforated top for demanding drainage applications.", applications: ["Heavy drainage", "Washing"], beltData: "To be confirmed by Uniking", notes: ["NEW in V6 catalog. Heavy-duty perforated. 2-inch pitch."], url: "https://www.movexii.com/en/p/modular-belts/7010-heavy-duty-perforated-top" },
     ],
   },
 
@@ -676,16 +742,16 @@ export const MOVEX_SERIES = [
   // ── BLUELINE® 7185 (12.7 mm pitch) — NEW in V6
   {
     id: "S7185", name: "Series 7185 (Blueline®)", beltType: "Straight-Running",
-    pitch_mm: 12.7, pitch_in: 0.50, catalogPage: 13, image: null,
-    description: "Blueline® 7185 — NEW 1/2-inch pitch flush grid for drainage-critical food processing.",
+    pitch_mm: 12.7, pitch_in: 0.50, catalogPage: 13, image: BL.S7185_FG,
+    description: "Blueline® 7185 — NEW 1/2-inch pitch flush grid for drainage-critical food processing. H=7 mm. Self-Locking Pin.",
     applications: ["Drainage-critical food processing", "Washing", "Seafood"],
     advantages: ["NEW 1/2-inch pitch", "Flush Grid for drainage", "FDA-compliant materials"],
-    sprockets: [{ name: "7185 Sprocket", teeth: "Missing Data", bore: "Missing Data", material: "Polyamide (PA)", notes: "Contact Uniking.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" }],
+    sprockets: [{ name: "7185 Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7185-7220-7233-7234 one-piece molded sprocket.", image: BL.SP_7220_7234, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7185-7220-7233-7234-one-piece-molded-sprocketm" }],
     accessories: [{ name: "7185 Nosebar", type: "nosebar", image: null, notes: "Contact Uniking.", url: "https://www.movexii.com/en/prodcat/modular-belts" }],
     techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "V6 p.13 (NEW)",
     min_width_mm: 50.8, min_width_in: 2.0, width_increment_mm: 25.4, width_increment_in: 1.0, fixation: "To be confirmed by Uniking",
     styles: [
-      { key: "flush_grid", label: "7185 FG — Flush Grid", openArea: "To be confirmed by Uniking", surface: "Open Grid", image: null,
+      { key: "flush_grid", label: "7185 FG — Flush Grid", openArea: "To be confirmed by Uniking", surface: "Open Grid", image: BL.S7185_FG,
         description: "NEW 7185 flush grid for drainage at 1/2-inch pitch.",
         applications: ["Drainage", "Washing", "Seafood"], beltData: "To be confirmed by Uniking",
         notes: ["NEW in V6 catalog. 1/2-inch pitch."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
@@ -695,16 +761,19 @@ export const MOVEX_SERIES = [
   // ── BLUELINE® 7585 (25.7 mm pitch) — NEW in V6
   {
     id: "S7585", name: "Series 7585 (Blueline®)", beltType: "Straight-Running",
-    pitch_mm: 25.7, pitch_in: 1.012, catalogPage: 37, image: null,
+    pitch_mm: 25.7, pitch_in: 1.012, catalogPage: 37, image: BL.S7585_FG,
     description: "Blueline® 7585 — NEW ~1-inch (25.7 mm) pitch flush grid for food processing.",
     applications: ["Food processing", "Drainage", "Washing"],
     advantages: ["NEW ~1-inch pitch", "Flush Grid for drainage", "FDA-compliant materials"],
-    sprockets: [{ name: "7585 Sprocket", teeth: "Missing Data", bore: "Missing Data", material: "Polyamide (PA)", notes: "Contact Uniking.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" }],
+    sprockets: [
+      { name: "7585 Split Machined Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7510-7520-7585 split machined sprocket.", image: BL.SP_7510_7520, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7510-7520-7585-split-machined-sprocketm" },
+      { name: "7585 One-Piece Molded Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7510-7520-7585 one-piece molded sprocket.", image: BL.SP_7510_7520_M, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7510-7520-7585-one-piece-molded-sprocketm" },
+    ],
     accessories: [{ name: "7585 Nosebar", type: "nosebar", image: null, notes: "Contact Uniking.", url: "https://www.movexii.com/en/prodcat/modular-belts" }],
     techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "V6 p.37 (NEW)",
     min_width_mm: 50.8, min_width_in: 2.0, width_increment_mm: 25.4, width_increment_in: 1.0, fixation: "To be confirmed by Uniking",
     styles: [
-      { key: "flush_grid", label: "7585 FG — Flush Grid", openArea: "To be confirmed by Uniking", surface: "Open Grid", image: null,
+      { key: "flush_grid", label: "7585 FG — Flush Grid", openArea: "To be confirmed by Uniking", surface: "Open Grid", image: BL.S7585_FG,
         description: "NEW 7585 flush grid at ~1-inch pitch.",
         applications: ["Drainage", "Food processing"], beltData: "To be confirmed by Uniking",
         notes: ["NEW in V6 catalog. 25.7 mm pitch."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
@@ -718,7 +787,10 @@ export const MOVEX_SERIES = [
     description: "Blueline® 7290/7293 — NEW 2-inch pitch sideflexing belts. 7290 R-FG (collapse 2.22) and 7293 TR-FG (collapse 1.6) for horizontal curves.",
     applications: ["Horizontal curves", "Heavy food processing curves", "Multi-directional conveying"],
     advantages: ["NEW 2-inch sideflexing", "7290 collapse factor 2.22", "7293 tight radius collapse 1.6", "FDA-compliant"],
-    sprockets: [{ name: "7290/7293 Sprocket", teeth: "Missing Data", bore: "Missing Data", material: "Polyamide (PA)", notes: "Contact Uniking.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" }],
+    sprockets: [
+      { name: "7290/7293 Split Machined Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7010-7290-7293 split machined sprocket.", image: BL.SP_7010_7290, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7010-7290-7293-split-machined-sprocketm" },
+      { name: "7290/7293 One-Piece Molded Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7010-7290-7293 one-piece molded sprocket.", image: BL.SP_7010_7290_M, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7010-7290-7293-one-piece-molded-sprocketm" },
+    ],
     accessories: [{ name: "7290/7293 Curved Track", type: "track", image: null, notes: "Curved track for 7290/7293.", url: "https://www.movexii.com/en/prodcat/curves-straight-tracks" }],
     techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "V6 p.57 (NEW)",
     collapse_factor: "2.22 (7290) / 1.6 (7293)", fixation: "To be confirmed by Uniking",
@@ -737,11 +809,14 @@ export const MOVEX_SERIES = [
   // ── BLUELINE® 7540 (sideflexing)
   {
     id: "S7540", name: "Series 7540 (Blueline® Sideflexing)", beltType: "Sideflexing",
-    pitch_mm: 25.4, pitch_in: 1.0, catalogPage: 215, image: null,
-    description: "Blueline® 7540 — 1-inch pitch sideflexing for horizontal curves. Collapse factor 2.2.",
+    pitch_mm: 25.4, pitch_in: 1.0, catalogPage: 215, image: BL.S7540_RFG,
+    description: "Blueline® 7540 — 1-inch pitch sideflexing for horizontal curves. Collapse factor 2.2. H=11 mm. Self-Locking Pin.",
     applications: ["Horizontal curves", "Food processing curves", "Multi-directional conveying"],
     advantages: ["Sideflexing for horizontal curves", "Collapse factor 2.2", "TAB version available", "Food-grade design"],
-    sprockets: [{ name: "7540 Sprocket", teeth: "Missing Data", bore: "Missing Data", material: "Polyamide (PA)", notes: "Contact Uniking.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" }],
+    sprockets: [
+      { name: "7540 Split Machined Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7540-7544 split machined sprocket.", image: BL.SP_7540_7544, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7540-7544-split-machined-sprocketm" },
+      { name: "7540 One-Piece Molded Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7540-7544 one-piece molded sprocket.", image: BL.SP_7540_7544_M, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7540-7544-one-piece-molded-sprocketm" },
+    ],
     accessories: [
       { name: "7540 Straight Track", type: "track", image: null, notes: "Straight track for 7540.", url: "https://www.movexii.com/en/prodcat/curves-straight-tracks" },
       { name: "7540 Curved Track",   type: "track", image: null, notes: "Fixed radius curved track for 7540.", url: "https://www.movexii.com/en/prodcat/curves-straight-tracks" },
@@ -750,19 +825,28 @@ export const MOVEX_SERIES = [
     techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "215 (Imperial) / p.41 Blueline",
     collapse_factor: 2.2, fixation: "Missing Data – Needs Mapping",
     styles: [
-      { key: "r_flush_grid",     label: "7540 R-FG — Sideflexing Flush Grid",      openArea: "~35%", surface: "Open Grid / Sideflexing",       image: null, description: "Sideflexing flush grid. Collapse factor 2.2.", applications: ["Horizontal curve conveying", "Curved drainage"], beltData: "Missing Data – Needs Mapping", notes: ["Collapse factor 2.2."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "tab_r_flush_grid", label: "7540 TAB R-FG — TAB Sideflexing Flush Grid", openArea: "~35%", surface: "Open Grid / Sideflexing / TAB", image: null, description: "TAB version for side tab drive systems.",          applications: ["TAB drive sideflexing curves"],            beltData: "Missing Data – Needs Mapping", notes: ["TAB drive version."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
+      { key: "r_flush_grid",     label: "7540 R-FG — Sideflexing Flush Grid",      openArea: "~35%", surface: "Open Grid / Sideflexing",       image: BL.S7540_RFG, description: "Sideflexing flush grid. Collapse factor 2.2. H=11 mm.", applications: ["Horizontal curve conveying", "Curved drainage"],
+        beltData: [
+          { material: "POM", label: "POM — Acetal Resin (Cyan/White)", pinMaterial: "PBT Pin", strengthNm: 20000, strengthLbsFt: 1370, massKgM2: 8.4, massLbFt2: 1.72, tempC: "-40 to +93", tempF: "-40 to 199" },
+          { material: "PP",  label: "PP — Polypropylene (Cyan/White)",  pinMaterial: "PBT Pin", strengthNm: 14000, strengthLbsFt: 959,  massKgM2: 5.8, massLbFt2: 1.19, tempC: "+5 to +93",  tempF: "41 to 199" },
+        ],
+        notes: ["Collapse factor 2.2. Curved run max load: 1100 N (POM).", "Backflex radius min.: Self-Locking Pin. H=11 mm.", "Sprocket pitches: 50/66.6/83.25/100/117 mm."], url: "https://www.movexii.com/en/p/modular-belts/7540-radius-flush-grid" },
+      { key: "tab_r_flush_grid", label: "7540 TAB R-FG — TAB Sideflexing Flush Grid", openArea: "~35%", surface: "Open Grid / Sideflexing / TAB", image: BL.S7540_RFG, description: "TAB version for side tab drive systems. Collapse factor 2.2.",          applications: ["TAB drive sideflexing curves"],            beltData: "To be confirmed by Uniking", notes: ["TAB drive version. Collapse factor 2.2."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
     ],
   },
 
   // ── BLUELINE® 7544 (sideflexing, tighter radius)
   {
     id: "S7544", name: "Series 7544 (Blueline® Sideflexing)", beltType: "Sideflexing",
-    pitch_mm: 25.4, pitch_in: 1.0, catalogPage: 216, image: null,
-    description: "Blueline® 7544 — 1-inch tighter-radius sideflexing. Collapse factor 1.6.",
+    pitch_mm: 25.4, pitch_in: 1.0, catalogPage: 216, image: BL.S7544_TRFG,
+    description: "Blueline® 7544 — 1-inch tighter-radius sideflexing. Collapse factor 1.6. H=11 mm.",
     applications: ["Tight horizontal curves", "Food processing tight curves"],
     advantages: ["Tighter collapse factor 1.6 vs 7540", "Flush Grid for drainage", "Grip Top for inclined curves"],
-    sprockets: [{ name: "7544 Sprocket", teeth: "Missing Data", bore: "Missing Data", material: "Polyamide (PA)", notes: "Contact Uniking.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" }],
+    sprockets: [
+      { name: "7544 Split Machined Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7540-7544 split machined sprocket.", image: BL.SP_7540_7544, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7540-7544-split-machined-sprocketm" },
+      { name: "7544 One-Piece Molded Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7540-7544 one-piece molded sprocket.", image: BL.SP_7540_7544_M, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7540-7544-one-piece-molded-sprocketm" },
+      { name: "7544 Support Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "7544 support sprocket for tight radius curves.", image: BL.SP_7544_SUP, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/7544-support-sprocketm" },
+    ],
     accessories: [
       { name: "7544 Straight Track",             type: "track", image: null, notes: "Straight track for 7544.",                     url: "https://www.movexii.com/en/prodcat/curves-straight-tracks" },
       { name: "7544 Curved Track (Tight Radius)", type: "track", image: null, notes: "Tighter radius curved track. Collapse 1.6.", url: "https://www.movexii.com/en/prodcat/curves-straight-tracks" },
@@ -770,8 +854,8 @@ export const MOVEX_SERIES = [
     techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "216 (Imperial) / p.45 Blueline",
     collapse_factor: 1.6, fixation: "Missing Data – Needs Mapping",
     styles: [
-      { key: "tr_flush_grid", label: "7544 TR-FG — Tight Radius Flush Grid", openArea: "~35%", surface: "Open Grid / Tight Radius", image: null, description: "Tight-radius sideflexing flush grid. Collapse 1.6.", applications: ["Tight horizontal curves", "Curved drainage"], beltData: "Missing Data – Needs Mapping", notes: ["Tighter radius than 7540. Collapse 1.6."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
-      { key: "tr_grip_top",   label: "7544 TR-GT — Tight Radius Grip Top",   openArea: "0%",   surface: "Closed / Grip / Tight Radius", image: null, description: "Tight-radius sideflexing grip top.",            applications: ["Grip on tight curves"],                    beltData: "Missing Data – Needs Mapping", notes: ["Grip top + tight radius. Collapse 1.6."], url: "https://www.movexii.com/en/prodcat/modular-belts" },
+      { key: "tr_flush_grid", label: "7544 TR-FG — Tight Radius Flush Grid", openArea: "~35%", surface: "Open Grid / Tight Radius", image: BL.S7544_TRFG, description: "Tight-radius sideflexing flush grid. Collapse 1.6. H=11 mm.", applications: ["Tight horizontal curves", "Curved drainage"], beltData: "To be confirmed by Uniking", notes: ["Tighter radius than 7540. Collapse 1.6."], url: "https://www.movexii.com/en/p/modular-belts/7544-tight-radius-flush-grid" },
+      { key: "tr_grip_top",   label: "7544 TR-GT — Tight Radius Grip Top",   openArea: "0%",   surface: "Closed / Grip / Tight Radius", image: BL.S7544_TRGT, description: "Tight-radius sideflexing grip top. Collapse 1.6. H=11 mm.",            applications: ["Grip on tight curves"],                    beltData: "To be confirmed by Uniking", notes: ["Grip top + tight radius. Collapse 1.6."], url: "https://www.movexii.com/en/p/modular-belts/7544-tight-radius-grip-top" },
     ],
   },
 
@@ -782,7 +866,10 @@ export const MOVEX_SERIES = [
     description: "Blueline® Zero Contact — eliminates direct contact between belt and product for ultra-hygienic handling.",
     applications: ["Ultra-hygienic food processing", "Delicate product handling", "No-contact conveying"],
     advantages: ["Zero product-to-belt contact", "Ultra-hygienic design", "PRO version available"],
-    sprockets: [{ name: "Zero Contact Sprocket", teeth: "Missing Data", bore: "Missing Data", material: "Polyamide (PA)", notes: "Contact Uniking.", image: null, url: "https://www.movexii.com/en/prodcat/sprockets-turning-disks" }],
+    sprockets: [
+      { name: "Zero Contact Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "Zero Contact one-piece machined sprocket.", image: BL.SP_ZERO_CONTACT, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/zero-contact-one-piece-machined-sprocketm" },
+      { name: "Zero Contact PRO Sprocket", teeth: "Catalog-confirmed", bore: "Square / Round", material: "Polyamide (PA)", notes: "Zero Contact PRO one-piece machined sprocket.", image: BL.SP_ZERO_PRO, url: "https://www.movexii.com/en/p/sprockets-turning-disks/belt-sprockets/zero-contact-pro-one-piece-machined-sprocketm" },
+    ],
     accessories: [{ name: "Zero Contact Track System", type: "track", image: null, notes: "Special track system.", url: "https://www.movexii.com/en/prodcat/accessories" }],
     techChartUrl: MOVEX_BLUELINE_URL, catalogPageRef: "217 (Imperial) / p.49 Blueline",
     fixation: "Missing Data – Needs Mapping",

@@ -310,7 +310,9 @@ export default function MovexSeriesDetail({ series, onConfigure, onBack, onGoRFQ
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {series.sprockets.map((sp, i) => (
                   <div key={i} style={{ background: "#fff", borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden", display: "flex", alignItems: "center", gap: 12, padding: "12px 16px" }}>
-                    <div style={{ width: 48, height: 40, flexShrink: 0, background: "#f0f4f8", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>⚙️</div>
+                    <div style={{ width: 56, height: 48, flexShrink: 0, background: "#f0f4f8", borderRadius: 6, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      {sp.image ? <img src={sp.image} alt={sp.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => { e.target.style.display = "none"; e.target.parentElement.innerHTML = "⚙️"; e.target.parentElement.style.fontSize = "20px"; }} /> : <span style={{ fontSize: 20 }}>⚙️</span>}
+                    </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 13, fontWeight: 800, color: C.navyMid }}>{sp.name}</div>
                       <div style={{ fontSize: 11, color: C.muted, marginTop: 1 }}>
