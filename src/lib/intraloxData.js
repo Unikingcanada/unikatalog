@@ -77,7 +77,7 @@ export const STRAIGHT_SERIES = [
     engineeringManualPage: "33",
     styles: [
       { key: "flat_top", label: "Flat Top", openArea: "0%", surface: "Closed / Smooth", image: CDN + "d5243989-0dde-4c19-99cf-ed3f8774b8d4/5004310_P1070334_16-9_darken15.jpeg?w=568&h=298.2&rect=0,0,2400,1350&fit=&q=85&auto=format", description: "Smooth closed-surface ultra-small pitch belt.", applications: ["Small parts", "Packaging", "Electronics"], beltData: "To be confirmed by Uniking", notes: ["1/3-in (8.47 mm) pitch."] },
-      { key: "flush_grid", label: "Flush Grid", openArea: "~30%", surface: "Open Grid", image: null, description: "Open flush grid for drainage and airflow at very small pitch.", applications: ["Drainage", "Airflow", "Visibility"], beltData: "To be confirmed by Uniking", notes: [] },
+      { key: "flush_grid", label: "Flush Grid", openArea: "~30%", surface: "Open Grid", image: IMG.S100, description: "Open flush grid for drainage and airflow at very small pitch.", applications: ["Drainage", "Airflow", "Visibility"], beltData: "To be confirmed by Uniking", notes: [] },
     ],
   },
   {
@@ -116,8 +116,11 @@ export const STRAIGHT_SERIES = [
     techChartUrl: MPB_MANUAL_URL,
     engineeringManualPage: "49",
     styles: [
-      { key: "flat_top", label: "Flat Top", openArea: "0%", surface: "Closed / Smooth", image: null, description: "Smooth closed 1/2-inch pitch belt.", applications: ["Small parts", "Sorting", "Accumulation"], beltData: "To be confirmed by Uniking", notes: ["0.50 in (12.7 mm) pitch."] },
-      { key: "ribbed_top", label: "Ribbed Top", openArea: "0%", surface: "Ribbed", image: null, description: "Ribbed surface for improved grip on inclines.", applications: ["Inclines", "Declines", "Grip conveying"], beltData: "To be confirmed by Uniking", notes: [] },
+      { key: "flush_grid", label: "Flush Grid", openArea: "17%", surface: "Open Grid", image: CDN + "b3a9b599-f6fe-4f13-9bc4-4660f1ada7e1/5014239_DSCF1506_S400-Flush-Grid_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format", description: "17% open area flush grid for fast drainage and simplified cleaning.", applications: ["Drainage", "Sorting", "Small parts"], beltData: "To be confirmed by Uniking", notes: ["17% open area."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-400/flush-grid" },
+      { key: "raised_rib", label: "Raised Rib", openArea: "0%", surface: "Ribbed", image: CDN + "e147215f-473b-4807-9290-0b025d51340e/5014239_DSCF1352_S400-Raised-Rib_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format", description: "Raised ribs for improved product grip and positioning on inclines.", applications: ["Inclines", "Declines", "Grip conveying"], beltData: "To be confirmed by Uniking", notes: ["Raised rib surface."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-400/raised-rib" },
+      { key: "flat_top", label: "Flat Top", openArea: "0%", surface: "Closed / Smooth", image: CDN + "0af4cffd-b729-44a1-a366-d59dc5b93ab2/5014239_DSCF1484_S400-Flat-Top_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format", description: "Smooth closed 1/2-inch pitch belt for dependable performance across applications.", applications: ["Small parts", "Sorting", "Accumulation"], beltData: "To be confirmed by Uniking", notes: ["0.50 in (12.7 mm) pitch."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-400/flat-top" },
+      { key: "non_skid", label: "Non Skid", openArea: "0%", surface: "Non-Skid / Grip", image: CDN + "c88723ff-d9f8-49c6-93e1-10b6a6aa0ddd/5014239_DSCF1361_S400-Non-Skid_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format", description: "Non-skid surface for superior product grip on inclines and declines.", applications: ["Inclines", "Declines", "Grip conveying"], beltData: "To be confirmed by Uniking", notes: ["Non-skid grip surface."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-400/non-skid" },
+      { key: "roller_top", label: "Roller Top™", openArea: "0%", surface: "Roller / Low Back Pressure", image: CDN + "48b63e18-62e7-485a-bb73-17c511ca05b7/5014239_DSCF1543_S400-Roller-Top_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format", description: "Roller top for low back-pressure accumulation and product handling.", applications: ["Low back-pressure accumulation", "Box handling"], beltData: "To be confirmed by Uniking", notes: ["Roller top surface."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-400/roller-top" },
     ],
   },
   {
@@ -155,7 +158,7 @@ export const STRAIGHT_SERIES = [
     techChartUrl: MPB_MANUAL_URL,
     engineeringManualPage: "83",
     styles: [
-      { key: "flat_top", label: "Flat Top", openArea: "0%", surface: "Closed / Smooth", image: null, description: "Smooth 0.60-inch pitch belt for gentle accumulation.", applications: ["Accumulation", "Packaging"], beltData: "To be confirmed by Uniking", notes: [] },
+      { key: "flat_top", label: "Flat Top", openArea: "0%", surface: "Closed / Smooth", image: IMG.S570, description: "Smooth 0.60-inch pitch belt for gentle accumulation.", applications: ["Accumulation", "Packaging"], beltData: "To be confirmed by Uniking", notes: [] },
     ],
   },
   {
@@ -522,7 +525,7 @@ export const STRAIGHT_SERIES = [
     styles: [
       { key: "flat_top", label: "Flat Top", openArea: "0%", surface: "Closed / Smooth", image: null, description: "Closed-surface flat top with fully flush edges for worker safety. Available in HHR nylon for high-heat applications.", applications: ["Food processing", "Dairy", "Baking", "Sanitary conveying"], beltData: "To be confirmed by Uniking", notes: ["0% open area. Fully flush edges."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-900/flat-top" },
       { key: "flush_grid", label: "Flush Grid", openArea: "38%", surface: "Open Grid", image: null, description: "38% open area flush grid with flush edges and smooth upper surface for drainage and airflow.", applications: ["Drainage", "Cooling", "Baking"], beltData: "To be confirmed by Uniking", notes: ["38% open area. Flush edges."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-900/flush-grid" },
-      { key: "open_flush_grid", label: "Open Flush Grid", openArea: "43%", surface: "Open Grid", image: null, description: "43% open area open flush grid with flush edges and unheaded rod retention for maximum drainage.", applications: ["Maximum drainage", "Washing", "Cooling"], beltData: "To be confirmed by Uniking", notes: ["43% open area. Unheaded rod."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-900/open-flush-grid" },
+      { key: "open_flush_grid", label: "Open Flush Grid", openArea: "43%", surface: "Open Grid", image: IMG.S900, description: "43% open area open flush grid with flush edges and unheaded rod retention for maximum drainage.", applications: ["Maximum drainage", "Washing", "Cooling"], beltData: "To be confirmed by Uniking", notes: ["43% open area. Unheaded rod."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-900/open-flush-grid" },
       { key: "flush_grid_nub_top", label: "Flush Grid Nub Top™", openArea: "38%", surface: "Open Grid / Nub", image: null, description: "Large open area for fluid drainage and airflow with raised 0.05-in nubs for product release.", applications: ["Drainage with product release", "Cooling", "Food processing"], beltData: "To be confirmed by Uniking", notes: ["Raised 0.05-in nubs."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-900/flush-grid-nub-top" },
       { key: "nub_top", label: "Nub Top™", openArea: "0%", surface: "Textured / Nub", image: null, description: "Raised nubs reduce surface adhesion for seamless product release. Fully flush edges and smooth upper surface.", applications: ["Sticky products", "Product release"], beltData: "To be confirmed by Uniking", notes: ["Raised nubs. Fully flush edges."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-900/nub-toptm" },
       { key: "perforated_flat_top", label: "Perforated Flat Top", openArea: "Custom", surface: "Perforated", image: null, description: "Custom-sized holes integrate with vacuum systems for superior suction on incline conveyance.", applications: ["Vacuum incline conveyance", "Inclines"], beltData: "To be confirmed by Uniking", notes: ["Custom hole sizes for vacuum systems."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-900/perforated-flat-top" },
@@ -607,7 +610,7 @@ export const STRAIGHT_SERIES = [
         ],
         notes: ["Small pitch reduces chordal action and gap at transfer dead plate.", "Can be used over 0.875 in (22.2 mm) nosebar for tight transfers."],
       },
-      { key: "flush_grid", label: "Flush Grid", openArea: "~35%", surface: "Open Grid", image: null, description: "Open grid for drainage and airflow with 0.60-in pitch.", applications: ["Drainage", "Cooling", "Airflow"], beltData: "To be confirmed by Uniking", notes: [] },
+      { key: "flush_grid", label: "Flush Grid", openArea: "~35%", surface: "Open Grid", image: IMG.S1100, description: "Open grid for drainage and airflow with 0.60-in pitch.", applications: ["Drainage", "Cooling", "Airflow"], beltData: "To be confirmed by Uniking", notes: [] },
       { key: "perforated_flat_top", label: "Perforated Flat Top", openArea: "~15%", surface: "Perforated", image: null, description: "Perforated closed surface for partial drainage.", applications: ["Drainage", "Washing", "Drying"], beltData: "To be confirmed by Uniking", notes: [] },
     ],
   },
@@ -650,7 +653,7 @@ export const STRAIGHT_SERIES = [
     techChartUrl: MPB_MANUAL_URL,
     engineeringManualPage: "223",
     styles: [
-      { key: "mtw_flat_top", label: "Mold to Width Flat Top", openArea: "0%", surface: "Closed / Smooth", image: null, description: "Mold-to-width flat top available in multiple widths and materials. Robust plastic sprockets resist wear and extend service life.", applications: ["Food processing", "Packaging", "General conveying"], beltData: "To be confirmed by Uniking", notes: ["Mold to width construction."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-1400/mold-to-width-flat-top" },
+      { key: "mtw_flat_top", label: "Mold to Width Flat Top", openArea: "0%", surface: "Closed / Smooth", image: IMG.S1400, description: "Mold-to-width flat top available in multiple widths and materials. Robust plastic sprockets resist wear and extend service life.", applications: ["Food processing", "Packaging", "General conveying"], beltData: "To be confirmed by Uniking", notes: ["Mold to width construction."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-1400/mold-to-width-flat-top" },
       { key: "flush_grid", label: "Flush Grid", openArea: "To be confirmed by Uniking", surface: "Open Grid", image: null, description: "Flush grid built for challenging heavy-duty applications: warmers, coolers, and pasteurizers.", applications: ["Warmers", "Coolers", "Pasteurizers", "Heavy-duty food processing"], beltData: "To be confirmed by Uniking", notes: ["Heavy-duty flush grid."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-1400/flush-grid" },
       { key: "flat_friction_top", label: "Flat Friction Top", openArea: "0%", surface: "Friction / Grip", image: null, description: "Flat friction top available in multiple module and surface color combinations. Robust sprockets resist wear.", applications: ["Inclines", "Declines", "Grip conveying"], beltData: "To be confirmed by Uniking", notes: ["1-in (25.4-mm) pitch. Friction top."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-1400/flat-friction-top" },
       { key: "mtw_flat_friction_top_tabs", label: "Mold to Width Flat Friction Top with Tabs", openArea: "0%", surface: "Friction / Tabs", image: null, description: "3.25-in mold-to-width flat friction top with tabs for product positioning on inclines.", applications: ["Incline conveying", "Product positioning"], beltData: "To be confirmed by Uniking", notes: ["3.25 in MTW with tabs."], url: "https://www.intralox.com/belt-finder/modular-plastic-belting/series-1400" },
@@ -674,7 +677,7 @@ export const STRAIGHT_SERIES = [
     techChartUrl: MPB_MANUAL_URL,
     engineeringManualPage: "249",
     styles: [
-      { key: "flat_top", label: "Flat Top", openArea: "0%", surface: "Closed / Smooth", image: null, description: "1.5-inch pitch heavy-duty flat top belt.", applications: ["Heavy industrial", "Food processing"], beltData: "To be confirmed by Uniking", notes: ["1.50 in (38.1 mm) pitch."] },
+      { key: "flat_top", label: "Flat Top", openArea: "0%", surface: "Closed / Smooth", image: IMG.S1500, description: "1.5-inch pitch heavy-duty flat top belt.", applications: ["Heavy industrial", "Food processing"], beltData: "To be confirmed by Uniking", notes: ["1.50 in (38.1 mm) pitch."] },
     ],
   },
   {
@@ -906,7 +909,7 @@ export const RADIUS_SERIES = [
     engineeringManualPage: "337",
     styles: [
       { key: "flat_top", label: "Flat Top", openArea: "0%", surface: "Closed / Smooth", image: null, description: "Flat top radius belt for heavy product curves.", applications: ["Horizontal curves", "Heavy conveying"], beltData: "To be confirmed by Uniking", notes: ["Radius belt."] },
-      { key: "flush_grid", label: "Flush Grid", openArea: "~40%", surface: "Open Grid", image: null, description: "Open grid radius belt for drainage and airflow on curves.", applications: ["Drainage curves", "Cooling curves"], beltData: "To be confirmed by Uniking", notes: [] },
+      { key: "flush_grid", label: "Flush Grid", openArea: "~40%", surface: "Open Grid", image: IMG.S2200, description: "Open grid radius belt for drainage and airflow on curves.", applications: ["Drainage curves", "Cooling curves"], beltData: "To be confirmed by Uniking", notes: [] },
     ],
   },
   {
