@@ -233,7 +233,7 @@ export const STRAIGHT_SERIES = [
       // ── 3. Flush Grid ────────────────────────────────────────────
       {
         key: "flush_grid", label: "Flush Grid", openArea: "27%", surface: "Open Grid",
-        image: CDN + "837cac22-0a98-48c7-8163-a606b20909ab/5014239_DTA29161_S900-Open-Grid_Surface_cropped.jpg?w=568&h=298&fit=crop&q=85&auto=format",
+        image: null,
         description: "27% open area flush grid for fast drainage. Slots prevent excessive surface pooling — ideal for seafood washing and dip tank lines. Bi-directional.",
         applications: ["Seafood washing", "Blanching", "Dip tank lines", "Thawing", "Drainage-critical applications"],
         beltData: [
@@ -588,7 +588,7 @@ export const STRAIGHT_SERIES = [
     styles: [
       {
         key: "flat_top", label: "Flat Top", openArea: "0%", surface: "Closed / Smooth",
-        image: CDN + "6faaa1c7-2418-464f-a174-dec87c8a7e46/202190B.jpg?w=568&h=298.2&rect=&fit=crop&q=85&auto=format",
+        image: null,
         description: "Lightweight, smooth, closed-surface belt. Tight transfer capability over 0.875-in nosebars.",
         applications: ["Canmaking", "Food processing", "Packaging"],
         beltData: [
@@ -827,7 +827,7 @@ export const STRAIGHT_SERIES = [
     pitch_in: "To be confirmed by Uniking",
     pitch_mm: "To be confirmed by Uniking",
     catalogPage: 317,
-    image: IMG.S900,
+    image: null,
     description: "Series 9000 is a specialty belt series for specific industrial or food processing applications. Pitch and full specifications to be confirmed by Uniking.",
     applications: ["Specialty industrial applications", "To be confirmed by Uniking"],
     advantages: ["Specialty design for demanding applications", "Contact Uniking for full specifications"],
@@ -846,7 +846,7 @@ export const STRAIGHT_SERIES = [
     pitch_in: "To be confirmed by Uniking",
     pitch_mm: "To be confirmed by Uniking",
     catalogPage: 323,
-    image: IMG.S1000,
+    image: null,
     description: "Series 10000 is a specialty belt series for specific industrial applications. Full specifications to be confirmed by Uniking.",
     applications: ["Specialty industrial applications", "To be confirmed by Uniking"],
     advantages: ["Specialty design", "Contact Uniking for full specifications"],
