@@ -6,6 +6,7 @@
  * Nothing is offered that is not in this chain's data.
  */
 import { useMemo, useState } from "react";
+import { base44 } from "@/api/base44Client";
 import { getChainDetail } from "@/lib/chainW58/chainRepo";
 import { tx, num, fmtIn, materialsByClass } from "@/lib/chainW58/chainText";
 import { addConfiguredChain } from "@/lib/chainW58/chainRfq";
@@ -27,7 +28,7 @@ export default function ChainConfigurator({ chainId, fromGroup, go }) {
   const [customMat, setCustomMat] = useState("");
   const [attMode, setAttMode] = useState("none"); // none | catalogue | custom
   const [attSel, setAttSel] = useState({}); // key -> {freq, freqOther}
-  const [customAtt, setCustomAtt] = useState({ text: "", freq: "" });
+  const [customAtt, setCustomAtt] = useState({ text: "", freq: "", fileUri: "", fileName: "", previewUrl: "", uploading: false, uploadError: "" });
   const [links, setLinks] = useState({ spare: 0, connecting: 0, offset: 0 });
   const [notes, setNotes] = useState("");
   const [tried, setTried] = useState(false);
@@ -69,16 +70,37 @@ export default function ChainConfigurator({ chainId, fromGroup, go }) {
   const materialText = material ? (material.custom ? `Custom: ${customMat.trim()}` : tx(material.name)) : "";
   const freqText = (s) => (s.freq === "custom" ? s.freqOther.trim() : FREQ.find((f) => f[0] === s.freq)?.[1] || "");
   const attLines = attMode === "none" ? ["No attachments"]
-    : attMode === "custom" ? [`Custom attachment: ${customAtt.text.trim()}${customAtt.freq.trim() ? ` (${customAtt.freq.trim()})` : ""}`]
+    : attMode === "custom" ? [`Custom attachment: ${customAtt.text.trim()}${customAtt.freq.trim() ? ` (${customAtt.freq.trim()})` : ""}${customAtt.fileName ? ` · drawing: ${customAtt.fileName}` : ""}`]
     : atts.filter((a) => attSel[a._key]).map((a) => `${tx(a.attachment_code)}${a.side ? ` ${tx(a.side).toLowerCase()}` : ""} - ${freqText(attSel[a._key])}`);
   const linkLines = LINKS.filter(([k]) => links[k] > 0).map(([k, label]) => `${label}: ${links[k]}`);
+
+  async function handleAttFile(file) {
+    if (!file) return;
+    const ok = /^image\/|pdf|\.dwg$|\.dxf$/i.test(file.type || file.name);
+    if (!ok) { setCustomAtt((s) => ({ ...s, uploadError: "Please upload an image, PDF or drawing file." })); return; }
+    if (file.size > 10 * 1024 * 1024) { setCustomAtt((s) => ({ ...s, uploadError: "File must be 10 MB or smaller." })); return; }
+    setCustomAtt((s) => ({ ...s, uploading: true, uploadError: "" }));
+    try {
+      const { file_uri } = await base44.integrations.Core.UploadPrivateFile({ file });
+      const preview = /^image\//i.test(file.type) ? URL.createObjectURL(file) : "";
+      setCustomAtt((s) => ({ ...s, fileUri: file_uri, fileName: file.name, previewUrl: preview, uploading: false }));
+    } catch {
+      setCustomAtt((s) => ({ ...s, uploading: false, uploadError: "Upload failed. Please try again." }));
+    }
+  }
+  function clearAttFile() {
+    setCustomAtt((s) => {
+      if (s.previewUrl) URL.revokeObjectURL(s.previewUrl);
+      return { ...s, fileUri: "", fileName: "", previewUrl: "", uploading: false, uploadError: "" };
+    });
+  }
 
   function addToCart() {
     const config = {
       chain_id: chain.chain_id, chain_number: chain.chain_number,
       length: { unit: length.unit, value: length.unit === "unsure" ? null : lenVal, note: length.note.trim() },
       material: material.custom ? { custom: true, customText: customMat.trim() } : { code: material.code, name: material.name, class: material.class },
-      attachments: attMode === "none" ? [] : attMode === "custom" ? [{ custom: true, description: customAtt.text.trim(), frequency: customAtt.freq.trim() }]
+      attachments: attMode === "none" ? [] : attMode === "custom" ? [{ custom: true, description: customAtt.text.trim(), frequency: customAtt.freq.trim(), fileUri: customAtt.fileUri || "", fileName: customAtt.fileName || "" }]
         : atts.filter((a) => attSel[a._key]).map((a) => ({ code: a.attachment_code, code_key: a.code_key, side: a.side, frequency: freqText(attSel[a._key]) })),
       links: { ...links },
       notes: notes.trim(),
@@ -239,6 +261,31 @@ export default function ChainConfigurator({ chainId, fromGroup, go }) {
                     <textarea id="cfg-catt" className="ukc-textarea" rows={3} value={customAtt.text} onChange={(e) => setCustomAtt((s) => ({ ...s, text: e.target.value }))} placeholder="Type, one or both sides, hole size and position, height…" /></div>
                   <div style={{ maxWidth: 360 }}><label className="ukc-label" htmlFor="cfg-cattf">Frequency</label>
                     <input id="cfg-cattf" className="ukc-input" value={customAtt.freq} onChange={(e) => setCustomAtt((s) => ({ ...s, freq: e.target.value }))} placeholder="e.g. every 4th pitch" /></div>
+                  <div>
+                    <label className="ukc-label">Picture or drawing (optional)</label>
+                    {customAtt.fileName ? (
+                      <div className="ukc-option on" style={{ alignItems: "center", gap: 12, cursor: "default" }}>
+                        {customAtt.previewUrl
+                          ? <img src={customAtt.previewUrl} alt={customAtt.fileName} style={{ width: 56, height: 44, objectFit: "contain", flexShrink: 0, borderRadius: 4, border: "1px solid var(--ukc-border)" }} />
+                          : <span style={{ width: 56, height: 44, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "#f4f5f7", borderRadius: 4, border: "1px solid var(--ukc-border)", fontSize: 18 }}>📎</span>}
+                        <span style={{ flex: 1, minWidth: 0 }} className="small">
+                          <span style={{ display: "block", fontWeight: 600 }}>{customAtt.fileName}</span>
+                          <span className="muted">Uploaded · stored privately with your RFQ</span>
+                        </span>
+                        <button type="button" className="ukc-btn ghost" onClick={clearAttFile} disabled={customAtt.uploading}>Remove</button>
+                      </div>
+                    ) : (
+                      <label className={"ukc-option" + (customAtt.uploading ? " on" : "")} style={{ alignItems: "center", gap: 12, cursor: customAtt.uploading ? "wait" : "pointer" }}>
+                        <span style={{ width: 56, height: 44, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "#f4f5f7", borderRadius: 4, border: "1px solid var(--ukc-border)", fontSize: 22 }}>{customAtt.uploading ? "…" : "🖼️"}</span>
+                        <span style={{ flex: 1, minWidth: 0 }}>
+                          <span className="t" style={{ display: "block" }}>{customAtt.uploading ? "Uploading…" : "Upload a picture or drawing"}</span>
+                          <span className="d">Image, PDF or DWG/DXF · max 10 MB. We'll quote from it.</span>
+                        </span>
+                        <input type="file" accept="image/*,.pdf,.dwg,.dxf" style={{ display: "none" }} disabled={customAtt.uploading} onChange={(e) => { handleAttFile(e.target.files?.[0]); e.target.value = ""; }} />
+                      </label>
+                    )}
+                    {customAtt.uploadError && <div className="ukc-err" role="alert" style={{ marginTop: 8 }}>{customAtt.uploadError}</div>}
+                  </div>
                 </div>
               )}
               {err}
