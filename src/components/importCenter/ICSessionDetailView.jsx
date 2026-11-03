@@ -32,11 +32,11 @@ function JsonBlock({ label, data, defaultOpen = false }) {
   return (
     <div style={{ marginTop: 6 }}>
       <button onClick={() => setOpen(o => !o)}
-        style={{ background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 5, padding: "3px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "#475569" }}>
+        style={{ background: "#ECEAE4", border: "1px solid #D9D6CE", borderRadius: 5, padding: "3px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "#3A4A66" }}>
         {open ? "▾" : "▸"} {label}
       </button>
       {open && (
-        <pre style={{ ...S.mono, background: "#0f172a", color: "#94a3b8", borderRadius: 7, padding: "10px 14px", marginTop: 6, maxHeight: 260, overflowY: "auto", border: "1px solid #1e293b" }}>
+        <pre style={{ ...S.mono, background: "#0E1F3A", color: "#8A94A6", borderRadius: 7, padding: "10px 14px", marginTop: 6, maxHeight: 260, overflowY: "auto", border: "1px solid #0E1F3A" }}>
           {JSON.stringify(data, null, 2)}
         </pre>
       )}
@@ -52,22 +52,22 @@ function RetryProgressPanel({ progress }) {
     <div style={{ background: isBackoff ? "#fffbeb" : "#f0fdf4", border: `1px solid ${isBackoff ? "#fde68a" : "#86efac"}`, borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
         <span style={{ fontSize: 18 }}>{isBackoff ? "⏸" : "⏳"}</span>
-        <span style={{ fontSize: 13, fontWeight: 700, color: isBackoff ? "#92400e" : "#166534" }}>{progress.msg}</span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: isBackoff ? "#92400e" : "#2E7D46" }}>{progress.msg}</span>
       </div>
       <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
         {[
-          { label: "Retrying", value: `${progress.current} / ${progress.total}`, color: "#0C2340" },
+          { label: "Retrying", value: `${progress.current} / ${progress.total}`, color: "#0E1F3A" },
           { label: "Written",  value: progress.written,  color: "#22c55e" },
           { label: "Failed",   value: progress.failed,   color: "#ef4444" },
         ].map(s => (
           <div key={s.label} style={{ textAlign: "center" }}>
             <div style={{ fontSize: 20, fontWeight: 900, color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: 10, color: "#64748b", fontWeight: 600 }}>{s.label}</div>
+            <div style={{ fontSize: 10, color: "#3A4A66", fontWeight: 600 }}>{s.label}</div>
           </div>
         ))}
       </div>
       {/* Progress bar */}
-      <div style={{ marginTop: 10, height: 6, background: "#e2e8f0", borderRadius: 99, overflow: "hidden" }}>
+      <div style={{ marginTop: 10, height: 6, background: "#D9D6CE", borderRadius: 99, overflow: "hidden" }}>
         <div style={{ height: "100%", background: isBackoff ? "#fbbf24" : "#22c55e", width: `${Math.round((progress.current / Math.max(progress.total, 1)) * 100)}%`, transition: "width 0.3s ease", borderRadius: 99 }} />
       </div>
     </div>
@@ -94,25 +94,25 @@ function BulkRetryToolbar({ failedCount, selectedIds, allFailedIds, onSelectAll,
 
       {/* Retry All Failed */}
       <button onClick={onRetryAll} disabled={busy}
-        style={tb("#7c3aed", "#fff", "#7c3aed")}>
+        style={tb("#3A4A66", "#fff", "#3A4A66")}>
         ↺ Retry All Failed
       </button>
 
       {/* Retry Selected */}
       <button onClick={onRetrySelected} disabled={busy || !hasSelection}
-        style={{ ...tb("#0C2340", "#fff", "#0C2340"), opacity: hasSelection ? 1 : 0.4 }}>
+        style={{ ...tb("#0E1F3A", "#fff", "#0E1F3A"), opacity: hasSelection ? 1 : 0.4 }}>
         ↺ Retry Selected ({selectedIds.size})
       </button>
 
       {/* Mark Selected as Skipped */}
       <button onClick={onMarkSkipped} disabled={busy || !hasSelection}
-        style={{ ...tb("#475569", "#fff", "#475569"), opacity: hasSelection ? 1 : 0.4 }}>
+        style={{ ...tb("#3A4A66", "#fff", "#3A4A66"), opacity: hasSelection ? 1 : 0.4 }}>
         ✗ Skip Selected
       </button>
 
       {/* Export Failed Rows */}
       <button onClick={onExportFailed} disabled={busy}
-        style={tb("#1d4ed8", "#fff", "#1d4ed8")}>
+        style={tb("#0E1F3A", "#fff", "#0E1F3A")}>
         ↓ Export Failed
       </button>
     </div>
@@ -131,42 +131,42 @@ function RecordRow({ record, onRetry, onEditRetry, index, selectable, selected, 
   const isFailed = record.record_status === "Failed";
 
   return (
-    <div style={{ borderBottom: "1px solid #f1f5f9", background: selected ? "#fef2f2" : undefined }}>
+    <div style={{ borderBottom: "1px solid #ECEAE4", background: selected ? "#fef2f2" : undefined }}>
       <div
         onClick={() => !selectable && setExpanded(o => !o)}
-        style={{ display: "grid", gridTemplateColumns: selectable ? "36px 24px 1fr 80px 80px 1fr 100px 120px" : "24px 1fr 80px 80px 1fr 100px 120px", gap: 10, alignItems: "center", padding: "10px 16px", cursor: "pointer", background: expanded ? "#f8fafc" : undefined }}>
+        style={{ display: "grid", gridTemplateColumns: selectable ? "36px 24px 1fr 80px 80px 1fr 100px 120px" : "24px 1fr 80px 80px 1fr 100px 120px", gap: 10, alignItems: "center", padding: "10px 16px", cursor: "pointer", background: expanded ? "#F4F2ED" : undefined }}>
 
         {/* Checkbox for failed rows */}
         {selectable && (
           <input type="checkbox" checked={selected} onChange={e => { e.stopPropagation(); onToggleSelect(record.id); }}
             onClick={e => e.stopPropagation()}
-            style={{ width: 15, height: 15, cursor: "pointer", accentColor: "#dc2626" }} />
+            style={{ width: 15, height: 15, cursor: "pointer", accentColor: "#C62828" }} />
         )}
 
-        <span onClick={() => setExpanded(o => !o)} style={{ fontSize: 11, color: "#94a3b8", fontWeight: 700 }}>{expanded ? "▾" : "▸"}</span>
-        <span style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#0C2340" }}>{chainId}</span>
-        <span style={{ fontSize: 11, color: "#64748b" }}>Row {record.row_index ?? index}</span>
+        <span onClick={() => setExpanded(o => !o)} style={{ fontSize: 11, color: "#8A94A6", fontWeight: 700 }}>{expanded ? "▾" : "▸"}</span>
+        <span style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#0E1F3A" }}>{chainId}</span>
+        <span style={{ fontSize: 11, color: "#3A4A66" }}>Row {record.row_index ?? index}</span>
         <span style={S.pill(record.record_status)}>{record.record_status}</span>
-        <span style={{ fontSize: 11, color: record.conflict_detail ? "#dc2626" : "#94a3b8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={record.conflict_detail || ""}>
-          {record.conflict_detail || <em style={{ color: "#cbd5e1" }}>—</em>}
+        <span style={{ fontSize: 11, color: record.conflict_detail ? "#C62828" : "#8A94A6", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={record.conflict_detail || ""}>
+          {record.conflict_detail || <em style={{ color: "#C9C5BB" }}>—</em>}
         </span>
-        <span style={{ fontFamily: "monospace", fontSize: 10, color: "#64748b" }}>
+        <span style={{ fontFamily: "monospace", fontSize: 10, color: "#3A4A66" }}>
           {record.production_record_id ? record.production_record_id.slice(0, 10) + "…" : "—"}
         </span>
-        <span style={{ fontSize: 10, color: "#94a3b8" }}>
+        <span style={{ fontSize: 10, color: "#8A94A6" }}>
           {ts ? new Date(ts).toLocaleString() : "—"}
         </span>
       </div>
 
       {expanded && (
-        <div style={{ background: "#f8fafc", padding: "12px 20px 16px", borderTop: "1px solid #e2e8f0" }}>
+        <div style={{ background: "#F4F2ED", padding: "12px 20px 16px", borderTop: "1px solid #D9D6CE" }}>
           {record.conflict_detail && (
             <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 7, padding: "8px 12px", marginBottom: 10, fontSize: 11, color: "#991b1b", ...S.mono }}>
               ⚠ {record.conflict_detail}
             </div>
           )}
           {record.production_record_id && (
-            <div style={{ fontSize: 11, color: "#64748b", marginBottom: 8 }}>
+            <div style={{ fontSize: 11, color: "#3A4A66", marginBottom: 8 }}>
               <strong>Production Record ID:</strong> <span style={S.mono}>{record.production_record_id}</span>
             </div>
           )}
@@ -176,11 +176,11 @@ function RecordRow({ record, onRetry, onEditRetry, index, selectable, selected, 
           {(isFailed || record.record_status === "Conflict" || record.record_status === "Invalid") && (
             <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
               <button onClick={e => { e.stopPropagation(); onRetry(record); }}
-                style={{ padding: "5px 14px", borderRadius: 6, border: "1px solid #86efac", background: "#f0fdf4", color: "#166534", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                style={{ padding: "5px 14px", borderRadius: 6, border: "1px solid #86efac", background: "#f0fdf4", color: "#2E7D46", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
                 ↺ Retry Record
               </button>
               <button onClick={e => { e.stopPropagation(); onEditRetry(record); }}
-                style={{ padding: "5px 14px", borderRadius: 6, border: "1px solid #93c5fd", background: "#eff6ff", color: "#1d4ed8", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                style={{ padding: "5px 14px", borderRadius: 6, border: "1px solid #F8C9B0", background: "#FDF0E9", color: "#0E1F3A", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
                 ✏ Edit & Retry
               </button>
             </div>
@@ -222,16 +222,16 @@ function EditRetryModal({ record, entityTarget, onClose, onSaved }) {
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 999, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
       <div style={{ background: "#fff", borderRadius: 12, width: "100%", maxWidth: 640, maxHeight: "85vh", overflowY: "auto", padding: 24 }}>
-        <div style={{ fontSize: 15, fontWeight: 900, color: "#0C2340", marginBottom: 4 }}>Edit & Retry</div>
-        <div style={{ fontSize: 11, color: "#64748b", marginBottom: 14 }}>
+        <div style={{ fontSize: 15, fontWeight: 900, color: "#0E1F3A", marginBottom: 4 }}>Edit & Retry</div>
+        <div style={{ fontSize: 11, color: "#3A4A66", marginBottom: 14 }}>
           Chain: <strong>{record.mapped_data?.chain_id || "—"}</strong> · Row {record.row_index}
         </div>
         <textarea value={editedData} onChange={e => setEditedData(e.target.value)}
-          style={{ width: "100%", height: 320, fontFamily: "monospace", fontSize: 11, padding: 12, border: "1px solid #e2e8f0", borderRadius: 8, resize: "vertical", boxSizing: "border-box", color: "#1e293b" }} />
-        {err && <div style={{ color: "#dc2626", fontSize: 11, fontWeight: 700, marginTop: 6 }}>⚠ {err}</div>}
+          style={{ width: "100%", height: 320, fontFamily: "monospace", fontSize: 11, padding: 12, border: "1px solid #D9D6CE", borderRadius: 8, resize: "vertical", boxSizing: "border-box", color: "#0E1F3A" }} />
+        {err && <div style={{ color: "#C62828", fontSize: 11, fontWeight: 700, marginTop: 6 }}>⚠ {err}</div>}
         <div style={{ display: "flex", gap: 10, marginTop: 14, justifyContent: "flex-end" }}>
-          <button onClick={onClose} style={{ padding: "7px 16px", borderRadius: 7, border: "1px solid #e2e8f0", background: "#f8fafc", color: "#475569", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Cancel</button>
-          <button onClick={handleSave} disabled={saving} style={{ padding: "7px 18px", borderRadius: 7, border: "none", background: "#0C2340", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+          <button onClick={onClose} style={{ padding: "7px 16px", borderRadius: 7, border: "1px solid #D9D6CE", background: "#F4F2ED", color: "#3A4A66", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>Cancel</button>
+          <button onClick={handleSave} disabled={saving} style={{ padding: "7px 18px", borderRadius: 7, border: "none", background: "#0E1F3A", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
             {saving ? "Saving…" : "Commit Edit"}
           </button>
         </div>
@@ -242,7 +242,7 @@ function EditRetryModal({ record, entityTarget, onClose, onSaved }) {
 
 // ── Session Status Pill ───────────────────────────────────────────────────────
 function SessionStatusPill({ status }) {
-  const color = SESSION_STATUS_COLORS[status] || "#94a3b8";
+  const color = SESSION_STATUS_COLORS[status] || "#8A94A6";
   return (
     <span style={{ display: "inline-flex", alignItems: "center", gap: 5, background: `${color}18`, color, border: `1px solid ${color}55`, borderRadius: 99, padding: "3px 12px", fontSize: 12, fontWeight: 700 }}>
       <span style={{ width: 7, height: 7, borderRadius: "50%", background: color, display: "inline-block" }} />
@@ -692,16 +692,16 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
         <button onClick={onBack} style={css.backBtn}>← All Sessions</button>
         <div style={{ flex: 1 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-            <div style={{ fontSize: 18, fontWeight: 900, color: "#0C2340" }}>{sessionKey}</div>
+            <div style={{ fontSize: 18, fontWeight: 900, color: "#0E1F3A" }}>{sessionKey}</div>
             <SessionStatusPill status={session.import_status} />
           </div>
-          <div style={{ fontSize: 11, color: "#64748b", marginTop: 4 }}>
+          <div style={{ fontSize: 11, color: "#3A4A66", marginTop: 4 }}>
             {session.manufacturer} · {session.source_catalog} · Target: <strong>{entityTarget}</strong>
             {session.uploaded_at && <> · Uploaded {new Date(session.uploaded_at).toLocaleString()}</>}
           </div>
         </div>
         {actionMsg && (
-          <div style={{ padding: "7px 14px", borderRadius: 8, fontSize: 11, fontWeight: 700, background: actionMsg.isError ? "#fef2f2" : "#f0fdf4", color: actionMsg.isError ? "#dc2626" : "#166534", border: `1px solid ${actionMsg.isError ? "#fca5a5" : "#86efac"}` }}>
+          <div style={{ padding: "7px 14px", borderRadius: 8, fontSize: 11, fontWeight: 700, background: actionMsg.isError ? "#fef2f2" : "#f0fdf4", color: actionMsg.isError ? "#C62828" : "#2E7D46", border: `1px solid ${actionMsg.isError ? "#fca5a5" : "#86efac"}` }}>
             {actionMsg.text}
           </div>
         )}
@@ -715,14 +715,14 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
             <div style={{ fontSize: 12, fontWeight: 800, color: "#92400e" }}>
               Incomplete — {missingRows} of {totalDetected} rows have no validation result
             </div>
-            <div style={{ fontSize: 11, color: "#b45309" }}>
+            <div style={{ fontSize: 11, color: "#B8860B" }}>
               Staged: {totalAccountedFor} · Missing: {missingRows} · Committing now will produce a partial import.
             </div>
           </div>
-          <button onClick={handleRetryUnprocessed} disabled={!!stagingProgress} style={{ padding: "6px 13px", borderRadius: 7, border: "none", background: "#0C2340", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: stagingProgress ? 0.5 : 1 }}>
+          <button onClick={handleRetryUnprocessed} disabled={!!stagingProgress} style={{ padding: "6px 13px", borderRadius: 7, border: "none", background: "#0E1F3A", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: stagingProgress ? 0.5 : 1 }}>
             ▶ Resume from Stored Payload
           </button>
-          <button onClick={() => handleCommit(true)} disabled={busy} style={{ padding: "6px 13px", borderRadius: 7, border: "1px solid #ef4444", background: "#fef2f2", color: "#dc2626", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+          <button onClick={() => handleCommit(true)} disabled={busy} style={{ padding: "6px 13px", borderRadius: 7, border: "1px solid #ef4444", background: "#fef2f2", color: "#C62828", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
             Commit Partial Anyway
           </button>
         </div>
@@ -730,8 +730,8 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
 
       {/* Primary action bar — shown for all actionable statuses */}
       {isResumable && (
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20, padding: "14px 18px", background: session.import_status === "Staged" ? "#eff6ff" : "#fffbeb", border: `1px solid ${session.import_status === "Staged" ? "#93c5fd" : "#fde68a"}`, borderRadius: 10 }}>
-          <span style={{ fontSize: 12, fontWeight: 700, color: session.import_status === "Staged" ? "#1d4ed8" : "#92400e", alignSelf: "center" }}>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20, padding: "14px 18px", background: session.import_status === "Staged" ? "#FDF0E9" : "#fffbeb", border: `1px solid ${session.import_status === "Staged" ? "#F8C9B0" : "#fde68a"}`, borderRadius: 10 }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: session.import_status === "Staged" ? "#0E1F3A" : "#92400e", alignSelf: "center" }}>
             {session.import_status === "Staged" && "📦 Staged records ready to commit"}
             {session.import_status === "Committing" && "⚡ Commit in progress — can be continued"}
             {session.import_status === "Pending Review" && "⚡ This session can be resumed"}
@@ -741,7 +741,7 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
           <button
             onClick={() => { setMode("resume"); setStatusFilter("All"); }}
             disabled={mode === "resume" || busy}
-            style={{ ...aBtn("#0C2340", "#fff"), opacity: mode === "resume" ? 0.5 : 1 }}>
+            style={{ ...aBtn("#0E1F3A", "#fff"), opacity: mode === "resume" ? 0.5 : 1 }}>
             {mode === "resume"
               ? "✓ In Commit Mode"
               : session.import_status === "Staged"
@@ -750,34 +750,34 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
                   ? "▶ Continue Commit"
                   : "▶ Resume Review & Commit"}
           </button>
-          <button onClick={() => handleExport("xlsx")} disabled={busy} style={aBtn("#1d4ed8", "#fff")}>↓ Export XLSX</button>
+          <button onClick={() => handleExport("xlsx")} disabled={busy} style={aBtn("#0E1F3A", "#fff")}>↓ Export XLSX</button>
           <button onClick={() => handleExport("csv")} disabled={busy} style={aBtn("#065f46", "#fff")}>↓ Export CSV</button>
         </div>
       )}
 
       {/* In-page resume progress panel */}
       {stagingProgress && (
-        <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
+        <div style={{ background: "#FDF0E9", border: "1px solid #F8C9B0", borderRadius: 10, padding: "14px 18px", marginBottom: 16 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-            <div style={{ width: 14, height: 14, border: "2px solid #bfdbfe", borderTopColor: "#1d4ed8", borderRadius: "50%", animation: "spin 0.8s linear infinite", flexShrink: 0 }} />
+            <div style={{ width: 14, height: 14, border: "2px solid #F8C9B0", borderTopColor: "#0E1F3A", borderRadius: "50%", animation: "spin 0.8s linear infinite", flexShrink: 0 }} />
             <div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#1d4ed8" }}>Resuming Staging — {stagingProgress.msg}</div>
-              <div style={{ fontSize: 11, color: "#3b82f6", marginTop: 2 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#0E1F3A" }}>Resuming Staging — {stagingProgress.msg}</div>
+              <div style={{ fontSize: 11, color: "#F26522", marginTop: 2 }}>
                 {stagingProgress.staged.toLocaleString()} / {stagingProgress.total.toLocaleString()} rows staged
               </div>
             </div>
             <button onClick={() => { cancelStagingRef.current = true; setStagingProgress(null); showMsg("Resume cancelled."); }}
-              style={{ marginLeft: "auto", padding: "4px 10px", borderRadius: 6, border: "1px solid #93c5fd", background: "#fff", color: "#1d4ed8", fontSize: 10, fontWeight: 700, cursor: "pointer" }}>
+              style={{ marginLeft: "auto", padding: "4px 10px", borderRadius: 6, border: "1px solid #F8C9B0", background: "#fff", color: "#0E1F3A", fontSize: 10, fontWeight: 700, cursor: "pointer" }}>
               Cancel
             </button>
           </div>
-          <div style={{ background: "#dbeafe", borderRadius: 99, height: 6, overflow: "hidden" }}>
-            <div style={{ height: "100%", background: "linear-gradient(90deg,#3b82f6,#8b5cf6)", width: stagingProgress.pct + "%", transition: "width 0.4s ease", borderRadius: 99 }} />
+          <div style={{ background: "#FDF0E9", borderRadius: 99, height: 6, overflow: "hidden" }}>
+            <div style={{ height: "100%", background: "linear-gradient(90deg,#F26522,#3A4A66)", width: stagingProgress.pct + "%", transition: "width 0.4s ease", borderRadius: 99 }} />
           </div>
         </div>
       )}
       {stagingError && (
-        <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8, padding: "10px 16px", marginBottom: 14, color: "#dc2626", fontSize: 11, fontWeight: 700 }}>
+        <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8, padding: "10px 16px", marginBottom: 14, color: "#C62828", fontSize: 11, fontWeight: 700 }}>
           ⚠ {stagingError}
         </div>
       )}
@@ -810,7 +810,7 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
               <div style={{ fontSize: 13, fontWeight: 800, color: "#92400e" }}>
                 Job Stalled — No progress for {stalledInfo.stalledFor}+ minute{stalledInfo.stalledFor !== 1 ? "s" : ""}
               </div>
-              <div style={{ fontSize: 11, color: "#b45309", marginTop: 2 }}>
+              <div style={{ fontSize: 11, color: "#B8860B", marginTop: 2 }}>
                 Last processed row: <strong>{stalledInfo.lastRow}</strong> of <strong>{stalledInfo.totalRows}</strong> ·
                 {" "}{stalledInfo.stagedCount} staged ·
                 {" "}{stalledInfo.totalRows - stalledInfo.stagedCount} unprocessed
@@ -819,10 +819,10 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
             </div>
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <button onClick={handleRetryUnprocessed} disabled={!!stagingProgress} style={{ padding: "7px 14px", borderRadius: 7, border: "none", background: "#0C2340", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: stagingProgress ? 0.5 : 1 }}>
+            <button onClick={handleRetryUnprocessed} disabled={!!stagingProgress} style={{ padding: "7px 14px", borderRadius: 7, border: "none", background: "#0E1F3A", color: "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer", opacity: stagingProgress ? 0.5 : 1 }}>
               ▶ Resume from Stored Payload ({stalledInfo.totalRows - stalledInfo.stagedCount} missing)
             </button>
-            <button onClick={handleCancelJob} style={{ padding: "7px 14px", borderRadius: 7, border: "1px solid #ef4444", background: "#fef2f2", color: "#dc2626", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+            <button onClick={handleCancelJob} style={{ padding: "7px 14px", borderRadius: 7, border: "1px solid #ef4444", background: "#fef2f2", color: "#C62828", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
               ✕ Cancel Job
             </button>
           </div>
@@ -831,13 +831,13 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
 
       {/* Live server-job banner — shown when staging or committing is running server-side */}
       {isLive && !stalled && (
-        <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 8, padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 14, height: 14, border: "2px solid #bfdbfe", borderTopColor: "#1d4ed8", borderRadius: "50%", animation: "spin 0.8s linear infinite", flexShrink: 0 }} />
+        <div style={{ background: "#FDF0E9", border: "1px solid #F8C9B0", borderRadius: 8, padding: "12px 16px", marginBottom: 16, display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 14, height: 14, border: "2px solid #F8C9B0", borderTopColor: "#0E1F3A", borderRadius: "50%", animation: "spin 0.8s linear infinite", flexShrink: 0 }} />
           <div>
-            <div style={{ fontSize: 12, fontWeight: 700, color: "#1d4ed8" }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "#0E1F3A" }}>
               Server job running — {session.import_status}
             </div>
-            <div style={{ fontSize: 11, color: "#3b82f6", marginTop: 2 }}>
+            <div style={{ fontSize: 11, color: "#F26522", marginTop: 2 }}>
               {session.rows_staged > 0 && `${session.rows_staged.toLocaleString()} staged`}
               {session.total_rows > 0 && ` of ${session.total_rows.toLocaleString()} total`}
               {session.validation_report?.last_processed_row > 0 && ` · last row: ${session.validation_report.last_processed_row}`}
@@ -850,18 +850,18 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
       {/* Stats row */}
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20 }}>
         {[
-          { label: "Detected",   value: session.total_rows || 0,                           color: "#0C2340" },
-          { label: "Staged",     value: session.rows_staged || records.length,              color: "#8b5cf6" },
+          { label: "Detected",   value: session.total_rows || 0,                           color: "#0E1F3A" },
+          { label: "Staged",     value: session.rows_staged || records.length,              color: "#3A4A66" },
           { label: "Written",    value: session.rows_written || 0,                          color: "#22c55e" },
           { label: "Failed",     value: session.failed_rows || 0,                           color: "#ef4444" },
-          { label: "Skipped",    value: session.duplicates_skipped || 0,                    color: "#94a3b8" },
-          { label: "New",        value: session.validation_report?.New || counts.New || 0,  color: "#16a34a" },
+          { label: "Skipped",    value: session.duplicates_skipped || 0,                    color: "#8A94A6" },
+          { label: "New",        value: session.validation_report?.New || counts.New || 0,  color: "#2E7D46" },
           { label: "Duplicate",  value: session.validation_report?.Duplicate || counts.Duplicate || 0, color: "#ca8a04" },
           { label: "Flags",      value: session.flags_generated || 0,                       color: "#f59e0b" },
         ].map(s => (
-          <div key={s.label} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 14px", minWidth: 80, flex: 1, textAlign: "center" }}>
+          <div key={s.label} style={{ background: "#fff", border: "1px solid #D9D6CE", borderRadius: 10, padding: "10px 14px", minWidth: 80, flex: 1, textAlign: "center" }}>
             <div style={{ fontSize: 20, fontWeight: 900, color: s.color }}>{(s.value || 0).toLocaleString()}</div>
-            <div style={{ fontSize: 9, color: "#64748b", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, marginTop: 2 }}>{s.label}</div>
+            <div style={{ fontSize: 9, color: "#3A4A66", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, marginTop: 2 }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -882,7 +882,7 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
       {mode === "resume" && (
         <div>
           {loading ? (
-            <div style={{ textAlign: "center", padding: "48px", color: "#64748b" }}>Loading staged records…</div>
+            <div style={{ textAlign: "center", padding: "48px", color: "#3A4A66" }}>Loading staged records…</div>
           ) : (
             <ICDiffViewer
               records={records.filter(r => r.record_status !== "Committed" && r.record_status !== "Skipped")}
@@ -907,7 +907,7 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
                 if (f !== "All" && cnt === 0) return null;
                 return (
                   <button key={f} onClick={() => setStatusFilter(f)}
-                    style={{ padding: "5px 12px", borderRadius: 99, border: `1px solid ${active ? "#0C2340" : "#e2e8f0"}`, background: active ? "#0C2340" : "#fff", color: active ? "#fff" : "#64748b", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                    style={{ padding: "5px 12px", borderRadius: 99, border: `1px solid ${active ? "#0E1F3A" : "#D9D6CE"}`, background: active ? "#0E1F3A" : "#fff", color: active ? "#fff" : "#3A4A66", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
                     {f} <span style={{ opacity: 0.7 }}>({cnt})</span>
                   </button>
                 );
@@ -927,16 +927,16 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
           )}
 
           {/* Records table */}
-          <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", overflow: "hidden" }}>
-            <div style={{ display: "grid", gridTemplateColumns: checkboxMode ? "36px 24px 1fr 80px 80px 1fr 100px 120px" : "24px 1fr 80px 80px 1fr 100px 120px", gap: 10, padding: "8px 16px", background: "#f8fafc", borderBottom: "1px solid #e2e8f0", fontSize: 10, fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>
+          <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", overflow: "hidden" }}>
+            <div style={{ display: "grid", gridTemplateColumns: checkboxMode ? "36px 24px 1fr 80px 80px 1fr 100px 120px" : "24px 1fr 80px 80px 1fr 100px 120px", gap: 10, padding: "8px 16px", background: "#F4F2ED", borderBottom: "1px solid #D9D6CE", fontSize: 10, fontWeight: 800, color: "#3A4A66", textTransform: "uppercase", letterSpacing: 0.5 }}>
               {checkboxMode && <span />}
               <span /><span>Chain ID</span><span>Row #</span><span>Status</span><span>Conflict Detail</span><span>Prod Record</span><span>Timestamp</span>
             </div>
 
             {loading ? (
-              <div style={{ padding: "48px 20px", textAlign: "center", color: "#64748b", fontSize: 13 }}>Loading records…</div>
+              <div style={{ padding: "48px 20px", textAlign: "center", color: "#3A4A66", fontSize: 13 }}>Loading records…</div>
             ) : filtered.length === 0 ? (
-              <div style={{ padding: "48px 20px", textAlign: "center", color: "#94a3b8", fontSize: 13 }}>No records match this filter.</div>
+              <div style={{ padding: "48px 20px", textAlign: "center", color: "#8A94A6", fontSize: 13 }}>No records match this filter.</div>
             ) : (
               filtered.map((r, i) => (
                 <RecordRow
@@ -957,7 +957,7 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
 
       {/* Session notes */}
       {session.notes && (
-        <div style={{ marginTop: 16, background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, padding: "10px 14px", fontSize: 11, color: "#64748b", fontFamily: "monospace" }}>
+        <div style={{ marginTop: 16, background: "#F4F2ED", border: "1px solid #D9D6CE", borderRadius: 8, padding: "10px 14px", fontSize: 11, color: "#3A4A66", fontFamily: "monospace" }}>
           {session.notes}
         </div>
       )}
@@ -977,9 +977,9 @@ export default function ICSessionDetailView({ session: initialSession, onBack })
 
 // ── Style constants ───────────────────────────────────────────────────────────
 const css = {
-  backBtn: { background: "#f1f5f9", border: "1px solid #e2e8f0", color: "#334155", borderRadius: 7, padding: "6px 14px", cursor: "pointer", fontSize: 12, fontWeight: 600, display: "inline-block", whiteSpace: "nowrap" },
-  modeBtn: { padding: "7px 18px", border: "1px solid #e2e8f0", borderRadius: 7, background: "#f8fafc", color: "#64748b", fontSize: 12, fontWeight: 700, cursor: "pointer" },
-  modeBtnActive: { background: "#0C2340", color: "#fff", border: "1px solid #0C2340" },
+  backBtn: { background: "#ECEAE4", border: "1px solid #D9D6CE", color: "#3A4A66", borderRadius: 7, padding: "6px 14px", cursor: "pointer", fontSize: 12, fontWeight: 600, display: "inline-block", whiteSpace: "nowrap" },
+  modeBtn: { padding: "7px 18px", border: "1px solid #D9D6CE", borderRadius: 7, background: "#F4F2ED", color: "#3A4A66", fontSize: 12, fontWeight: 700, cursor: "pointer" },
+  modeBtnActive: { background: "#0E1F3A", color: "#fff", border: "1px solid #0E1F3A" },
 };
 
 function aBtn(bg, color) {

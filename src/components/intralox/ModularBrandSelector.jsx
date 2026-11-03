@@ -2,10 +2,10 @@
 // Shows: Intralox, Movex, Rexnord, Regina, Uni, Forbo / Forbo Siegling
 
 const C = {
-  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  gold: "#F26522", border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
 };
-const INTRALOX_RED = "#E31837";
+const INTRALOX_RED = "#F26522";
 const LOGO_URL = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png";
 const INTRALOX_LOGO = "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/64536dc1d_intralox-logo-box-194a1e40631d2cf9cd7d463fa5afc04b.svg";
 
@@ -28,7 +28,7 @@ const BRANDS = [
     description: "System Plast (Regal Rexnord) offers a comprehensive range of modular plastic belts and sprockets. 8 mm to 63.5 mm pitch. NGevo material for longer wear life.",
     logo: "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/65db03af1_System-Plast-logo.png",
     logoBg: "#fff",
-    accentColor: "#0057A8",
+    accentColor: "#0E1F3A",
     available: true,
     features: ["8 mm to 63.5 mm Pitch", "NGevo Material", "Raised Rib (2500RR)", "Anti-Slip (2508/2630)", "Magnetic Chainbelt", "Smart Guide Rev.005"],
   },
@@ -121,7 +121,7 @@ export default function ModularBrandSelector({ onSelectBrand, onBack }) {
                 border: `2px solid ${hovered === brand.key && brand.available ? brand.accentColor : C.border}`,
                 overflow: "hidden",
                 transition: "all 0.18s",
-                boxShadow: hovered === brand.key && brand.available ? "0 8px 28px rgba(15,35,64,0.12)" : "0 1px 4px rgba(0,0,0,0.05)",
+                boxShadow: hovered === brand.key && brand.available ? "0 8px 28px rgba(14,31,58,0.12)" : "0 1px 4px rgba(0,0,0,0.05)",
                 transform: hovered === brand.key && brand.available ? "translateY(-3px)" : "none",
                 cursor: brand.available ? "pointer" : "default",
                 opacity: brand.available ? 1 : 0.7,
@@ -142,7 +142,7 @@ export default function ModularBrandSelector({ onSelectBrand, onBack }) {
                   <div style={{ fontSize: 11, color: C.muted, marginTop: 1 }}>{brand.tagline}</div>
                 </div>
                 {!brand.available && (
-                  <div style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, background: "#f1f5f9", color: C.muted, padding: "3px 8px", borderRadius: 20, whiteSpace: "nowrap", flexShrink: 0 }}>
+                  <div style={{ marginLeft: "auto", fontSize: 10, fontWeight: 700, background: "#ECEAE4", color: C.muted, padding: "3px 8px", borderRadius: 20, whiteSpace: "nowrap", flexShrink: 0 }}>
                     Coming Soon
                   </div>
                 )}
@@ -157,7 +157,7 @@ export default function ModularBrandSelector({ onSelectBrand, onBack }) {
               <div style={{ padding: "0 20px 14px" }}>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {brand.features.map(f => (
-                    <span key={f} style={{ fontSize: 10, fontWeight: 600, background: "#f1f5f9", color: C.navyMid, padding: "3px 8px", borderRadius: 10 }}>{f}</span>
+                    <span key={f} style={{ fontSize: 10, fontWeight: 600, background: "#ECEAE4", color: C.navyMid, padding: "3px 8px", borderRadius: 10 }}>{f}</span>
                   ))}
                 </div>
               </div>
@@ -167,7 +167,7 @@ export default function ModularBrandSelector({ onSelectBrand, onBack }) {
                 {brand.available ? (
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <span style={{ fontSize: 12, fontWeight: 700, color: brand.accentColor }}>View Products →</span>
-                    <div style={{ width: 28, height: 28, borderRadius: "50%", background: hovered === brand.key ? brand.accentColor : "#f1f5f9", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.15s" }}>
+                    <div style={{ width: 28, height: 28, borderRadius: "50%", background: hovered === brand.key ? brand.accentColor : "#ECEAE4", display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.15s" }}>
                       <span style={{ color: hovered === brand.key ? "#fff" : C.muted, fontSize: 14, fontWeight: 700 }}>›</span>
                     </div>
                   </div>

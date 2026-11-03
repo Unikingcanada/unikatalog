@@ -2,23 +2,23 @@ import { useState } from "react";
 import { IMG_STYLE_COUNTS } from "@/lib/intraloxData";
 
 const C = {
-  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  gold: "#F26522", border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
 };
-const INTRALOX_RED = "#E31837";
+const INTRALOX_RED = "#F26522";
 const INTRALOX_LOGO = "https://media.base44.com/images/public/69ebd56ae74b0ffcc2427c7a/64536dc1d_intralox-logo-box-194a1e40631d2cf9cd7d463fa5afc04b.svg";
 
 const BELT_TYPE_COLORS = {
-  "Straight-Running": { bg: "#e0f2fe", color: "#0369a1" },
+  "Straight-Running": { bg: "#FDF0E9", color: "#0E1F3A" },
   "Radius":           { bg: "#fce7f3", color: "#be185d" },
-  "Spiral":           { bg: "#ede9fe", color: "#7c3aed" },
+  "Spiral":           { bg: "#ECEAE4", color: "#3A4A66" },
   "Side-Flexing":     { bg: "#fef9c3", color: "#92400e" },
   "Belt Support Tool":{ bg: "#d1fae5", color: "#065f46" },
 };
 
 export default function IntraloxSeriesCard({ series, onViewSeries }) {
   const [hov, setHov] = useState(false);
-  const typeCfg = BELT_TYPE_COLORS[series.beltType] || { bg: "#f1f5f9", color: "#334155" };
+  const typeCfg = BELT_TYPE_COLORS[series.beltType] || { bg: "#ECEAE4", color: "#3A4A66" };
 
   const pitchLabel = series.pitch_in && series.pitch_in !== "To be confirmed by Uniking"
     ? `${series.pitch_in}" pitch`
@@ -38,7 +38,7 @@ export default function IntraloxSeriesCard({ series, onViewSeries }) {
         border: `2px solid ${hov ? C.navyMid : C.border}`,
         overflow: "hidden",
         transition: "all 0.18s",
-        boxShadow: hov ? "0 10px 30px rgba(15,35,64,0.12)" : "0 1px 4px rgba(0,0,0,0.05)",
+        boxShadow: hov ? "0 10px 30px rgba(14,31,58,0.12)" : "0 1px 4px rgba(0,0,0,0.05)",
         transform: hov ? "translateY(-3px)" : "none",
         display: "flex",
         flexDirection: "column",
@@ -46,7 +46,7 @@ export default function IntraloxSeriesCard({ series, onViewSeries }) {
       }}
     >
       {/* Image */}
-      <div style={{ height: 155, overflow: "hidden", position: "relative", background: "#f0f4f8" }}>
+      <div style={{ height: 155, overflow: "hidden", position: "relative", background: "#F4F2ED" }}>
         {series.image ? (
           <img src={series.image} alt={series.name}
             style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.3s", transform: hov ? "scale(1.04)" : "scale(1)" }}
@@ -58,7 +58,7 @@ export default function IntraloxSeriesCard({ series, onViewSeries }) {
             <div style={{ fontSize: 10, color: C.muted, textAlign: "center", padding: "0 12px" }}>Image to be added by Uniking</div>
           </div>
         )}
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(15,35,64,0.65) 0%, transparent 55%)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(14,31,58,0.65) 0%, transparent 55%)" }} />
 
         {/* Tags over image */}
         <div style={{ position: "absolute", top: 10, left: 12, display: "flex", gap: 6 }}>
@@ -92,7 +92,7 @@ export default function IntraloxSeriesCard({ series, onViewSeries }) {
             <div style={{ fontSize: 10, color: C.muted }}>📄 2026 Catalog p.{series.catalogPage}</div>
           )}
           {styleCount && (
-            <div style={{ fontSize: 10, fontWeight: 700, color: C.navyMid, background: "#eef3f8", padding: "2px 8px", borderRadius: 10 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: C.navyMid, background: "#F4F2ED", padding: "2px 8px", borderRadius: 10 }}>
               {styleCount} Style{styleCount !== 1 ? "s" : ""}
             </div>
           )}
@@ -108,10 +108,10 @@ export default function IntraloxSeriesCard({ series, onViewSeries }) {
           <div style={{ fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 4 }}>Applications</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
             {(series.applications || []).slice(0, 3).map(a => (
-              <span key={a} style={{ background: "#eef3f8", color: C.navyMid, fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>{a}</span>
+              <span key={a} style={{ background: "#F4F2ED", color: C.navyMid, fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>{a}</span>
             ))}
             {(series.applications || []).length > 3 && (
-              <span style={{ background: "#f1f5f9", color: C.muted, fontSize: 10, padding: "2px 7px", borderRadius: 10 }}>+{series.applications.length - 3} more</span>
+              <span style={{ background: "#ECEAE4", color: C.muted, fontSize: 10, padding: "2px 7px", borderRadius: 10 }}>+{series.applications.length - 3} more</span>
             )}
           </div>
         </div>
@@ -122,7 +122,7 @@ export default function IntraloxSeriesCard({ series, onViewSeries }) {
             <div style={{ fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 4 }}>Key Advantages</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
               {series.advantages.slice(0, 2).map(a => (
-                <span key={a} style={{ background: "#f0fdf4", color: "#16a34a", fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>✓ {a.slice(0, 40)}{a.length > 40 ? "…" : ""}</span>
+                <span key={a} style={{ background: "#f0fdf4", color: "#2E7D46", fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>✓ {a.slice(0, 40)}{a.length > 40 ? "…" : ""}</span>
               ))}
             </div>
           </div>

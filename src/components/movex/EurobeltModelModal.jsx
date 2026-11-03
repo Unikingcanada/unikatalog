@@ -6,8 +6,8 @@
 import { useState } from "react";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", border: "#e2e8f0",
-  muted: "#64748b", bg: "#f8fafc", green: "#16a34a", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", border: "#D9D6CE",
+  muted: "#3A4A66", bg: "#F4F2ED", green: "#2E7D46", text: "#0E1F3A",
 };
 const EUROBELT_BLUE = "#0066B3";
 
@@ -94,7 +94,7 @@ export default function EurobeltModelModal({ model, series, onClose, onAddToRFQ 
         <div style={{ padding: "18px 22px" }}>
           {/* Image + quick specs */}
           <div style={{ display: "flex", gap: 14, marginBottom: 16 }}>
-            <div style={{ width: 120, height: 100, flexShrink: 0, background: "#f0f4f8", borderRadius: 8, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: 120, height: 100, flexShrink: 0, background: "#F4F2ED", borderRadius: 8, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
               {(model.image || series.image) ? (
                 <img src={model.image || series.image} alt={model.label} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => { e.target.style.display = "none"; e.target.parentElement.innerHTML = "🔗"; e.target.parentElement.style.fontSize = "32px"; }} />
               ) : (
@@ -161,14 +161,14 @@ export default function EurobeltModelModal({ model, series, onClose, onAddToRFQ 
           </div>
 
           {/* Summary */}
-          <div style={{ background: "#eef3f8", borderRadius: 8, padding: "10px 14px", marginBottom: 14, fontSize: 11 }}>
+          <div style={{ background: "#F4F2ED", borderRadius: 8, padding: "10px 14px", marginBottom: 14, fontSize: 11 }}>
             <span style={{ fontWeight: 700, color: C.navyMid }}>Your selection: </span>
             <span style={{ color: C.text }}>{[model.label, materialLabel, width && `${width} ${widthUnit}`, `Qty ${quantity}`].filter(Boolean).join(" · ")}</span>
           </div>
 
           {/* Actions */}
           <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={onClose} style={{ flex: 1, padding: "11px", background: "#f1f5f9", color: C.navyMid, border: "none", borderRadius: 9, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Cancel</button>
+            <button onClick={onClose} style={{ flex: 1, padding: "11px", background: "#ECEAE4", color: C.navyMid, border: "none", borderRadius: 9, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Cancel</button>
             <button onClick={handleAdd} disabled={added} style={{ flex: 2, padding: "11px", border: "none", borderRadius: 9, cursor: added ? "default" : "pointer", background: added ? C.green : C.navyMid, color: "#fff", fontSize: 12, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
               {added ? "✓ Added to RFQ" : "+ Add to RFQ Cart"}
             </button>

@@ -1,12 +1,12 @@
 // Supplier selector — equal-weight cards for Maxi-Lift / Tapco / 4B
-const NAVY = "#1a3a5c";
+const NAVY = "#0E1F3A";
 
 const SUPPLIERS = [
   {
     key: "Maxi-Lift",
     logo: null,
     tagline: "Agricultural & Industrial Elevator Buckets",
-    color: "#b45309", bg: "#fffbeb", border: "#fde68a",
+    color: "#B8860B", bg: "#fffbeb", border: "#fde68a",
     url: "https://maxilift.com",
     desc: "Tiger-Tuff, Maxi-Tuff, HD-Max and more — the broadest range of polyethylene, nylon and urethane bucket styles for grain elevators.",
     ag: ["Tiger-Tuff CC", "HD-Max", "HD-Max LP", "HD-Stax", "Dura-Buket"],
@@ -16,7 +16,7 @@ const SUPPLIERS = [
     key: "Tapco",
     logo: null,
     tagline: "The Largest Manufacturer of Elevator Buckets in North America",
-    color: "#1d4ed8", bg: "#eff6ff", border: "#bfdbfe",
+    color: "#0E1F3A", bg: "#FDF0E9", border: "#F8C9B0",
     url: "https://tapcoinc.com",
     desc: "CC-HD, CC-XD, AA-RB and Super EuroBucket styles — high-efficiency buckets engineered for maximum throughput and durability.",
     ag: ["CC-HD", "CC-XD", "CCHD-LP", "CCXD-LP", "U-HD"],
@@ -26,7 +26,7 @@ const SUPPLIERS = [
     key: "4B",
     logo: null,
     tagline: "Worldwide Manufacturer of Bucket Elevator Components",
-    color: "#b91c1c", bg: "#fef2f2", border: "#fecaca",
+    color: "#C62828", bg: "#fef2f2", border: "#fecaca",
     url: "https://www.go4b.com",
     desc: "Starco, Super Starco, JUMBO CC-S, GB Spidex and Nylathane buckets — from agricultural grain to heavy industrial aggregates.",
     ag: ["Starco LP (Plastic)", "Starco LP (Steel)", "Super Starco LP", "GB Spidex"],
@@ -50,7 +50,7 @@ export default function ElevSupplierGrid({ buckets, onSelectSupplier, onBack }) 
         <button onClick={onBack} className="uk-btn-back">← Back</button>
         <div>
           <div style={{ fontSize: 22, fontWeight: 900, color: NAVY }}>Elevator Buckets</div>
-          <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2 }}>Select a supplier to browse bucket styles</div>
+          <div style={{ fontSize: 13, color: "#3A4A66", marginTop: 2 }}>Select a supplier to browse bucket styles</div>
         </div>
       </div>
 
@@ -69,25 +69,25 @@ export default function ElevSupplierGrid({ buckets, onSelectSupplier, onBack }) 
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 10, background: sup.bg, border: `1px solid ${sup.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>🪣</div>
                 <div>
-                  <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>{sup.key}</div>
+                  <div style={{ fontSize: 18, fontWeight: 900, color: "#0E1F3A" }}>{sup.key}</div>
                   <div style={{ fontSize: 11, color: sup.color, fontWeight: 600, lineHeight: 1.4 }}>{sup.tagline}</div>
                 </div>
               </div>
-              <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.6, marginBottom: 14 }}>{sup.desc}</div>
+              <div style={{ fontSize: 12, color: "#3A4A66", lineHeight: 1.6, marginBottom: 14 }}>{sup.desc}</div>
               {/* Style tags */}
               <div style={{ marginBottom: 10 }}>
                 <div style={{ fontSize: 10, fontWeight: 700, color: "#065f46", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 5 }}>Agricultural</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 8 }}>
                   {sup.ag.map(s => <span key={s} style={{ fontSize: 10, background: "#ecfdf5", color: "#065f46", padding: "2px 8px", borderRadius: 99, fontWeight: 600 }}>{s}</span>)}
                 </div>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "#1d4ed8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 5 }}>Industrial</div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "#0E1F3A", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 5 }}>Industrial</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                  {sup.ind.map(s => <span key={s} style={{ fontSize: 10, background: "#eff6ff", color: "#1d4ed8", padding: "2px 8px", borderRadius: 99, fontWeight: 600 }}>{s}</span>)}
+                  {sup.ind.map(s => <span key={s} style={{ fontSize: 10, background: "#FDF0E9", color: "#0E1F3A", padding: "2px 8px", borderRadius: 99, fontWeight: 600 }}>{s}</span>)}
                 </div>
               </div>
               {/* Footer */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #f3f4f6", paddingTop: 12, marginTop: 6 }}>
-                <span style={{ fontSize: 11, color: "#9ca3af" }}>{dbCount > 0 ? `${dbCount} styles in catalog` : "Styles available"}</span>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #F4F2ED", paddingTop: 12, marginTop: 6 }}>
+                <span style={{ fontSize: 11, color: "#8A94A6" }}>{dbCount > 0 ? `${dbCount} styles in catalog` : "Styles available"}</span>
                 <span style={{ fontSize: 12, fontWeight: 700, color: sup.color }}>Browse →</span>
               </div>
             </div>

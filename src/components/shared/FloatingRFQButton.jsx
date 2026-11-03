@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 
 const C = {
-  navy: "#003c5b",
-  gold: "#C9A84C",
+  navy: "#0E1F3A",
+  gold: "#F26522",
 };
 
 export default function FloatingRFQButton({ onGoRFQ }) {
@@ -55,7 +55,7 @@ export default function FloatingRFQButton({ onGoRFQ }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          boxShadow: "0 4px 20px rgba(0,60,91,0.45)",
+          boxShadow: "0 4px 20px rgba(14,31,58,0.45)",
           cursor: "pointer",
           transform: pulse ? "scale(1.15)" : "scale(1)",
           transition: "transform 0.2s",
@@ -70,7 +70,7 @@ export default function FloatingRFQButton({ onGoRFQ }) {
             position: "absolute",
             top: -6,
             right: -6,
-            background: "#2563eb",
+            background: "#F26522",
             color: "#fff",
             borderRadius: "50%",
             width: 22,

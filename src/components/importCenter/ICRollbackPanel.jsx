@@ -97,8 +97,8 @@ export default function ICRollbackPanel({ sessions, onRollbackComplete }) {
   return (
     <div>
       <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 20, fontWeight: 900, color: "#0C2340" }}>Rollback Center</div>
-        <div style={{ fontSize: 12, color: "#64748b", marginTop: 2 }}>
+        <div style={{ fontSize: 20, fontWeight: 900, color: "#0E1F3A" }}>Rollback Center</div>
+        <div style={{ fontSize: 12, color: "#3A4A66", marginTop: 2 }}>
           Reverse committed import sessions. Only sessions with rollback snapshots are shown.
         </div>
       </div>
@@ -108,13 +108,13 @@ export default function ICRollbackPanel({ sessions, onRollbackComplete }) {
           padding: "10px 16px", borderRadius: 8, marginBottom: 16,
           background: msg.type === "success" ? "#f0fdf4" : "#fef2f2",
           border: `1px solid ${msg.type === "success" ? "#86efac" : "#fca5a5"}`,
-          color: msg.type === "success" ? "#166534" : "#dc2626",
+          color: msg.type === "success" ? "#2E7D46" : "#C62828",
           fontSize: 12, fontWeight: 700,
         }}>{msg.text}</div>
       )}
 
       {committedSessions.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "60px 20px", color: "#64748b", background: "#fff", borderRadius: 12, border: "1px dashed #e2e8f0" }}>
+        <div style={{ textAlign: "center", padding: "60px 20px", color: "#3A4A66", background: "#fff", borderRadius: 12, border: "1px dashed #D9D6CE" }}>
           <div style={{ fontSize: 40, marginBottom: 12 }}>🔒</div>
           <div style={{ fontWeight: 700, fontSize: 14 }}>No rollback-eligible sessions</div>
           <div style={{ fontSize: 12, marginTop: 4 }}>Only committed sessions with snapshots appear here.</div>
@@ -122,11 +122,11 @@ export default function ICRollbackPanel({ sessions, onRollbackComplete }) {
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {committedSessions.map(s => (
-            <div key={s.id} style={{ background: "#fff", borderRadius: 10, border: "1px solid #e2e8f0", padding: "16px 20px" }}>
+            <div key={s.id} style={{ background: "#fff", borderRadius: 10, border: "1px solid #D9D6CE", padding: "16px 20px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#0C2340" }}>{s.session_id || s.id?.slice(0,8)}</div>
-                  <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
+                  <div style={{ fontFamily: "monospace", fontSize: 12, fontWeight: 700, color: "#0E1F3A" }}>{s.session_id || s.id?.slice(0,8)}</div>
+                  <div style={{ fontSize: 11, color: "#3A4A66", marginTop: 2 }}>
                     {s.manufacturer} · {s.source_catalog}
                   </div>
                   <div style={{ display: "flex", gap: 12, marginTop: 6, flexWrap: "wrap" }}>
@@ -137,27 +137,27 @@ export default function ICRollbackPanel({ sessions, onRollbackComplete }) {
                       let snapCount = 0;
                       try { snapCount = JSON.parse(s.rollback_snapshot_ref || '[]').length; } catch {}
                       return <>
-                        <span style={{ fontSize: 10, color: "#dc2626", fontWeight: 700 }}>🗑 {newCount} to delete</span>
-                        <span style={{ fontSize: 10, color: "#1d4ed8", fontWeight: 700 }}>↩ {updCount} to restore ({snapCount} snapshots)</span>
+                        <span style={{ fontSize: 10, color: "#C62828", fontWeight: 700 }}>🗑 {newCount} to delete</span>
+                        <span style={{ fontSize: 10, color: "#0E1F3A", fontWeight: 700 }}>↩ {updCount} to restore ({snapCount} snapshots)</span>
                       </>;
                     })()}
                   </div>
-                  <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 4 }}>
+                  <div style={{ fontSize: 10, color: "#8A94A6", marginTop: 4 }}>
                     Committed: {s.uploaded_at ? new Date(s.uploaded_at).toLocaleString() : "—"}
                   </div>
                 </div>
 
                 {confirmId === s.id ? (
                   <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                    <span style={{ fontSize: 11, color: "#dc2626", fontWeight: 700 }}>⚠ Confirm rollback?</span>
+                    <span style={{ fontSize: 11, color: "#C62828", fontWeight: 700 }}>⚠ Confirm rollback?</span>
                     <button
                       onClick={() => handleRollback(s)}
                       disabled={rolling === s.id}
-                      style={{ background: "#dc2626", color: "#fff", border: "none", borderRadius: 7, padding: "7px 16px", fontSize: 11, fontWeight: 800, cursor: "pointer" }}>
+                      style={{ background: "#C62828", color: "#fff", border: "none", borderRadius: 7, padding: "7px 16px", fontSize: 11, fontWeight: 800, cursor: "pointer" }}>
                       {rolling === s.id ? "Rolling back…" : "Yes, Rollback"}
                     </button>
                     <button onClick={() => setConfirmId(null)}
-                      style={{ background: "#f1f5f9", color: "#475569", border: "1px solid #e2e8f0", borderRadius: 7, padding: "7px 14px", fontSize: 11, fontWeight: 600, cursor: "pointer" }}>
+                      style={{ background: "#ECEAE4", color: "#3A4A66", border: "1px solid #D9D6CE", borderRadius: 7, padding: "7px 14px", fontSize: 11, fontWeight: 600, cursor: "pointer" }}>
                       Cancel
                     </button>
                   </div>
@@ -170,7 +170,7 @@ export default function ICRollbackPanel({ sessions, onRollbackComplete }) {
               </div>
 
               {s.notes && (
-                <div style={{ marginTop: 10, fontSize: 10, color: "#64748b", background: "#f8fafc", padding: "6px 10px", borderRadius: 6, fontFamily: "monospace" }}>
+                <div style={{ marginTop: 10, fontSize: 10, color: "#3A4A66", background: "#F4F2ED", padding: "6px 10px", borderRadius: 6, fontFamily: "monospace" }}>
                   {s.notes}
                 </div>
               )}

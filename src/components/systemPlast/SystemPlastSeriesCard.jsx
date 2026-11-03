@@ -1,15 +1,15 @@
 import { useState } from "react";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
-  border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522",
+  border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED",
 };
-const SP_BLUE = "#0057A8";
+const SP_BLUE = "#0E1F3A";
 
 const BELT_TYPE_THEMES = {
-  "Straight-Running":          { bg: "#eef3f8", color: "#1A3A5C", label: "Straight-Running" },
+  "Straight-Running":          { bg: "#F4F2ED", color: "#0E1F3A", label: "Straight-Running" },
   "Sideflexing":               { bg: "#fdf4e3", color: "#92400e", label: "Sideflexing" },
-  "Straight-Running / Special":{ bg: "#f0fdf4", color: "#166534", label: "Special" },
+  "Straight-Running / Special":{ bg: "#f0fdf4", color: "#2E7D46", label: "Special" },
 };
 
 export default function SystemPlastSeriesCard({ series, onViewSeries }) {
@@ -29,13 +29,13 @@ export default function SystemPlastSeriesCard({ series, onViewSeries }) {
         background: "#fff", borderRadius: 14,
         border: `2px solid ${hov ? SP_BLUE : C.border}`,
         overflow: "hidden", transition: "all 0.18s",
-        boxShadow: hov ? "0 10px 30px rgba(0,87,168,0.13)" : "0 1px 4px rgba(0,0,0,0.05)",
+        boxShadow: hov ? "0 10px 30px rgba(14,31,58,0.13)" : "0 1px 4px rgba(0,0,0,0.05)",
         transform: hov ? "translateY(-3px)" : "none",
         display: "flex", flexDirection: "column", cursor: "pointer",
       }}
     >
       {/* Image area */}
-      <div style={{ height: 130, overflow: "hidden", background: "#eef3f8", position: "relative", flexShrink: 0 }}>
+      <div style={{ height: 130, overflow: "hidden", background: "#F4F2ED", position: "relative", flexShrink: 0 }}>
         {series.image ? (
           <img src={series.image} alt={series.name}
             style={{ width: "100%", height: "100%", objectFit: "cover", transform: hov ? "scale(1.04)" : "scale(1)", transition: "transform 0.3s" }}
@@ -62,7 +62,7 @@ export default function SystemPlastSeriesCard({ series, onViewSeries }) {
             {theme.label}
           </span>
           {pitchLabel && (
-            <span style={{ background: "rgba(0,87,168,0.1)", color: SP_BLUE, fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 8 }}>
+            <span style={{ background: "rgba(14,31,58,0.1)", color: SP_BLUE, fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 8 }}>
               Pitch: {pitchLabel}
             </span>
           )}
@@ -72,7 +72,7 @@ export default function SystemPlastSeriesCard({ series, onViewSeries }) {
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 10 }}>
           {(series.applications || []).slice(0, 3).map(a => (
-            <span key={a} style={{ background: "#f1f5f9", color: C.muted, fontSize: 9, padding: "1px 6px", borderRadius: 6 }}>{a}</span>
+            <span key={a} style={{ background: "#ECEAE4", color: C.muted, fontSize: 9, padding: "1px 6px", borderRadius: 6 }}>{a}</span>
           ))}
         </div>
         <button

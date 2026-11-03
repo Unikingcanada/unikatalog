@@ -12,12 +12,12 @@ import { getSprocketSeriesForChain, getToothOptions } from "@/lib/chainSprocketC
 import { addChainRFQItem, formatRFQLineSummary } from "@/lib/chainRFQStructure";
 
 const C = {
-  navy: "#003c5b", navyMid: "#1A3A5C",
-  border: "#e2e8f0", bg: "#f8fafc", card: "#ffffff",
-  text: "#0f172a", muted: "#64748b", slate: "#334155",
-  green: "#16a34a", greenBg: "#f0fdf4",
-  blue: "#2563eb", blueBg: "#eff6ff",
-  gold: "#C9A84C",
+  navy: "#0E1F3A", navyMid: "#0E1F3A",
+  border: "#D9D6CE", bg: "#F4F2ED", card: "#ffffff",
+  text: "#0E1F3A", muted: "#3A4A66", slate: "#3A4A66",
+  green: "#2E7D46", greenBg: "#f0fdf4",
+  blue: "#F26522", blueBg: "#FDF0E9",
+  gold: "#F26522",
 };
 
 function StepHeader({ number, title, subtitle }) {
@@ -255,7 +255,7 @@ export default function ChainConfigurator({ onClose, initialFamily, initialChain
             {CHAIN_FAMILIES.map(fam => (
               <div key={fam.key} onClick={() => { set("family", fam.key); set("familyObj", fam); set("chain_number", null); set("chainObj", null); setState(prev => ({ ...prev, family: fam.key, familyObj: fam, chain_number: null, chainObj: null, step: 2 })); }}
                 style={{ padding: "12px 14px", borderRadius: 8, border: "2px solid " + C.border, background: C.card, cursor: "pointer", transition: "all 0.15s" }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = C.navyMid; e.currentTarget.style.background = "#f0f4f8"; }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = C.navyMid; e.currentTarget.style.background = "#F4F2ED"; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.background = C.card; }}>
                 <div style={{ fontSize: 18, marginBottom: 4 }}>{fam.icon}</div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: C.text, marginBottom: 3 }}>{fam.label}</div>
@@ -281,7 +281,7 @@ export default function ChainConfigurator({ onClose, initialFamily, initialChain
                   .filter(p => !state._search || [p.chain_number, p.part_number, p.product_type, p.description].some(v => v?.toLowerCase().includes(state._search?.toLowerCase())))
                   .map(p => (
                     <div key={p.id} onClick={() => { setState(prev => ({ ...prev, chain_number: p.chain_number, chainObj: p, step: 3 })); }}
-                      style={{ padding: "10px 14px", borderRadius: 8, border: "2px solid " + (state.chain_number === p.chain_number ? C.navyMid : C.border), background: state.chain_number === p.chain_number ? "#f0f4f8" : C.card, cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}>
+                      style={{ padding: "10px 14px", borderRadius: 8, border: "2px solid " + (state.chain_number === p.chain_number ? C.navyMid : C.border), background: state.chain_number === p.chain_number ? "#F4F2ED" : C.card, cursor: "pointer", display: "flex", alignItems: "center", gap: 12 }}>
                       {p.image && <img src={p.image} alt={p.part_number} style={{ width: 40, height: 32, objectFit: "contain", flexShrink: 0 }} onError={e => e.target.style.display = "none"} />}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontWeight: 700, fontSize: 13, color: C.text }}>{p.chain_number || p.part_number}</div>

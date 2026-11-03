@@ -5,9 +5,9 @@ import { useState } from "react";
 import { MATERIALS, WIDTH_DIMENSIONS } from "@/lib/tableTopChainData";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
-  border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
-  plastic: "#0057A8", steel: "#374151",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522",
+  border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
+  plastic: "#0E1F3A", steel: "#3A4A66",
 };
 
 const TYPE_LABELS = {
@@ -19,7 +19,7 @@ const TYPE_LABELS = {
 const PITCH_COLORS = {
   '1.0" (25.4 mm)': "#4f46e5",
   '1.5" (38.1 mm)': "#0891b2",
-  '0.43"–1.0" (11–25 mm)': "#7c3aed",
+  '0.43"–1.0" (11–25 mm)': "#3A4A66",
 };
 
 function WidthDimTable({ width }) {
@@ -28,7 +28,7 @@ function WidthDimTable({ width }) {
   return (
     <div style={{
       marginTop: 8, background: "#f0f7ff", borderRadius: 8, padding: "10px 12px",
-      border: "1px solid #bfdbfe", fontSize: 11,
+      border: "1px solid #F8C9B0", fontSize: 11,
     }}>
       <div style={{ fontWeight: 700, color: C.navyMid, marginBottom: 6, fontSize: 10, textTransform: "uppercase", letterSpacing: "0.5px" }}>
         Dimensions for {width}
@@ -119,7 +119,7 @@ export default function TTCProductCard({ product, onViewDetails, onAddRFQ }) {
         {/* Applications */}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
           {product.applications.slice(0, 3).map((app, i) => (
-            <span key={i} style={{ fontSize: 9, color: C.navyMid, background: "#eef3f8", padding: "2px 7px", borderRadius: 10, fontWeight: 600 }}>{app}</span>
+            <span key={i} style={{ fontSize: 9, color: C.navyMid, background: "#F4F2ED", padding: "2px 7px", borderRadius: 10, fontWeight: 600 }}>{app}</span>
           ))}
           {product.applications.length > 3 && (
             <span style={{ fontSize: 9, color: C.muted, padding: "2px 4px" }}>+{product.applications.length - 3}</span>
@@ -128,7 +128,7 @@ export default function TTCProductCard({ product, onViewDetails, onAddRFQ }) {
 
         {/* Materials count */}
         <div style={{
-          background: "#f8fafc", borderRadius: 6, padding: "5px 10px",
+          background: "#F4F2ED", borderRadius: 6, padding: "5px 10px",
           display: "flex", justifyContent: "space-between", alignItems: "center",
           border: `1px solid ${C.border}`,
         }}>

@@ -89,7 +89,7 @@ export default function ChainsAudit() {
 
   if (loading) {
     return (
-      <div style={{ padding: "40px 20px", textAlign: "center", color: "#64748b" }}>
+      <div style={{ padding: "40px 20px", textAlign: "center", color: "#3A4A66" }}>
         <div style={{ fontSize: 14, marginBottom: 12 }}>Loading chain audit data…</div>
       </div>
     );
@@ -98,31 +98,31 @@ export default function ChainsAudit() {
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
       <div style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#0C2340", marginBottom: 8 }}>
+        <h1 style={{ fontSize: 28, fontWeight: 900, color: "#0E1F3A", marginBottom: 8 }}>
           Chains-Only Audit Dashboard
         </h1>
-        <p style={{ fontSize: 13, color: "#64748b" }}>
+        <p style={{ fontSize: 13, color: "#3A4A66" }}>
           Real-time health check for normalized chain ecosystem. All counts auto-refresh.
         </p>
       </div>
 
       {error && (
-        <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8, padding: "12px 16px", marginBottom: 20, color: "#dc2626", fontSize: 12 }}>
+        <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8, padding: "12px 16px", marginBottom: 20, color: "#C62828", fontSize: 12 }}>
           ⚠ {error}
         </div>
       )}
 
       {/* Core counts row */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginBottom: 24 }}>
-        <StatCard icon={<Database className="w-5 h-5" />} label="DB Normalized Chains" value={stats.normalizedChainsCount} color="#0C2340" />
-        <StatCard icon={<Database className="w-5 h-5" />} label="Unique Chain IDs" value={stats.mergedChainCount} color="#2563eb" />
-        <StatCard icon={<CheckCircle2 className="w-5 h-5" />} label="Visible Active Chains" value={getTotalUniqueChainCount()} color="#16a34a" />
-        <StatCard icon={<AlertCircle className="w-5 h-5" />} label="Duplicate DB Records" value={stats.duplicateChainIds} color={stats.duplicateChainIds > 0 ? "#dc2626" : "#22c55e"} />
+        <StatCard icon={<Database className="w-5 h-5" />} label="DB Normalized Chains" value={stats.normalizedChainsCount} color="#0E1F3A" />
+        <StatCard icon={<Database className="w-5 h-5" />} label="Unique Chain IDs" value={stats.mergedChainCount} color="#F26522" />
+        <StatCard icon={<CheckCircle2 className="w-5 h-5" />} label="Visible Active Chains" value={getTotalUniqueChainCount()} color="#2E7D46" />
+        <StatCard icon={<AlertCircle className="w-5 h-5" />} label="Duplicate DB Records" value={stats.duplicateChainIds} color={stats.duplicateChainIds > 0 ? "#C62828" : "#22c55e"} />
       </div>
 
       {/* Orphaned records grid */}
       <div style={{ marginBottom: 24 }}>
-        <h2 style={{ fontSize: 16, fontWeight: 800, color: "#1e293b", marginBottom: 12 }}>Orphaned Related Records</h2>
+        <h2 style={{ fontSize: 16, fontWeight: 800, color: "#0E1F3A", marginBottom: 12 }}>Orphaned Related Records</h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10 }}>
           <OrphanCard entity="Dimensions" count={stats.orphanedDimensions} />
           <OrphanCard entity="Performance" count={stats.orphanedPerformance} />
@@ -135,16 +135,16 @@ export default function ChainsAudit() {
       </div>
 
       {/* Review flags */}
-      <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 10, padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <div style={{ background: "#F4F2ED", border: "1px solid #D9D6CE", borderRadius: 10, padding: "16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div>
-          <div style={{ fontSize: 12, fontWeight: 800, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 4 }}>
+          <div style={{ fontSize: 12, fontWeight: 800, color: "#3A4A66", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: 4 }}>
             ⚑ Review Flags Pending
           </div>
           <div style={{ fontSize: 28, fontWeight: 900, color: stats.pendingReviewFlags > 0 ? "#f59e0b" : "#22c55e" }}>
             {stats.pendingReviewFlags}
           </div>
         </div>
-        <div style={{ fontSize: 12, color: "#94a3b8", textAlign: "right", lineHeight: "1.6" }}>
+        <div style={{ fontSize: 12, color: "#8A94A6", textAlign: "right", lineHeight: "1.6" }}>
           {stats.pendingReviewFlags > 0
             ? `${stats.pendingReviewFlags} chain(s) flagged for engineering review`
             : "No pending review flags — all clear"}
@@ -154,24 +154,24 @@ export default function ChainsAudit() {
       {/* Import Session Dashboard */}
       {importSessions.length > 0 && (
         <div style={{ marginTop: 28 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 800, color: "#1e293b", marginBottom: 12 }}>Recent Import Sessions</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 800, color: "#0E1F3A", marginBottom: 12 }}>Recent Import Sessions</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
             {importSessions.slice(0, 6).map(sess => (
-              <div key={sess.id} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: 14, display: "flex", flexDirection: "column", gap: 8 }}>
+              <div key={sess.id} style={{ background: "#fff", border: "1px solid #D9D6CE", borderRadius: 10, padding: 14, display: "flex", flexDirection: "column", gap: 8 }}>
                 <div style={{ display: "flex", alignItems: "flex-start", gap: 8, justifyContent: "space-between" }}>
                   <div>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: "#0C2340" }}>{sess.session_id}</div>
-                    <div style={{ fontSize: 10, color: "#64748b", marginTop: 2 }}>{sess.manufacturer || "Unknown"}</div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#0E1F3A" }}>{sess.session_id}</div>
+                    <div style={{ fontSize: 10, color: "#3A4A66", marginTop: 2 }}>{sess.manufacturer || "Unknown"}</div>
                   </div>
                   <StatusBadge status={sess.import_status} />
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 11, color: "#64748b" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 11, color: "#3A4A66" }}>
                   <div>📊 Total: {sess.total_rows || 0}</div>
                   <div>✓ Written: {sess.rows_written || 0}</div>
                   <div>⚠ Flags: {sess.flags_generated || 0}</div>
                   {sess.rows_staged && <div>📦 Staged: {sess.rows_staged}</div>}
                 </div>
-                <div style={{ fontSize: 9, color: "#94a3b8", marginTop: 4 }}>
+                <div style={{ fontSize: 9, color: "#8A94A6", marginTop: 4 }}>
                   {sess.uploaded_at ? new Date(sess.uploaded_at).toLocaleDateString() : "—"}
                 </div>
               </div>
@@ -181,10 +181,10 @@ export default function ChainsAudit() {
       )}
 
       {/* Summary */}
-      <div style={{ marginTop: 24, padding: "14px 16px", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 8, fontSize: 12, color: "#166534", lineHeight: 1.6 }}>
+      <div style={{ marginTop: 24, padding: "14px 16px", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 8, fontSize: 12, color: "#2E7D46", lineHeight: 1.6 }}>
         <strong>✓ Consolidation Status:</strong>
         <div style={{ marginTop: 6 }}>
-          {stats.normalizedChainsCount} total DB records · {stats.mergedChainCount} unique IDs · <strong style={{ color: "#16a34a" }}>{getTotalUniqueChainCount()} visible active chains</strong>
+          {stats.normalizedChainsCount} total DB records · {stats.mergedChainCount} unique IDs · <strong style={{ color: "#2E7D46" }}>{getTotalUniqueChainCount()} visible active chains</strong>
         </div>
         <div style={{ marginTop: 6 }}>
           {stats.rawImportsCount} raw imports tracked · {stats.duplicateChainIds > 0 ? `⚠ ${stats.duplicateChainIds} duplicate records ignored` : "✓ No duplicate records"}
@@ -196,14 +196,14 @@ export default function ChainsAudit() {
 
 function StatCard({ icon, label, value, color }) {
   return (
-    <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "16px", textAlign: "center" }}>
+    <div style={{ background: "#fff", border: "1px solid #D9D6CE", borderRadius: 10, padding: "16px", textAlign: "center" }}>
       <div style={{ marginBottom: 8, color, display: "flex", justifyContent: "center" }}>
         {icon}
       </div>
       <div style={{ fontSize: 24, fontWeight: 900, color: color, marginBottom: 4 }}>
         {value.toLocaleString()}
       </div>
-      <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>
+      <div style={{ fontSize: 11, color: "#3A4A66", fontWeight: 600 }}>
         {label}
       </div>
     </div>
@@ -220,10 +220,10 @@ function OrphanCard({ entity, count }) {
       padding: "12px",
       textAlign: "center"
     }}>
-      <div style={{ fontSize: 18, fontWeight: 900, color: isIssue ? "#dc2626" : "#22c55e", marginBottom: 4 }}>
+      <div style={{ fontSize: 18, fontWeight: 900, color: isIssue ? "#C62828" : "#22c55e", marginBottom: 4 }}>
         {count}
       </div>
-      <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>
+      <div style={{ fontSize: 11, color: "#3A4A66", fontWeight: 600 }}>
         Orphaned {entity}
       </div>
     </div>
@@ -232,18 +232,18 @@ function OrphanCard({ entity, count }) {
 
 function StatusBadge({ status }) {
   const colors = {
-    "Uploading": { bg: "#eff6ff", color: "#0284c7" },
-    "Staged": { bg: "#f0fdf4", color: "#16a34a" },
-    "Validating": { bg: "#fef3c7", color: "#b45309" },
-    "Pending Review": { bg: "#fef2f2", color: "#dc2626" },
+    "Uploading": { bg: "#FDF0E9", color: "#0284c7" },
+    "Staged": { bg: "#f0fdf4", color: "#2E7D46" },
+    "Validating": { bg: "#fef3c7", color: "#B8860B" },
+    "Pending Review": { bg: "#fef2f2", color: "#C62828" },
     "Committing": { bg: "#f3e8ff", color: "#9333ea" },
-    "Committed": { bg: "#dcfce7", color: "#166534" },
+    "Committed": { bg: "#dcfce7", color: "#2E7D46" },
     "Partially Committed": { bg: "#fef3c7", color: "#92400e" },
     "Rolled Back": { bg: "#fee2e2", color: "#991b1b" },
     "Failed": { bg: "#fecaca", color: "#7f1d1d" },
-    "Cancelled": { bg: "#f1f5f9", color: "#64748b" },
+    "Cancelled": { bg: "#ECEAE4", color: "#3A4A66" },
   };
-  const style = colors[status] || { bg: "#f1f5f9", color: "#64748b" };
+  const style = colors[status] || { bg: "#ECEAE4", color: "#3A4A66" };
   return (
     <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 4, background: style.bg, color: style.color }}>
       {status || "—"}

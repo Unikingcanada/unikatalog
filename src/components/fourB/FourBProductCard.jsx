@@ -2,8 +2,8 @@ import { useState } from "react";
 import { APPROVALS } from "@/lib/fourBData";
 
 const FOURBRED = "#cc0000";
-const NAVY = "#0f2340";
-const GOLD = "#c9a84c";
+const NAVY = "#0E1F3A";
+const GOLD = "#F26522";
 
 function ApprovalBadge({ code }) {
   const a = APPROVALS[code];
@@ -60,7 +60,7 @@ export default function FourBProductCard({ product, onClick }) {
       style={{
         background: "#fff",
         borderRadius: 10,
-        border: `1px solid ${hov ? FOURBRED : "#e2e8f0"}`,
+        border: `1px solid ${hov ? FOURBRED : "#D9D6CE"}`,
         boxShadow: hov ? "0 6px 24px rgba(204,0,0,0.10)" : "0 1px 4px rgba(0,0,0,0.06)",
         transition: "all 0.18s",
         display: "flex", flexDirection: "column",
@@ -73,12 +73,12 @@ export default function FourBProductCard({ product, onClick }) {
 
       {/* Image */}
       <div onClick={() => onClick(product)}
-        style={{ background: "#f8fafc", height: 160, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", position: "relative", borderBottom: "1px solid #f1f5f9" }}>
+        style={{ background: "#F4F2ED", height: 160, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", position: "relative", borderBottom: "1px solid #ECEAE4" }}>
         <img
           src={product.image}
           alt={product.name}
           style={{ maxHeight: 144, maxWidth: "90%", objectFit: "contain", transition: "transform 0.25s", transform: hov ? "scale(1.04)" : "scale(1)" }}
-          onError={e => { e.target.parentElement.style.background = "#f1f5f9"; e.target.style.display = "none"; }}
+          onError={e => { e.target.parentElement.style.background = "#ECEAE4"; e.target.style.display = "none"; }}
         />
         {/* 4B logo stamp */}
         <div style={{
@@ -94,7 +94,7 @@ export default function FourBProductCard({ product, onClick }) {
         <div style={{ fontSize: 13, fontWeight: 800, color: NAVY, lineHeight: 1.3, marginBottom: 5 }}>
           {product.name}
         </div>
-        <div style={{ fontSize: 11, color: "#64748b", lineHeight: 1.55, marginBottom: 8,
+        <div style={{ fontSize: 11, color: "#3A4A66", lineHeight: 1.55, marginBottom: 8,
           display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
           {product.description}
         </div>
@@ -111,15 +111,15 @@ export default function FourBProductCard({ product, onClick }) {
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "8px 14px", borderTop: "1px solid #f1f5f9", display: "flex", gap: 8, justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ padding: "8px 14px", borderTop: "1px solid #ECEAE4", display: "flex", gap: 8, justifyContent: "space-between", alignItems: "center" }}>
         <span onClick={() => onClick(product)} style={{ fontSize: 11, fontWeight: 600, color: FOURBRED, cursor: "pointer" }}>
           View Details ›
         </span>
         <button onClick={handleRFQ} style={{
           padding: "5px 10px", borderRadius: 6, fontSize: 10, fontWeight: 700, cursor: "pointer",
-          border: added ? "1px solid #16a34a" : `1px solid ${FOURBRED}`,
+          border: added ? "1px solid #2E7D46" : `1px solid ${FOURBRED}`,
           background: added ? "#f0fdf4" : `${FOURBRED}10`,
-          color: added ? "#16a34a" : FOURBRED,
+          color: added ? "#2E7D46" : FOURBRED,
           transition: "all 0.15s", whiteSpace: "nowrap"
         }}>
           {added ? "✓ In RFQ" : "+ RFQ"}

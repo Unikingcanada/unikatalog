@@ -10,9 +10,9 @@ import { base44 } from "@/api/base44Client";
 import ICShell from "@/components/importCenter/ICShell";
 
 const ROLE_LABELS = {
-  super_admin: { label: "Super Admin", color: "#7c3aed", bg: "#f5f3ff", border: "#c4b5fd" },
-  admin:       { label: "Admin",       color: "#1d4ed8", bg: "#eff6ff", border: "#93c5fd" },
-  employee:    { label: "Employee",    color: "#475569", bg: "#f8fafc", border: "#cbd5e1" },
+  super_admin: { label: "Super Admin", color: "#3A4A66", bg: "#f5f3ff", border: "#c4b5fd" },
+  admin:       { label: "Admin",       color: "#0E1F3A", bg: "#FDF0E9", border: "#F8C9B0" },
+  employee:    { label: "Employee",    color: "#3A4A66", bg: "#F4F2ED", border: "#C9C5BB" },
 };
 
 function RolePill({ role }) {
@@ -63,18 +63,18 @@ export default function AdminUsers() {
     <ICShell>
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: "flex", alignItems: "baseline", gap: 14, flexWrap: "wrap" }}>
-          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#0C2340", margin: 0 }}>User Management</h1>
-          <span style={{ fontSize: 11, fontWeight: 700, background: "#f5f3ff", color: "#7c3aed", border: "1px solid #c4b5fd", borderRadius: 99, padding: "2px 10px" }}>
+          <h1 style={{ fontSize: 28, fontWeight: 900, color: "#0E1F3A", margin: 0 }}>User Management</h1>
+          <span style={{ fontSize: 11, fontWeight: 700, background: "#f5f3ff", color: "#3A4A66", border: "1px solid #c4b5fd", borderRadius: 99, padding: "2px 10px" }}>
             ADMIN ONLY
           </span>
         </div>
-        <p style={{ fontSize: 13, color: "#64748b", margin: "6px 0 0" }}>
+        <p style={{ fontSize: 13, color: "#3A4A66", margin: "6px 0 0" }}>
           Manage user roles and access levels. New users are automatically assigned the Employee role.
         </p>
       </div>
 
       {msg && (
-        <div style={{ padding: "10px 16px", borderRadius: 8, marginBottom: 16, fontSize: 12, fontWeight: 700, background: msg.error ? "#fef2f2" : "#f0fdf4", color: msg.error ? "#dc2626" : "#166534", border: `1px solid ${msg.error ? "#fca5a5" : "#86efac"}` }}>
+        <div style={{ padding: "10px 16px", borderRadius: 8, marginBottom: 16, fontSize: 12, fontWeight: 700, background: msg.error ? "#fef2f2" : "#f0fdf4", color: msg.error ? "#C62828" : "#2E7D46", border: `1px solid ${msg.error ? "#fca5a5" : "#86efac"}` }}>
           {msg.text}
         </div>
       )}
@@ -84,7 +84,7 @@ export default function AdminUsers() {
         {Object.entries(ROLE_LABELS).map(([key, r]) => (
           <div key={key} style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", background: r.bg, border: `1px solid ${r.border}`, borderRadius: 8 }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: r.color }}>{r.label}</span>
-            <span style={{ fontSize: 10, color: "#64748b" }}>
+            <span style={{ fontSize: 10, color: "#3A4A66" }}>
               {key === "super_admin" && "— Full access, user management"}
               {key === "admin" && "— Admin tools access"}
               {key === "employee" && "— Catalog & app only"}
@@ -94,16 +94,16 @@ export default function AdminUsers() {
       </div>
 
       {loading ? (
-        <div style={{ textAlign: "center", padding: "60px", color: "#64748b" }}>Loading users…</div>
+        <div style={{ textAlign: "center", padding: "60px", color: "#3A4A66" }}>Loading users…</div>
       ) : (
-        <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", overflow: "hidden" }}>
+        <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", overflow: "hidden" }}>
           {/* Header */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 160px 120px 100px", gap: 12, padding: "10px 20px", background: "#f8fafc", borderBottom: "2px solid #e2e8f0", fontSize: 10, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.5 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 160px 120px 100px", gap: 12, padding: "10px 20px", background: "#F4F2ED", borderBottom: "2px solid #D9D6CE", fontSize: 10, fontWeight: 800, color: "#8A94A6", textTransform: "uppercase", letterSpacing: 0.5 }}>
             <span>User</span><span>Email</span><span>Role</span><span>Change Role</span>
           </div>
 
           {users.length === 0 && (
-            <div style={{ padding: "48px 20px", textAlign: "center", color: "#94a3b8" }}>No users found.</div>
+            <div style={{ padding: "48px 20px", textAlign: "center", color: "#8A94A6" }}>No users found.</div>
           )}
 
           {users.map((u, i) => {
@@ -112,14 +112,14 @@ export default function AdminUsers() {
             const canChange = isSuperAdmin && !isOtherSuperAdmin;
 
             return (
-              <div key={u.id} style={{ display: "grid", gridTemplateColumns: "1fr 160px 120px 100px", gap: 12, alignItems: "center", padding: "12px 20px", borderBottom: i < users.length - 1 ? "1px solid #f1f5f9" : "none", background: isMe ? "#fafff4" : undefined }}>
+              <div key={u.id} style={{ display: "grid", gridTemplateColumns: "1fr 160px 120px 100px", gap: 12, alignItems: "center", padding: "12px 20px", borderBottom: i < users.length - 1 ? "1px solid #ECEAE4" : "none", background: isMe ? "#fafff4" : undefined }}>
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "#0C2340" }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#0E1F3A" }}>
                     {u.full_name || "—"} {isMe && <span style={{ fontSize: 10, color: "#22c55e", fontWeight: 800 }}>(you)</span>}
                   </div>
-                  <div style={{ fontSize: 11, color: "#64748b", marginTop: 1 }}>{u.email}</div>
+                  <div style={{ fontSize: 11, color: "#3A4A66", marginTop: 1 }}>{u.email}</div>
                 </div>
-                <div style={{ fontSize: 11, color: "#64748b", wordBreak: "break-all" }}>{u.email}</div>
+                <div style={{ fontSize: 11, color: "#3A4A66", wordBreak: "break-all" }}>{u.email}</div>
                 <div><RolePill role={u.role || "employee"} /></div>
                 <div>
                   {canChange ? (
@@ -127,13 +127,13 @@ export default function AdminUsers() {
                       value={u.role || "employee"}
                       onChange={e => handleRoleChange(u.id, e.target.value, u.role)}
                       disabled={saving === u.id}
-                      style={{ padding: "5px 8px", border: "1px solid #e2e8f0", borderRadius: 6, fontSize: 11, color: "#334155", background: "#fff", cursor: "pointer", outline: "none" }}>
+                      style={{ padding: "5px 8px", border: "1px solid #D9D6CE", borderRadius: 6, fontSize: 11, color: "#3A4A66", background: "#fff", cursor: "pointer", outline: "none" }}>
                       <option value="super_admin">Super Admin</option>
                       <option value="admin">Admin</option>
                       <option value="employee">Employee</option>
                     </select>
                   ) : (
-                    <span style={{ fontSize: 10, color: "#cbd5e1" }}>{isOtherSuperAdmin ? "Protected" : "—"}</span>
+                    <span style={{ fontSize: 10, color: "#C9C5BB" }}>{isOtherSuperAdmin ? "Protected" : "—"}</span>
                   )}
                 </div>
               </div>

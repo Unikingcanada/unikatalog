@@ -10,8 +10,8 @@ import BeltSchematic from "@/components/intralox/BeltSchematic";
 import UniKingTearSheet from "@/components/intralox/UnkingTearSheet";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
-  green: "#16a34a", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522",
+  green: "#2E7D46", border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
 };
 const MOVEX_RED = "#E63946";
 
@@ -41,7 +41,7 @@ function Header({ step, onClose }) {
         </div>
         <div style={{ fontSize: 12, color: C.muted }}>Build your RFQ line item step by step</div>
       </div>
-      <button onClick={onClose} style={{ background: "#f1f5f9", border: "1px solid #e2e8f0", color: C.muted, borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>✕</button>
+      <button onClick={onClose} style={{ background: "#ECEAE4", border: "1px solid #D9D6CE", color: C.muted, borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>✕</button>
     </div>
   );
 }
@@ -50,7 +50,7 @@ function ProgressBar({ step }) {
   return (
     <div style={{ display: "flex", gap: 4, padding: "14px 24px 0" }}>
       {STEPS.map((_, n) => (
-        <div key={n} style={{ flex: 1, height: 4, borderRadius: 4, background: n <= step ? C.navyMid : "#e2e8f0", transition: "background 0.2s" }} />
+        <div key={n} style={{ flex: 1, height: 4, borderRadius: 4, background: n <= step ? C.navyMid : "#D9D6CE", transition: "background 0.2s" }} />
       ))}
     </div>
   );
@@ -71,9 +71,9 @@ function StepHeader({ number, title, subtitle }) {
 function NavButtons({ step, onBack, onNext, canNext = true, nextLabel = "Next →" }) {
   return (
     <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
-      {step > 0 && <button onClick={onBack} style={{ background: "#f1f5f9", border: "1px solid " + C.border, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>}
+      {step > 0 && <button onClick={onBack} style={{ background: "#ECEAE4", border: "1px solid " + C.border, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>}
       <button onClick={onNext} disabled={!canNext}
-        style={{ flex: 1, background: canNext ? C.navyMid : "#e5e7eb", color: canNext ? "#fff" : C.muted, border: "none", borderRadius: 8, padding: "12px 24px", cursor: canNext ? "pointer" : "default", fontSize: 13, fontWeight: 700 }}>
+        style={{ flex: 1, background: canNext ? C.navyMid : "#D9D6CE", color: canNext ? "#fff" : C.muted, border: "none", borderRadius: 8, padding: "12px 24px", cursor: canNext ? "pointer" : "default", fontSize: 13, fontWeight: 700 }}>
         {nextLabel}
       </button>
     </div>
@@ -86,7 +86,7 @@ function SLabel({ children }) {
 
 function Opt({ label, sub, selected, onClick }) {
   return (
-    <button onClick={onClick} style={{ background: selected ? C.navyMid : "#f1f5f9", color: selected ? "#fff" : C.text, border: "2px solid " + (selected ? C.navyMid : C.border), borderRadius: 10, padding: "10px 14px", cursor: "pointer", textAlign: "left", fontSize: 13, fontWeight: selected ? 700 : 400, transition: "all 0.15s" }}>
+    <button onClick={onClick} style={{ background: selected ? C.navyMid : "#ECEAE4", color: selected ? "#fff" : C.text, border: "2px solid " + (selected ? C.navyMid : C.border), borderRadius: 10, padding: "10px 14px", cursor: "pointer", textAlign: "left", fontSize: 13, fontWeight: selected ? 700 : 400, transition: "all 0.15s" }}>
       {label}
       {sub && <div style={{ fontSize: 11, color: selected ? "rgba(255,255,255,0.7)" : C.muted, marginTop: 2 }}>{sub}</div>}
     </button>
@@ -142,7 +142,7 @@ export default function MovexConfigurator({ initialSeries, initialStyle, onCompl
   const bodyStyle = { padding: "16px 24px 24px", maxHeight: "70vh", overflowY: "auto" };
 
   const UnitToggle = () => (
-    <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#f1f5f9", borderRadius: 20, padding: "3px 6px", marginBottom: 12, width: "fit-content" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 4, background: "#ECEAE4", borderRadius: 20, padding: "3px 6px", marginBottom: 12, width: "fit-content" }}>
       <span style={{ fontSize: 10, color: C.muted, marginRight: 2 }}>Units:</span>
       {["inches", "mm"].map(u => (
         <button key={u} onClick={() => setUnits(u)}
@@ -162,7 +162,7 @@ export default function MovexConfigurator({ initialSeries, initialStyle, onCompl
           {MOVEX_SERIES.map(s => (
             <button key={s.id} onClick={() => { set("seriesId", s.id); set("styleKey", ""); setTimeout(next, 120); }}
               style={{ background: config.seriesId === s.id ? C.navyMid : "#fff", border: "2px solid " + (config.seriesId === s.id ? C.navyMid : C.border), borderRadius: 10, padding: "12px 16px", cursor: "pointer", textAlign: "left", display: "flex", gap: 12, transition: "all 0.15s" }}>
-              <div style={{ flexShrink: 0, width: 48, height: 40, borderRadius: 6, overflow: "hidden", background: "#f0f4f8" }}>
+              <div style={{ flexShrink: 0, width: 48, height: 40, borderRadius: 6, overflow: "hidden", background: "#F4F2ED" }}>
                 {s.image && <img src={s.image} alt={s.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => e.target.style.display = "none"} />}
               </div>
               <div>
@@ -188,7 +188,7 @@ export default function MovexConfigurator({ initialSeries, initialStyle, onCompl
           {seriesData?.styles?.map(s => (
             <button key={s.key} onClick={() => { set("styleKey", s.key); set("material", ""); set("pinMaterial", ""); setTimeout(next, 120); }}
               style={{ background: config.styleKey === s.key ? C.navyMid : "#fff", border: "2px solid " + (config.styleKey === s.key ? C.navyMid : C.border), borderRadius: 10, padding: "12px 16px", cursor: "pointer", textAlign: "left", display: "flex", gap: 12, transition: "all 0.15s" }}>
-              <div style={{ flexShrink: 0, width: 48, height: 40, borderRadius: 6, overflow: "hidden", background: "#f0f4f8" }}>
+              <div style={{ flexShrink: 0, width: 48, height: 40, borderRadius: 6, overflow: "hidden", background: "#F4F2ED" }}>
                 {(s.image || seriesData?.image) && <img src={s.image || seriesData.image} alt={s.label} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={e => e.target.style.display = "none"} />}
               </div>
               <div>
@@ -395,10 +395,10 @@ export default function MovexConfigurator({ initialSeries, initialStyle, onCompl
             <input type="number" value={config.beltWidth} onChange={e => set("beltWidth", e.target.value)}
               placeholder={widthPlaceholder}
               style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid " + C.border, fontSize: 14, outline: "none" }} />
-            <div style={{ background: "#f1f5f9", borderRadius: 8, padding: "10px 14px", fontSize: 13, fontWeight: 700, color: C.navyMid, whiteSpace: "nowrap" }}>{units}</div>
+            <div style={{ background: "#ECEAE4", borderRadius: 8, padding: "10px 14px", fontSize: 13, fontWeight: 700, color: C.navyMid, whiteSpace: "nowrap" }}>{units}</div>
           </div>
           {validationMsg && (
-            <div style={{ marginTop: 8, padding: "8px 12px", background: validationMsg.ok ? "#f0fdf4" : "#fef2f2", borderRadius: 7, fontSize: 12, fontWeight: 600, color: validationMsg.ok ? "#16a34a" : "#dc2626" }}>
+            <div style={{ marginTop: 8, padding: "8px 12px", background: validationMsg.ok ? "#f0fdf4" : "#fef2f2", borderRadius: 7, fontSize: 12, fontWeight: 600, color: validationMsg.ok ? "#2E7D46" : "#C62828" }}>
               {validationMsg.msg}
             </div>
           )}
@@ -427,7 +427,7 @@ export default function MovexConfigurator({ initialSeries, initialStyle, onCompl
             {LENGTH_UNITS.map(u => <option key={u} value={u}>{u}</option>)}
           </select>
         </div>
-        <div style={{ marginTop: 8, fontSize: 12, color: C.muted, background: "#eff6ff", borderRadius: 6, padding: "8px 12px" }}>
+        <div style={{ marginTop: 8, fontSize: 12, color: C.muted, background: "#FDF0E9", borderRadius: 6, padding: "8px 12px" }}>
           ℹ Total belt running length = conveyor length × 2 + sprocket/nosebar allowance. Movex must confirm before ordering.
         </div>
         <NavButtons step={step} onBack={back} onNext={next} canNext={true} />
@@ -485,7 +485,7 @@ export default function MovexConfigurator({ initialSeries, initialStyle, onCompl
                 <div>
                   <div style={{ fontSize: 12, fontWeight: 700, color: C.green, marginBottom: 8 }}>✓ Catalog-confirmed sideguard options for {seriesData?.name}:</div>
                   {sgOpts.map((sg, i) => (
-                    <div key={i} style={{ background: "#f8fafc", border: "1px solid " + C.border, borderRadius: 8, padding: "12px 14px", marginBottom: 8 }}>
+                    <div key={i} style={{ background: "#F4F2ED", border: "1px solid " + C.border, borderRadius: 8, padding: "12px 14px", marginBottom: 8 }}>
                       <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid }}>{sg.name}</div>
                       <div style={{ fontSize: 12, color: C.muted }}>{sg.notes}</div>
                     </div>
@@ -536,7 +536,7 @@ export default function MovexConfigurator({ initialSeries, initialStyle, onCompl
         <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
           {["Belts", "Sets", "Each"].map(u => (
             <button key={u} onClick={() => set("quantityUnit", u)}
-              style={{ flex: 1, background: config.quantityUnit === u ? C.navyMid : "#f1f5f9", color: config.quantityUnit === u ? "#fff" : C.text, border: "2px solid " + (config.quantityUnit === u ? C.navyMid : C.border), borderRadius: 8, padding: "8px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+              style={{ flex: 1, background: config.quantityUnit === u ? C.navyMid : "#ECEAE4", color: config.quantityUnit === u ? "#fff" : C.text, border: "2px solid " + (config.quantityUnit === u ? C.navyMid : C.border), borderRadius: 8, padding: "8px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
               {u}
             </button>
           ))}
@@ -567,13 +567,13 @@ export default function MovexConfigurator({ initialSeries, initialStyle, onCompl
         {config.uploads.length > 0 && (
           <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 12 }}>
             {config.uploads.map((f, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "#f8fafc", borderRadius: 8, border: "1px solid " + C.border }}>
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "#F4F2ED", borderRadius: 8, border: "1px solid " + C.border }}>
                 <span style={{ fontSize: 18 }}>{f.type.startsWith("image/") ? "🖼️" : "📄"}</span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 600, color: C.navyMid, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</div>
                   <div style={{ fontSize: 11, color: C.muted }}>{(f.size / 1024).toFixed(0)} KB</div>
                 </div>
-                <button onClick={() => set("uploads", config.uploads.filter((_, j) => j !== i))} style={{ background: "none", border: "none", color: "#9ca3af", cursor: "pointer", fontSize: 20 }}>×</button>
+                <button onClick={() => set("uploads", config.uploads.filter((_, j) => j !== i))} style={{ background: "none", border: "none", color: "#8A94A6", cursor: "pointer", fontSize: 20 }}>×</button>
               </div>
             ))}
           </div>
@@ -675,7 +675,7 @@ export default function MovexConfigurator({ initialSeries, initialStyle, onCompl
 
           <div style={{ background: C.bg, borderRadius: 10, border: "1px solid " + C.border, overflow: "hidden", marginBottom: 14 }}>
             {fields.map(([k, v], i) => (
-              <div key={k} style={{ display: "flex", gap: 12, padding: "8px 14px", background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: i < fields.length - 1 ? "1px solid " + C.border : "none" }}>
+              <div key={k} style={{ display: "flex", gap: 12, padding: "8px 14px", background: i % 2 === 0 ? "#F4F2ED" : "#fff", borderBottom: i < fields.length - 1 ? "1px solid " + C.border : "none" }}>
                 <span style={{ fontSize: 12, color: C.muted, fontWeight: 600, width: 150, flexShrink: 0 }}>{k}</span>
                 <span style={{ fontSize: 12, color: v?.includes("To be confirmed") ? "#92400e" : C.text, flex: 1, fontStyle: v?.includes("To be confirmed") ? "italic" : "normal" }}>{v}</span>
               </div>
@@ -683,7 +683,7 @@ export default function MovexConfigurator({ initialSeries, initialStyle, onCompl
           </div>
 
           {beltRow && (
-            <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#166534", marginBottom: 12 }}>
+            <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#2E7D46", marginBottom: 12 }}>
               ✓ Catalog-confirmed: Max load {beltRow.strengthNm?.toLocaleString()} N/m ({beltRow.strengthLbsFt} lbs/ft) · Temp {beltRow.tempC}°C / {beltRow.tempF}°F · Mass {beltRow.massKgM2} kg/m²
             </div>
           )}
@@ -695,7 +695,7 @@ export default function MovexConfigurator({ initialSeries, initialStyle, onCompl
           )}
 
           {config.uploads.length > 0 && (
-            <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#1e40af", marginBottom: 12 }}>
+            <div style={{ background: "#FDF0E9", border: "1px solid #F8C9B0", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#0E1F3A", marginBottom: 12 }}>
               📎 {config.uploads.length} file{config.uploads.length !== 1 ? "s" : ""} attached
             </div>
           )}
@@ -705,7 +705,7 @@ export default function MovexConfigurator({ initialSeries, initialStyle, onCompl
           </div>
 
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <button onClick={back} style={{ background: "#f1f5f9", border: "1px solid " + C.border, borderRadius: 8, padding: "10px 16px", cursor: "pointer", fontSize: 13 }}>← Back</button>
+            <button onClick={back} style={{ background: "#ECEAE4", border: "1px solid " + C.border, borderRadius: 8, padding: "10px 16px", cursor: "pointer", fontSize: 13 }}>← Back</button>
             <button onClick={() => setShowTearSheet(true)} style={{ flex: 1, padding: "11px", background: C.gold, color: C.navy, border: "none", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 800 }}>📄 View / Print Tear Sheet</button>
             <button onClick={handleAddRFQ} style={{ flex: 2, padding: "11px", background: C.green, color: "#fff", border: "none", borderRadius: 10, cursor: "pointer", fontSize: 14, fontWeight: 800, minWidth: "100%" }}>Add to RFQ ✓</button>
           </div>

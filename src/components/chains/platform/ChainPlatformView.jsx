@@ -21,9 +21,9 @@ import ChainImportPanel from "./ChainImportPanel";
 import ChainCountDebugPanel from "./ChainCountDebugPanel";
 
 const C = {
-  navy: "#003c5b", navyMid: "#1A3A5C",
-  border: "#e2e8f0", bg: "#f8fafc", card: "#ffffff",
-  text: "#0f172a", muted: "#64748b",
+  navy: "#0E1F3A", navyMid: "#0E1F3A",
+  border: "#D9D6CE", bg: "#F4F2ED", card: "#ffffff",
+  text: "#0E1F3A", muted: "#3A4A66",
 };
 
 function ViewToggle({ view, onChange }) {
@@ -73,7 +73,7 @@ function ProductListView({ family, products, onSelect, onConfigure, liveChainSou
         const inFamily = products.some(c => c.chain_id?.toLowerCase() === "dryrun-test-001");
         const canonicalLabel = familyKeyToLabel(family.key);
         return (
-          <div style={{ fontSize: 10, color: "#0f172a", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 6, padding: "10px 14px", marginBottom: 16, fontFamily: "monospace" }}>
+          <div style={{ fontSize: 10, color: "#0E1F3A", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 6, padding: "10px 14px", marginBottom: 16, fontFamily: "monospace" }}>
             <div style={{ fontWeight: 700, fontSize: 11, marginBottom: 6 }}>🔍 Debug: {family.label}</div>
             <div>Selected family key: <b>"{family.key}"</b></div>
             <div>Canonical label (for DB filter): <b>"{canonicalLabel}"</b></div>
@@ -85,25 +85,25 @@ function ProductListView({ family, products, onSelect, onConfigure, liveChainSou
               {testRecord ? (
                 <>
                   <div>chain_id: <b>{testRecord.chain_id}</b></div>
-                  <div>chain_family (raw): <b style={{ color: "#dc2626" }}>"{testRecord.chain_family}"</b></div>
-                  <div>chain_family (normalized): <b style={{ color: "#16a34a" }}>"{normalizeChainFamily(testRecord.chain_family)}"</b></div>
+                  <div>chain_family (raw): <b style={{ color: "#C62828" }}>"{testRecord.chain_family}"</b></div>
+                  <div>chain_family (normalized): <b style={{ color: "#2E7D46" }}>"{normalizeChainFamily(testRecord.chain_family)}"</b></div>
                   <div>status: <b>{testRecord.status || "(none)"}</b></div>
                   <div>chain_number: <b>{testRecord.chain_number}</b></div>
                   <div>display_name: <b>{testRecord.display_name}</b></div>
                   <div>_from_db: <b>{testRecord._from_db ? "YES" : "no"}</b></div>
                   <div style={{ marginTop: 4 }}>
-                    In merged source: <b style={{ color: "#16a34a" }}>✓ YES</b> &nbsp;|&nbsp;
-                    In this family: <b style={{ color: inFamily ? "#16a34a" : "#dc2626" }}>{inFamily ? "✓ YES" : "✗ NO — family key/label mismatch"}</b>
+                    In merged source: <b style={{ color: "#2E7D46" }}>✓ YES</b> &nbsp;|&nbsp;
+                    In this family: <b style={{ color: inFamily ? "#2E7D46" : "#C62828" }}>{inFamily ? "✓ YES" : "✗ NO — family key/label mismatch"}</b>
                   </div>
-                  <div style={{ marginTop: 4, color: "#475569" }}>
-                    Filter: normalizeChainFamily("{testRecord.chain_family}").toLowerCase() === "{canonicalLabel.toLowerCase()}" → <b style={{ color: normalizeChainFamily(testRecord.chain_family).toLowerCase() === canonicalLabel.toLowerCase() ? "#16a34a" : "#dc2626" }}>{normalizeChainFamily(testRecord.chain_family).toLowerCase() === canonicalLabel.toLowerCase() ? "✓ MATCH" : "✗ NO MATCH"}</b>
+                  <div style={{ marginTop: 4, color: "#3A4A66" }}>
+                    Filter: normalizeChainFamily("{testRecord.chain_family}").toLowerCase() === "{canonicalLabel.toLowerCase()}" → <b style={{ color: normalizeChainFamily(testRecord.chain_family).toLowerCase() === canonicalLabel.toLowerCase() ? "#2E7D46" : "#C62828" }}>{normalizeChainFamily(testRecord.chain_family).toLowerCase() === canonicalLabel.toLowerCase() ? "✓ MATCH" : "✗ NO MATCH"}</b>
                   </div>
                 </>
               ) : (
-                <div style={{ color: "#dc2626" }}>✗ DRYRUN-TEST-001 NOT in merged source</div>
+                <div style={{ color: "#C62828" }}>✗ DRYRUN-TEST-001 NOT in merged source</div>
               )}
             </div>
-            <div style={{ marginTop: 6, color: "#475569" }}>First 10 chain IDs in family: {products.slice(0, 10).map(c => c.chain_id || c.chain_number).join(", ") || "(none)"}</div>
+            <div style={{ marginTop: 6, color: "#3A4A66" }}>First 10 chain IDs in family: {products.slice(0, 10).map(c => c.chain_id || c.chain_number).join(", ") || "(none)"}</div>
           </div>
         );
       })()}
@@ -132,7 +132,7 @@ function ProductListView({ family, products, onSelect, onConfigure, liveChainSou
           {family.applications?.length > 0 && (
             <div style={{ marginTop: 6, display: "flex", gap: 5, flexWrap: "wrap" }}>
               {family.applications.map((a, i) => (
-                <span key={i} style={{ fontSize: 10, padding: "1px 7px", borderRadius: 20, background: "#e0f2fe", color: "#0369a1", fontWeight: 600 }}>{a}</span>
+                <span key={i} style={{ fontSize: 10, padding: "1px 7px", borderRadius: 20, background: "#FDF0E9", color: "#0E1F3A", fontWeight: 600 }}>{a}</span>
               ))}
             </div>
           )}
@@ -175,7 +175,7 @@ function ProductListView({ family, products, onSelect, onConfigure, liveChainSou
               style={{ background: C.card, border: "1px solid " + C.border, borderRadius: 8, display: "flex", alignItems: "center", gap: 0, overflow: "hidden", cursor: "pointer" }}>
               <div style={{ width: 3, alignSelf: "stretch", background: C.navyMid, flexShrink: 0 }} />
               {(p.image || p.image_url) && (
-                <div style={{ width: 60, height: 50, display: "flex", alignItems: "center", justifyContent: "center", background: C.bg, borderRight: "1px solid #f1f5f9", flexShrink: 0 }}>
+                <div style={{ width: 60, height: 50, display: "flex", alignItems: "center", justifyContent: "center", background: C.bg, borderRight: "1px solid #ECEAE4", flexShrink: 0 }}>
                   <img src={p.image || p.image_url} alt="" style={{ maxHeight: 44, maxWidth: 54, objectFit: "contain" }} onError={e => e.target.style.display = "none"} />
                 </div>
               )}
@@ -292,7 +292,7 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
           ← {view === "detail" ? (CHAIN_FAMILIES.find(f => f.key === selectedFamily)?.label || "Chains") : view === "import" ? "Chain Families" : "Chain Families"}
         </button>
       )}
-      <span style={{ fontSize: 12, color: "#94a3b8" }}>
+      <span style={{ fontSize: 12, color: "#8A94A6" }}>
         {view === "families" && "Chain Platform"}
         {view === "products" && CHAIN_FAMILIES.find(f => f.key === selectedFamily)?.label}
         {view === "detail" && (selectedProduct?.chain_number || selectedProduct?.part_number)}
@@ -300,7 +300,7 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
       </span>
       {view === "families" && (
         <button onClick={() => { setView("import"); window.scrollTo(0,0); }}
-          style={{ marginLeft: "auto", padding: "6px 14px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 700, color: "#334155" }}>
+          style={{ marginLeft: "auto", padding: "6px 14px", background: "#F4F2ED", border: "1px solid #D9D6CE", borderRadius: 7, cursor: "pointer", fontSize: 11, fontWeight: 700, color: "#3A4A66" }}>
           ⬆ Import Engine
         </button>
       )}
@@ -360,7 +360,7 @@ export default function ChainPlatformView({ onBack, onGoRFQ }) {
                 <div style={{ fontSize: 18, fontWeight: 800, color: C.text }}>Chain Configurator</div>
                 <div style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>Build your RFQ line item step by step</div>
               </div>
-              <button onClick={() => setShowConfigurator(false)} style={{ background: "#f1f5f9", border: "none", fontSize: 18, cursor: "pointer", color: C.muted, padding: "6px 10px", borderRadius: 8 }}>×</button>
+              <button onClick={() => setShowConfigurator(false)} style={{ background: "#ECEAE4", border: "none", fontSize: 18, cursor: "pointer", color: C.muted, padding: "6px 10px", borderRadius: 8 }}>×</button>
             </div>
             <ChainConfigurator
               initialFamily={configFamily}

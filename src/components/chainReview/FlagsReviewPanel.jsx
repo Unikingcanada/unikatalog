@@ -13,10 +13,10 @@ const FLAG_TYPES = [
 const SEVERITIES = ["Critical","High","Medium","Low"];
 
 const SEVERITY_COLORS = {
-  Critical: ["#fef2f2","#b91c1c"],
+  Critical: ["#fef2f2","#C62828"],
   High:     ["#fff7ed","#c2410c"],
-  Medium:   ["#fffbeb","#b45309"],
-  Low:      ["#f0fdf4","#16a34a"],
+  Medium:   ["#fffbeb","#B8860B"],
+  Low:      ["#f0fdf4","#2E7D46"],
 };
 
 export default function FlagsReviewPanel({ records, onRefresh, onActionMsg }) {
@@ -144,7 +144,7 @@ export default function FlagsReviewPanel({ records, onRefresh, onActionMsg }) {
   return (
     <div>
       {/* ── Advanced Filters ── */}
-      <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "14px 18px", marginBottom: 14, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "flex-end" }}>
+      <div style={{ background: "#fff", border: "1px solid #D9D6CE", borderRadius: 10, padding: "14px 18px", marginBottom: 14, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "flex-end" }}>
         <FilterField label="Flag Type">
           <select value={fType} onChange={e => setFType(e.target.value)} style={sel}>
             <option value="">All types</option>
@@ -174,10 +174,10 @@ export default function FlagsReviewPanel({ records, onRefresh, onActionMsg }) {
           <input type="date" value={fDateTo} onChange={e => setFDateTo(e.target.value)} style={sel} />
         </FilterField>
         <button onClick={() => { setFType(""); setFSeverity(""); setFStatus(""); setFChain(""); setFDateFrom(""); setFDateTo(""); }}
-          style={{ padding: "5px 12px", border: "1px solid #e2e8f0", borderRadius: 6, background: "#f8fafc", fontSize: 11, color: "#64748b", cursor: "pointer", alignSelf: "flex-end" }}>
+          style={{ padding: "5px 12px", border: "1px solid #D9D6CE", borderRadius: 6, background: "#F4F2ED", fontSize: 11, color: "#3A4A66", cursor: "pointer", alignSelf: "flex-end" }}>
           Clear
         </button>
-        <span style={{ alignSelf: "flex-end", fontSize: 11, color: "#94a3b8", marginLeft: "auto" }}>
+        <span style={{ alignSelf: "flex-end", fontSize: 11, color: "#8A94A6", marginLeft: "auto" }}>
           {filtered.length} / {records.length} flags shown
         </span>
       </div>
@@ -194,7 +194,7 @@ export default function FlagsReviewPanel({ records, onRefresh, onActionMsg }) {
           <button
             onClick={handleQuickResolveMissingDims}
             disabled={quickWorking}
-            style={{ background: "#b45309", color: "#fff", border: "none", borderRadius: 7, padding: "7px 16px", fontSize: 12, fontWeight: 700, cursor: quickWorking ? "default" : "pointer", opacity: quickWorking ? 0.6 : 1 }}>
+            style={{ background: "#B8860B", color: "#fff", border: "none", borderRadius: 7, padding: "7px 16px", fontSize: 12, fontWeight: 700, cursor: quickWorking ? "default" : "pointer", opacity: quickWorking ? 0.6 : 1 }}>
             {quickWorking ? "Resolving…" : `Resolve ${missingDimsCount} Flags`}
           </button>
         </div>
@@ -202,32 +202,32 @@ export default function FlagsReviewPanel({ records, onRefresh, onActionMsg }) {
 
       {/* ── Bulk toolbar ── */}
       {selected.size > 0 && (
-        <div style={{ background: "#1a3a5c", borderRadius: 10, padding: "10px 18px", marginBottom: 12, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        <div style={{ background: "#0E1F3A", borderRadius: 10, padding: "10px 18px", marginBottom: 12, display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
           <span style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>{selected.size} selected</span>
           <button onClick={handleBulkApprove} disabled={bulkWorking} style={bBtn("#22c55e")}>✓ Resolve All</button>
           <button onClick={handleBulkAccepted} disabled={bulkWorking} style={bBtn("#f59e0b")}>📌 Accepted Limitation</button>
           <button onClick={() => setShowNoteInput(v => !v)} disabled={bulkWorking} style={bBtn("#6366f1")}>📝 Assign Note</button>
-          <button onClick={() => setSelected(new Set())} style={{ ...bBtn("#94a3b8"), marginLeft: "auto" }}>Deselect</button>
+          <button onClick={() => setSelected(new Set())} style={{ ...bBtn("#8A94A6"), marginLeft: "auto" }}>Deselect</button>
         </div>
       )}
 
       {/* Bulk note input */}
       {showNoteInput && selected.size > 0 && (
-        <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, padding: "12px 16px", marginBottom: 12, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+        <div style={{ background: "#fff", border: "1px solid #D9D6CE", borderRadius: 8, padding: "12px 16px", marginBottom: 12, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
           <input
             value={bulkNote}
             onChange={e => setBulkNote(e.target.value)}
             placeholder={`Note to apply to ${selected.size} flags…`}
-            style={{ flex: 1, minWidth: 200, padding: "7px 12px", border: "1px solid #e2e8f0", borderRadius: 6, fontSize: 12, outline: "none" }}
+            style={{ flex: 1, minWidth: 200, padding: "7px 12px", border: "1px solid #D9D6CE", borderRadius: 6, fontSize: 12, outline: "none" }}
             onKeyDown={e => e.key === "Enter" && handleBulkNote()}
             autoFocus
           />
           <button onClick={handleBulkNote} disabled={bulkWorking || !bulkNote.trim()}
-            style={{ padding: "7px 16px", border: "none", borderRadius: 6, background: "#1a3a5c", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+            style={{ padding: "7px 16px", border: "none", borderRadius: 6, background: "#0E1F3A", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
             Apply Note
           </button>
           <button onClick={() => { setShowNoteInput(false); setBulkNote(""); }}
-            style={{ padding: "7px 12px", border: "1px solid #e2e8f0", borderRadius: 6, background: "#f8fafc", color: "#64748b", fontSize: 12, cursor: "pointer" }}>
+            style={{ padding: "7px 12px", border: "1px solid #D9D6CE", borderRadius: 6, background: "#F4F2ED", color: "#3A4A66", fontSize: 12, cursor: "pointer" }}>
             Cancel
           </button>
         </div>
@@ -235,16 +235,16 @@ export default function FlagsReviewPanel({ records, onRefresh, onActionMsg }) {
 
       {/* ── Records list ── */}
       {filtered.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "48px 20px", color: "#64748b", background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0" }}>
+        <div style={{ textAlign: "center", padding: "48px 20px", color: "#3A4A66", background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE" }}>
           No flags match the current filters.
         </div>
       ) : (
-        <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", overflow: "hidden" }}>
+        <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", overflow: "hidden" }}>
           {/* Select-all header */}
-          <div style={{ padding: "8px 16px", background: "#f8fafc", borderBottom: "1px solid #e2e8f0", display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ padding: "8px 16px", background: "#F4F2ED", borderBottom: "1px solid #D9D6CE", display: "flex", alignItems: "center", gap: 10 }}>
             <input type="checkbox" checked={allSelected} onChange={toggleAll}
-              style={{ width: 15, height: 15, cursor: "pointer", accentColor: "#1a3a5c" }} />
-            <span style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>
+              style={{ width: 15, height: 15, cursor: "pointer", accentColor: "#0E1F3A" }} />
+            <span style={{ fontSize: 11, color: "#3A4A66", fontWeight: 600 }}>
               {allSelected ? "Deselect all" : `Select all ${filtered.length} visible`}
             </span>
           </div>
@@ -252,14 +252,14 @@ export default function FlagsReviewPanel({ records, onRefresh, onActionMsg }) {
           {filtered.map((record, i) => {
             const isSelected = selected.has(record.id);
             const isExpanded = expandedId === record.id;
-            const [, sevFg] = SEVERITY_COLORS[record.severity] || ["#f1f5f9","#94a3b8"];
+            const [, sevFg] = SEVERITY_COLORS[record.severity] || ["#ECEAE4","#8A94A6"];
             return (
               <div key={record.id}
-                style={{ borderBottom: i < filtered.length - 1 ? "1px solid #f1f5f9" : "none", display: "flex", alignItems: "flex-start", gap: 0, background: isSelected ? "#f0f7ff" : "transparent" }}>
+                style={{ borderBottom: i < filtered.length - 1 ? "1px solid #ECEAE4" : "none", display: "flex", alignItems: "flex-start", gap: 0, background: isSelected ? "#f0f7ff" : "transparent" }}>
                 {/* Checkbox column */}
                 <div style={{ padding: "18px 14px 0 16px", flexShrink: 0 }}>
                   <input type="checkbox" checked={isSelected} onChange={() => toggleOne(record.id)}
-                    style={{ width: 15, height: 15, cursor: "pointer", accentColor: "#1a3a5c" }} />
+                    style={{ width: 15, height: 15, cursor: "pointer", accentColor: "#0E1F3A" }} />
                 </div>
                 {/* Row */}
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -301,15 +301,15 @@ export default function FlagsReviewPanel({ records, onRefresh, onActionMsg }) {
 function FilterField({ label, children }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-      <label style={{ fontSize: 10, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px" }}>{label}</label>
+      <label style={{ fontSize: 10, fontWeight: 700, color: "#3A4A66", textTransform: "uppercase", letterSpacing: "0.5px" }}>{label}</label>
       {children}
     </div>
   );
 }
 
 const sel = {
-  padding: "5px 10px", border: "1px solid #e2e8f0", borderRadius: 6,
-  fontSize: 11, color: "#1e293b", background: "#fff", outline: "none", cursor: "pointer",
+  padding: "5px 10px", border: "1px solid #D9D6CE", borderRadius: 6,
+  fontSize: 11, color: "#0E1F3A", background: "#fff", outline: "none", cursor: "pointer",
 };
 
 function bBtn(bg) {

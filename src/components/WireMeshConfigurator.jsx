@@ -3,11 +3,11 @@ import { useState, useRef } from "react";
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const C = {
-  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  gold: "#C9A84C", goldLight: "#e8c96d",
-  green: "#16a34a", greenBg: "#dcfce7",
-  border: "#e2e8f0", text: "#0f172a", muted: "#64748b",
-  bg: "#f8fafc", card: "#ffffff"
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  gold: "#F26522", goldLight: "#F26522",
+  green: "#2E7D46", greenBg: "#dcfce7",
+  border: "#D9D6CE", text: "#0E1F3A", muted: "#3A4A66",
+  bg: "#F4F2ED", card: "#ffffff"
 };
 
 const LOGO = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png";
@@ -169,7 +169,7 @@ function WireMeshSchematic({ config }) {
   const hasBead = edgeStyle?.toLowerCase().includes("bead");
 
   return (
-    <div style={{ background: "#0f2340", borderRadius: 12, padding: "12px 12px 8px", marginBottom: 16, border: "1px solid rgba(255,255,255,0.08)" }}>
+    <div style={{ background: "#0E1F3A", borderRadius: 12, padding: "12px 12px 8px", marginBottom: 16, border: "1px solid rgba(255,255,255,0.08)" }}>
       <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 6, textAlign: "center" }}>
         Live Belt Schematic — {style?.label || "Select a belt style"}
       </div>
@@ -199,10 +199,10 @@ function WireMeshSchematic({ config }) {
 
         {/* Left drive */}
         <ellipse cx={beltX} cy={beltY + beltH / 2} rx={14} ry={beltH / 2 + 4}
-          fill={leftDrum ? "#334155" : "#1e3a5c"} stroke={frameColor} strokeWidth={2} />
+          fill={leftDrum ? "#3A4A66" : "#1e3a5c"} stroke={frameColor} strokeWidth={2} />
         {/* Right nose / drive */}
         <ellipse cx={beltX + beltW} cy={beltY + beltH / 2} rx={14} ry={beltH / 2 + 4}
-          fill="#334155" stroke={frameColor} strokeWidth={2} />
+          fill="#3A4A66" stroke={frameColor} strokeWidth={2} />
 
         {/* Sprocket teeth hint on drive side */}
         {!leftDrum && [0.2, 0.4, 0.6, 0.8].map((t, i) => (
@@ -236,27 +236,27 @@ function WireMeshSchematic({ config }) {
         {/* Width dimension */}
         <defs>
           <marker id="wArr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8" />
+            <path d="M0,0 L6,3 L0,6 Z" fill="#8A94A6" />
           </marker>
           <marker id="wArrL" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
-            <path d="M6,0 L0,3 L6,6 Z" fill="#94a3b8" />
+            <path d="M6,0 L0,3 L6,6 Z" fill="#8A94A6" />
           </marker>
         </defs>
 
         {/* Width arrow (vertical) */}
         <line x1={beltX - 30} y1={beltY} x2={beltX - 30} y2={beltY + beltH}
-          stroke="#94a3b8" strokeWidth={1} markerEnd="url(#wArr)" markerStart="url(#wArrL)" />
+          stroke="#8A94A6" strokeWidth={1} markerEnd="url(#wArr)" markerStart="url(#wArrL)" />
         <text x={beltX - 48} y={beltY + beltH / 2 + 4}
-          textAnchor="middle" fontSize={9} fill="#94a3b8"
+          textAnchor="middle" fontSize={9} fill="#8A94A6"
           transform={`rotate(-90, ${beltX - 48}, ${beltY + beltH / 2 + 4})`}>
           {widthNum > 0 ? `W = ${widthNum}"` : "Width = ?"}
         </text>
 
         {/* Length arrow (horizontal) */}
         <line x1={beltX} y1={beltY + beltH + 22} x2={beltX + beltW} y2={beltY + beltH + 22}
-          stroke="#94a3b8" strokeWidth={1} markerEnd="url(#wArr)" markerStart="url(#wArrL)" />
+          stroke="#8A94A6" strokeWidth={1} markerEnd="url(#wArr)" markerStart="url(#wArrL)" />
         <text x={beltX + beltW / 2} y={beltY + beltH + 36}
-          textAnchor="middle" fontSize={9} fill="#94a3b8" fontWeight="700">
+          textAnchor="middle" fontSize={9} fill="#8A94A6" fontWeight="700">
           {lengthNum > 0 ? `L = ${lengthNum} ft` : "Length = ?"}
         </text>
 
@@ -271,7 +271,7 @@ function WireMeshSchematic({ config }) {
         {/* Edge label */}
         {edgeStyle && (
           <text x={beltX + beltW + 20} y={beltY + beltH / 2 + 4}
-            fontSize={8} fill="#94a3b8" fontWeight="600" dominantBaseline="middle">
+            fontSize={8} fill="#8A94A6" fontWeight="600" dominantBaseline="middle">
             {hasChainEdge ? "Chain Edge →" : hasBead ? "Beaded →" : "Selvedge →"}
           </text>
         )}
@@ -279,7 +279,7 @@ function WireMeshSchematic({ config }) {
         {/* Wire dia label */}
         {wireDiameter && (
           <text x={beltX + 12} y={beltY + beltH + 52}
-            fontSize={8} fill="#94a3b8">
+            fontSize={8} fill="#8A94A6">
             Wire: {wireDiameter}
           </text>
         )}
@@ -302,17 +302,17 @@ function BeltStyleCard({ style, onViewSpecs, onConfigure }) {
         background: "#fff", borderRadius: 14,
         border: `2px solid ${hov ? C.navyMid : C.border}`,
         overflow: "hidden", transition: "all 0.18s",
-        boxShadow: hov ? "0 10px 30px rgba(15,35,64,0.12)" : "0 1px 4px rgba(0,0,0,0.06)",
+        boxShadow: hov ? "0 10px 30px rgba(14,31,58,0.12)" : "0 1px 4px rgba(0,0,0,0.06)",
         transform: hov ? "translateY(-3px)" : "none",
         display: "flex", flexDirection: "column"
       }}>
 
       {/* Image */}
-      <div style={{ height: 160, overflow: "hidden", position: "relative", background: "#f0f4f8" }}>
+      <div style={{ height: 160, overflow: "hidden", position: "relative", background: "#F4F2ED" }}>
         <img src={style.image} alt={style.label}
           style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.3s", transform: hov ? "scale(1.04)" : "scale(1)" }}
           onError={(e) => { e.target.style.display = "none"; }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(15,35,64,0.75) 0%, transparent 55%)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(14,31,58,0.75) 0%, transparent 55%)" }} />
         <div style={{ position: "absolute", bottom: 10, left: 14 }}>
           <div style={{ color: "#fff", fontSize: 13, fontWeight: 800, lineHeight: 1.2 }}>{style.label}</div>
         </div>
@@ -326,10 +326,10 @@ function BeltStyleCard({ style, onViewSpecs, onConfigure }) {
           <div style={{ fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 4 }}>Applications</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
             {style.applications.slice(0, 3).map(a => (
-              <span key={a} style={{ background: "#eef3f8", color: C.navyMid, fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>{a}</span>
+              <span key={a} style={{ background: "#F4F2ED", color: C.navyMid, fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>{a}</span>
             ))}
             {style.applications.length > 3 && (
-              <span style={{ background: "#f1f5f9", color: C.muted, fontSize: 10, padding: "2px 7px", borderRadius: 10 }}>+{style.applications.length - 3} more</span>
+              <span style={{ background: "#ECEAE4", color: C.muted, fontSize: 10, padding: "2px 7px", borderRadius: 10 }}>+{style.applications.length - 3} more</span>
             )}
           </div>
         </div>
@@ -338,7 +338,7 @@ function BeltStyleCard({ style, onViewSpecs, onConfigure }) {
           <div style={{ fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 4 }}>Key Advantages</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
             {style.advantages.slice(0, 3).map(a => (
-              <span key={a} style={{ background: "#f0fdf4", color: "#16a34a", fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>✓ {a}</span>
+              <span key={a} style={{ background: "#f0fdf4", color: "#2E7D46", fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 10 }}>✓ {a}</span>
             ))}
           </div>
         </div>
@@ -347,7 +347,7 @@ function BeltStyleCard({ style, onViewSpecs, onConfigure }) {
       {/* Actions */}
       <div style={{ padding: "10px 14px", borderTop: "1px solid " + C.border, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
         <button onClick={() => onViewSpecs(style)}
-          style={{ padding: "8px", background: "#f1f5f9", color: C.navyMid, border: "none", borderRadius: 8, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>
+          style={{ padding: "8px", background: "#ECEAE4", color: C.navyMid, border: "none", borderRadius: 8, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>
           View Specs
         </button>
         <button onClick={() => onConfigure(style)}
@@ -421,7 +421,7 @@ function SpecsModal({ style, onConfigure, onClose }) {
           </div>
 
           <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={onClose} style={{ flex: 1, padding: "11px", background: "#f1f5f9", color: C.navyMid, border: "none", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Close</button>
+            <button onClick={onClose} style={{ flex: 1, padding: "11px", background: "#ECEAE4", color: C.navyMid, border: "none", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Close</button>
             <button onClick={() => { onClose(); onConfigure(style); }}
               style={{ flex: 2, padding: "11px", background: C.navyMid, color: "#fff", border: "none", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 800 }}>
               Configure This Belt →
@@ -491,7 +491,7 @@ function Wizard({ initialStyle, onComplete, onClose }) {
   );
 
   const ProgressBar = () => (
-    <div style={{ background: "#e5e7eb", height: 4, borderRadius: 0 }}>
+    <div style={{ background: "#D9D6CE", height: 4, borderRadius: 0 }}>
       <div style={{ background: C.gold, height: "100%", width: `${((step + 1) / STEPS.length) * 100}%`, transition: "width 0.3s", borderRadius: 0 }} />
     </div>
   );
@@ -499,10 +499,10 @@ function Wizard({ initialStyle, onComplete, onClose }) {
   const NavButtons = ({ canNext = true, nextLabel = "Next →" }) => (
     <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
       {step > 0 && (
-        <button onClick={back} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
+        <button onClick={back} style={{ background: "#ECEAE4", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 20px", cursor: "pointer", fontSize: 13 }}>← Back</button>
       )}
       <button onClick={next} disabled={!canNext}
-        style={{ flex: 1, background: canNext ? C.navyMid : "#e5e7eb", color: canNext ? "#fff" : C.muted, border: "none", borderRadius: 8, padding: "12px 24px", cursor: canNext ? "pointer" : "default", fontSize: 13, fontWeight: 700 }}>
+        style={{ flex: 1, background: canNext ? C.navyMid : "#D9D6CE", color: canNext ? "#fff" : C.muted, border: "none", borderRadius: 8, padding: "12px 24px", cursor: canNext ? "pointer" : "default", fontSize: 13, fontWeight: 700 }}>
         {nextLabel}
       </button>
     </div>
@@ -516,14 +516,14 @@ function Wizard({ initialStyle, onComplete, onClose }) {
 
   const OptionBtn = ({ label, selected, onClick }) => (
     <button onClick={onClick}
-      style={{ background: selected ? C.navyMid : "#f1f5f9", color: selected ? "#fff" : C.text, border: `2px solid ${selected ? C.navyMid : C.border}`, borderRadius: 10, padding: "10px 14px", cursor: "pointer", textAlign: "left", fontSize: 13, fontWeight: selected ? 700 : 400, transition: "all 0.15s" }}>
+      style={{ background: selected ? C.navyMid : "#ECEAE4", color: selected ? "#fff" : C.text, border: `2px solid ${selected ? C.navyMid : C.border}`, borderRadius: 10, padding: "10px 14px", cursor: "pointer", textAlign: "left", fontSize: 13, fontWeight: selected ? 700 : 400, transition: "all 0.15s" }}>
       {label}
     </button>
   );
 
   const SLabel = ({ children, note }) => (
     <div style={{ fontWeight: 700, fontSize: 12, color: C.muted, textTransform: "uppercase", letterSpacing: "0.4px", marginBottom: 6, marginTop: 14 }}>
-      {children}{note && <span style={{ fontWeight: 400, marginLeft: 6, color: "#94a3b8" }}>— {note}</span>}
+      {children}{note && <span style={{ fontWeight: 400, marginLeft: 6, color: "#8A94A6" }}>— {note}</span>}
     </div>
   );
 
@@ -613,7 +613,7 @@ function Wizard({ initialStyle, onComplete, onClose }) {
         <input type="number" value={config.beltLength} onChange={e => update("beltLength", e.target.value)}
           placeholder="e.g. 20 (feet)"
           style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 8, border: `1px solid ${C.border}`, fontSize: 14, outline: "none" }} />
-        <div style={{ marginTop: 8, fontSize: 12, color: C.muted, background: "#eff6ff", borderRadius: 6, padding: "8px 12px" }}>
+        <div style={{ marginTop: 8, fontSize: 12, color: C.muted, background: "#FDF0E9", borderRadius: 6, padding: "8px 12px" }}>
           ℹ The total belt length (including return) will be calculated based on conveyor length. Uniking will confirm before production.
         </div>
         <NavButtons canNext={!!config.beltLength} />
@@ -635,7 +635,7 @@ function Wizard({ initialStyle, onComplete, onClose }) {
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
               {currentStyle.pitchOptions.map(p => (
                 <button key={p} onClick={() => update("pitch", p)}
-                  style={{ background: config.pitch === p ? C.navyMid : "#f1f5f9", color: config.pitch === p ? "#fff" : C.text, border: `2px solid ${config.pitch === p ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 13, fontWeight: config.pitch === p ? 700 : 400 }}>
+                  style={{ background: config.pitch === p ? C.navyMid : "#ECEAE4", color: config.pitch === p ? "#fff" : C.text, border: `2px solid ${config.pitch === p ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 13, fontWeight: config.pitch === p ? 700 : 400 }}>
                   {p}
                 </button>
               ))}
@@ -664,12 +664,12 @@ function Wizard({ initialStyle, onComplete, onClose }) {
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
               {currentStyle.wireGauges.map(g => (
                 <button key={g} onClick={() => update("wireGauge", g)}
-                  style={{ background: config.wireGauge === g ? C.navyMid : "#f1f5f9", color: config.wireGauge === g ? "#fff" : C.text, border: `2px solid ${config.wireGauge === g ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 13, fontWeight: config.wireGauge === g ? 700 : 400 }}>
+                  style={{ background: config.wireGauge === g ? C.navyMid : "#ECEAE4", color: config.wireGauge === g ? "#fff" : C.text, border: `2px solid ${config.wireGauge === g ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 13, fontWeight: config.wireGauge === g ? 700 : 400 }}>
                   {g}
                 </button>
               ))}
               <button onClick={() => update("wireGauge", "")}
-                style={{ background: !config.wireGauge ? "#fef3c7" : "#f1f5f9", color: !config.wireGauge ? "#92400e" : C.muted, border: `2px solid ${!config.wireGauge ? "#f59e0b" : C.border}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 13 }}>
+                style={{ background: !config.wireGauge ? "#fef3c7" : "#ECEAE4", color: !config.wireGauge ? "#92400e" : C.muted, border: `2px solid ${!config.wireGauge ? "#f59e0b" : C.border}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 13 }}>
                 I don't know
               </button>
             </div>
@@ -780,7 +780,7 @@ function Wizard({ initialStyle, onComplete, onClose }) {
         <div style={{ display: "flex", gap: 10, marginBottom: 14 }}>
           {["Each", "Belts", "Feet", "Sets"].map(u => (
             <button key={u} onClick={() => update("quantityUnit", u)}
-              style={{ flex: 1, background: config.quantityUnit === u ? C.navyMid : "#f1f5f9", color: config.quantityUnit === u ? "#fff" : C.text, border: `2px solid ${config.quantityUnit === u ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+              style={{ flex: 1, background: config.quantityUnit === u ? C.navyMid : "#ECEAE4", color: config.quantityUnit === u ? "#fff" : C.text, border: `2px solid ${config.quantityUnit === u ? C.navyMid : C.border}`, borderRadius: 8, padding: "8px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
               {u}
             </button>
           ))}
@@ -818,14 +818,14 @@ function Wizard({ initialStyle, onComplete, onClose }) {
         {config.uploads.length > 0 && (
           <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 12 }}>
             {config.uploads.map((f, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "#f8fafc", borderRadius: 8, border: `1px solid ${C.border}` }}>
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "#F4F2ED", borderRadius: 8, border: `1px solid ${C.border}` }}>
                 <span style={{ fontSize: 18 }}>{f.type.startsWith("image/") ? "🖼️" : "📄"}</span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 600, color: C.navyMid, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name}</div>
                   <div style={{ fontSize: 11, color: C.muted }}>{(f.size / 1024).toFixed(0)} KB</div>
                 </div>
                 <button onClick={() => update("uploads", config.uploads.filter((_, j) => j !== i))}
-                  style={{ background: "none", border: "none", color: "#9ca3af", cursor: "pointer", fontSize: 20 }}>×</button>
+                  style={{ background: "none", border: "none", color: "#8A94A6", cursor: "pointer", fontSize: 20 }}>×</button>
               </div>
             ))}
           </div>
@@ -881,24 +881,24 @@ function Wizard({ initialStyle, onComplete, onClose }) {
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'Segoe UI',Arial,sans-serif; color:#111; background:#fff; }
   @media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }
-  .header { background:#0f2340; color:#fff; padding:22px 32px; display:flex; align-items:center; justify-content:space-between; }
-  .accent-bar { height:4px; background:linear-gradient(90deg,#C9A84C,#1a3a5c); }
+  .header { background:#0E1F3A; color:#fff; padding:22px 32px; display:flex; align-items:center; justify-content:space-between; }
+  .accent-bar { height:4px; background:linear-gradient(90deg,#F26522,#0E1F3A); }
   .body { padding:24px 32px; }
-  h1 { font-size:24px; font-weight:900; color:#0f2340; margin-bottom:4px; }
-  .subtitle { font-size:13px; color:#64748b; margin-bottom:20px; }
+  h1 { font-size:24px; font-weight:900; color:#0E1F3A; margin-bottom:4px; }
+  .subtitle { font-size:13px; color:#3A4A66; margin-bottom:20px; }
   table { width:100%; border-collapse:collapse; font-size:12px; margin-bottom:20px; }
-  thead tr { background:#0f2340; }
+  thead tr { background:#0E1F3A; }
   thead th { padding:8px 12px; color:#fff; font-weight:700; text-align:left; }
-  tbody tr:nth-child(even) { background:#f8fafc; }
-  tbody td { padding:8px 12px; border-bottom:1px solid #e5e7eb; }
-  tbody td:first-child { font-weight:600; color:#0f2340; width:35%; }
+  tbody tr:nth-child(even) { background:#F4F2ED; }
+  tbody td { padding:8px 12px; border-bottom:1px solid #D9D6CE; }
+  tbody td:first-child { font-weight:600; color:#0E1F3A; width:35%; }
   .warn { background:#fffbeb; border:1px solid #fde68a; border-radius:6px; padding:10px 14px; font-size:11px; color:#92400e; margin:16px 0; }
-  .footer { margin-top:20px; padding-top:12px; border-top:1px solid #e5e7eb; display:flex; justify-content:space-between; font-size:10px; color:#94a3b8; }
+  .footer { margin-top:20px; padding-top:12px; border-top:1px solid #D9D6CE; display:flex; justify-content:space-between; font-size:10px; color:#8A94A6; }
   .no-print { margin:16px 32px; display:flex; gap:10px; }
   @media print { .no-print { display:none !important; } }
   .btn { padding:8px 18px; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:700; }
-  .btn-primary { background:#0f2340; color:#fff; }
-  .btn-secondary { background:#f1f5f9; color:#334155; border:1px solid #e2e8f0; }
+  .btn-primary { background:#0E1F3A; color:#fff; }
+  .btn-secondary { background:#ECEAE4; color:#3A4A66; border:1px solid #D9D6CE; }
 </style></head><body>
 <div class="no-print">
   <button class="btn btn-primary" onclick="window.print()">Print / Save PDF</button>
@@ -922,11 +922,11 @@ function Wizard({ initialStyle, onComplete, onClose }) {
       ${fields.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("")}
     </tbody>
   </table>
-  ${config.uploads.length > 0 ? `<div style="margin-bottom:16px;font-size:12px;color:#334155"><strong>Attachments included:</strong> ${config.uploads.map(f => f.name).join(", ")}</div>` : ""}
+  ${config.uploads.length > 0 ? `<div style="margin-bottom:16px;font-size:12px;color:#3A4A66"><strong>Attachments included:</strong> ${config.uploads.map(f => f.name).join(", ")}</div>` : ""}
   <div class="footer">
     <div>
       unikingcanada.com · rfq@unikingcanada.com<br/>
-      <span style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#cbd5e1;">No pricing information included</span>
+      <span style="font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#C9C5BB;">No pricing information included</span>
     </div>
     <div style="text-align:right">Wire Mesh Belt · ${styleObj?.label || ""}</div>
   </div>
@@ -967,7 +967,7 @@ function Wizard({ initialStyle, onComplete, onClose }) {
 
           <div style={{ background: C.bg, borderRadius: 10, border: `1px solid ${C.border}`, overflow: "hidden", marginBottom: 16 }}>
             {fields.map(([k, v], i) => (
-              <div key={k} style={{ display: "flex", gap: 12, padding: "8px 14px", background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: i < fields.length - 1 ? `1px solid ${C.border}` : "none" }}>
+              <div key={k} style={{ display: "flex", gap: 12, padding: "8px 14px", background: i % 2 === 0 ? "#F4F2ED" : "#fff", borderBottom: i < fields.length - 1 ? `1px solid ${C.border}` : "none" }}>
                 <span style={{ fontSize: 12, color: C.muted, fontWeight: 600, width: 130, flexShrink: 0 }}>{k}</span>
                 <span style={{ fontSize: 12, color: C.text, flex: 1 }}>{v}</span>
               </div>
@@ -975,7 +975,7 @@ function Wizard({ initialStyle, onComplete, onClose }) {
           </div>
 
           {config.uploads.length > 0 && (
-            <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#166534", marginBottom: 12 }}>
+            <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "10px 14px", fontSize: 12, color: "#2E7D46", marginBottom: 12 }}>
               📎 {config.uploads.length} file{config.uploads.length !== 1 ? "s" : ""} attached: {config.uploads.map(f => f.name).join(", ")}
             </div>
           )}
@@ -985,7 +985,7 @@ function Wizard({ initialStyle, onComplete, onClose }) {
           </div>
 
           <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={back} style={{ background: "#f1f5f9", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 16px", cursor: "pointer", fontSize: 13 }}>← Back</button>
+            <button onClick={back} style={{ background: "#ECEAE4", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 16px", cursor: "pointer", fontSize: 13 }}>← Back</button>
             <button onClick={handlePrintTearSheet}
               style={{ flex: 1, padding: "11px", background: C.gold, color: C.navy, border: "none", borderRadius: 10, cursor: "pointer", fontSize: 13, fontWeight: 800 }}>
               Print Tear Sheet

@@ -4,10 +4,10 @@ import FourBProductCard from "./FourBProductCard";
 import FourBProductDetail from "./FourBProductDetail";
 
 const FOURBRED = "#cc0000";
-const NAVY = "#0f2340";
-const NAVYMID = "#1a3a5c";
-const BORDER = "#e2e8f0";
-const BG = "#f8fafc";
+const NAVY = "#0E1F3A";
+const NAVYMID = "#0E1F3A";
+const BORDER = "#D9D6CE";
+const BG = "#F4F2ED";
 
 const FOURBLOGO = "https://www.go4b.com/usa/images/misc/4b-logo.gif";
 
@@ -29,10 +29,10 @@ function SubcategoryCard({ sub, count, hovered, setHovered, onSelect }) {
         boxShadow: isHov ? "0 6px 20px rgba(204,0,0,0.12)" : "0 1px 4px rgba(0,0,0,0.05)",
       }}>
       {/* Image */}
-      <div style={{ height: 120, background: "#f1f5f9", overflow: "hidden", position: "relative", flexShrink: 0 }}>
+      <div style={{ height: 120, background: "#ECEAE4", overflow: "hidden", position: "relative", flexShrink: 0 }}>
         <img src={sub.heroImage} alt={sub.label}
           style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.3s", transform: isHov ? "scale(1.06)" : "scale(1)" }}
-          onError={e => { e.target.parentElement.style.background = "#e2e8f0"; e.target.style.display = "none"; }} />
+          onError={e => { e.target.parentElement.style.background = "#D9D6CE"; e.target.style.display = "none"; }} />
         <div style={{ position: "absolute", inset: 0, background: isHov ? "rgba(204,0,0,0.35)" : "rgba(0,0,0,0.15)", transition: "background 0.18s" }} />
         <div style={{ position: "absolute", top: 8, left: 8, fontSize: 22 }}>{sub.icon}</div>
       </div>
@@ -40,8 +40,8 @@ function SubcategoryCard({ sub, count, hovered, setHovered, onSelect }) {
       <div style={{ padding: "12px 14px", flex: 1, display: "flex", flexDirection: "column", gap: 5 }}>
         <div style={{ height: 2, background: FOURBRED, borderRadius: 2, marginBottom: 4, width: isHov ? "100%" : "30%", transition: "width 0.25s" }} />
         <div style={{ fontSize: 13, fontWeight: 800, color: isHov ? FOURBRED : NAVY }}>{sub.label}</div>
-        <div style={{ fontSize: 11, color: "#64748b", lineHeight: 1.5 }}>{sub.description}</div>
-        <div style={{ fontSize: 11, color: isHov ? FOURBRED : "#94a3b8", fontWeight: isHov ? 700 : 400, marginTop: 4 }}>
+        <div style={{ fontSize: 11, color: "#3A4A66", lineHeight: 1.5 }}>{sub.description}</div>
+        <div style={{ fontSize: 11, color: isHov ? FOURBRED : "#8A94A6", fontWeight: isHov ? 700 : 400, marginTop: 4 }}>
           {count ? `${count} products →` : "View →"}
         </div>
       </div>
@@ -94,14 +94,14 @@ export default function FourBCatalog({ onBack, onGoRFQ }) {
           <div style={{ maxWidth: 1200, margin: "0 auto", padding: "28px clamp(12px,4vw,28px) 80px" }}>
             {/* Page title */}
             <div style={{ marginBottom: 22 }}>
-              <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "1px", marginBottom: 6 }}>4B Braime™ · Authorized Distributor</div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: "#3A4A66", textTransform: "uppercase", letterSpacing: "1px", marginBottom: 6 }}>4B Braime™ · Authorized Distributor</div>
               <h1 style={{ fontSize: 22, fontWeight: 900, color: NAVY, margin: "0 0 6px" }}>4B Electronics & Monitoring</h1>
-              <p style={{ fontSize: 13, color: "#64748b", lineHeight: 1.7, margin: 0 }}>
+              <p style={{ fontSize: 13, color: "#3A4A66", lineHeight: 1.7, margin: 0 }}>
                 Industry-leading hazard monitoring, alignment, speed, temperature and level sensing systems for bucket elevators and conveyors. CSA, ATEX and CE approved for dust hazard environments.
               </p>
             </div>
             <div style={{ marginBottom: 16 }}>
-              <div style={{ fontSize: 13, color: "#64748b", fontWeight: 700 }}>
+              <div style={{ fontSize: 13, color: "#3A4A66", fontWeight: 700 }}>
                 {PRODUCTS.length} products across {SUBCATEGORIES.length} categories — all directly sourced from go4b.com
               </div>
             </div>
@@ -123,7 +123,7 @@ export default function FourBCatalog({ onBack, onGoRFQ }) {
               <div style={{ background: FOURBRED, color: "#fff", fontSize: 24, fontWeight: 900, padding: "6px 16px", borderRadius: 8, flexShrink: 0 }}>4B</div>
               <div style={{ flex: 1, minWidth: 200 }}>
                 <div style={{ fontSize: 15, fontWeight: 800, color: NAVY, marginBottom: 4 }}>About 4B Braime™</div>
-                <div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.7 }}>
+                <div style={{ fontSize: 12, color: "#3A4A66", lineHeight: 1.7 }}>
                   4B is an industry leader in developing high quality, innovative and dependable electronic monitoring components for bucket elevators and conveyors in dust hazard environments. All products are CSA, ATEX and CE approved where applicable.
                 </div>
               </div>
@@ -146,9 +146,9 @@ export default function FourBCatalog({ onBack, onGoRFQ }) {
                 <span style={{ fontSize: 22 }}>{activeSub.icon}</span>
                 <div style={{ fontSize: 20, fontWeight: 800, color: NAVY }}>{activeSub.label}</div>
               </div>
-              <div style={{ fontSize: 13, color: "#64748b", maxWidth: 560, lineHeight: 1.6 }}>{activeSub.description}</div>
+              <div style={{ fontSize: 13, color: "#3A4A66", maxWidth: 560, lineHeight: 1.6 }}>{activeSub.description}</div>
               <div style={{ marginTop: 8 }}>
-                <span style={{ fontSize: 12, color: "#64748b" }}>{filteredProducts.length} of {subcatProducts.length} products</span>
+                <span style={{ fontSize: 12, color: "#3A4A66" }}>{filteredProducts.length} of {subcatProducts.length} products</span>
                 <a href={activeSub.url} target="_blank" rel="noopener noreferrer"
                   style={{ marginLeft: 14, fontSize: 11, fontWeight: 700, color: FOURBRED, textDecoration: "none" }}>
                   View on go4b.com ↗
@@ -165,7 +165,7 @@ export default function FourBCatalog({ onBack, onGoRFQ }) {
 
           {/* Products grid */}
           {filteredProducts.length === 0 ? (
-            <div style={{ textAlign: "center", padding: 60, color: "#94a3b8" }}>No products match your search.</div>
+            <div style={{ textAlign: "center", padding: 60, color: "#8A94A6" }}>No products match your search.</div>
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 16 }}>
               {filteredProducts.map(p => (

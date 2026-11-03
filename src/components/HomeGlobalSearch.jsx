@@ -1,28 +1,28 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 
 const C = {
-  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  gold: "#F26522", border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
 };
 
 const TYPE_COLORS = {
   "Modular Belt":             { bg: "#d1fae5", color: "#065f46" },
   "Elevator Bucket":          { bg: "#fef3c7", color: "#92400e" },
   "ANSI/BS Chain":            { bg: "#e0e7ff", color: "#3730a3" },
-  "Engineered Chain":         { bg: "#dbeafe", color: "#1d4ed8" },
-  "Welded Steel Chain":       { bg: "#f1f5f9", color: "#374151" },
+  "Engineered Chain":         { bg: "#FDF0E9", color: "#0E1F3A" },
+  "Welded Steel Chain":       { bg: "#ECEAE4", color: "#3A4A66" },
   "Conveyor Chain":           { bg: "#cffafe", color: "#0e7490" },
-  "Wire Mesh Belt":           { bg: "#ede9fe", color: "#6d28d9" },
-  "Conveyor Rollers":         { bg: "#e0f2fe", color: "#0369a1" },
+  "Wire Mesh Belt":           { bg: "#ECEAE4", color: "#3A4A66" },
+  "Conveyor Rollers":         { bg: "#FDF0E9", color: "#0E1F3A" },
   "Plastic Chain":            { bg: "#fce7f3", color: "#be185d" },
-  "Metal Chain":              { bg: "#f3f4f6", color: "#374151" },
+  "Metal Chain":              { bg: "#F4F2ED", color: "#3A4A66" },
   "Forged Chain":             { bg: "#ffedd5", color: "#c2410c" },
-  "Long Link Chain":          { bg: "#f1f5f9", color: "#374151" },
+  "Long Link Chain":          { bg: "#ECEAE4", color: "#3A4A66" },
   "Pintle Chain":             { bg: "#fef9c3", color: "#854d0e" },
-  "Special Application Chain":{ bg: "#f0fdf4", color: "#166534" },
+  "Special Application Chain":{ bg: "#f0fdf4", color: "#2E7D46" },
   "Monitoring System":        { bg: "#d1fae5", color: "#047857" },
   "Table Top Chain":          { bg: "#cffafe", color: "#0e7490" },
-  "Steel Hinged Belt":        { bg: "#f3f4f6", color: "#374151" },
+  "Steel Hinged Belt":        { bg: "#F4F2ED", color: "#3A4A66" },
 };
 
 // ── Build a flat, rich search string for a product ──────────────────────────
@@ -144,7 +144,7 @@ function fuzzyScore(str, pattern) {
 }
 
 function TypeBadge({ type }) {
-  const cfg = TYPE_COLORS[type] || { bg: "#f1f5f9", color: "#334155" };
+  const cfg = TYPE_COLORS[type] || { bg: "#ECEAE4", color: "#3A4A66" };
   return (
     <span style={{
       fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 10,
@@ -273,7 +273,7 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
       {/* Search icon */}
        <svg style={{
          position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)",
-         width: 18, height: 18, color: "#94a3b8", pointerEvents: "none", zIndex: 1, fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round"
+         width: 18, height: 18, color: "#8A94A6", pointerEvents: "none", zIndex: 1, fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round"
        }} viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
 
       <input
@@ -289,7 +289,7 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
           borderRadius: showDrop ? "12px 12px 0 0" : 12,
           border: `1.5px solid ${showDrop || inputValue ? C.navyMid : C.border}`,
           fontSize: 15, outline: "none", background: "#fff",
-          boxShadow: inputValue ? "0 4px 16px rgba(26,58,92,0.10)" : "0 1px 4px rgba(0,0,0,0.05)",
+          boxShadow: inputValue ? "0 4px 16px rgba(14,31,58,0.10)" : "0 1px 4px rgba(0,0,0,0.05)",
           transition: "border 0.15s, box-shadow 0.15s",
           color: C.text,
         }}
@@ -299,7 +299,7 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
       {isSearching && (
         <div style={{
           position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)",
-          width: 16, height: 16, border: "2px solid #e2e8f0", borderTopColor: C.navyMid,
+          width: 16, height: 16, border: "2px solid #D9D6CE", borderTopColor: C.navyMid,
           borderRadius: "50%", animation: "spin 0.7s linear infinite", zIndex: 1,
         }} />
       )}
@@ -310,7 +310,7 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
           style={{
             position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
             background: "none", border: "none", cursor: "pointer", fontSize: 20,
-            color: "#94a3b8", lineHeight: 1, zIndex: 1, padding: "0 4px",
+            color: "#8A94A6", lineHeight: 1, zIndex: 1, padding: "0 4px",
           }}
         >×</button>
       )}
@@ -322,12 +322,12 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
           background: "#fff",
           border: `1.5px solid ${C.navyMid}`, borderTop: "none",
           borderRadius: "0 0 12px 12px",
-          boxShadow: "0 8px 32px rgba(15,35,64,0.18)",
+          boxShadow: "0 8px 32px rgba(14,31,58,0.18)",
           overflow: "hidden",
         }}>
           {isSearching ? (
             <div style={{ padding: "20px", textAlign: "center", color: C.muted, fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}>
-              <div style={{ width: 14, height: 14, border: "2px solid #e2e8f0", borderTopColor: C.navyMid, borderRadius: "50%", animation: "spin 0.7s linear infinite", flexShrink: 0 }} />
+              <div style={{ width: 14, height: 14, border: "2px solid #D9D6CE", borderTopColor: C.navyMid, borderRadius: "50%", animation: "spin 0.7s linear infinite", flexShrink: 0 }} />
               Searching…
             </div>
           ) : showNoResults ? (
@@ -343,7 +343,7 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
                 padding: "7px 16px 5px",
                 fontSize: 10, fontWeight: 700, color: C.muted,
                 textTransform: "uppercase", letterSpacing: "0.6px",
-                borderBottom: "1px solid #f1f5f9",
+                borderBottom: "1px solid #ECEAE4",
                 display: "flex", justifyContent: "space-between",
               }}>
                 <span>{results.length} result{results.length !== 1 ? "s" : ""}</span>
@@ -361,9 +361,9 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
                       style={{
                         display: "flex", alignItems: "center", gap: 12,
                         padding: "9px 16px",
-                        borderBottom: i < results.length - 1 ? "1px solid #f8fafc" : "none",
+                        borderBottom: i < results.length - 1 ? "1px solid #F4F2ED" : "none",
                         cursor: "pointer",
-                        background: highlighted === i ? "#eef3f8" : "#fff",
+                        background: highlighted === i ? "#F4F2ED" : "#fff",
                         transition: "background 0.1s",
                       }}
                     >
@@ -376,9 +376,9 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
                         />
                       ) : (
                         <div style={{
-                          width: 44, height: 36, borderRadius: 6, background: "#f1f5f9",
+                          width: 44, height: 36, borderRadius: 6, background: "#ECEAE4",
                           flexShrink: 0, display: "flex", alignItems: "center",
-                          justifyContent: "center", color: "#cbd5e1",
+                          justifyContent: "center", color: "#C9C5BB",
                         }}/>
                       )}
 
@@ -409,8 +409,8 @@ export default function HomeGlobalSearch({ allData = [], onSelect }) {
               {/* Footer hint */}
               <div style={{
                 padding: "6px 16px",
-                fontSize: 10, color: "#cbd5e1",
-                borderTop: "1px solid #f8fafc",
+                fontSize: 10, color: "#C9C5BB",
+                borderTop: "1px solid #F4F2ED",
                 display: "flex", gap: 14,
               }}>
                 <span>↑↓ Navigate</span>

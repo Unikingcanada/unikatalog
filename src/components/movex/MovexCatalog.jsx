@@ -9,8 +9,8 @@ import MovexConfigurator from "./MovexConfigurator";
 import { MOVEX_SERIES, MOVEX_STRAIGHT_SERIES, MOVEX_SIDEFLEXING_SERIES, MOVEX_CATALOG_URL, MOVEX_BLUELINE_URL } from "@/lib/movexData";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
-  border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522",
+  border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
 };
 const MOVEX_RED = "#E63946";
 
@@ -121,7 +121,7 @@ export default function MovexCatalog({ onBack }) {
               <div style={{ background: MOVEX_RED, borderRadius: 6, padding: "4px 10px" }}>
                 <span style={{ fontSize: 11, fontWeight: 900, color: "#fff", letterSpacing: "1px" }}>MOVEX</span>
               </div>
-              <div style={{ background: "#1e40af", borderRadius: 6, padding: "4px 10px" }}>
+              <div style={{ background: "#0E1F3A", borderRadius: 6, padding: "4px 10px" }}>
                 <span style={{ fontSize: 11, fontWeight: 800, color: "#fff" }}>Blueline®</span>
               </div>
               <div style={{ background: "#0066B3", borderRadius: 6, padding: "4px 10px" }}>
@@ -141,7 +141,7 @@ export default function MovexCatalog({ onBack }) {
                 📄 Imperial Catalog
               </a>
               <a href={MOVEX_BLUELINE_URL} target="_blank" rel="noreferrer"
-                style={{ background: "#1e40af", color: "#fff", padding: "8px 16px", borderRadius: 8, fontSize: 12, fontWeight: 700, textDecoration: "none" }}>
+                style={{ background: "#0E1F3A", color: "#fff", padding: "8px 16px", borderRadius: 8, fontSize: 12, fontWeight: 700, textDecoration: "none" }}>
                 📄 Blueline® Catalog
               </a>
             </div>

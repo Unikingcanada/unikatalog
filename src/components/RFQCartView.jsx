@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { CatalogProduct, ElevatorBucket, UniCatalog, MacChainProduct } from "@/api/entities";
 
-const NAVY = "#0f2340";
+const NAVY = "#0E1F3A";
 const UNIT_OPTIONS = ["Feet", "Meters", "Pitches", "Pieces", "Sets", "Rolls", "Inches", "Yards", "Each"];
 const LOGO_URL = "https://media.base44.com/images/public/69dd9ffccab4dd693d4d92f5/e48ee59d9_Unitingthestrongestlinks_20251031_225809_0000.png";
 
 const C = {
-  navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  gold: "#C9A84C", goldLight: "#e8c96d",
-  green: "#16a34a", greenBg: "#dcfce7",
-  accent: "#2563eb",
-  bg: "#f8fafc", card: "#ffffff",
-  border: "#e2e8f0", text: "#0f172a", muted: "#64748b",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  gold: "#F26522", goldLight: "#F26522",
+  green: "#2E7D46", greenBg: "#dcfce7",
+  accent: "#F26522",
+  bg: "#F4F2ED", card: "#ffffff",
+  border: "#D9D6CE", text: "#0E1F3A", muted: "#3A4A66",
 };
 
 function getRFQCart() {
@@ -50,12 +50,12 @@ function StepBar({ step }) {
         return (
           <div key={i} style={{ display: "flex", alignItems: "center" }}>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-              <div style={{ width: 34, height: 34, borderRadius: "50%", background: done ? "#16a34a" : active ? NAVY : "#e2e8f0", color: done || active ? "#fff" : "#94a3b8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800 }}>
+              <div style={{ width: 34, height: 34, borderRadius: "50%", background: done ? "#2E7D46" : active ? NAVY : "#D9D6CE", color: done || active ? "#fff" : "#8A94A6", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 800 }}>
                 {done ? "✓" : i + 1}
               </div>
-              <div style={{ fontSize: 11, fontWeight: active ? 700 : 500, color: active ? NAVY : done ? "#16a34a" : "#94a3b8" }}>{label}</div>
+              <div style={{ fontSize: 11, fontWeight: active ? 700 : 500, color: active ? NAVY : done ? "#2E7D46" : "#8A94A6" }}>{label}</div>
             </div>
-            {i < steps.length - 1 && <div style={{ width: 56, height: 2, background: done ? "#16a34a" : "#e2e8f0", margin: "0 4px", marginBottom: 18 }} />}
+            {i < steps.length - 1 && <div style={{ width: 56, height: 2, background: done ? "#2E7D46" : "#D9D6CE", margin: "0 4px", marginBottom: 18 }} />}
           </div>
         );
       })}
@@ -140,7 +140,7 @@ function AddProductPanel({ cartItems, onAdd, onClose }) {
 
   return (
     <div style={{ background: "#fff", border: "1.5px solid " + C.accent, borderRadius: 12, overflow: "hidden", marginBottom: 16 }}>
-      <div style={{ padding: "14px 16px", borderBottom: "1px solid " + C.border, background: "#eff6ff" }}>
+      <div style={{ padding: "14px 16px", borderBottom: "1px solid " + C.border, background: "#FDF0E9" }}>
         <div style={{ fontSize: 13, fontWeight: 800, color: C.accent, marginBottom: 10 }}>Search Catalog</div>
         <input ref={searchRef} value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Type a product name, series, or category…"
           style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 8, border: "1.5px solid " + C.accent, fontSize: 14, outline: "none", background: "#fff" }} />
@@ -152,14 +152,14 @@ function AddProductPanel({ cartItems, onAdd, onClose }) {
           {filtered.map((p, i) => {
             const inCart = cartIds.has(p.id + "_" + (p._source || ""));
             return (
-              <div key={p.id + i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", borderBottom: "1px solid #f8fafc", background: inCart ? "#f0fdf4" : "#fff" }}>
-                {p.image_url ? <img src={p.image_url} alt="" style={{ width: 40, height: 36, objectFit: "contain", borderRadius: 4, background: "#f8fafc", flexShrink: 0 }} onError={(e) => e.target.style.display = "none"} /> : <div style={{ width: 40, height: 36, borderRadius: 4, background: "#f1f5f9", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, color: "#cbd5e1" }}>⛓</div>}
+              <div key={p.id + i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", borderBottom: "1px solid #F4F2ED", background: inCart ? "#f0fdf4" : "#fff" }}>
+                {p.image_url ? <img src={p.image_url} alt="" style={{ width: 40, height: 36, objectFit: "contain", borderRadius: 4, background: "#F4F2ED", flexShrink: 0 }} onError={(e) => e.target.style.display = "none"} /> : <div style={{ width: 40, height: 36, borderRadius: 4, background: "#ECEAE4", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, color: "#C9C5BB" }}>⛓</div>}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: 700, color: NAVY, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.series}</div>
                   <div style={{ fontSize: 11, color: C.muted }}>{p.type}{p.style ? " · " + p.style : ""}</div>
                 </div>
                 <button onClick={() => !inCart && onAdd(p)} disabled={inCart}
-                  style={{ padding: "5px 12px", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: inCart ? "default" : "pointer", flexShrink: 0, border: inCart ? "1px solid #16a34a" : "1px solid " + C.accent, background: inCart ? "#f0fdf4" : C.accent, color: inCart ? "#16a34a" : "#fff" }}>
+                  style={{ padding: "5px 12px", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: inCart ? "default" : "pointer", flexShrink: 0, border: inCart ? "1px solid #2E7D46" : "1px solid " + C.accent, background: inCart ? "#f0fdf4" : C.accent, color: inCart ? "#2E7D46" : "#fff" }}>
                   {inCart ? "✓ Added" : "+ Add"}
                 </button>
               </div>
@@ -184,7 +184,7 @@ function AddProductPanel({ cartItems, onAdd, onClose }) {
               </div>
               <div style={{ display: "flex", gap: 8 }}>
                 <button onClick={() => setShowCustom(false)} style={{ flex: 1, padding: "10px", borderRadius: 7, border: "1px solid " + C.border, background: "#fff", color: C.muted, fontWeight: 700, fontSize: 13, cursor: "pointer" }}>Cancel</button>
-                <button onClick={handleAddCustom} disabled={!customDesc.trim()} style={{ flex: 2, padding: "10px", borderRadius: 7, border: "none", background: customDesc.trim() ? NAVY : "#e2e8f0", color: customDesc.trim() ? "#fff" : "#94a3b8", fontWeight: 800, fontSize: 13, cursor: customDesc.trim() ? "pointer" : "default" }}>Add Custom Item</button>
+                <button onClick={handleAddCustom} disabled={!customDesc.trim()} style={{ flex: 2, padding: "10px", borderRadius: 7, border: "none", background: customDesc.trim() ? NAVY : "#D9D6CE", color: customDesc.trim() ? "#fff" : "#8A94A6", fontWeight: 800, fontSize: 13, cursor: customDesc.trim() ? "pointer" : "default" }}>Add Custom Item</button>
               </div>
             </div>
           </div>
@@ -271,9 +271,9 @@ export default function RFQCartView({ onBack }) {
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 16 }}>
                 {items.map((item, idx) => (
-                  <div key={item.cartId || idx} style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", overflow: "hidden", opacity: removeAnim === idx ? 0 : 1, transform: removeAnim === idx ? "translateX(12px)" : "none", transition: "opacity 0.22s, transform 0.22s" }}>
+                  <div key={item.cartId || idx} style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", overflow: "hidden", opacity: removeAnim === idx ? 0 : 1, transform: removeAnim === idx ? "translateX(12px)" : "none", transition: "opacity 0.22s, transform 0.22s" }}>
                     <div style={{ display: "flex" }}>
-                      {item.image_url ? <div style={{ width: 76, flexShrink: 0, background: "#f8fafc", borderRight: "1px solid #f1f5f9", display: "flex", alignItems: "center", justifyContent: "center", padding: 8 }}><img src={item.image_url} alt="" style={{ maxWidth: "100%", maxHeight: 58, objectFit: "contain" }} onError={(e) => e.target.style.display = "none"} /></div> : item._source === "custom" ? <div style={{ width: 76, flexShrink: 0, background: "#fef9c3", borderRight: "1px solid #f1f5f9", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>✏️</div> : null}
+                      {item.image_url ? <div style={{ width: 76, flexShrink: 0, background: "#F4F2ED", borderRight: "1px solid #ECEAE4", display: "flex", alignItems: "center", justifyContent: "center", padding: 8 }}><img src={item.image_url} alt="" style={{ maxWidth: "100%", maxHeight: 58, objectFit: "contain" }} onError={(e) => e.target.style.display = "none"} /></div> : item._source === "custom" ? <div style={{ width: 76, flexShrink: 0, background: "#fef9c3", borderRight: "1px solid #ECEAE4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>✏️</div> : null}
                       <div style={{ flex: 1, padding: "12px 14px" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
                           <div>
@@ -283,12 +283,12 @@ export default function RFQCartView({ onBack }) {
                             </div>
                             <div style={{ fontSize: 12, color: C.muted, marginTop: 1 }}>{item.type}{item.style ? " · " + item.style : ""}</div>
                           </div>
-                          <button onClick={() => removeItem(idx)} style={{ background: "none", border: "none", color: "#d1d5db", cursor: "pointer", fontSize: 22, lineHeight: 1, padding: "0 4px" }} onMouseEnter={(e) => e.target.style.color = "#ef4444"} onMouseLeave={(e) => e.target.style.color = "#d1d5db"}>×</button>
+                          <button onClick={() => removeItem(idx)} style={{ background: "none", border: "none", color: "#C9C5BB", cursor: "pointer", fontSize: 22, lineHeight: 1, padding: "0 4px" }} onMouseEnter={(e) => e.target.style.color = "#ef4444"} onMouseLeave={(e) => e.target.style.color = "#C9C5BB"}>×</button>
                         </div>
                         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                          <div><Label>Qty</Label><input type="number" min="1" value={item.quantity || 1} onChange={(e) => updateItem(idx, "quantity", e.target.value)} style={{ width: 70, padding: "8px 10px", borderRadius: 6, border: "1px solid #e2e8f0", fontSize: 14, fontWeight: 700, color: NAVY, outline: "none" }} /></div>
-                          <div><Label>Unit</Label><select value={item.unit || "Feet"} onChange={(e) => updateItem(idx, "unit", e.target.value)} style={{ padding: "8px 10px", borderRadius: 6, border: "1px solid #e2e8f0", fontSize: 13, color: NAVY, outline: "none", background: "#fff" }}>{UNIT_OPTIONS.map((u) => <option key={u}>{u}</option>)}</select></div>
-                          <div style={{ width: "100%" }}><Label>Notes / Specs</Label><input type="text" placeholder="Width, material, application..." value={item.notes || ""} onChange={(e) => updateItem(idx, "notes", e.target.value)} style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", borderRadius: 6, border: "1px solid #e2e8f0", fontSize: 13, color: NAVY, outline: "none" }} /></div>
+                          <div><Label>Qty</Label><input type="number" min="1" value={item.quantity || 1} onChange={(e) => updateItem(idx, "quantity", e.target.value)} style={{ width: 70, padding: "8px 10px", borderRadius: 6, border: "1px solid #D9D6CE", fontSize: 14, fontWeight: 700, color: NAVY, outline: "none" }} /></div>
+                          <div><Label>Unit</Label><select value={item.unit || "Feet"} onChange={(e) => updateItem(idx, "unit", e.target.value)} style={{ padding: "8px 10px", borderRadius: 6, border: "1px solid #D9D6CE", fontSize: 13, color: NAVY, outline: "none", background: "#fff" }}>{UNIT_OPTIONS.map((u) => <option key={u}>{u}</option>)}</select></div>
+                          <div style={{ width: "100%" }}><Label>Notes / Specs</Label><input type="text" placeholder="Width, material, application..." value={item.notes || ""} onChange={(e) => updateItem(idx, "notes", e.target.value)} style={{ width: "100%", boxSizing: "border-box", padding: "8px 10px", borderRadius: 6, border: "1px solid #D9D6CE", fontSize: 13, color: NAVY, outline: "none" }} /></div>
                         </div>
                       </div>
                     </div>
@@ -297,8 +297,8 @@ export default function RFQCartView({ onBack }) {
               </div>
             </>
           )}
-          {showAddPanel ? <AddProductPanel cartItems={items} onAdd={handleAddProduct} onClose={() => setShowAddPanel(false)} /> : <button onClick={() => setShowAddPanel(true)} style={{ width: "100%", padding: "11px 16px", borderRadius: 8, border: "1.5px dashed " + C.border, background: "#f8fafc", color: C.accent, fontWeight: 700, fontSize: 13, cursor: "pointer", marginBottom: 16, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>+ Add more products</button>}
-          {items.length > 0 && <button onClick={() => setStep(1)} style={{ width: "100%", background: NAVY, color: "#fff", padding: "16px 20px", borderRadius: 10, fontWeight: 800, fontSize: 16, border: "none", cursor: "pointer", boxShadow: "0 4px 14px rgba(15,35,64,0.2)", display: "block" }}>Next: Add Your Details →</button>}
+          {showAddPanel ? <AddProductPanel cartItems={items} onAdd={handleAddProduct} onClose={() => setShowAddPanel(false)} /> : <button onClick={() => setShowAddPanel(true)} style={{ width: "100%", padding: "11px 16px", borderRadius: 8, border: "1.5px dashed " + C.border, background: "#F4F2ED", color: C.accent, fontWeight: 700, fontSize: 13, cursor: "pointer", marginBottom: 16, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>+ Add more products</button>}
+          {items.length > 0 && <button onClick={() => setStep(1)} style={{ width: "100%", background: NAVY, color: "#fff", padding: "16px 20px", borderRadius: 10, fontWeight: 800, fontSize: 16, border: "none", cursor: "pointer", boxShadow: "0 4px 14px rgba(14,31,58,0.2)", display: "block" }}>Next: Add Your Details →</button>}
         </div>
       )}
     </div>
@@ -306,7 +306,7 @@ export default function RFQCartView({ onBack }) {
 
   const renderStep1 = () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", padding: "20px" }}>
+      <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", padding: "20px" }}>
         <div style={{ fontSize: 15, fontWeight: 800, color: NAVY, marginBottom: 18 }}>Contact Information</div>
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div><Label required>Full Name</Label><FieldInput value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="Jane Smith" required /></div>
@@ -315,60 +315,60 @@ export default function RFQCartView({ onBack }) {
           <div><Label>Phone Number</Label><FieldInput type="tel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="+1 (514) 000-0000" /></div>
         </div>
       </div>
-      <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", padding: "20px" }}>
+      <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", padding: "20px" }}>
         <div style={{ fontSize: 15, fontWeight: 800, color: NAVY, marginBottom: 12 }}>Additional Notes</div>
         <Label>Anything else our team should know?</Label>
-        <textarea value={form.notes} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} placeholder="Application details, timeline, budget…" rows={5} style={{ width: "100%", boxSizing: "border-box", padding: "12px 14px", borderRadius: 8, border: "1px solid #e2e8f0", fontSize: 14, color: C.text, outline: "none", resize: "vertical", lineHeight: 1.6 }} onFocus={(e) => e.target.style.borderColor = C.accent} onBlur={(e) => e.target.style.borderColor = "#e2e8f0"} />
+        <textarea value={form.notes} onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))} placeholder="Application details, timeline, budget…" rows={5} style={{ width: "100%", boxSizing: "border-box", padding: "12px 14px", borderRadius: 8, border: "1px solid #D9D6CE", fontSize: 14, color: C.text, outline: "none", resize: "vertical", lineHeight: 1.6 }} onFocus={(e) => e.target.style.borderColor = C.accent} onBlur={(e) => e.target.style.borderColor = "#D9D6CE"} />
       </div>
-      <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", padding: "20px" }}>
+      <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", padding: "20px" }}>
         <div style={{ fontSize: 15, fontWeight: 800, color: NAVY, marginBottom: 4 }}>Attachments <span style={{ fontSize: 12, fontWeight: 500, color: C.muted }}>(optional)</span></div>
         <div style={{ fontSize: 13, color: C.muted, marginBottom: 14 }}>Photos, drawings, spec sheets — max 10MB each</div>
-        <div onDragOver={(e) => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)} onDrop={handleDrop} onClick={() => fileInputRef.current.click()} style={{ border: "2px dashed " + (dragOver ? C.accent : "#cbd5e1"), borderRadius: 10, padding: "28px 20px", textAlign: "center", background: dragOver ? "#eff6ff" : "#f8fafc", cursor: "pointer" }}>
+        <div onDragOver={(e) => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)} onDrop={handleDrop} onClick={() => fileInputRef.current.click()} style={{ border: "2px dashed " + (dragOver ? C.accent : "#C9C5BB"), borderRadius: 10, padding: "28px 20px", textAlign: "center", background: dragOver ? "#FDF0E9" : "#F4F2ED", cursor: "pointer" }}>
           <div style={{ fontSize: 30, marginBottom: 8 }}>📎</div>
           <div style={{ fontSize: 14, fontWeight: 700, color: C.navyMid }}>Tap to attach files</div>
           <div style={{ fontSize: 12, color: C.muted, marginTop: 4 }}>Images, PDFs, DWG, Excel, Word…</div>
           <input ref={fileInputRef} type="file" multiple accept="*/*" onChange={(e) => handleFiles(e.target.files)} style={{ display: "none" }} />
         </div>
-        {attachments.length > 0 && <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>{attachments.map((file, i) => <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "#f8fafc", borderRadius: 8, border: "1px solid #e2e8f0" }}><span style={{ fontSize: 18 }}>{file.type.startsWith("image/") ? "🖼️" : "📄"}</span><div style={{ flex: 1, minWidth: 0 }}><div style={{ fontSize: 13, fontWeight: 600, color: NAVY, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{file.name}</div><div style={{ fontSize: 11, color: C.muted }}>{(file.size / 1024).toFixed(0)} KB</div></div><button onClick={() => setAttachments((prev) => prev.filter((_, j) => j !== i))} style={{ background: "none", border: "none", color: "#9ca3af", cursor: "pointer", fontSize: 20, lineHeight: 1 }}>×</button></div>)}</div>}
+        {attachments.length > 0 && <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>{attachments.map((file, i) => <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: "#F4F2ED", borderRadius: 8, border: "1px solid #D9D6CE" }}><span style={{ fontSize: 18 }}>{file.type.startsWith("image/") ? "🖼️" : "📄"}</span><div style={{ flex: 1, minWidth: 0 }}><div style={{ fontSize: 13, fontWeight: 600, color: NAVY, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{file.name}</div><div style={{ fontSize: 11, color: C.muted }}>{(file.size / 1024).toFixed(0)} KB</div></div><button onClick={() => setAttachments((prev) => prev.filter((_, j) => j !== i))} style={{ background: "none", border: "none", color: "#8A94A6", cursor: "pointer", fontSize: 20, lineHeight: 1 }}>×</button></div>)}</div>}
       </div>
-      {error && <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: "12px 14px", fontSize: 13, color: "#dc2626" }}>{error}</div>}
+      {error && <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: "12px 14px", fontSize: 13, color: "#C62828" }}>{error}</div>}
       <div style={{ display: "flex", gap: 10 }}>
-        <button onClick={() => { setError(""); setStep(0); }} style={{ flex: 1, background: "#fff", color: NAVY, padding: "14px 16px", borderRadius: 10, fontWeight: 700, fontSize: 15, border: "1.5px solid #e2e8f0", cursor: "pointer" }}>← Back</button>
-        <button onClick={() => { if (!form.name || !form.email) { setError("Please fill in your name and email."); return; } setError(""); setStep(2); }} style={{ flex: 2, background: NAVY, color: "#fff", padding: "14px 16px", borderRadius: 10, fontWeight: 800, fontSize: 15, border: "none", cursor: "pointer", boxShadow: "0 4px 14px rgba(15,35,64,0.2)" }}>Review & Submit →</button>
+        <button onClick={() => { setError(""); setStep(0); }} style={{ flex: 1, background: "#fff", color: NAVY, padding: "14px 16px", borderRadius: 10, fontWeight: 700, fontSize: 15, border: "1.5px solid #D9D6CE", cursor: "pointer" }}>← Back</button>
+        <button onClick={() => { if (!form.name || !form.email) { setError("Please fill in your name and email."); return; } setError(""); setStep(2); }} style={{ flex: 2, background: NAVY, color: "#fff", padding: "14px 16px", borderRadius: 10, fontWeight: 800, fontSize: 15, border: "none", cursor: "pointer", boxShadow: "0 4px 14px rgba(14,31,58,0.2)" }}>Review & Submit →</button>
       </div>
     </div>
   );
 
   const renderStep2 = () => (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", padding: "18px" }}>
+      <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", padding: "18px" }}>
         <div style={{ fontSize: 12, fontWeight: 800, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 12 }}>Products ({items.length})</div>
         {items.map((item, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: i < items.length - 1 ? "1px solid #f1f5f9" : "none" }}>
-            {item.image_url ? <img src={item.image_url} alt="" style={{ width: 36, height: 36, objectFit: "contain", borderRadius: 4, background: "#f8fafc" }} onError={(e) => e.target.style.display = "none"} /> : <span style={{ fontSize: 20 }}>{item._source === "custom" ? "✏️" : "📦"}</span>}
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: i < items.length - 1 ? "1px solid #ECEAE4" : "none" }}>
+            {item.image_url ? <img src={item.image_url} alt="" style={{ width: 36, height: 36, objectFit: "contain", borderRadius: 4, background: "#F4F2ED" }} onError={(e) => e.target.style.display = "none"} /> : <span style={{ fontSize: 20 }}>{item._source === "custom" ? "✏️" : "📦"}</span>}
             <div style={{ flex: 1 }}><div style={{ fontSize: 13, fontWeight: 700, color: NAVY }}>{item.series || item.name}</div><div style={{ fontSize: 11, color: C.muted }}>{item.type}</div></div>
             <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid, whiteSpace: "nowrap" }}>{item.quantity || 1} {item.unit || "Feet"}</div>
           </div>
         ))}
       </div>
-      <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", padding: "18px" }}>
+      <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", padding: "18px" }}>
         <div style={{ fontSize: 12, fontWeight: 800, color: C.muted, textTransform: "uppercase", letterSpacing: "0.6px", marginBottom: 12 }}>Contact</div>
         {[["Name", form.name], ["Company", form.company], ["Email", form.email], ["Phone", form.phone]].filter(([, v]) => v).map(([k, v]) => <div key={k} style={{ display: "flex", gap: 10, padding: "5px 0", fontSize: 13 }}><span style={{ color: C.muted, width: 72, flexShrink: 0 }}>{k}</span><span style={{ color: NAVY, fontWeight: 600 }}>{v}</span></div>)}
-        {form.notes && <div style={{ marginTop: 10, padding: "10px 12px", background: "#f8fafc", borderRadius: 7, fontSize: 13, color: C.text, lineHeight: 1.5 }}>{form.notes}</div>}
+        {form.notes && <div style={{ marginTop: 10, padding: "10px 12px", background: "#F4F2ED", borderRadius: 7, fontSize: 13, color: C.text, lineHeight: 1.5 }}>{form.notes}</div>}
       </div>
-      {error && <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: "12px 14px", fontSize: 13, color: "#dc2626" }}>{error}</div>}
+      {error && <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: "12px 14px", fontSize: 13, color: "#C62828" }}>{error}</div>}
       <div style={{ display: "flex", gap: 10 }}>
-        <button onClick={() => { setError(""); setStep(1); }} style={{ flex: 1, background: "#fff", color: NAVY, padding: "14px 16px", borderRadius: 10, fontWeight: 700, fontSize: 15, border: "1.5px solid #e2e8f0", cursor: "pointer" }}>← Back</button>
-        <button onClick={handleSubmit} disabled={submitting} style={{ flex: 2, background: submitting ? "#94a3b8" : NAVY, color: "#fff", padding: "14px 16px", borderRadius: 10, fontWeight: 800, fontSize: 15, border: "none", cursor: submitting ? "not-allowed" : "pointer" }}>{submitting ? "Sending…" : "Submit RFQ ✓"}</button>
+        <button onClick={() => { setError(""); setStep(1); }} style={{ flex: 1, background: "#fff", color: NAVY, padding: "14px 16px", borderRadius: 10, fontWeight: 700, fontSize: 15, border: "1.5px solid #D9D6CE", cursor: "pointer" }}>← Back</button>
+        <button onClick={handleSubmit} disabled={submitting} style={{ flex: 2, background: submitting ? "#8A94A6" : NAVY, color: "#fff", padding: "14px 16px", borderRadius: 10, fontWeight: 800, fontSize: 15, border: "none", cursor: submitting ? "not-allowed" : "pointer" }}>{submitting ? "Sending…" : "Submit RFQ ✓"}</button>
       </div>
-      <div style={{ fontSize: 11, color: "#94a3b8", textAlign: "center", lineHeight: 1.6 }}>Sent to rfq@unikingcanada.com · We typically respond within 1–2 business days.</div>
+      <div style={{ fontSize: 11, color: "#8A94A6", textAlign: "center", lineHeight: 1.6 }}>Sent to rfq@unikingcanada.com · We typically respond within 1–2 business days.</div>
     </div>
   );
 
   return (
     <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "Arial,sans-serif" }}>
       <div style={{ background: NAVY, height: 56, display: "flex", alignItems: "center", padding: "0 20px", justifyContent: "space-between" }}>
-        <a href="#" onClick={(e) => { e.preventDefault(); onBack(); }} style={{ color: "#93c5fd", fontSize: 13, fontWeight: 600, textDecoration: "none" }}>← Back to Catalog</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); onBack(); }} style={{ color: "#F8C9B0", fontSize: 13, fontWeight: 600, textDecoration: "none" }}>← Back to Catalog</a>
         <img src={LOGO_URL} style={{ maxHeight: 26, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.9 }} alt="Uniking Canada" />
         <span style={{ width: 80 }} />
       </div>

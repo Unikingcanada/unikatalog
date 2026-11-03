@@ -5,8 +5,8 @@
 import { useState } from "react";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  gold: "#F26522", border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
 };
 
 const TABS = [
@@ -33,7 +33,7 @@ const SPEC_LABELS = {
   notes: 'Notes',
 };
 
-export default function ChainProductDetail({ product, accentColor = "#0C2340", onBack, onGoRFQ }) {
+export default function ChainProductDetail({ product, accentColor = "#0E1F3A", onBack, onGoRFQ }) {
   const [activeTab, setActiveTab] = useState("specs");
   const [rfqAdded, setRfqAdded] = useState({});
 
@@ -112,7 +112,7 @@ export default function ChainProductDetail({ product, accentColor = "#0C2340", o
         <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", gap: 28, flexWrap: "wrap", alignItems: "flex-start" }}>
 
           {/* Product image */}
-          <div style={{ width: 180, height: 140, flexShrink: 0, borderRadius: 12, overflow: "hidden", background: "#1a3a5c", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: 180, height: 140, flexShrink: 0, borderRadius: 12, overflow: "hidden", background: "#0E1F3A", display: "flex", alignItems: "center", justifyContent: "center" }}>
             {product.image ? (
               <img src={product.image} alt={product.chain_number} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             ) : (
@@ -149,7 +149,7 @@ export default function ChainProductDetail({ product, accentColor = "#0C2340", o
 
             {/* RFQ button */}
             <button onClick={addChainToRFQ}
-              style={{ background: rfqAdded._chain ? "#16a34a" : C.gold, color: rfqAdded._chain ? "#fff" : C.navy, border: "none", borderRadius: 10, padding: "12px 28px", cursor: "pointer", fontSize: 13, fontWeight: 800, transition: "background 0.2s" }}>
+              style={{ background: rfqAdded._chain ? "#2E7D46" : C.gold, color: rfqAdded._chain ? "#fff" : C.navy, border: "none", borderRadius: 10, padding: "12px 28px", cursor: "pointer", fontSize: 13, fontWeight: 800, transition: "background 0.2s" }}>
               {rfqAdded._chain ? "✓ Added to RFQ" : `+ Add ${product.chain_number} to RFQ`}
             </button>
           </div>
@@ -170,7 +170,7 @@ export default function ChainProductDetail({ product, accentColor = "#0C2340", o
                 style={{ padding: "14px 18px", border: "none", background: "none", cursor: "pointer", fontSize: 12, fontWeight: activeTab === tab.key ? 800 : 500, color: activeTab === tab.key ? accentColor : C.muted, borderBottom: activeTab === tab.key ? `3px solid ${accentColor}` : "3px solid transparent", whiteSpace: "nowrap", transition: "all 0.15s" }}>
                 {tab.label}
                 {count != null && count > 0 && (
-                  <span style={{ marginLeft: 5, fontSize: 9, fontWeight: 700, background: activeTab === tab.key ? accentColor : "#f1f5f9", color: activeTab === tab.key ? "#fff" : C.muted, padding: "1px 5px", borderRadius: 8 }}>
+                  <span style={{ marginLeft: 5, fontSize: 9, fontWeight: 700, background: activeTab === tab.key ? accentColor : "#ECEAE4", color: activeTab === tab.key ? "#fff" : C.muted, padding: "1px 5px", borderRadius: 8 }}>
                     {count}
                   </span>
                 )}
@@ -196,7 +196,7 @@ export default function ChainProductDetail({ product, accentColor = "#0C2340", o
                     const isNote = key === "notes";
                     return (
                       <tr key={key} style={{ borderBottom: `1px solid ${C.border}` }}>
-                        <td style={{ padding: "12px 18px", fontSize: 12, fontWeight: 700, color: C.navyMid, background: "#f8fafc", width: "35%", borderRight: `1px solid ${C.border}` }}>
+                        <td style={{ padding: "12px 18px", fontSize: 12, fontWeight: 700, color: C.navyMid, background: "#F4F2ED", width: "35%", borderRight: `1px solid ${C.border}` }}>
                           {label}
                         </td>
                         <td style={{ padding: "12px 18px", fontSize: 12, color: isNote ? "#92400e" : C.text, background: isNote ? "#fffbeb" : "#fff" }}>
@@ -308,14 +308,14 @@ export default function ChainProductDetail({ product, accentColor = "#0C2340", o
                     </div>
                     <button
                       onClick={() => addToRFQ({ code: `${product.chain_number}-OPT-${i}`, name: `${product.chain_number} — ${opt}` }, "Option")}
-                      style={{ background: rfqAdded[`${product.chain_number}-OPT-${i}`] ? "#16a34a" : accentColor, color: "#fff", border: "none", borderRadius: 7, padding: "7px 14px", cursor: "pointer", fontSize: 11, fontWeight: 700, flexShrink: 0, whiteSpace: "nowrap", transition: "background 0.2s" }}>
+                      style={{ background: rfqAdded[`${product.chain_number}-OPT-${i}`] ? "#2E7D46" : accentColor, color: "#fff", border: "none", borderRadius: 7, padding: "7px 14px", cursor: "pointer", fontSize: 11, fontWeight: 700, flexShrink: 0, whiteSpace: "nowrap", transition: "background 0.2s" }}>
                       {rfqAdded[`${product.chain_number}-OPT-${i}`] ? "✓" : "+ RFQ"}
                     </button>
                   </div>
                 ))}
               </div>
             )}
-            <div style={{ marginTop: 20, background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 10, padding: "12px 16px", fontSize: 11, color: "#0369a1" }}>
+            <div style={{ marginTop: 20, background: "#FDF0E9", border: "1px solid #bae6fd", borderRadius: 10, padding: "12px 16px", fontSize: 11, color: "#0E1F3A" }}>
               ℹ Options listed are sourced from official MAC Chain and Allied-Locke catalogs. Not all options are available for all sizes. Contact Uniking to confirm availability.
             </div>
           </div>
@@ -336,7 +336,7 @@ export default function ChainProductDetail({ product, accentColor = "#0C2340", o
                 {product.source_url && (
                   <div style={{ display: "flex", gap: 16, borderBottom: `1px solid ${C.border}`, paddingBottom: 12 }}>
                     <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, minWidth: 160 }}>Source URL</div>
-                    <a href={product.source_url} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: "#0369a1", textDecoration: "underline" }}>
+                    <a href={product.source_url} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: "#0E1F3A", textDecoration: "underline" }}>
                       {product.source_url}
                     </a>
                   </div>
@@ -359,9 +359,9 @@ export default function ChainProductDetail({ product, accentColor = "#0C2340", o
 
 function Row({ label, value, isNote }) {
   return (
-    <div style={{ display: "flex", gap: 16, borderBottom: `1px solid #f1f5f9`, paddingBottom: 12 }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: "#1A3A5C", minWidth: 160 }}>{label}</div>
-      <div style={{ fontSize: 12, color: isNote ? "#92400e" : "#0f172a", background: isNote ? "#fffbeb" : "transparent", borderRadius: 4, padding: isNote ? "2px 8px" : 0 }}>
+    <div style={{ display: "flex", gap: 16, borderBottom: `1px solid #ECEAE4`, paddingBottom: 12 }}>
+      <div style={{ fontSize: 12, fontWeight: 700, color: "#0E1F3A", minWidth: 160 }}>{label}</div>
+      <div style={{ fontSize: 12, color: isNote ? "#92400e" : "#0E1F3A", background: isNote ? "#fffbeb" : "transparent", borderRadius: 4, padding: isNote ? "2px 8px" : 0 }}>
         {value || "—"}
       </div>
     </div>
@@ -369,12 +369,12 @@ function Row({ label, value, isNote }) {
 }
 
 function ComponentRow({ item, type, accentColor, added, onAddRFQ, extra, extra2 }) {
-  const C2 = { border: "#e2e8f0", muted: "#64748b", text: "#0f172a", navyMid: "#1A3A5C" };
+  const C2 = { border: "#D9D6CE", muted: "#3A4A66", text: "#0E1F3A", navyMid: "#0E1F3A" };
   const toConfirm = (item.notes || item.description || "").toLowerCase().includes("confirm");
   return (
     <div style={{ background: "#fff", border: `1px solid ${C2.border}`, borderRadius: 10, padding: "14px 18px", display: "flex", gap: 14, alignItems: "flex-start" }}>
       {item.image && (
-        <div style={{ width: 54, height: 44, borderRadius: 7, overflow: "hidden", background: "#f1f5f9", flexShrink: 0 }}>
+        <div style={{ width: 54, height: 44, borderRadius: 7, overflow: "hidden", background: "#ECEAE4", flexShrink: 0 }}>
           <img src={item.image} alt={item.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </div>
       )}
@@ -388,10 +388,10 @@ function ComponentRow({ item, type, accentColor, added, onAddRFQ, extra, extra2 
         </div>
         {item.name && item.name !== item.code && <div style={{ fontSize: 11, color: C2.muted, marginBottom: 3 }}>{item.name}</div>}
         {item.description && <div style={{ fontSize: 11, color: C2.muted }}>{item.description}</div>}
-        {item.notes && <div style={{ fontSize: 10, color: "#b45309", marginTop: 3 }}>{item.notes}</div>}
+        {item.notes && <div style={{ fontSize: 10, color: "#B8860B", marginTop: 3 }}>{item.notes}</div>}
       </div>
       <button onClick={onAddRFQ}
-        style={{ background: added ? "#16a34a" : accentColor, color: "#fff", border: "none", borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 11, fontWeight: 700, flexShrink: 0, transition: "background 0.2s" }}>
+        style={{ background: added ? "#2E7D46" : accentColor, color: "#fff", border: "none", borderRadius: 8, padding: "8px 14px", cursor: "pointer", fontSize: 11, fontWeight: 700, flexShrink: 0, transition: "background 0.2s" }}>
         {added ? "✓" : "+ RFQ"}
       </button>
     </div>
@@ -400,7 +400,7 @@ function ComponentRow({ item, type, accentColor, added, onAddRFQ, extra, extra2 
 
 function EmptyTab({ message }) {
   return (
-    <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", padding: "36px", textAlign: "center", color: "#64748b" }}>
+    <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", padding: "36px", textAlign: "center", color: "#3A4A66" }}>
       <div style={{ fontSize: 28, marginBottom: 10 }}>📋</div>
       <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>No data available</div>
       <div style={{ fontSize: 12 }}>{message}</div>

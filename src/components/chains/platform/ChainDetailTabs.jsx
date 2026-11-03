@@ -8,12 +8,12 @@ import ChainEquivalencyPanel from "./ChainEquivalencyPanel";
 import { ATTACHMENT_LIBRARY } from "@/lib/chainAttachmentLibrary";
 
 const C = {
-  navy: "#003c5b", navyMid: "#1A3A5C",
-  border: "#e2e8f0", bg: "#f8fafc", card: "#ffffff",
-  text: "#0f172a", muted: "#64748b", slate: "#334155",
-  green: "#16a34a", greenBg: "#f0fdf4",
-  amber: "#d97706", amberBg: "#fffbeb",
-  blue: "#2563eb", blueBg: "#eff6ff",
+  navy: "#0E1F3A", navyMid: "#0E1F3A",
+  border: "#D9D6CE", bg: "#F4F2ED", card: "#ffffff",
+  text: "#0E1F3A", muted: "#3A4A66", slate: "#3A4A66",
+  green: "#2E7D46", greenBg: "#f0fdf4",
+  amber: "#B8860B", amberBg: "#fffbeb",
+  blue: "#F26522", blueBg: "#FDF0E9",
 };
 
 function SectionTitle({ children }) {
@@ -237,7 +237,7 @@ function PinsTab({ product, onAddRFQ }) {
   return (
     <div>
       {inferredFiltered.length > 0 && (
-        <div style={{ fontSize: 11, color: C.muted, marginBottom: 12, padding: "8px 12px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 6 }}>
+        <div style={{ fontSize: 11, color: C.muted, marginBottom: 12, padding: "8px 12px", background: "#FDF0E9", border: "1px solid #bae6fd", borderRadius: 6 }}>
           ℹ Standard connecting links and offset links are inferred from the chain size. Confirm availability with Uniking before ordering.
         </div>
       )}
@@ -246,11 +246,11 @@ function PinsTab({ product, onAddRFQ }) {
           const displayCode = pin.code || pin.name;
           const displayType = pin.type || pin.description;
           return (
-            <div key={i} style={{ border: "1px solid " + (pin._inferred ? "#bae6fd" : C.border), borderRadius: 8, padding: "14px", background: pin._inferred ? "#f0f9ff" : C.card }}>
+            <div key={i} style={{ border: "1px solid " + (pin._inferred ? "#bae6fd" : C.border), borderRadius: 8, padding: "14px", background: pin._inferred ? "#FDF0E9" : C.card }}>
               {pin.image_url && <img src={pin.image_url} alt={displayCode} style={{ width: "100%", height: 60, objectFit: "contain", marginBottom: 8 }} onError={e => e.target.style.display = "none"} />}
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
                 <div style={{ fontWeight: 700, fontSize: 13, color: C.text }}>{displayCode}</div>
-                {pin._inferred && <span style={{ fontSize: 9, padding: "1px 5px", background: "#e0f2fe", color: "#0369a1", borderRadius: 4, fontWeight: 700 }}>Standard</span>}
+                {pin._inferred && <span style={{ fontSize: 9, padding: "1px 5px", background: "#FDF0E9", color: "#0E1F3A", borderRadius: 4, fontWeight: 700 }}>Standard</span>}
               </div>
               <div style={{ fontSize: 12, color: C.muted, marginBottom: 8, lineHeight: 1.5 }}>{displayType}</div>
               <button onClick={() => onAddRFQ && onAddRFQ({ ...product, series: (product.chain_number || product.part_number) + " + " + displayCode, notes: "Pin/Link: " + displayCode })}
@@ -272,7 +272,7 @@ function SprocketsTab({ product, dbSprockets, onAddRFQ }) {
 
   if (loading) return (
     <div style={{ color: C.muted, fontSize: 13, padding: "24px 0", display: "flex", alignItems: "center", gap: 8 }}>
-      <span style={{ display: "inline-block", width: 14, height: 14, border: "2px solid #e2e8f0", borderTopColor: C.navyMid, borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
+      <span style={{ display: "inline-block", width: 14, height: 14, border: "2px solid #D9D6CE", borderTopColor: C.navyMid, borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
       Loading sprocket data…
     </div>
   );
@@ -394,7 +394,7 @@ function SourceDataTab({ product }) {
                 <span style={{
                   fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20,
                   background: s.confidence === "Confirmed" ? C.greenBg : s.confidence === "Needs Review" ? C.amberBg : "#fef2f2",
-                  color: s.confidence === "Confirmed" ? C.green : s.confidence === "Needs Review" ? C.amber : "#dc2626",
+                  color: s.confidence === "Confirmed" ? C.green : s.confidence === "Needs Review" ? C.amber : "#C62828",
                   border: `1px solid ${s.confidence === "Confirmed" ? "#86efac" : s.confidence === "Needs Review" ? "#fbbf24" : "#fca5a5"}`
                 }}>
                   {s.confidence || "Needs Review"}
@@ -428,7 +428,7 @@ function SourceDataTab({ product }) {
         <div style={{ color: C.muted, fontSize: 13, padding: "24px 0" }}>No source data on file. Contact Uniking.</div>
       )}
 
-      <div style={{ marginTop: 16, padding: "10px 14px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 6, fontSize: 12, color: "#0369a1" }}>
+      <div style={{ marginTop: 16, padding: "10px 14px", background: "#FDF0E9", border: "1px solid #bae6fd", borderRadius: 6, fontSize: 12, color: "#0E1F3A" }}>
         ℹ This platform merges data from multiple suppliers. All specifications must be confirmed by Uniking before supply.
       </div>
     </div>

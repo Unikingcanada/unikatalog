@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { ROLLER_SERIES } from "@/lib/rollerSeriesData";
 
-const NAVY = "#003c5b";
-const NAVY_MID = "#1A3A5C";
+const NAVY = "#0E1F3A";
+const NAVY_MID = "#0E1F3A";
 const C = {
-  bg: "#f8fafc", card: "#ffffff", border: "#e2e8f0",
-  navy: NAVY, navyMid: NAVY_MID, muted: "#64748b", text: "#0f172a", slate: "#334155"
+  bg: "#F4F2ED", card: "#ffffff", border: "#D9D6CE",
+  navy: NAVY, navyMid: NAVY_MID, muted: "#3A4A66", text: "#0E1F3A", slate: "#3A4A66"
 };
-const DUTY_COLOR = { Light: "#3b82f6", Medium: "#f59e0b", Heavy: "#ef4444" };
+const DUTY_COLOR = { Light: "#F26522", Medium: "#f59e0b", Heavy: "#ef4444" };
 
 function getRFQCart() { try { return JSON.parse(localStorage.getItem("uniking_rfq_cart") || "[]"); } catch { return []; } }
 function saveRFQCart(items) { localStorage.setItem("uniking_rfq_cart", JSON.stringify(items)); window.dispatchEvent(new Event("rfq_cart_updated")); }
@@ -45,10 +45,10 @@ function LoadTable({ table }) {
         </thead>
         <tbody>
           {rows.map((row, i) => (
-            <tr key={i} style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid " + C.border }}>
+            <tr key={i} style={{ background: i % 2 === 0 ? "#F4F2ED" : "#fff", borderBottom: "1px solid " + C.border }}>
               <td style={{ padding: "7px 10px", color: NAVY_MID, fontWeight: 600, whiteSpace: "nowrap" }}>{row.label}</td>
               {cols_mm.map((c, ci) => (
-                <td key={ci} style={{ padding: "7px 10px", textAlign: "right", color: row.loads[ci] ? C.text : "#cbd5e1" }}>
+                <td key={ci} style={{ padding: "7px 10px", textAlign: "right", color: row.loads[ci] ? C.text : "#C9C5BB" }}>
                   {row.loads[ci] != null ? <><b>{row.loads[ci]}</b> N</> : "—"}
                 </td>
               ))}
@@ -128,14 +128,14 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
   const capW = Math.max(8, visualWall * 2.2);    // width of bearing seat ring
   const capH = visualDia * 0.72;                 // height of bearing cap (smaller than tube)
   const capY = cy - capH / 2;
-  const capColor = "#94a3b8";
+  const capColor = "#8A94A6";
 
   const hasSleeve = sleeve && sleeve !== "None";
   const sleeveThick = hasSleeve ? Math.max(4, visualDia * 0.09) : 0;
   let sleeveColor = "#f59e0b";
   if (/pu/i.test(sleeve || "")) sleeveColor = "#a78bfa";
   if (/pvc/i.test(sleeve || "")) sleeveColor = "#60a5fa";
-  if (/lagging/i.test(sleeve || "")) sleeveColor = "#6b7280";
+  if (/lagging/i.test(sleeve || "")) sleeveColor = "#3A4A66";
 
   const isVariable = varRHmm != null && varLHmm != null;
   const leftExtMm = isVariable ? varLHmm : shaftExtMm;
@@ -162,7 +162,7 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
   const tapInnerPoints = `${cx + visualWall * 2},${cy - innerSmall} ${cx + drawRL - visualWall * 2},${cy - innerLarge} ${cx + drawRL - visualWall * 2},${cy + innerLarge} ${cx + visualWall * 2},${cy + innerSmall}`;
 
   // ── Helper: boxed callout label (engineering drawing style) ──────────────
-  function DimLabel({ x, y, text, color: lc = "#64748b", anchor = "middle" }) {
+  function DimLabel({ x, y, text, color: lc = "#3A4A66", anchor = "middle" }) {
     const pad = 4, h = 16;
     const approxW = text.length * 6 + pad * 2;
     const lx = anchor === "middle" ? x - approxW / 2 : anchor === "end" ? x - approxW : x;
@@ -177,7 +177,7 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
   }
 
   return (
-    <div style={{ background: "#f1f5f9", borderRadius: 10, padding: "14px 16px", border: "1px solid " + C.border }}>
+    <div style={{ background: "#ECEAE4", borderRadius: 10, padding: "14px 16px", border: "1px solid " + C.border }}>
       <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: C.muted, marginBottom: 8 }}>
         Engineering Schematic — {rlLabel} · EL = {fmtMm(elMm)}
         {isTapered && <span style={{ marginLeft: 8, color: series.color, fontWeight: 800 }}>· Tapered {conicity}</span>}
@@ -185,36 +185,36 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
       <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" height={VH} style={{ display: "block", maxWidth: 620 }}>
         <defs>
           <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#64748b" />
+            <path d="M0,0 L6,3 L0,6 Z" fill="#3A4A66" />
           </marker>
           <marker id="arrL" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
-            <path d="M6,0 L0,3 L6,6 Z" fill="#64748b" />
+            <path d="M6,0 L0,3 L6,6 Z" fill="#3A4A66" />
           </marker>
           <marker id="arrB" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#2563eb" />
+            <path d="M0,0 L6,3 L0,6 Z" fill="#F26522" />
           </marker>
           <marker id="arrBL" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
-            <path d="M6,0 L0,3 L6,6 Z" fill="#2563eb" />
+            <path d="M6,0 L0,3 L6,6 Z" fill="#F26522" />
           </marker>
           <marker id="arrV" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#b45309" />
+            <path d="M0,0 L6,3 L0,6 Z" fill="#B8860B" />
           </marker>
           <marker id="arrVL" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
-            <path d="M6,0 L0,3 L6,6 Z" fill="#b45309" />
+            <path d="M6,0 L0,3 L6,6 Z" fill="#B8860B" />
           </marker>
           <marker id="arrG" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="#16a34a" />
+            <path d="M0,0 L6,3 L0,6 Z" fill="#2E7D46" />
           </marker>
           <marker id="arrGL" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto">
-            <path d="M6,0 L0,3 L6,6 Z" fill="#16a34a" />
+            <path d="M6,0 L0,3 L6,6 Z" fill="#2E7D46" />
           </marker>
         </defs>
 
         {/* ── Shaft arms ── */}
         <line x1={0} y1={cy} x2={cx} y2={cy}
-          stroke={isVariable ? "#b45309" : "#64748b"} strokeWidth={isVariable ? 6 : 5} strokeLinecap="round" />
+          stroke={isVariable ? "#B8860B" : "#3A4A66"} strokeWidth={isVariable ? 6 : 5} strokeLinecap="round" />
         <line x1={cx + drawRL} y1={cy} x2={VW} y2={cy}
-          stroke={isVariable ? "#b45309" : "#64748b"} strokeWidth={isVariable ? 6 : 5} strokeLinecap="round" />
+          stroke={isVariable ? "#B8860B" : "#3A4A66"} strokeWidth={isVariable ? 6 : 5} strokeLinecap="round" />
 
 
 
@@ -228,17 +228,17 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
               textAnchor="middle" fontSize={11} fill={color} fontWeight="700" fontFamily="Arial,sans-serif">
               {conicity} Tapered
             </text>
-            <line x1={cx} y1={cy - smallHalf - 4} x2={cx} y2={cy + smallHalf + 4} stroke="#16a34a" strokeWidth={1.2} />
+            <line x1={cx} y1={cy - smallHalf - 4} x2={cx} y2={cy + smallHalf + 4} stroke="#2E7D46" strokeWidth={1.2} />
             <line x1={cx - 1} y1={cy - smallHalf} x2={cx - 1} y2={cy + smallHalf}
-              stroke="#16a34a" strokeWidth={1} markerEnd="url(#arrG)" markerStart="url(#arrGL)" />
+              stroke="#2E7D46" strokeWidth={1} markerEnd="url(#arrG)" markerStart="url(#arrGL)" />
             <text x={cx - 5} y={cy - smallHalf - 6}
-              textAnchor="middle" fontSize={9} fill="#16a34a" fontWeight="700" fontFamily="Arial,sans-serif">
+              textAnchor="middle" fontSize={9} fill="#2E7D46" fontWeight="700" fontFamily="Arial,sans-serif">
               d={fmtMm(smallDiaMm)}
             </text>
             <line x1={cx + drawRL + 1} y1={cy - largeHalf} x2={cx + drawRL + 1} y2={cy + largeHalf}
-              stroke="#16a34a" strokeWidth={1} markerEnd="url(#arrG)" markerStart="url(#arrGL)" />
+              stroke="#2E7D46" strokeWidth={1} markerEnd="url(#arrG)" markerStart="url(#arrGL)" />
             <text x={cx + drawRL + 5} y={cy - largeHalf - 6}
-              textAnchor="start" fontSize={9} fill="#16a34a" fontWeight="700" fontFamily="Arial,sans-serif">
+              textAnchor="start" fontSize={9} fill="#2E7D46" fontWeight="700" fontFamily="Arial,sans-serif">
               D={fmtMm(largeDiaMm)}
             </text>
           </>
@@ -295,11 +295,11 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
                 return (
                   <g key={gi}>
                     <rect x={gx - grooveW / 2} y={tubeY1} width={grooveW} height={grooveDepth}
-                      fill="#fff" stroke="#94a3b8" strokeWidth={1} />
+                      fill="#fff" stroke="#8A94A6" strokeWidth={1} />
                     <rect x={gx - grooveW / 2} y={tubeY2 - grooveDepth} width={grooveW} height={grooveDepth}
-                      fill="#fff" stroke="#94a3b8" strokeWidth={1} />
+                      fill="#fff" stroke="#8A94A6" strokeWidth={1} />
                     {gi === 0 && (
-                      <text x={gx} y={tubeY1 - 5} textAnchor="middle" fontSize={8} fill="#94a3b8" fontFamily="Arial,sans-serif">
+                      <text x={gx} y={tubeY1 - 5} textAnchor="middle" fontSize={8} fill="#8A94A6" fontFamily="Arial,sans-serif">
                         groove
                       </text>
                     )}
@@ -347,34 +347,34 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
                   <g key={key}>
                     <rect x={x0} y={hubTop} width={w} height={spVisR * 2}
                       fill={isPolyVee ? "#a78bfa" : isRoundBelt ? "#60a5fa" : "#f59e0b"}
-                      fillOpacity={0.2} stroke={isPolyVee ? "#7c3aed" : isRoundBelt ? "#2563eb" : "#d97706"}
+                      fillOpacity={0.2} stroke={isPolyVee ? "#3A4A66" : isRoundBelt ? "#F26522" : "#B8860B"}
                       strokeWidth={1.8} rx={1.5} />
                     {numTeeth > 0 && <path d={topT} fill={isPolyVee ? "#a78bfa" : "#f59e0b"} fillOpacity={0.8}
-                      stroke={isPolyVee ? "#7c3aed" : "#d97706"} strokeWidth={0.8} strokeLinejoin="round" />}
+                      stroke={isPolyVee ? "#3A4A66" : "#B8860B"} strokeWidth={0.8} strokeLinejoin="round" />}
                     {numTeeth > 0 && <path d={botT} fill={isPolyVee ? "#a78bfa" : "#f59e0b"} fillOpacity={0.8}
-                      stroke={isPolyVee ? "#7c3aed" : "#d97706"} strokeWidth={0.8} strokeLinejoin="round" />}
-                    {isPolyVee && <path d={polyVeeGrooves} fill="none" stroke="#7c3aed" strokeWidth={1.5} strokeOpacity={0.6} />}
+                      stroke={isPolyVee ? "#3A4A66" : "#B8860B"} strokeWidth={0.8} strokeLinejoin="round" />}
+                    {isPolyVee && <path d={polyVeeGrooves} fill="none" stroke="#3A4A66" strokeWidth={1.5} strokeOpacity={0.6} />}
                     {isRoundBelt && <ellipse cx={dcx} cy={hubTop} rx={w * 0.35} ry={spVisR * 0.12}
-                      fill="#60a5fa" fillOpacity={0.6} stroke="#2563eb" strokeWidth={0.8} />}
+                      fill="#60a5fa" fillOpacity={0.6} stroke="#F26522" strokeWidth={0.8} />}
                     {isRoundBelt && <ellipse cx={dcx} cy={hubBot} rx={w * 0.35} ry={spVisR * 0.12}
-                      fill="#60a5fa" fillOpacity={0.6} stroke="#2563eb" strokeWidth={0.8} />}
+                      fill="#60a5fa" fillOpacity={0.6} stroke="#F26522" strokeWidth={0.8} />}
                     {[0.25, 0.5, 0.75].map((f, i) => (
                       <line key={i} x1={x0 + w * f} y1={hubTop + 3} x2={x0 + w * f} y2={hubBot - 3}
-                        stroke={isPolyVee ? "#7c3aed" : "#d97706"} strokeWidth={0.5} strokeOpacity={0.3} />
+                        stroke={isPolyVee ? "#3A4A66" : "#B8860B"} strokeWidth={0.5} strokeOpacity={0.3} />
                     ))}
                     <circle cx={dcx} cy={sy} r={boreR}
-                      fill="#fff" stroke={isPolyVee ? "#7c3aed" : "#d97706"} strokeWidth={1.2} />
+                      fill="#fff" stroke={isPolyVee ? "#3A4A66" : "#B8860B"} strokeWidth={1.2} />
                   </g>
                 );
               }
-              const labelColor = isPolyVee ? "#7c3aed" : isRoundBelt ? "#1d4ed8" : "#b45309";
+              const labelColor = isPolyVee ? "#3A4A66" : isRoundBelt ? "#0E1F3A" : "#B8860B";
               const labelCx = sx + (isDouble ? singleHubW * 2 + hubGap : singleHubW) / 2;
               return (
                 <g>
                   {renderDisc(sx, singleHubW, "disc1")}
                   {isDouble && renderDisc(sx + singleHubW + hubGap, singleHubW, "disc2")}
                   {isDouble && <rect x={sx + singleHubW} y={sy - spVisR * 0.4} width={hubGap} height={spVisR * 0.8}
-                    fill="#e5e7eb" fillOpacity={0.6} />}
+                    fill="#D9D6CE" fillOpacity={0.6} />}
                   <line x1={sx - 7} y1={hubTop - toothH} x2={sx - 7} y2={hubBot + toothH}
                     stroke={labelColor} strokeWidth={0.8} strokeDasharray="2 2" />
                   <text x={sx - 9} y={sy + 4} textAnchor="end" fontSize={7.5} fill={labelColor}
@@ -391,41 +391,41 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
 
         {/* ── C: Boxed dimension callout — RL ── */}
         <line x1={cx} y1={dimY_RL} x2={cx + drawRL} y2={dimY_RL}
-          stroke="#64748b" strokeWidth={1} markerEnd="url(#arr)" markerStart="url(#arrL)" />
+          stroke="#3A4A66" strokeWidth={1} markerEnd="url(#arr)" markerStart="url(#arrL)" />
         {/* Extension tick lines */}
-        <line x1={cx} y1={botRef + 4} x2={cx} y2={dimY_RL + 2} stroke="#64748b" strokeWidth={0.7} strokeDasharray="2 2" />
-        <line x1={cx + drawRL} y1={botRef + 4} x2={cx + drawRL} y2={dimY_RL + 2} stroke="#64748b" strokeWidth={0.7} strokeDasharray="2 2" />
-        <DimLabel x={cx + drawRL / 2} y={dimY_RL} text={rlLabel} color="#475569" />
+        <line x1={cx} y1={botRef + 4} x2={cx} y2={dimY_RL + 2} stroke="#3A4A66" strokeWidth={0.7} strokeDasharray="2 2" />
+        <line x1={cx + drawRL} y1={botRef + 4} x2={cx + drawRL} y2={dimY_RL + 2} stroke="#3A4A66" strokeWidth={0.7} strokeDasharray="2 2" />
+        <DimLabel x={cx + drawRL / 2} y={dimY_RL} text={rlLabel} color="#3A4A66" />
 
         {/* ── C: Boxed dimension callout — EL ── */}
         <line x1={4} y1={dimY_EL} x2={VW - 4} y2={dimY_EL}
-          stroke="#374151" strokeWidth={1} strokeDasharray="5 3" markerEnd="url(#arr)" markerStart="url(#arrL)" />
+          stroke="#3A4A66" strokeWidth={1} strokeDasharray="5 3" markerEnd="url(#arr)" markerStart="url(#arrL)" />
         <DimLabel x={VW / 2} y={dimY_EL} text={elLabel} color="#1f2937" />
 
         {/* ── C: Boxed dimension callout — B / LH (left) ── */}
         <line x1={4} y1={shaftDimY} x2={cx - 2} y2={shaftDimY}
-          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={1}
+          stroke={isVariable ? "#B8860B" : "#F26522"} strokeWidth={1}
           markerEnd={isVariable ? "url(#arrV)" : "url(#arrB)"}
           markerStart={isVariable ? "url(#arrVL)" : "url(#arrBL)"} />
         <line x1={4} y1={topRef - 4} x2={4} y2={shaftDimY + 2}
-          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={0.7} strokeDasharray="2 2" />
+          stroke={isVariable ? "#B8860B" : "#F26522"} strokeWidth={0.7} strokeDasharray="2 2" />
         <line x1={cx} y1={topRef - 4} x2={cx} y2={shaftDimY + 2}
-          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={0.7} strokeDasharray="2 2" />
+          stroke={isVariable ? "#B8860B" : "#F26522"} strokeWidth={0.7} strokeDasharray="2 2" />
         <DimLabel x={cx / 2} y={shaftDimY} text={isVariable ? lhLabel : bLabel}
-          color={isVariable ? "#b45309" : "#2563eb"} />
+          color={isVariable ? "#B8860B" : "#F26522"} />
 
         {/* ── C: Boxed dimension callout — B / RH (right) ── */}
         <line x1={cx + drawRL + 2} y1={shaftDimY} x2={VW - 4} y2={shaftDimY}
-          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={1}
+          stroke={isVariable ? "#B8860B" : "#F26522"} strokeWidth={1}
           markerEnd={isVariable ? "url(#arrV)" : "url(#arrB)"}
           markerStart={isVariable ? "url(#arrVL)" : "url(#arrBL)"} />
         <line x1={cx + drawRL} y1={topRef - 4} x2={cx + drawRL} y2={shaftDimY + 2}
-          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={0.7} strokeDasharray="2 2" />
+          stroke={isVariable ? "#B8860B" : "#F26522"} strokeWidth={0.7} strokeDasharray="2 2" />
         <line x1={VW - 4} y1={topRef - 4} x2={VW - 4} y2={shaftDimY + 2}
-          stroke={isVariable ? "#b45309" : "#2563eb"} strokeWidth={0.7} strokeDasharray="2 2" />
+          stroke={isVariable ? "#B8860B" : "#F26522"} strokeWidth={0.7} strokeDasharray="2 2" />
         <DimLabel x={cx + drawRL + shaftVisLen / 2} y={shaftDimY}
           text={isVariable ? rhLabel : bLabel}
-          color={isVariable ? "#b45309" : "#2563eb"} />
+          color={isVariable ? "#B8860B" : "#F26522"} />
       </svg>
 
       {/* Legend row */}
@@ -437,45 +437,45 @@ function RollerSchematic({ series, rl, tubeIdx, sleeve, shaftObj, imperial, groo
           </div>
         )}
         {isTapered && (
-          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#16a34a" }}>
-            <div style={{ width: 16, height: 2, background: "#16a34a" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#2E7D46" }}>
+            <div style={{ width: 16, height: 2, background: "#2E7D46" }} />
             <span>d = small end · D = large end</span>
           </div>
         )}
         {!isTapered && (
-          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#94a3b8" }}>
-            <div style={{ width: 10, height: 10, borderRadius: 2, background: "#94a3b8", opacity: 0.4, border: "1px solid #94a3b8" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#8A94A6" }}>
+            <div style={{ width: 10, height: 10, borderRadius: 2, background: "#8A94A6", opacity: 0.4, border: "1px solid #8A94A6" }} />
             <span>Bearing housing</span>
           </div>
         )}
         {groovesQty > 0 && (
-          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#94a3b8" }}>
-            <div style={{ width: 6, height: 10, border: "1px solid #94a3b8", background: "#fff" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#8A94A6" }}>
+            <div style={{ width: 6, height: 10, border: "1px solid #8A94A6", background: "#fff" }} />
             <span>{groovesQty} groove{groovesQty > 1 ? "s" : ""}</span>
           </div>
         )}
         {driveHead && (
-          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#d97706" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#B8860B" }}>
             <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#f59e0b", opacity: 0.7 }} />
             <span style={{ fontWeight: 600 }}>{driveHead.label}</span>
           </div>
         )}
-        <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#475569" }}>
-          <div style={{ width: 16, height: 1.5, background: "#475569" }} />
+        <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#3A4A66" }}>
+          <div style={{ width: 16, height: 1.5, background: "#3A4A66" }} />
           <span>RL = body</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#1f2937" }}>
-          <div style={{ width: 16, height: 1.5, background: "#1f2937", borderTop: "2px dashed #374151" }} />
+          <div style={{ width: 16, height: 1.5, background: "#1f2937", borderTop: "2px dashed #3A4A66" }} />
           <span>EL = end-to-end</span>
         </div>
         {isVariable ? (
-          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#b45309" }}>
-            <div style={{ width: 16, height: 1.5, background: "#b45309" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#B8860B" }}>
+            <div style={{ width: 16, height: 1.5, background: "#B8860B" }} />
             <span>LH / RH shaft extensions</span>
           </div>
         ) : (
-          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#2563eb" }}>
-            <div style={{ width: 16, height: 1.5, background: "#2563eb" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 5, color: "#F26522" }}>
+            <div style={{ width: 16, height: 1.5, background: "#F26522" }} />
             <span>B = shaft extension</span>
           </div>
         )}
@@ -586,7 +586,7 @@ function buildTearSheetHTML(series, config) {
   const rlVal = parseInt(rl) || 600;
   const tubeMm = tubeObj?.tube_mm || 50;
   const wallMm = tubeObj?.wall_mm || 1.5;
-  const color = series.color || "#1A3A5C";
+  const color = series.color || "#0E1F3A";
   const bMm = getShaftExtMm(shaftObj);
   const elMm = rlVal + bMm * 2;
 
@@ -595,7 +595,7 @@ function buildTearSheetHTML(series, config) {
   let sleeveColor = "#f59e0b";
   if (/pu/i.test(sleeve || "")) sleeveColor = "#a78bfa";
   if (/pvc/i.test(sleeve || "")) sleeveColor = "#60a5fa";
-  if (/lagging/i.test(sleeve || "")) sleeveColor = "#6b7280";
+  if (/lagging/i.test(sleeve || "")) sleeveColor = "#3A4A66";
 
   // SVG layout
   const shaftArm = 44;
@@ -614,14 +614,14 @@ function buildTearSheetHTML(series, config) {
 
   const schematicSVG = `<svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <marker id="a1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#64748b"/></marker>
-      <marker id="a2" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="#64748b"/></marker>
-      <marker id="b1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2563eb"/></marker>
-      <marker id="b2" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="#2563eb"/></marker>
+      <marker id="a1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#3A4A66"/></marker>
+      <marker id="a2" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="#3A4A66"/></marker>
+      <marker id="b1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#F26522"/></marker>
+      <marker id="b2" markerWidth="6" markerHeight="6" refX="1" refY="3" orient="auto"><path d="M6,0 L0,3 L6,6 Z" fill="#F26522"/></marker>
     </defs>
     <!-- Shaft arms -->
-    <line x1="0" y1="${cy}" x2="${cx}" y2="${cy}" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
-    <line x1="${cx+drawRL}" y1="${cy}" x2="${svgW}" y2="${cy}" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
+    <line x1="0" y1="${cy}" x2="${cx}" y2="${cy}" stroke="#3A4A66" stroke-width="4" stroke-linecap="round"/>
+    <line x1="${cx+drawRL}" y1="${cy}" x2="${svgW}" y2="${cy}" stroke="#3A4A66" stroke-width="4" stroke-linecap="round"/>
     <!-- Sleeve overlay -->
     ${hasSleeve ? `<rect x="${cx}" y="${tubeY1-sleeveThick}" width="${drawRL}" height="${tubeMm+sleeveThick*2}" rx="${tubeMm/6}" fill="${sleeveColor}" fill-opacity="0.3" stroke="${sleeveColor}" stroke-width="1.5"/>` : ""}
     <!-- Tube body -->
@@ -633,17 +633,17 @@ function buildTearSheetHTML(series, config) {
     <!-- Tube label -->
     <text x="${cx+drawRL/2}" y="${cy+4}" text-anchor="middle" font-size="10" fill="${color}" font-weight="bold" font-family="Arial,sans-serif">&#216;${tubeMm} x ${wallMm}mm</text>
     <!-- RL dim line -->
-    <line x1="${cx}" y1="${dimY1}" x2="${cx+drawRL}" y2="${dimY1}" stroke="#64748b" stroke-width="1" marker-end="url(#a1)" marker-start="url(#a2)"/>
-    <text x="${cx+drawRL/2}" y="${dimY1+11}" text-anchor="middle" font-size="9" fill="#64748b" font-family="Arial,sans-serif" font-weight="600">RL = ${rlVal} mm (${(rlVal/25.4).toFixed(3)}")</text>
+    <line x1="${cx}" y1="${dimY1}" x2="${cx+drawRL}" y2="${dimY1}" stroke="#3A4A66" stroke-width="1" marker-end="url(#a1)" marker-start="url(#a2)"/>
+    <text x="${cx+drawRL/2}" y="${dimY1+11}" text-anchor="middle" font-size="9" fill="#3A4A66" font-family="Arial,sans-serif" font-weight="600">RL = ${rlVal} mm (${(rlVal/25.4).toFixed(3)}")</text>
     <!-- EL dim line -->
-    <line x1="0" y1="${dimY2}" x2="${svgW}" y2="${dimY2}" stroke="#374151" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#a1)" marker-start="url(#a2)"/>
-    <text x="${svgW/2}" y="${dimY2+11}" text-anchor="middle" font-size="9" fill="#374151" font-family="Arial,sans-serif" font-weight="600">EL = ${elMm} mm (${(elMm/25.4).toFixed(3)}")</text>
+    <line x1="0" y1="${dimY2}" x2="${svgW}" y2="${dimY2}" stroke="#3A4A66" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#a1)" marker-start="url(#a2)"/>
+    <text x="${svgW/2}" y="${dimY2+11}" text-anchor="middle" font-size="9" fill="#3A4A66" font-family="Arial,sans-serif" font-weight="600">EL = ${elMm} mm (${(elMm/25.4).toFixed(3)}")</text>
     <!-- B dim left -->
-    <line x1="0" y1="${bDimY}" x2="${cx}" y2="${bDimY}" stroke="#2563eb" stroke-width="1" marker-end="url(#b1)" marker-start="url(#b2)"/>
-    <text x="${cx/2}" y="${bDimY-3}" text-anchor="middle" font-size="8" fill="#2563eb" font-weight="bold" font-family="Arial,sans-serif">B=${bMm}mm</text>
+    <line x1="0" y1="${bDimY}" x2="${cx}" y2="${bDimY}" stroke="#F26522" stroke-width="1" marker-end="url(#b1)" marker-start="url(#b2)"/>
+    <text x="${cx/2}" y="${bDimY-3}" text-anchor="middle" font-size="8" fill="#F26522" font-weight="bold" font-family="Arial,sans-serif">B=${bMm}mm</text>
     <!-- B dim right -->
-    <line x1="${cx+drawRL}" y1="${bDimY}" x2="${svgW}" y2="${bDimY}" stroke="#2563eb" stroke-width="1" marker-end="url(#b1)" marker-start="url(#b2)"/>
-    <text x="${cx+drawRL+shaftArm/2}" y="${bDimY-3}" text-anchor="middle" font-size="8" fill="#2563eb" font-weight="bold" font-family="Arial,sans-serif">B=${bMm}mm</text>
+    <line x1="${cx+drawRL}" y1="${bDimY}" x2="${svgW}" y2="${bDimY}" stroke="#F26522" stroke-width="1" marker-end="url(#b1)" marker-start="url(#b2)"/>
+    <text x="${cx+drawRL+shaftArm/2}" y="${bDimY-3}" text-anchor="middle" font-size="8" fill="#F26522" font-weight="bold" font-family="Arial,sans-serif">B=${bMm}mm</text>
   </svg>`;
 
   const date = new Date().toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" });
@@ -656,26 +656,26 @@ function buildTearSheetHTML(series, config) {
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
     body{font-family:'Segoe UI',Arial,sans-serif;color:#111;}
-    .hdr{background:#0f2340;color:#fff;padding:20px 32px;display:flex;justify-content:space-between;align-items:center;}
-    .bar{height:4px;background:linear-gradient(90deg,#2d8a4e,#1a3a5c);}
+    .hdr{background:#0E1F3A;color:#fff;padding:20px 32px;display:flex;justify-content:space-between;align-items:center;}
+    .bar{height:4px;background:linear-gradient(90deg,#2d8a4e,#0E1F3A);}
     .body{padding:24px 32px;}
-    h2{font-size:22px;font-weight:900;color:#0f2340;margin-bottom:4px;}
-    .sub{font-size:13px;color:#64748b;margin-bottom:12px;}
-    .pn{background:#0f2340;color:#fff;display:inline-block;padding:7px 16px;border-radius:6px;font-size:14px;font-weight:800;letter-spacing:1px;margin-bottom:16px;}
+    h2{font-size:22px;font-weight:900;color:#0E1F3A;margin-bottom:4px;}
+    .sub{font-size:13px;color:#3A4A66;margin-bottom:12px;}
+    .pn{background:#0E1F3A;color:#fff;display:inline-block;padding:7px 16px;border-radius:6px;font-size:14px;font-weight:800;letter-spacing:1px;margin-bottom:16px;}
     .pn-lbl{font-size:9px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
-    .schematic{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px;margin-bottom:18px;}
-    .schem-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#64748b;margin-bottom:8px;}
-    .spec{background:#f8fafc;border:1px solid #e5e7eb;border-radius:6px;padding:12px 16px;margin-bottom:12px;}
+    .schematic{background:#ECEAE4;border:1px solid #D9D6CE;border-radius:8px;padding:14px 16px;margin-bottom:18px;}
+    .schem-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#3A4A66;margin-bottom:8px;}
+    .spec{background:#F4F2ED;border:1px solid #D9D6CE;border-radius:6px;padding:12px 16px;margin-bottom:12px;}
     .spec-row{display:flex;gap:10px;margin-bottom:6px;font-size:13px;}
-    .lbl{color:#94a3b8;font-weight:600;width:170px;flex-shrink:0;}
-    .val{color:#0f2340;font-weight:700;}
-    .notes{background:#fff8ed;border-left:3px solid #f59e0b;padding:10px 14px;font-size:12px;color:#334155;line-height:1.7;margin-top:12px;}
+    .lbl{color:#8A94A6;font-weight:600;width:170px;flex-shrink:0;}
+    .val{color:#0E1F3A;font-weight:700;}
+    .notes{background:#fff8ed;border-left:3px solid #f59e0b;padding:10px 14px;font-size:12px;color:#3A4A66;line-height:1.7;margin-top:12px;}
     .no-print{margin:16px 32px;display:flex;gap:10px;}
     @media print{.no-print{display:none!important;}}
     .btn{padding:8px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:700;}
-    .btn-p{background:#0f2340;color:#fff;}
-    .btn-s{background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;}
-    .footer{margin-top:24px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:10px;color:#94a3b8;}
+    .btn-p{background:#0E1F3A;color:#fff;}
+    .btn-s{background:#ECEAE4;color:#3A4A66;border:1px solid #D9D6CE;}
+    .footer{margin-top:24px;padding-top:12px;border-top:1px solid #D9D6CE;font-size:10px;color:#8A94A6;}
   </style>
 </head>
 <body>
@@ -693,7 +693,7 @@ function buildTearSheetHTML(series, config) {
 <div class="bar"></div>
 <div class="body">
   <div style="display:flex;gap:20px;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;">
-    ${series.image_url ? `<img src="${series.image_url}" alt="${series.name}" style="max-height:100px;max-width:150px;object-fit:contain;border:1px solid #e5e7eb;border-radius:6px;padding:8px;background:#f8fafc;" />` : ""}
+    ${series.image_url ? `<img src="${series.image_url}" alt="${series.name}" style="max-height:100px;max-width:150px;object-fit:contain;border:1px solid #D9D6CE;border-radius:6px;padding:8px;background:#F4F2ED;" />` : ""}
     <div>
       <h2>${series.name}</h2>
       <div class="sub">${series.subtitle} - Catalog pages ${series.page_range}</div>
@@ -757,12 +757,12 @@ function SeriesGrid({ onSelect }) {
           <div key={s.id}
             onMouseEnter={() => setHov(s.id)} onMouseLeave={() => setHov(null)}
             onClick={() => onSelect(s)}
-            style={{ background: C.card, border: "1px solid " + (hov === s.id ? NAVY_MID : C.border), borderRadius: 12, overflow: "hidden", cursor: "pointer", transition: "all .15s", boxShadow: hov === s.id ? "0 6px 20px rgba(0,60,91,.12)" : "0 1px 4px rgba(0,0,0,.05)", transform: hov === s.id ? "translateY(-2px)" : "none" }}>
+            style={{ background: C.card, border: "1px solid " + (hov === s.id ? NAVY_MID : C.border), borderRadius: 12, overflow: "hidden", cursor: "pointer", transition: "all .15s", boxShadow: hov === s.id ? "0 6px 20px rgba(14,31,58,.12)" : "0 1px 4px rgba(0,0,0,.05)", transform: hov === s.id ? "translateY(-2px)" : "none" }}>
             {/* Accent bar */}
             <div style={{ height: 3, background: s.color || NAVY }} />
             {/* Image */}
             {s.image_url && (
-              <div style={{ background: "#f8fafc", height: 120, display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid " + C.border }}>
+              <div style={{ background: "#F4F2ED", height: 120, display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid " + C.border }}>
                 <img src={s.image_url} alt={s.name} style={{ maxHeight: 108, maxWidth: "88%", objectFit: "contain" }} onError={e => e.target.parentElement.style.display = "none"} />
               </div>
             )}
@@ -780,7 +780,7 @@ function SeriesGrid({ onSelect }) {
                 <span style={{ fontSize: 11, color: C.slate }}>pp. {s.page_range}</span>
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 12 }}>
-                {s.tags.map(t => <span key={t} style={{ fontSize: 9, padding: "2px 7px", borderRadius: 99, background: "#e0f2fe", color: "#0369a1", fontWeight: 600 }}>{t}</span>)}
+                {s.tags.map(t => <span key={t} style={{ fontSize: 9, padding: "2px 7px", borderRadius: 99, background: "#FDF0E9", color: "#0E1F3A", fontWeight: 600 }}>{t}</span>)}
               </div>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <span style={{ fontSize: 12, color: C.muted }}>View details →</span>
@@ -844,7 +844,7 @@ function SeriesDetail({ series, onBack, onConfigure }) {
           </div>
           {/* Configure Button */}
           <button onClick={onConfigure}
-            style={{ padding: "11px 28px", borderRadius: 9, fontSize: 14, fontWeight: 800, cursor: "pointer", border: "none", background: series.color || "#2563eb", color: "#fff", letterSpacing: "0.02em", boxShadow: "0 4px 14px rgba(0,0,0,.25)", transition: "opacity .15s" }}
+            style={{ padding: "11px 28px", borderRadius: 9, fontSize: 14, fontWeight: 800, cursor: "pointer", border: "none", background: series.color || "#F26522", color: "#fff", letterSpacing: "0.02em", boxShadow: "0 4px 14px rgba(0,0,0,.25)", transition: "opacity .15s" }}
             onMouseEnter={e => e.target.style.opacity = ".85"} onMouseLeave={e => e.target.style.opacity = "1"}>
             ⚙ Configure This Roller
           </button>
@@ -890,7 +890,7 @@ function SeriesDetail({ series, onBack, onConfigure }) {
               <>
                 <div style={{ fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: 1, color: C.muted, margin: "16px 0 10px" }}>Surface Options</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                  {series.sleeves.map((s, i) => <span key={i} style={{ padding: "4px 10px", background: "#ede9fe", color: "#6d28d9", borderRadius: 99, fontSize: 11, fontWeight: 600 }}>{s}</span>)}
+                  {series.sleeves.map((s, i) => <span key={i} style={{ padding: "4px 10px", background: "#ECEAE4", color: "#3A4A66", borderRadius: 99, fontSize: 11, fontWeight: 600 }}>{s}</span>)}
                 </div>
               </>
             )}
@@ -917,7 +917,7 @@ function SeriesDetail({ series, onBack, onConfigure }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {series.applications.map((a, i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: C.bg, borderRadius: 7, border: "1px solid " + C.border }}>
-                <span style={{ color: "#16a34a", fontWeight: 800, fontSize: 16 }}>✓</span>
+                <span style={{ color: "#2E7D46", fontWeight: 800, fontSize: 16 }}>✓</span>
                 <span style={{ fontSize: 13, color: C.text }}>{a}</span>
               </div>
             ))}
@@ -937,7 +937,7 @@ function SeriesDetail({ series, onBack, onConfigure }) {
                 {d.teeth && <div style={{ fontSize: 11, color: C.muted }}>Teeth: {d.teeth}</div>}
                 {d.OD_mm && <div style={{ fontSize: 11, color: C.muted }}>OD: {d.OD_mm} mm</div>}
                 {d.EL_formula && <div style={{ fontSize: 11, color: C.muted }}>EL = {d.EL_formula}</div>}
-                {d.max_load_N && <div style={{ fontSize: 11, color: "#dc2626", fontWeight: 600 }}>Max {d.max_load_N} N</div>}
+                {d.max_load_N && <div style={{ fontSize: 11, color: "#C62828", fontWeight: 600 }}>Max {d.max_load_N} N</div>}
               </div>
             ))}
           </div>
@@ -945,7 +945,7 @@ function SeriesDetail({ series, onBack, onConfigure }) {
       )}
 
       {/* Bottom Configure CTA */}
-      <div style={{ marginTop: 28, padding: "20px 24px", background: "#f0f7ff", borderRadius: 12, border: "1px solid #bfdbfe", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+      <div style={{ marginTop: 28, padding: "20px 24px", background: "#f0f7ff", borderRadius: 12, border: "1px solid #F8C9B0", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
         <div>
           <div style={{ fontSize: 14, fontWeight: 700, color: NAVY_MID }}>Ready to configure?</div>
           <div style={{ fontSize: 12, color: C.muted }}>Select your tube, shaft, length and options — then add to RFQ or print a tear sheet.</div>
@@ -1060,14 +1060,14 @@ function Configurator({ series, onBack, onGoRFQ }) {
         </div>
         {isVariable && (
           <div style={{ gridColumn: "1 / -1", background: "#fef3c7", border: "1px solid #fde68a", borderRadius: 8, padding: "14px 16px" }}>
-            <div style={{ fontSize: 11, fontWeight: 800, color: "#b45309", marginBottom: 10, textTransform: "uppercase", letterSpacing: 1 }}>Variable Shaft Extensions</div>
+            <div style={{ fontSize: 11, fontWeight: 800, color: "#B8860B", marginBottom: 10, textTransform: "uppercase", letterSpacing: 1 }}>Variable Shaft Extensions</div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <div>
                 <label style={{ fontSize: 11, fontWeight: 700, color: "#92400e", display: "block", marginBottom: 5 }}>LH (Left) — {imperial ? "in" : "mm"}</label>
                 <input type="number" value={varShaftLH} min={imperial ? "0.5" : "10"} max={imperial ? "20" : "500"} step={imperial ? "0.125" : "5"}
                   onChange={e => setVarShaftLH(e.target.value)}
                   style={{ width: "100%", padding: "9px 10px", border: "1px solid #fde68a", borderRadius: 7, fontSize: 13, fontWeight: 700, outline: "none", background: "#fff", color: "#92400e" }} />
-                <div style={{ fontSize: 10, color: "#b45309", marginTop: 3 }}>
+                <div style={{ fontSize: 10, color: "#B8860B", marginTop: 3 }}>
                   = {imperial ? `${Math.round(parseFloat(varShaftLH||0)*25.4)} mm` : `${((parseInt(varShaftLH)||0)/25.4).toFixed(3)}"`}
                 </div>
               </div>
@@ -1076,7 +1076,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
                 <input type="number" value={varShaftRH} min={imperial ? "0.5" : "10"} max={imperial ? "20" : "500"} step={imperial ? "0.125" : "5"}
                   onChange={e => setVarShaftRH(e.target.value)}
                   style={{ width: "100%", padding: "9px 10px", border: "1px solid #fde68a", borderRadius: 7, fontSize: 13, fontWeight: 700, outline: "none", background: "#fff", color: "#92400e" }} />
-                <div style={{ fontSize: 10, color: "#b45309", marginTop: 3 }}>
+                <div style={{ fontSize: 10, color: "#B8860B", marginTop: 3 }}>
                   = {imperial ? `${Math.round(parseFloat(varShaftRH||0)*25.4)} mm` : `${((parseInt(varShaftRH)||0)/25.4).toFixed(3)}"`}
                 </div>
               </div>
@@ -1091,7 +1091,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
         <div>
           <label style={{ fontSize: 11, fontWeight: 700, color: C.muted, display: "block", marginBottom: 5 }}>
             Body Length (RL) — {imperial ? "in" : "mm"}
-            <span style={{ color: "#94a3b8", fontWeight: 400 }}>
+            <span style={{ color: "#8A94A6", fontWeight: 400 }}>
               {imperial ? ` = ${parseInt(rl)||600} mm` : ` = ${((parseInt(rl)||600)/25.4).toFixed(3)}"`}
             </span>
           </label>
@@ -1122,7 +1122,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
               {[0,1,2,3,4].map(n => <option key={n} value={n}>{n === 0 ? "No grooves" : `${n} groove${n>1?"s":""}`}</option>)}
             </select>
             {groovesQty > 0 && (
-              <div style={{ marginTop: 6, background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 6, padding: "8px 10px", fontSize: 11, color: "#15803d" }}>
+              <div style={{ marginTop: 6, background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 6, padding: "8px 10px", fontSize: 11, color: "#2E7D46" }}>
                 <b>{groovesQty} groove{groovesQty>1?"s":""}</b> — spacing {imperial ? `${(((parseInt(rl)||600)/25.4)/(groovesQty+1)).toFixed(3)}"` : `${Math.round((parseInt(rl)||600)/(groovesQty+1))} mm`} apart
               </div>
             )}
@@ -1133,7 +1133,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
         )}
         {driveHeads && (
           <div style={{ gridColumn: "1 / -1" }}>
-            <label style={{ fontSize: 11, fontWeight: 700, color: "#d97706", display: "block", marginBottom: 5 }}>⚙ Drive Head / Sprocket</label>
+            <label style={{ fontSize: 11, fontWeight: 700, color: "#B8860B", display: "block", marginBottom: 5 }}>⚙ Drive Head / Sprocket</label>
             <select value={sprocketIdx} onChange={e => setSprocketIdx(Number(e.target.value))}
               style={{ width: "100%", padding: "9px 10px", border: "1px solid #fde68a", borderRadius: 7, fontSize: 12, outline: "none", background: "#fffbeb" }}>
               {driveHeads.map((d, i) => <option key={i} value={i}>{d.label}</option>)}
@@ -1150,7 +1150,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
                   driveHead.material ? ["Material", driveHead.material] : null,
                 ].filter(Boolean).map(([k, v]) => (
                   <div key={k} style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 6, padding: "6px 10px" }}>
-                    <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8, color: "#d97706", marginBottom: 2 }}>{k}</div>
+                    <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.8, color: "#B8860B", marginBottom: 2 }}>{k}</div>
                     <div style={{ fontSize: 12, fontWeight: 700, color: "#92400e" }}>{v}</div>
                   </div>
                 ))}
@@ -1261,7 +1261,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
       {/* Actions */}
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         <button onClick={addToRFQ}
-          style={{ flex: 1, padding: "11px 16px", borderRadius: 9, fontSize: 13, fontWeight: 800, cursor: "pointer", border: "none", background: rfqAdded ? "#16a34a" : "#2563eb", color: "#fff", transition: "background .15s", minWidth: 120 }}>
+          style={{ flex: 1, padding: "11px 16px", borderRadius: 9, fontSize: 13, fontWeight: 800, cursor: "pointer", border: "none", background: rfqAdded ? "#2E7D46" : "#F26522", color: "#fff", transition: "background .15s", minWidth: 120 }}>
           {rfqAdded ? "✓ Added to RFQ" : "+ Add to RFQ"}
         </button>
         <button onClick={() => {
@@ -1274,7 +1274,7 @@ function Configurator({ series, onBack, onGoRFQ }) {
       </div>
       {rfqAdded && (
         <button onClick={onGoRFQ}
-          style={{ width: "100%", padding: "10px", borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: "pointer", border: "1px solid #16a34a", background: "#f0fdf4", color: "#16a34a" }}>
+          style={{ width: "100%", padding: "10px", borderRadius: 9, fontSize: 13, fontWeight: 700, cursor: "pointer", border: "1px solid #2E7D46", background: "#f0fdf4", color: "#2E7D46" }}>
           View RFQ Cart →
         </button>
       )}

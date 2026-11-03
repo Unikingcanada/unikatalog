@@ -14,10 +14,10 @@ import { familyLabelToKey } from "@/lib/chainFamilyNormalizer";
 import { useNavigate } from "react-router-dom";
 
 const C = {
-  navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  border: "#e2e8f0", bg: "#f8fafc", card: "#ffffff",
-  text: "#0f172a", muted: "#64748b",
-  gold: "#C9A84C",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  border: "#D9D6CE", bg: "#F4F2ED", card: "#ffffff",
+  text: "#0E1F3A", muted: "#3A4A66",
+  gold: "#F26522",
 };
 
 function FamilyCard({ family, count, onClick }) {
@@ -175,7 +175,7 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator,
       {search.trim() && debugInfo && (
         <div style={{ fontSize: 11, color: C.muted, marginBottom: 16, padding: "8px 0" }}>
           <div>Search source: Normalized_Chains DB ({debugInfo.dbRecordsSearched} live records)</div>
-          <div style={{ marginTop: 2, color: "#16a34a", fontWeight: 600 }}>
+          <div style={{ marginTop: 2, color: "#2E7D46", fontWeight: 600 }}>
             {debugInfo.matchesReturned} matching chain record{debugInfo.matchesReturned !== 1 ? "s" : ""}
           </div>
         </div>
@@ -238,7 +238,7 @@ export default function ChainFamilyBrowser({ onSelectFamily, onOpenConfigurator,
                   {chain.pitch_mm && <span>({chain.pitch_mm}mm)</span>}
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6, paddingTop: 6, borderTop: "1px solid " + C.border }}>
-                  <span style={{ fontSize: 10, fontWeight: 600, color: chain.status === "Active" || !chain.status ? "#16a34a" : C.muted }}>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: chain.status === "Active" || !chain.status ? "#2E7D46" : C.muted }}>
                     {chain.status || "Active"}
                   </span>
                   <span style={{ fontSize: 11, fontWeight: 600, color: C.navyMid }}>View Details →</span>

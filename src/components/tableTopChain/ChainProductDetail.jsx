@@ -2,8 +2,8 @@ import { useState } from "react";
 import { MATERIALS } from "@/lib/tableTopChainData";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
-  border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522",
+  border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
 };
 
 const FRICTION_BAR = { "Low": 1, "Low-Medium": 2, "Medium": 3, "High": 5 };
@@ -14,7 +14,7 @@ function RatingBar({ value, max = 5, color }) {
   return (
     <div style={{ display: "flex", gap: 2, alignItems: "center" }}>
       {Array.from({ length: max }).map((_, i) => (
-        <div key={i} style={{ width: 12, height: 5, borderRadius: 2, background: i < filled ? color : "#e2e8f0" }} />
+        <div key={i} style={{ width: 12, height: 5, borderRadius: 2, background: i < filled ? color : "#D9D6CE" }} />
       ))}
     </div>
   );
@@ -22,12 +22,12 @@ function RatingBar({ value, max = 5, color }) {
 
 function MaterialRow({ mat, product, onAddRFQ, selected, onSelect }) {
   const isPlas = product.chainType === "Plastic";
-  const accentColor = isPlas ? "#0057A8" : "#374151";
+  const accentColor = isPlas ? "#0E1F3A" : "#3A4A66";
 
   return (
     <tr
       onClick={() => onSelect(mat.id)}
-      style={{ background: selected ? "#eef3f8" : "white", cursor: "pointer", transition: "background 0.12s" }}
+      style={{ background: selected ? "#F4F2ED" : "white", cursor: "pointer", transition: "background 0.12s" }}
     >
       <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}` }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -53,7 +53,7 @@ function MaterialRow({ mat, product, onAddRFQ, selected, onSelect }) {
       <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}` }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
           <div style={{ fontSize: 9, color: C.muted }}>Wear Res.</div>
-          <RatingBar value={mat.wear} color="#16a34a" />
+          <RatingBar value={mat.wear} color="#2E7D46" />
           <div style={{ fontSize: 8, color: C.muted }}>{mat.wear?.slice(0, 20)}</div>
         </div>
       </td>
@@ -63,13 +63,13 @@ function MaterialRow({ mat, product, onAddRFQ, selected, onSelect }) {
       <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}` }}>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
           {mat.applications.slice(0, 2).map(a => (
-            <span key={a} style={{ fontSize: 8, background: "#f1f5f9", color: C.muted, padding: "1px 5px", borderRadius: 5 }}>{a}</span>
+            <span key={a} style={{ fontSize: 8, background: "#ECEAE4", color: C.muted, padding: "1px 5px", borderRadius: 5 }}>{a}</span>
           ))}
         </div>
       </td>
       <td style={{ padding: "10px 12px", borderBottom: `1px solid ${C.border}` }}>
         {mat.exclusive ? (
-          <span style={{ fontSize: 9, fontWeight: 700, color: "#6d28d9", background: "#ede9fe", padding: "2px 7px", borderRadius: 8 }}>
+          <span style={{ fontSize: 9, fontWeight: 700, color: "#3A4A66", background: "#ECEAE4", padding: "2px 7px", borderRadius: 8 }}>
             {mat.brandNote}
           </span>
         ) : (
@@ -80,7 +80,7 @@ function MaterialRow({ mat, product, onAddRFQ, selected, onSelect }) {
         <button
           onClick={(e) => { e.stopPropagation(); onAddRFQ(product, mat); }}
           style={{
-            padding: "5px 11px", background: selected ? accentColor : "#f1f5f9",
+            padding: "5px 11px", background: selected ? accentColor : "#ECEAE4",
             color: selected ? "#fff" : C.navyMid, border: "none", borderRadius: 7,
             cursor: "pointer", fontSize: 10, fontWeight: 800, whiteSpace: "nowrap",
           }}
@@ -97,7 +97,7 @@ export default function ChainProductDetail({ product, onBack, onAddRFQ }) {
   const [imgErr, setImgErr] = useState(false);
 
   const isPlas = product.chainType === "Plastic";
-  const accentColor = isPlas ? "#0057A8" : "#374151";
+  const accentColor = isPlas ? "#0E1F3A" : "#3A4A66";
   const materialList = (product.materials || []).map(m => MATERIALS[m]).filter(Boolean);
 
   const plastic = materialList.filter(m => m.category === "Plastic");
@@ -147,7 +147,7 @@ export default function ChainProductDetail({ product, onBack, onAddRFQ }) {
           <div style={{ fontSize: 13, fontWeight: 700, color: C.navyMid, marginBottom: 10 }}>Typical Applications</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
             {product.applications?.map(a => (
-              <span key={a} style={{ fontSize: 11, background: "#eef3f8", color: C.navyMid, padding: "4px 12px", borderRadius: 16, fontWeight: 600 }}>{a}</span>
+              <span key={a} style={{ fontSize: 11, background: "#F4F2ED", color: C.navyMid, padding: "4px 12px", borderRadius: 16, fontWeight: 600 }}>{a}</span>
             ))}
           </div>
         </div>
@@ -163,7 +163,7 @@ export default function ChainProductDetail({ product, onBack, onAddRFQ }) {
             </div>
             {selectedMat && (
               <button onClick={handleAddRFQSelected}
-                style={{ background: "#16a34a", color: "#fff", border: "none", borderRadius: 8, padding: "8px 18px", cursor: "pointer", fontWeight: 800, fontSize: 12 }}>
+                style={{ background: "#2E7D46", color: "#fff", border: "none", borderRadius: 8, padding: "8px 18px", cursor: "pointer", fontWeight: 800, fontSize: 12 }}>
                 ✓ Add Selected to RFQ
               </button>
             )}
@@ -172,13 +172,13 @@ export default function ChainProductDetail({ product, onBack, onAddRFQ }) {
           {/* Plastic materials */}
           {plastic.length > 0 && (
             <>
-              <div style={{ background: "#eef3f8", padding: "6px 20px", borderTop: `1px solid ${C.border}` }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: "#0057A8", textTransform: "uppercase", letterSpacing: "0.5px" }}>Plastic Materials</span>
+              <div style={{ background: "#F4F2ED", padding: "6px 20px", borderTop: `1px solid ${C.border}` }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "#0E1F3A", textTransform: "uppercase", letterSpacing: "0.5px" }}>Plastic Materials</span>
               </div>
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 700 }}>
                   <thead>
-                    <tr style={{ background: "#f8fafc" }}>
+                    <tr style={{ background: "#F4F2ED" }}>
                       {["Material", "Category", "Friction", "Wear Resistance", "Temp Range", "Applications", "Availability", ""].map(h => (
                         <th key={h} style={{ padding: "7px 12px", fontSize: 9, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.5px", textAlign: "left", borderBottom: `1px solid ${C.border}`, whiteSpace: "nowrap" }}>{h}</th>
                       ))}
@@ -197,13 +197,13 @@ export default function ChainProductDetail({ product, onBack, onAddRFQ }) {
           {/* Steel materials */}
           {steel.length > 0 && (
             <>
-              <div style={{ background: "#f1f5f9", padding: "6px 20px", borderTop: `1px solid ${C.border}` }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: "#374151", textTransform: "uppercase", letterSpacing: "0.5px" }}>Steel Materials</span>
+              <div style={{ background: "#ECEAE4", padding: "6px 20px", borderTop: `1px solid ${C.border}` }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: "#3A4A66", textTransform: "uppercase", letterSpacing: "0.5px" }}>Steel Materials</span>
               </div>
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 700 }}>
                   <thead>
-                    <tr style={{ background: "#f8fafc" }}>
+                    <tr style={{ background: "#F4F2ED" }}>
                       {["Material", "Category", "Friction", "Wear Resistance", "Temp Range", "Applications", "Availability", ""].map(h => (
                         <th key={h} style={{ padding: "7px 12px", fontSize: 9, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.5px", textAlign: "left", borderBottom: `1px solid ${C.border}`, whiteSpace: "nowrap" }}>{h}</th>
                       ))}

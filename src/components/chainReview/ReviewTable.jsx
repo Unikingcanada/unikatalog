@@ -13,7 +13,7 @@ export default function ReviewTable({ records, entityKey, onApprove, onReject, o
   function toggle(id) { setExpandedId(p => p === id ? null : id); }
 
   return (
-    <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0", overflow: "hidden", marginTop: 4 }}>
+    <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #D9D6CE", overflow: "hidden", marginTop: 4 }}>
       {records.map((record, i) => {
         const isExpanded = expandedId === record.id;
         const RowComponent =
@@ -21,7 +21,7 @@ export default function ReviewTable({ records, entityKey, onApprove, onReject, o
           entityKey === "dimensions"  ? ReviewRowDimensions  :
                                         ReviewRowFlags;
         return (
-          <div key={record.id} style={{ borderBottom: i < records.length - 1 ? "1px solid #f1f5f9" : "none" }}>
+          <div key={record.id} style={{ borderBottom: i < records.length - 1 ? "1px solid #ECEAE4" : "none" }}>
             <RowComponent
               record={record}
               expanded={isExpanded}

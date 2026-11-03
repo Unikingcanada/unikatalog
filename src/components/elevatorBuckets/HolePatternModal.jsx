@@ -1,7 +1,7 @@
 // Hole Pattern Confirmation Modal — shown when user clicks "Add to RFQ" on a size row
 import { useState } from "react";
 
-const NAVY = "#1a3a5c";
+const NAVY = "#0E1F3A";
 
 export default function HolePatternModal({ rec, size, material, onClose, onAdded }) {
   const [phase, setPhase] = useState("confirm"); // confirm | custom
@@ -93,14 +93,14 @@ export default function HolePatternModal({ rec, size, material, onClose, onAdded
           {(rec.schematic_image || rec.image_url) && (
             <div style={{ textAlign: "center", marginBottom: 18 }}>
               <img src={rec.schematic_image || rec.image_url} alt={`${rec.series} schematic`}
-                style={{ maxHeight: 160, maxWidth: "100%", objectFit: "contain", border: "1px solid #e5e7eb", borderRadius: 10, padding: 10, background: "#f8fafc" }}
+                style={{ maxHeight: 160, maxWidth: "100%", objectFit: "contain", border: "1px solid #D9D6CE", borderRadius: 10, padding: 10, background: "#F4F2ED" }}
                 onError={e => e.target.parentElement.style.display = "none"} />
             </div>
           )}
 
           {/* Standard hole spacing display */}
           {stdHoles && (
-            <div style={{ background: "#f8fafc", border: "1px solid #e5e7eb", borderRadius: 10, padding: "14px 16px", marginBottom: 20 }}>
+            <div style={{ background: "#F4F2ED", border: "1px solid #D9D6CE", borderRadius: 10, padding: "14px 16px", marginBottom: 20 }}>
               <div style={{ fontSize: 12, fontWeight: 800, color: NAVY, marginBottom: 10 }}>Standard Drilling Pattern</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                 {[
@@ -109,13 +109,13 @@ export default function HolePatternModal({ rec, size, material, onClose, onAdded
                   ["Horizontal Spacing (C/C)", stdHoles.horizontalSpacing],
                   ["Vertical Spacing (top→bottom)", stdHoles.verticalSpacing],
                 ].map(([label, value]) => (
-                  <div key={label} style={{ background: "#fff", border: "1px solid #f1f5f9", borderRadius: 7, padding: "8px 10px" }}>
-                    <div style={{ fontSize: 9, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: 0.6, marginBottom: 3 }}>{label}</div>
+                  <div key={label} style={{ background: "#fff", border: "1px solid #ECEAE4", borderRadius: 7, padding: "8px 10px" }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: "#8A94A6", textTransform: "uppercase", letterSpacing: 0.6, marginBottom: 3 }}>{label}</div>
                     <div style={{ fontSize: 13, fontWeight: 800, color: NAVY }}>{value || "—"}</div>
                   </div>
                 ))}
               </div>
-              {stdHoles.notes && <div style={{ marginTop: 8, fontSize: 11, color: "#6b7280", lineHeight: 1.5 }}>{stdHoles.notes}</div>}
+              {stdHoles.notes && <div style={{ marginTop: 8, fontSize: 11, color: "#3A4A66", lineHeight: 1.5 }}>{stdHoles.notes}</div>}
             </div>
           )}
 
@@ -123,27 +123,27 @@ export default function HolePatternModal({ rec, size, material, onClose, onAdded
           <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 16, flexWrap: "wrap" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <span style={{ fontSize: 12, fontWeight: 700, color: NAVY }}>Qty:</span>
-              <button onClick={() => setQty(Math.max(1, qty - 1))} style={{ width: 28, height: 28, borderRadius: 6, border: "1px solid #d1d5db", background: "#f9fafb", cursor: "pointer", fontSize: 15 }}>−</button>
+              <button onClick={() => setQty(Math.max(1, qty - 1))} style={{ width: 28, height: 28, borderRadius: 6, border: "1px solid #C9C5BB", background: "#F4F2ED", cursor: "pointer", fontSize: 15 }}>−</button>
               <input type="number" min={1} value={qty} onChange={e => setQty(Math.max(1, parseInt(e.target.value) || 1))}
-                style={{ width: 50, textAlign: "center", padding: "5px", borderRadius: 6, border: "1px solid #d1d5db", fontSize: 13, fontWeight: 700 }} />
-              <button onClick={() => setQty(qty + 1)} style={{ width: 28, height: 28, borderRadius: 6, border: "1px solid #d1d5db", background: "#f9fafb", cursor: "pointer", fontSize: 15 }}>+</button>
+                style={{ width: 50, textAlign: "center", padding: "5px", borderRadius: 6, border: "1px solid #C9C5BB", fontSize: 13, fontWeight: 700 }} />
+              <button onClick={() => setQty(qty + 1)} style={{ width: 28, height: 28, borderRadius: 6, border: "1px solid #C9C5BB", background: "#F4F2ED", cursor: "pointer", fontSize: 15 }}>+</button>
             </div>
             <input value={notes} onChange={e => setNotes(e.target.value)} placeholder="Notes (application, venting...)"
-              style={{ flex: 1, minWidth: 140, padding: "7px 12px", borderRadius: 8, border: "1px solid #d1d5db", fontSize: 12, outline: "none" }} />
+              style={{ flex: 1, minWidth: 140, padding: "7px 12px", borderRadius: 8, border: "1px solid #C9C5BB", fontSize: 12, outline: "none" }} />
           </div>
 
           {phase === "confirm" && (
             <>
-              <div style={{ fontSize: 14, fontWeight: 800, color: "#0f172a", marginBottom: 14, textAlign: "center" }}>
+              <div style={{ fontSize: 14, fontWeight: 800, color: "#0E1F3A", marginBottom: 14, textAlign: "center" }}>
                 Does this match your existing hole pattern?
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
                 <button onClick={addStandard} disabled={added}
-                  style={{ padding: "14px", borderRadius: 10, border: "none", background: added ? "#065f46" : "#16a34a", color: "#fff", fontSize: 14, fontWeight: 800, cursor: "pointer", transition: "background 0.2s" }}>
+                  style={{ padding: "14px", borderRadius: 10, border: "none", background: added ? "#065f46" : "#2E7D46", color: "#fff", fontSize: 14, fontWeight: 800, cursor: "pointer", transition: "background 0.2s" }}>
                   {added ? "✓ Added!" : "✓ Yes — Standard Drilling"}
                 </button>
                 <button onClick={() => setPhase("custom")}
-                  style={{ padding: "14px", borderRadius: 10, border: "2px solid #b45309", background: "#fffbeb", color: "#b45309", fontSize: 13, fontWeight: 800, cursor: "pointer" }}>
+                  style={{ padding: "14px", borderRadius: 10, border: "2px solid #B8860B", background: "#fffbeb", color: "#B8860B", fontSize: 13, fontWeight: 800, cursor: "pointer" }}>
                   ✎ No — Enter Custom Drilling
                 </button>
               </div>
@@ -153,7 +153,7 @@ export default function HolePatternModal({ rec, size, material, onClose, onAdded
           {phase === "custom" && (
             <>
               <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, padding: "16px", marginBottom: 16 }}>
-                <div style={{ fontSize: 13, fontWeight: 800, color: "#b45309", marginBottom: 12 }}>Custom Drilling Specification</div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: "#B8860B", marginBottom: 12 }}>Custom Drilling Specification</div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                   {[
                     ["holeDiameter", "Hole Diameter (in)", 'e.g. 17/32"'],
@@ -178,7 +178,7 @@ export default function HolePatternModal({ rec, size, material, onClose, onAdded
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
                 <button onClick={() => setPhase("confirm")}
-                  style={{ padding: "12px", borderRadius: 10, border: "1px solid #e5e7eb", background: "#f9fafb", color: "#374151", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                  style={{ padding: "12px", borderRadius: 10, border: "1px solid #D9D6CE", background: "#F4F2ED", color: "#3A4A66", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
                   ← Back
                 </button>
                 <button onClick={addCustom} disabled={added}

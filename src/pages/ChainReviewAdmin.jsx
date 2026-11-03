@@ -111,7 +111,7 @@ export default function ChainReviewAdmin() {
           <div style={{ fontSize: 12, color: S.muted, marginTop: 2 }}>Internal governance panel — admin only</div>
         </div>
         {actionMsg && (
-          <div style={{ padding: "8px 18px", borderRadius: 8, background: actionMsg.startsWith("Error") ? "#fef2f2" : "#f0fdf4", color: actionMsg.startsWith("Error") ? "#b91c1c" : "#16a34a", fontWeight: 700, fontSize: 13 }}>
+          <div style={{ padding: "8px 18px", borderRadius: 8, background: actionMsg.startsWith("Error") ? "#fef2f2" : "#f0fdf4", color: actionMsg.startsWith("Error") ? "#C62828" : "#2E7D46", fontWeight: 700, fontSize: 13 }}>
             {actionMsg}
           </div>
         )}
@@ -172,7 +172,7 @@ export default function ChainReviewAdmin() {
 
 function AdminShell({ children }) {
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#ECEAE4", fontFamily: "'Inter','Segoe UI',sans-serif" }}>
       <div style={{ background: S.navy, padding: "12px 32px", display: "flex", alignItems: "center", gap: 14 }}>
         <span style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: 2, color: "rgba(255,255,255,0.5)" }}>Admin</span>
         <span style={{ color: "rgba(255,255,255,0.25)" }}>|</span>
@@ -187,12 +187,12 @@ function AdminShell({ children }) {
 }
 
 const S = {
-  navy:   "#1a3a5c",
-  muted:  "#64748b",
-  border: "#e2e8f0",
+  navy:   "#0E1F3A",
+  muted:  "#3A4A66",
+  border: "#D9D6CE",
   header: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, flexWrap: "wrap", gap: 12 },
-  tabBar: { display: "flex", gap: 0, borderBottom: "2px solid #e2e8f0", marginBottom: 0, overflowX: "auto" },
-  tab:    { padding: "10px 20px", border: "none", background: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#64748b", borderBottom: "2px solid transparent", marginBottom: -2, whiteSpace: "nowrap" },
-  tabActive: { color: "#1a3a5c", borderBottomColor: "#1a3a5c" },
-  center: { textAlign: "center", padding: "60px 20px", color: "#64748b", fontSize: 14 },
+  tabBar: { display: "flex", gap: 0, borderBottom: "2px solid #D9D6CE", marginBottom: 0, overflowX: "auto" },
+  tab:    { padding: "10px 20px", border: "none", background: "none", cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#3A4A66", borderBottom: "2px solid transparent", marginBottom: -2, whiteSpace: "nowrap" },
+  tabActive: { color: "#0E1F3A", borderBottomColor: "#0E1F3A" },
+  center: { textAlign: "center", padding: "60px 20px", color: "#3A4A66", fontSize: 14 },
 };

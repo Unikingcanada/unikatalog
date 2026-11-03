@@ -35,35 +35,35 @@ export default function ReviewRowDimensions({ record, expanded, onToggle, onAppr
       <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", cursor: "pointer" }} onClick={onToggle}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-            <span style={{ fontSize: 13, fontWeight: 800, color: "#1a3a5c" }}>chain_id: {record.chain_id || "—"}</span>
-            {record.source_brand && <span style={{ fontSize: 10, background: "#e0f2fe", color: "#0369a1", padding: "2px 7px", borderRadius: 99, fontWeight: 700 }}>{record.source_brand}</span>}
-            {record.standard && <span style={{ fontSize: 10, background: "#f1f5f9", color: "#334155", padding: "2px 7px", borderRadius: 99, fontWeight: 600 }}>{record.standard}</span>}
+            <span style={{ fontSize: 13, fontWeight: 800, color: "#0E1F3A" }}>chain_id: {record.chain_id || "—"}</span>
+            {record.source_brand && <span style={{ fontSize: 10, background: "#FDF0E9", color: "#0E1F3A", padding: "2px 7px", borderRadius: 99, fontWeight: 700 }}>{record.source_brand}</span>}
+            {record.standard && <span style={{ fontSize: 10, background: "#ECEAE4", color: "#3A4A66", padding: "2px 7px", borderRadius: 99, fontWeight: 600 }}>{record.standard}</span>}
           </div>
           <div style={{ display: "flex", gap: 8, marginTop: 6, flexWrap: "wrap", alignItems: "center" }}>
             <StatusBadge status={record.review_status} needsReview={record.needs_review} />
             {presentDims.slice(0, 4).map(([label, key]) => (
-              <span key={key} style={{ fontSize: 10, background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 99, padding: "2px 8px", color: "#334155", fontWeight: 600 }}>
+              <span key={key} style={{ fontSize: 10, background: "#F4F2ED", border: "1px solid #D9D6CE", borderRadius: 99, padding: "2px 8px", color: "#3A4A66", fontWeight: 600 }}>
                 {label}: {record[key]}
               </span>
             ))}
-            {presentDims.length > 4 && <span style={{ fontSize: 10, color: "#94a3b8" }}>+{presentDims.length - 4} more</span>}
+            {presentDims.length > 4 && <span style={{ fontSize: 10, color: "#8A94A6" }}>+{presentDims.length - 4} more</span>}
           </div>
         </div>
         <ActionButtons onApprove={onApprove} onReject={onReject} onFlag={onFlag} />
       </div>
 
       {expanded && (
-        <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #f1f5f9", display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #ECEAE4", display: "flex", flexDirection: "column", gap: 12 }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px,1fr))", gap: 8 }}>
             {presentDims.map(([label, key]) => (
-              <div key={key} style={{ background: "#f8fafc", borderRadius: 6, padding: "8px 12px" }}>
-                <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8", marginBottom: 2 }}>{label}</div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>{record[key]}</div>
+              <div key={key} style={{ background: "#F4F2ED", borderRadius: 6, padding: "8px 12px" }}>
+                <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#8A94A6", marginBottom: 2 }}>{label}</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#0E1F3A" }}>{record[key]}</div>
               </div>
             ))}
           </div>
           {record.notes && (
-            <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 6, padding: "10px 14px", fontSize: 12, color: "#374151" }}>
+            <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 6, padding: "10px 14px", fontSize: 12, color: "#3A4A66" }}>
               <strong>Notes:</strong> {record.notes}
             </div>
           )}
@@ -77,12 +77,12 @@ export default function ReviewRowDimensions({ record, expanded, onToggle, onAppr
 function NotesEditor({ notes, onChange, onSave, saving }) {
   return (
     <div>
-      <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", marginBottom: 4, textTransform: "uppercase", letterSpacing: 1 }}>Resolution Notes</div>
+      <div style={{ fontSize: 11, fontWeight: 700, color: "#3A4A66", marginBottom: 4, textTransform: "uppercase", letterSpacing: 1 }}>Resolution Notes</div>
       <textarea value={notes} onChange={e => onChange(e.target.value)} rows={3}
-        style={{ width: "100%", padding: "8px 12px", border: "1px solid #e2e8f0", borderRadius: 7, fontSize: 12, resize: "vertical", outline: "none", boxSizing: "border-box", fontFamily: "inherit" }}
+        style={{ width: "100%", padding: "8px 12px", border: "1px solid #D9D6CE", borderRadius: 7, fontSize: 12, resize: "vertical", outline: "none", boxSizing: "border-box", fontFamily: "inherit" }}
         placeholder="Add resolution notes..." />
       <button onClick={onSave} disabled={saving}
-        style={{ marginTop: 6, padding: "6px 16px", borderRadius: 6, border: "none", background: saving ? "#e2e8f0" : "#1a3a5c", color: saving ? "#94a3b8" : "#fff", fontSize: 12, fontWeight: 700, cursor: saving ? "default" : "pointer" }}>
+        style={{ marginTop: 6, padding: "6px 16px", borderRadius: 6, border: "none", background: saving ? "#D9D6CE" : "#0E1F3A", color: saving ? "#8A94A6" : "#fff", fontSize: 12, fontWeight: 700, cursor: saving ? "default" : "pointer" }}>
         {saving ? "Saving…" : "Save Notes"}
       </button>
     </div>

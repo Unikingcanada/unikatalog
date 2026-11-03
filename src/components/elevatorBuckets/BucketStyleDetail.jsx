@@ -3,28 +3,28 @@ import { useState, useMemo, useEffect } from "react";
 import HolePatternModal from "./HolePatternModal";
 import { addCompareItem, removeCompareItem, isInCompare, buildCompareItem, getCompareItems } from "@/lib/bucketCompareState";
 
-const NAVY = "#1a3a5c";
-const AMBER = "#b45309";
+const NAVY = "#0E1F3A";
+const AMBER = "#B8860B";
 
 const MAT_STYLES = {
-  "Polyethylene": { color: "#1d4ed8", bg: "#dbeafe", border: "#bfdbfe", dot: "#3b82f6", label: "Polyethylene (HDPE)", temp: "-120°F to 180°F", fda: true },
-  "Nylon":        { color: "#374151", bg: "#f3f4f6", border: "#d1d5db", dot: "#9ca3af", label: "Nylon", temp: "-60°F to 300°F", fda: false },
-  "Urethane":     { color: "#b45309", bg: "#fef3c7", border: "#fde68a", dot: "#f59e0b", label: "Urethane", temp: "-60°F to 180°F", fda: true },
-  "Carbon Steel": { color: "#374151", bg: "#e5e7eb", border: "#d1d5db", dot: "#6b7280", label: "Carbon Steel", temp: "High Temp", fda: false },
-  "Mild Steel":   { color: "#374151", bg: "#e5e7eb", border: "#d1d5db", dot: "#6b7280", label: "Mild Steel", temp: "High Temp", fda: false },
+  "Polyethylene": { color: "#0E1F3A", bg: "#FDF0E9", border: "#F8C9B0", dot: "#F26522", label: "Polyethylene (HDPE)", temp: "-120°F to 180°F", fda: true },
+  "Nylon":        { color: "#3A4A66", bg: "#F4F2ED", border: "#C9C5BB", dot: "#8A94A6", label: "Nylon", temp: "-60°F to 300°F", fda: false },
+  "Urethane":     { color: "#B8860B", bg: "#fef3c7", border: "#fde68a", dot: "#f59e0b", label: "Urethane", temp: "-60°F to 180°F", fda: true },
+  "Carbon Steel": { color: "#3A4A66", bg: "#D9D6CE", border: "#C9C5BB", dot: "#3A4A66", label: "Carbon Steel", temp: "High Temp", fda: false },
+  "Mild Steel":   { color: "#3A4A66", bg: "#D9D6CE", border: "#C9C5BB", dot: "#3A4A66", label: "Mild Steel", temp: "High Temp", fda: false },
   "Stainless Steel": { color: "#1e3a8a", bg: "#e0e7ff", border: "#a5b4fc", dot: "#6366f1", label: "Stainless Steel", temp: "High Temp", fda: true },
   "Ductile Iron": { color: "#92400e", bg: "#fde8d8", border: "#fcd9bd", dot: "#c2410c", label: "Ductile Iron", temp: "Up to 800°F", fda: false },
-  "Aluminum":     { color: "#0369a1", bg: "#e0f2fe", border: "#7dd3fc", dot: "#0ea5e9", label: "Aluminum", temp: "Up to 400°F", fda: false },
+  "Aluminum":     { color: "#0E1F3A", bg: "#FDF0E9", border: "#7dd3fc", dot: "#0ea5e9", label: "Aluminum", temp: "Up to 400°F", fda: false },
   "Nylathane":    { color: "#0f766e", bg: "#ccfbf1", border: "#5eead4", dot: "#14b8a6", label: "Nylathane™", temp: "-40°F to 284°F", fda: true },
-  "Nyrim":        { color: "#6d28d9", bg: "#ede9fe", border: "#c4b5fd", dot: "#8b5cf6", label: "Nyrim", temp: "-60°F to 300°F", fda: false },
+  "Nyrim":        { color: "#3A4A66", bg: "#ECEAE4", border: "#c4b5fd", dot: "#3A4A66", label: "Nyrim", temp: "-60°F to 300°F", fda: false },
 };
 
 function getMat(str) {
-  if (!str) return { color: NAVY, bg: "#f3f4f6", border: "#e5e7eb", dot: "#9ca3af", label: str || "", temp: "—", fda: false };
+  if (!str) return { color: NAVY, bg: "#F4F2ED", border: "#D9D6CE", dot: "#8A94A6", label: str || "", temp: "—", fda: false };
   for (const [k, v] of Object.entries(MAT_STYLES)) {
     if (str.toLowerCase().includes(k.toLowerCase())) return { key: str, ...v };
   }
-  return { key: str, color: NAVY, bg: "#f3f4f6", border: "#e5e7eb", dot: "#9ca3af", label: str, temp: "—", fda: false };
+  return { key: str, color: NAVY, bg: "#F4F2ED", border: "#D9D6CE", dot: "#8A94A6", label: str, temp: "—", fda: false };
 }
 
 function parseMaterials(rec) {
@@ -37,22 +37,22 @@ function parseMaterials(rec) {
 function BucketSchematic() {
   return (
     <svg viewBox="0 0 220 160" width="100%" style={{ maxWidth: 220, display: "block" }} xmlns="http://www.w3.org/2000/svg">
-      <rect x="20" y="20" width="180" height="120" rx="6" fill="#f1f5f9" stroke="#cbd5e1" strokeWidth="1.5"/>
-      <rect x="40" y="4" width="140" height="22" rx="4" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="1.5"/>
-      <line x1="20" y1="80" x2="200" y2="80" stroke="#94a3b8" strokeWidth="1" strokeDasharray="4 3"/>
+      <rect x="20" y="20" width="180" height="120" rx="6" fill="#ECEAE4" stroke="#C9C5BB" strokeWidth="1.5"/>
+      <rect x="40" y="4" width="140" height="22" rx="4" fill="#D9D6CE" stroke="#8A94A6" strokeWidth="1.5"/>
+      <line x1="20" y1="80" x2="200" y2="80" stroke="#8A94A6" strokeWidth="1" strokeDasharray="4 3"/>
       {/* Hole dots */}
-      <circle cx="70" cy="50" r="5" fill="#fff" stroke="#64748b" strokeWidth="1.5"/>
-      <circle cx="150" cy="50" r="5" fill="#fff" stroke="#64748b" strokeWidth="1.5"/>
+      <circle cx="70" cy="50" r="5" fill="#fff" stroke="#3A4A66" strokeWidth="1.5"/>
+      <circle cx="150" cy="50" r="5" fill="#fff" stroke="#3A4A66" strokeWidth="1.5"/>
       {/* Dimension labels */}
-      <text x="110" y="100" textAnchor="middle" fontSize="9" fill="#94a3b8" fontFamily="Arial">A = Length</text>
-      <text x="205" y="55" textAnchor="start" fontSize="8" fill="#0369a1" fontFamily="Arial">B</text>
-      <text x="205" y="105" textAnchor="start" fontSize="8" fill="#0369a1" fontFamily="Arial">C</text>
-      <text x="110" y="150" textAnchor="middle" fontSize="8" fill="#94a3b8" fontFamily="Arial">D = Depth · E = C/C Holes</text>
+      <text x="110" y="100" textAnchor="middle" fontSize="9" fill="#8A94A6" fontFamily="Arial">A = Length</text>
+      <text x="205" y="55" textAnchor="start" fontSize="8" fill="#0E1F3A" fontFamily="Arial">B</text>
+      <text x="205" y="105" textAnchor="start" fontSize="8" fill="#0E1F3A" fontFamily="Arial">C</text>
+      <text x="110" y="150" textAnchor="middle" fontSize="8" fill="#8A94A6" fontFamily="Arial">D = Depth · E = C/C Holes</text>
       {/* Arrows */}
-      <line x1="20" y1="145" x2="200" y2="145" stroke="#94a3b8" strokeWidth="1" markerEnd="url(#arr)"/>
+      <line x1="20" y1="145" x2="200" y2="145" stroke="#8A94A6" strokeWidth="1" markerEnd="url(#arr)"/>
       <defs>
         <marker id="arr" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
-          <path d="M0,0 L5,2.5 L0,5 Z" fill="#94a3b8"/>
+          <path d="M0,0 L5,2.5 L0,5 Z" fill="#8A94A6"/>
         </marker>
       </defs>
     </svg>
@@ -162,7 +162,7 @@ export default function BucketStyleDetail({ rec, onBack }) {
       {/* Back + Breadcrumb */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
         <button onClick={onBack} className="uk-btn-back">← Back</button>
-        <div style={{ fontSize: 12, color: "#9ca3af", display: "flex", gap: 4, flexWrap: "wrap" }}>
+        <div style={{ fontSize: 12, color: "#8A94A6", display: "flex", gap: 4, flexWrap: "wrap" }}>
           <span>Elevator Buckets</span>
           <span>›</span>
           <span>{rec.supplier || rec.vendor}</span>
@@ -174,10 +174,10 @@ export default function BucketStyleDetail({ rec, onBack }) {
       </div>
 
       {/* Header card */}
-      <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 14, padding: "20px 24px", marginBottom: 20 }}>
+      <div style={{ background: "#fff", border: "1px solid #D9D6CE", borderRadius: 14, padding: "20px 24px", marginBottom: 20 }}>
         <div style={{ display: "flex", gap: 18, alignItems: "flex-start", flexWrap: "wrap" }}>
           {/* Image or schematic */}
-          <div style={{ width: 110, height: 88, background: "#f8fafc", border: "1px solid #e5e7eb", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
+          <div style={{ width: 110, height: 88, background: "#F4F2ED", border: "1px solid #D9D6CE", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
             {rec.image_url ? (
               <img src={rec.image_url} alt={rec.series}
                 style={{ maxWidth: 98, maxHeight: 78, objectFit: "contain" }}
@@ -188,20 +188,20 @@ export default function BucketStyleDetail({ rec, onBack }) {
           </div>
           <div style={{ flex: 1, minWidth: 200 }}>
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
-              <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: isAg ? "#d1fae5" : "#dbeafe", color: isAg ? "#065f46" : "#1d4ed8" }}>
+              <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: isAg ? "#d1fae5" : "#FDF0E9", color: isAg ? "#065f46" : "#0E1F3A" }}>
                 {rec.category || (isAg ? "Agricultural" : "Industrial")}
               </span>
-              {rec.supplier && <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: "#f3f4f6", color: "#374151" }}>{rec.supplier || rec.vendor}</span>}
-              {rec.discharge_type && <span style={{ fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 99, background: "#f3f4f6", color: "#6b7280" }}>{rec.discharge_type}</span>}
-              {rec.duty && <span style={{ fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 99, background: "#fef3c7", color: "#b45309" }}>{rec.duty}</span>}
+              {rec.supplier && <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: "#F4F2ED", color: "#3A4A66" }}>{rec.supplier || rec.vendor}</span>}
+              {rec.discharge_type && <span style={{ fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 99, background: "#F4F2ED", color: "#3A4A66" }}>{rec.discharge_type}</span>}
+              {rec.duty && <span style={{ fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 99, background: "#fef3c7", color: "#B8860B" }}>{rec.duty}</span>}
             </div>
             <div style={{ fontSize: 22, fontWeight: 900, color: NAVY, marginBottom: 6 }}>{rec.styleName || rec.series}</div>
-            {rec.application && <div style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.55, marginBottom: 8 }}>{rec.application}</div>}
+            {rec.application && <div style={{ fontSize: 13, color: "#3A4A66", lineHeight: 1.55, marginBottom: 8 }}>{rec.application}</div>}
             {rec.standardHoleNotes && (
-              <div style={{ fontSize: 12, color: "#374151", background: "#fff8ed", borderLeft: `3px solid ${AMBER}`, borderRadius: 4, padding: "8px 12px", lineHeight: 1.6 }}>{rec.standardHoleNotes}</div>
+              <div style={{ fontSize: 12, color: "#3A4A66", background: "#fff8ed", borderLeft: `3px solid ${AMBER}`, borderRadius: 4, padding: "8px 12px", lineHeight: 1.6 }}>{rec.standardHoleNotes}</div>
             )}
             {rec.notes && !rec.standardHoleNotes && (
-              <div style={{ fontSize: 12, color: "#374151", background: "#f8fafc", borderLeft: `3px solid #94a3b8`, borderRadius: 4, padding: "8px 12px", lineHeight: 1.6 }}>{rec.notes}</div>
+              <div style={{ fontSize: 12, color: "#3A4A66", background: "#F4F2ED", borderLeft: `3px solid #8A94A6`, borderRadius: 4, padding: "8px 12px", lineHeight: 1.6 }}>{rec.notes}</div>
             )}
           </div>
         </div>
@@ -209,15 +209,15 @@ export default function BucketStyleDetail({ rec, onBack }) {
 
       {/* Material toggle */}
       {materials.length > 0 && (
-        <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "16px 20px", marginBottom: 20 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: "#9ca3af", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>Material — click to filter weights</div>
+        <div style={{ background: "#fff", border: "1px solid #D9D6CE", borderRadius: 12, padding: "16px 20px", marginBottom: 20 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#8A94A6", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>Material — click to filter weights</div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             {materials.map(m => {
               const d = getMat(m);
               const active = activeMat === m;
               return (
                 <button key={m} onClick={() => setActiveMat(m)}
-                  style={{ padding: "8px 16px", borderRadius: 99, cursor: "pointer", transition: "all 0.15s", border: active ? `2px solid ${d.color}` : "2px solid #e5e7eb", background: active ? d.bg : "#f9fafb", color: active ? d.color : "#374151", fontWeight: active ? 800 : 600, fontSize: 13 }}>
+                  style={{ padding: "8px 16px", borderRadius: 99, cursor: "pointer", transition: "all 0.15s", border: active ? `2px solid ${d.color}` : "2px solid #D9D6CE", background: active ? d.bg : "#F4F2ED", color: active ? d.color : "#3A4A66", fontWeight: active ? 800 : 600, fontSize: 13 }}>
                   <span style={{ display: "inline-block", width: 8, height: 8, borderRadius: "50%", background: d.dot, marginRight: 7, verticalAlign: "middle" }} />
                   {d.label || m}
                   {d.fda && <span style={{ marginLeft: 6, fontSize: 9, fontWeight: 700, color: "#065f46", background: "#d1fae5", borderRadius: 99, padding: "1px 6px" }}>FDA</span>}
@@ -226,14 +226,14 @@ export default function BucketStyleDetail({ rec, onBack }) {
             })}
           </div>
           {activeMat && (
-            <div style={{ marginTop: 10, display: "flex", gap: 14, flexWrap: "wrap", fontSize: 12, color: "#6b7280" }}>
+            <div style={{ marginTop: 10, display: "flex", gap: 14, flexWrap: "wrap", fontSize: 12, color: "#3A4A66" }}>
               <span>Temp: <b style={{ color: NAVY }}>{md.temp}</b></span>
-              <span>FDA approved: <b style={{ color: md.fda ? "#065f46" : "#dc2626" }}>{md.fda ? "Yes" : "No"}</b></span>
-              {sizesByMaterial && <span style={{ fontSize: 11, color: "#9ca3af" }}>· Weight column updates per material</span>}
+              <span>FDA approved: <b style={{ color: md.fda ? "#065f46" : "#C62828" }}>{md.fda ? "Yes" : "No"}</b></span>
+              {sizesByMaterial && <span style={{ fontSize: 11, color: "#8A94A6" }}>· Weight column updates per material</span>}
             </div>
           )}
           {/* Capacity note */}
-          <div style={{ marginTop: 10, fontSize: 11, color: "#6b7280", background: "#f8fafc", borderRadius: 6, padding: "7px 12px", lineHeight: 1.6 }}>
+          <div style={{ marginTop: 10, fontSize: 11, color: "#3A4A66", background: "#F4F2ED", borderRadius: 6, padding: "7px 12px", lineHeight: 1.6 }}>
             <b>Note:</b> Capacity figures are at Water Level (WL). Usable capacity = WL + 10% for CC-style buckets. For Style AA: usable = gross × 0.75.
           </div>
         </div>
@@ -241,8 +241,8 @@ export default function BucketStyleDetail({ rec, onBack }) {
 
       {/* Cross-manufacturer compare hint */}
       {!isPending && baseSizes.length > 0 && (
-        <div style={{ fontSize: 12, color: "#9ca3af", marginBottom: 12, fontStyle: "italic" }}>
-          Want to compare this style against other manufacturers? Use the <b style={{ color: "#7c3aed" }}>Compare</b> buttons on any row below.
+        <div style={{ fontSize: 12, color: "#8A94A6", marginBottom: 12, fontStyle: "italic" }}>
+          Want to compare this style against other manufacturers? Use the <b style={{ color: "#3A4A66" }}>Compare</b> buttons on any row below.
         </div>
       )}
 
@@ -255,10 +255,10 @@ export default function BucketStyleDetail({ rec, onBack }) {
 
       {/* Spec table or pending state */}
       {isPending ? (
-        <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "48px 24px", textAlign: "center", marginBottom: 20 }}>
+        <div style={{ background: "#fff", border: "1px solid #D9D6CE", borderRadius: 12, padding: "48px 24px", textAlign: "center", marginBottom: 20 }}>
           <div style={{ fontSize: 36, marginBottom: 12 }}>📋</div>
           <div style={{ fontSize: 15, fontWeight: 700, color: NAVY, marginBottom: 6 }}>Specifications Coming Soon</div>
-          <div style={{ fontSize: 13, color: "#6b7280", maxWidth: 420, margin: "0 auto 20px", lineHeight: 1.6 }}>
+          <div style={{ fontSize: 13, color: "#3A4A66", maxWidth: 420, margin: "0 auto 20px", lineHeight: 1.6 }}>
             Full size data for this style is being verified from the manufacturer catalog. Contact Uniking for immediate specifications.
           </div>
           <button onClick={() => {
@@ -272,16 +272,16 @@ export default function BucketStyleDetail({ rec, onBack }) {
           </button>
         </div>
       ) : baseSizes.length > 0 ? (
-        <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden", marginBottom: 20 }}>
-          <div style={{ padding: "14px 20px", borderBottom: "1px solid #f3f4f6", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+        <div style={{ background: "#fff", border: "1px solid #D9D6CE", borderRadius: 12, overflow: "hidden", marginBottom: 20 }}>
+          <div style={{ padding: "14px 20px", borderBottom: "1px solid #F4F2ED", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
             <div>
               <div style={{ fontSize: 14, fontWeight: 800, color: NAVY }}>Available Sizes</div>
-              <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 2 }}>
+              <div style={{ fontSize: 11, color: "#8A94A6", marginTop: 2 }}>
                 {sizesByMaterial && activeMat ? `Weights shown for ${activeMat} · ` : ""}
                 Click "+ RFQ" to specify drilling and add to quote
               </div>
             </div>
-            <div style={{ fontSize: 12, color: "#9ca3af" }}>{baseSizes.length} sizes</div>
+            <div style={{ fontSize: 12, color: "#8A94A6" }}>{baseSizes.length} sizes</div>
           </div>
           <div className="table-scroll">
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
@@ -303,11 +303,11 @@ export default function BucketStyleDetail({ rec, onBack }) {
                   const inCompare = compareSet.has(nom);
                   return (
                     <tr key={i}
-                      style={{ background: i % 2 === 0 ? "#f8fafc" : "#fff", borderBottom: "1px solid #f3f4f6" }}
+                      style={{ background: i % 2 === 0 ? "#F4F2ED" : "#fff", borderBottom: "1px solid #F4F2ED" }}
                       onMouseEnter={e => e.currentTarget.style.background = "#fef3c7"}
-                      onMouseLeave={e => e.currentTarget.style.background = i % 2 === 0 ? "#f8fafc" : "#fff"}>
+                      onMouseLeave={e => e.currentTarget.style.background = i % 2 === 0 ? "#F4F2ED" : "#fff"}>
                       {activeCols.map(c => (
-                        <td key={c.key} style={{ padding: "9px 12px", color: c.bold ? NAVY : "#374151", fontWeight: c.bold ? 800 : 500, whiteSpace: "nowrap" }}>
+                        <td key={c.key} style={{ padding: "9px 12px", color: c.bold ? NAVY : "#3A4A66", fontWeight: c.bold ? 800 : 500, whiteSpace: "nowrap" }}>
                           {getCell(c, size)}
                         </td>
                       ))}
@@ -334,12 +334,12 @@ export default function BucketStyleDetail({ rec, onBack }) {
                               }}
                               style={{
                                 padding: "5px 10px", borderRadius: 6, cursor: "pointer", fontSize: 11, fontWeight: 700, transition: "all 0.15s", whiteSpace: "nowrap",
-                                border: inGlobal ? "none" : "1px solid #7c3aed",
-                                background: inGlobal ? "#7c3aed" : "#faf5ff",
-                                color: inGlobal ? "#fff" : "#7c3aed",
+                                border: inGlobal ? "none" : "1px solid #3A4A66",
+                                background: inGlobal ? "#3A4A66" : "#faf5ff",
+                                color: inGlobal ? "#fff" : "#3A4A66",
                               }}
-                              onMouseEnter={e => { if (!inGlobal) { e.currentTarget.style.background = "#7c3aed"; e.currentTarget.style.color = "#fff"; }}}
-                              onMouseLeave={e => { if (!inGlobal) { e.currentTarget.style.background = "#faf5ff"; e.currentTarget.style.color = "#7c3aed"; }}}>
+                              onMouseEnter={e => { if (!inGlobal) { e.currentTarget.style.background = "#3A4A66"; e.currentTarget.style.color = "#fff"; }}}
+                              onMouseLeave={e => { if (!inGlobal) { e.currentTarget.style.background = "#faf5ff"; e.currentTarget.style.color = "#3A4A66"; }}}>
                               {inGlobal ? "✓ In Compare" : "Compare"}
                             </button>
                           );
@@ -347,9 +347,9 @@ export default function BucketStyleDetail({ rec, onBack }) {
                       </td>
                       <td style={{ padding: "8px 12px", whiteSpace: "nowrap" }}>
                         <button onClick={() => setRfqSize(buildRFQSize(size))}
-                          style={{ padding: "5px 12px", borderRadius: 6, border: "1px solid #2563eb", background: "#eff6ff", color: "#2563eb", fontSize: 11, fontWeight: 700, cursor: "pointer", transition: "all 0.12s" }}
-                          onMouseEnter={e => { e.currentTarget.style.background = "#2563eb"; e.currentTarget.style.color = "#fff"; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = "#eff6ff"; e.currentTarget.style.color = "#2563eb"; }}>
+                          style={{ padding: "5px 12px", borderRadius: 6, border: "1px solid #F26522", background: "#FDF0E9", color: "#F26522", fontSize: 11, fontWeight: 700, cursor: "pointer", transition: "all 0.12s" }}
+                          onMouseEnter={e => { e.currentTarget.style.background = "#F26522"; e.currentTarget.style.color = "#fff"; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = "#FDF0E9"; e.currentTarget.style.color = "#F26522"; }}>
                           + RFQ
                         </button>
                       </td>
@@ -361,7 +361,7 @@ export default function BucketStyleDetail({ rec, onBack }) {
           </div>
         </div>
       ) : (
-        <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: "40px 24px", textAlign: "center", marginBottom: 20 }}>
+        <div style={{ background: "#fff", border: "1px solid #D9D6CE", borderRadius: 12, padding: "40px 24px", textAlign: "center", marginBottom: 20 }}>
           <div style={{ fontSize: 32, marginBottom: 10 }}>📋</div>
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>Size data not yet entered for this style</div>
           <button onClick={() => {
@@ -377,7 +377,7 @@ export default function BucketStyleDetail({ rec, onBack }) {
 
       {/* Notes */}
       {rec.notes && (
-        <div style={{ background: "#fff8ed", border: "1px solid #fde68a", borderRadius: 10, padding: "14px 18px", fontSize: 12, color: "#374151", lineHeight: 1.7, marginBottom: 20 }}>
+        <div style={{ background: "#fff8ed", border: "1px solid #fde68a", borderRadius: 10, padding: "14px 18px", fontSize: 12, color: "#3A4A66", lineHeight: 1.7, marginBottom: 20 }}>
           <b>Notes:</b> {rec.notes}
         </div>
       )}
@@ -395,24 +395,24 @@ export default function BucketStyleDetail({ rec, onBack }) {
 
       {/* Compare sticky bar */}
       {compareSet.size >= 1 && (
-        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200, background: "#1a1a2e", borderTop: "2px solid #7c3aed", padding: "12px 24px", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200, background: "#1a1a2e", borderTop: "2px solid #3A4A66", padding: "12px 24px", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
           <div style={{ flex: 1, display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
             <span style={{ fontSize: 12, fontWeight: 700, color: "#c4b5fd" }}>Compare Selected ({compareSet.size}):</span>
             {compareArr.map(s => (
-              <span key={s.sizeNominal || s.size} style={{ fontSize: 11, background: "#ede9fe", color: "#7c3aed", padding: "3px 10px", borderRadius: 99, fontWeight: 600 }}>
+              <span key={s.sizeNominal || s.size} style={{ fontSize: 11, background: "#ECEAE4", color: "#3A4A66", padding: "3px 10px", borderRadius: 99, fontWeight: 600 }}>
                 {s.sizeNominal || s.size}
               </span>
             ))}
           </div>
           <button onClick={() => setCompareSet(new Set())}
-            style={{ padding: "7px 16px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.2)", background: "transparent", color: "#9ca3af", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
+            style={{ padding: "7px 16px", borderRadius: 8, border: "1px solid rgba(255,255,255,0.2)", background: "transparent", color: "#8A94A6", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
             Clear
           </button>
           <button onClick={() => {
             const html = buildCompareHTML(compareArr, rec, activeMat, weightMap, activeCols);
             const blob = new Blob([html], { type: "text/html" });
             window.open(URL.createObjectURL(blob), "_blank");
-          }} style={{ padding: "7px 18px", borderRadius: 8, border: "none", background: "#7c3aed", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
+          }} style={{ padding: "7px 18px", borderRadius: 8, border: "none", background: "#3A4A66", color: "#fff", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
             Compare & Export →
           </button>
         </div>
@@ -428,25 +428,25 @@ function buildCompareHTML(sizes, rec, material, weightMap, activeCols) {
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family:'Segoe UI',Arial,sans-serif; color:#111; background:#fff; }
-.header { background:#0f2340; color:#fff; padding:20px 32px; display:flex; justify-content:space-between; align-items:center; }
-.accent { height:4px; background:linear-gradient(90deg,#7c3aed,#1a3a5c); }
+.header { background:#0E1F3A; color:#fff; padding:20px 32px; display:flex; justify-content:space-between; align-items:center; }
+.accent { height:4px; background:linear-gradient(90deg,#3A4A66,#0E1F3A); }
 .body { padding:24px 32px; }
-h2 { font-size:20px; font-weight:900; color:#0f2340; margin-bottom:4px; }
-.sub { font-size:12px; color:#6b7280; margin-bottom:16px; }
+h2 { font-size:20px; font-weight:900; color:#0E1F3A; margin-bottom:4px; }
+.sub { font-size:12px; color:#3A4A66; margin-bottom:16px; }
 table { width:100%; border-collapse:collapse; font-size:12px; }
-thead tr { background:#0f2340; }
+thead tr { background:#0E1F3A; }
 thead th { padding:9px 12px; color:#fff; font-weight:700; text-align:left; white-space:nowrap; }
-tbody tr:nth-child(even) { background:#f8fafc; }
-tbody td { padding:8px 12px; border-bottom:1px solid #e5e7eb; }
-tbody td:first-child { font-weight:700; color:#1a3a5c; }
-.footer { margin-top:20px; font-size:10px; color:#94a3b8; border-top:1px solid #e5e7eb; padding-top:12px; }
+tbody tr:nth-child(even) { background:#F4F2ED; }
+tbody td { padding:8px 12px; border-bottom:1px solid #D9D6CE; }
+tbody td:first-child { font-weight:700; color:#0E1F3A; }
+.footer { margin-top:20px; font-size:10px; color:#8A94A6; border-top:1px solid #D9D6CE; padding-top:12px; }
 .no-print { margin:12px 32px; display:flex; gap:10px; }
 @media print { .no-print { display:none!important; } }
 .btn { padding:8px 16px; border:none; border-radius:6px; cursor:pointer; font-size:12px; font-weight:700; }
 </style></head><body>
 <div class="no-print">
-  <button class="btn" style="background:#0f2340;color:#fff;" onclick="window.print()">Print / Save PDF</button>
-  <button class="btn" style="background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;" onclick="window.close()">Close</button>
+  <button class="btn" style="background:#0E1F3A;color:#fff;" onclick="window.print()">Print / Save PDF</button>
+  <button class="btn" style="background:#ECEAE4;color:#3A4A66;border:1px solid #D9D6CE;" onclick="window.close()">Close</button>
 </div>
 <div class="header">
   <div>

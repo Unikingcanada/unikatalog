@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { TOOTH_CONFIGS, SHARPTOP_UPGRADES, COMPATIBLE_SPROCKETS, buildRFQLabel } from "@/lib/sharpTopData";
 
-const C = { navy: "#0F2340", navyMid: "#1A3A5C", navyLight: "#2A5080", gold: "#C9A84C", border: "#e2e8f0", muted: "#64748b", text: "#0f172a", bg: "#f8fafc", green: "#16a34a", greenBg: "#f0fdf4" };
+const C = { navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66", gold: "#F26522", border: "#D9D6CE", muted: "#3A4A66", text: "#0E1F3A", bg: "#F4F2ED", green: "#2E7D46", greenBg: "#f0fdf4" };
 
 function getRFQCart() { try { return JSON.parse(localStorage.getItem("uniking_rfq_cart") || "[]"); } catch { return []; } }
 
@@ -10,7 +10,7 @@ function SpecRow({ label, value, note }) {
     <tr>
       <td style={{ padding: "8px 12px", color: C.muted, fontWeight: 600, fontSize: 12, borderBottom: `1px solid ${C.border}`, width: "45%" }}>{label}</td>
       <td style={{ padding: "8px 12px", borderBottom: `1px solid ${C.border}`, fontSize: 12 }}>
-        <span style={{ color: "#b45309", fontStyle: "italic", fontSize: 11 }}>To be confirmed by Uniking</span>
+        <span style={{ color: "#B8860B", fontStyle: "italic", fontSize: 11 }}>To be confirmed by Uniking</span>
       </td>
     </tr>
   );
@@ -42,7 +42,7 @@ function ConfigSelector({ product, selectedConfig, onSelect }) {
             style={{
               border: `2px solid ${isSelected ? C.navyMid : C.border}`,
               borderRadius: 10, padding: "12px 14px", cursor: "pointer",
-              background: isSelected ? "#eef3f8" : "#fff",
+              background: isSelected ? "#F4F2ED" : "#fff",
               transition: "all 0.15s",
             }}
           >
@@ -69,10 +69,10 @@ function ConfigSelector({ product, selectedConfig, onSelect }) {
             <div style={{ fontSize: 12, color: C.muted, marginTop: 8, marginLeft: 28, lineHeight: 1.6 }}>{cfg.desc}</div>
             {cfg.points && (
               <div style={{ marginTop: 8, marginLeft: 28, display: "flex", gap: 6 }}>
-                <span style={{ fontSize: 10, background: "#eef3f8", color: C.navyMid, padding: "2px 8px", borderRadius: 10, fontWeight: 700 }}>
+                <span style={{ fontSize: 10, background: "#F4F2ED", color: C.navyMid, padding: "2px 8px", borderRadius: 10, fontWeight: 700 }}>
                   {cfg.points} point{cfg.points !== 1 ? "s" : ""}
                 </span>
-                <span style={{ fontSize: 10, background: "#f8fafc", color: C.muted, padding: "2px 8px", borderRadius: 10, border: `1px solid ${C.border}` }}>
+                <span style={{ fontSize: 10, background: "#F4F2ED", color: C.muted, padding: "2px 8px", borderRadius: 10, border: `1px solid ${C.border}` }}>
                   {cfg.frequency}
                 </span>
               </div>
@@ -96,7 +96,7 @@ function SprocketsTab({ product }) {
           <div style={{ fontSize: 12, fontWeight: 700, color: C.navyMid, marginBottom: 8 }}>{sg.note}</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
             {sg.teeth.map(t => (
-              <span key={t} style={{ fontSize: 12, background: "#f8fafc", border: `1px solid ${C.border}`, borderRadius: 6, padding: "4px 10px", fontWeight: 600, color: C.text }}>
+              <span key={t} style={{ fontSize: 12, background: "#F4F2ED", border: `1px solid ${C.border}`, borderRadius: 6, padding: "4px 10px", fontWeight: 600, color: C.text }}>
                 {t}T
               </span>
             ))}
@@ -127,11 +127,11 @@ function UpgradesTab({ product, onAddUpgrade }) {
             <div>
               <div style={{ fontSize: 13, fontWeight: 800, color: C.text, marginBottom: 4 }}>{u.label}</div>
               <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.5 }}>{u.description}</div>
-              <div style={{ fontSize: 11, color: "#b45309", marginTop: 6 }}>Lead time: {u.lead_time}</div>
+              <div style={{ fontSize: 11, color: "#B8860B", marginTop: 6 }}>Lead time: {u.lead_time}</div>
             </div>
             <button
               onClick={() => onAddUpgrade(u)}
-              style={{ flexShrink: 0, padding: "6px 14px", borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: "pointer", background: "#eff6ff", color: "#2563eb", border: "1px solid #bfdbfe", whiteSpace: "nowrap" }}
+              style={{ flexShrink: 0, padding: "6px 14px", borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: "pointer", background: "#FDF0E9", color: "#F26522", border: "1px solid #F8C9B0", whiteSpace: "nowrap" }}
             >
               + Enquire
             </button>
@@ -289,7 +289,7 @@ export default function SharpTopProductDetail({ product, onClose, onGoRFQ }) {
                   </tbody>
                 </table>
               </div>
-              <div style={{ marginTop: 12, padding: "10px 14px", background: "#f0f9ff", borderRadius: 8, border: "1px solid #bae6fd", fontSize: 11, color: "#0369a1" }}>
+              <div style={{ marginTop: 12, padding: "10px 14px", background: "#FDF0E9", borderRadius: 8, border: "1px solid #bae6fd", fontSize: 11, color: "#0E1F3A" }}>
                 ℹ All specifications are based on Connexus Industries catalog data (2024). Final confirmation recommended before procurement.
               </div>
             </div>
@@ -313,9 +313,9 @@ export default function SharpTopProductDetail({ product, onClose, onGoRFQ }) {
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <div style={{ fontSize: 12, fontWeight: 700, color: C.muted }}>Qty (ft):</div>
               <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                <button onClick={() => setQty(q => Math.max(1, q - 1))} style={{ width: 26, height: 26, borderRadius: 5, border: `1px solid ${C.border}`, background: "#f9fafb", cursor: "pointer", fontSize: 14 }}>−</button>
+                <button onClick={() => setQty(q => Math.max(1, q - 1))} style={{ width: 26, height: 26, borderRadius: 5, border: `1px solid ${C.border}`, background: "#F4F2ED", cursor: "pointer", fontSize: 14 }}>−</button>
                 <input type="number" min={1} value={qty} onChange={e => setQty(Math.max(1, parseInt(e.target.value)||1))} style={{ width: 52, textAlign: "center", padding: "4px", borderRadius: 5, border: `1px solid ${C.border}`, fontSize: 12, fontWeight: 700 }} />
-                <button onClick={() => setQty(q => q + 1)} style={{ width: 26, height: 26, borderRadius: 5, border: `1px solid ${C.border}`, background: "#f9fafb", cursor: "pointer", fontSize: 14 }}>+</button>
+                <button onClick={() => setQty(q => q + 1)} style={{ width: 26, height: 26, borderRadius: 5, border: `1px solid ${C.border}`, background: "#F4F2ED", cursor: "pointer", fontSize: 14 }}>+</button>
               </div>
             </div>
             <input

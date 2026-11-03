@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 
 const C = {
-  navy: "#003c5b", navyMid: "#1A3A5C", navyLight: "#2A5080",
-  bg: "#f8fafc", card: "#ffffff", border: "#e2e8f0", text: "#0f172a", muted: "#64748b"
+  navy: "#0E1F3A", navyMid: "#0E1F3A", navyLight: "#3A4A66",
+  bg: "#F4F2ED", card: "#ffffff", border: "#D9D6CE", text: "#0E1F3A", muted: "#3A4A66"
 };
 
 function stripVendor(text) {
@@ -58,7 +58,7 @@ function WeldedChainCard({ chain, hovered, setHovered, onSelect }) {
   return (
     <div onMouseEnter={() => setHovered(chain.part_number)} onMouseLeave={() => setHovered(null)}
       style={{ background: isHov ? C.navyMid : C.card, border: "1px solid " + (isHov ? C.navyMid : C.border), borderRadius: 10, overflow: "hidden", transition: "all 0.15s", display: "flex", flexDirection: "column" }}>
-      {chain.product_image && <div onClick={() => onSelect(chain)} style={{ cursor: "pointer", background: C.bg, borderBottom: "1px solid #f1f5f9", padding: 8, display: "flex", alignItems: "center", justifyContent: "center", height: 110 }}><img src={chain.product_image} alt={chain.part_number} style={{ maxHeight: 98, maxWidth: "86%", objectFit: "contain" }} /></div>}
+      {chain.product_image && <div onClick={() => onSelect(chain)} style={{ cursor: "pointer", background: C.bg, borderBottom: "1px solid #ECEAE4", padding: 8, display: "flex", alignItems: "center", justifyContent: "center", height: 110 }}><img src={chain.product_image} alt={chain.part_number} style={{ maxHeight: 98, maxWidth: "86%", objectFit: "contain" }} /></div>}
       <div onClick={() => onSelect(chain)} style={{ padding: "14px 16px", flex: 1, cursor: "pointer" }}>
         <div style={{ fontSize: 15, fontWeight: 800, color: isHov ? "#fff" : C.text, marginBottom: 4 }}>{chain.part_number}</div>
         <div style={{ fontSize: 12, color: isHov ? "rgba(255,255,255,0.65)" : C.muted, marginBottom: 8 }}>{stripVendor(chain.description)?.slice(0, 80)}</div>
@@ -70,7 +70,7 @@ function WeldedChainCard({ chain, hovered, setHovered, onSelect }) {
       </div>
       <div style={{ padding: "8px 16px", borderTop: "1px solid " + (isHov ? "rgba(255,255,255,0.1)" : C.bg), display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <span onClick={() => onSelect(chain)} style={{ fontSize: 11, fontWeight: 600, color: isHov ? "rgba(255,255,255,0.7)" : C.navyMid, cursor: "pointer" }}>View Specs ›</span>
-        <button onClick={handleRFQ} style={{ padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: added ? "1px solid #16a34a" : "1px solid #2563eb", background: added ? "#f0fdf4" : isHov ? "rgba(255,255,255,0.15)" : "#eff6ff", color: added ? "#16a34a" : isHov ? "#fff" : "#2563eb", transition: "all 0.15s" }}>
+        <button onClick={handleRFQ} style={{ padding: "4px 10px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: added ? "1px solid #2E7D46" : "1px solid #F26522", background: added ? "#f0fdf4" : isHov ? "rgba(255,255,255,0.15)" : "#FDF0E9", color: added ? "#2E7D46" : isHov ? "#fff" : "#F26522", transition: "all 0.15s" }}>
           {added ? "✓ In RFQ" : "+ Add to RFQ"}
         </button>
       </div>
@@ -96,13 +96,13 @@ function WeldedChainRow({ chain, onSelect }) {
     <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{ background: C.card, border: "1px solid " + (hov ? C.navyMid : C.border), borderRadius: 8, display: "flex", alignItems: "center", overflow: "hidden", transition: "all 0.15s" }}>
       <div style={{ width: 3, alignSelf: "stretch", background: C.navyMid, flexShrink: 0 }} />
-      {chain.product_image && <div onClick={() => onSelect(chain)} style={{ width: 64, height: 56, display: "flex", alignItems: "center", justifyContent: "center", background: "#f8fafc", borderRight: "1px solid #f1f5f9", flexShrink: 0, cursor: "pointer" }}><img src={chain.product_image} alt="" style={{ maxHeight: 48, maxWidth: 56, objectFit: "contain" }} onError={(e) => e.target.style.display = "none"} /></div>}
+      {chain.product_image && <div onClick={() => onSelect(chain)} style={{ width: 64, height: 56, display: "flex", alignItems: "center", justifyContent: "center", background: "#F4F2ED", borderRight: "1px solid #ECEAE4", flexShrink: 0, cursor: "pointer" }}><img src={chain.product_image} alt="" style={{ maxHeight: 48, maxWidth: 56, objectFit: "contain" }} onError={(e) => e.target.style.display = "none"} /></div>}
       <div onClick={() => onSelect(chain)} style={{ flex: 1, padding: "10px 14px", cursor: "pointer", minWidth: 0 }}>
         <div style={{ fontSize: 14, fontWeight: 800, color: C.text }}>{chain.part_number}</div>
         <div style={{ fontSize: 12, color: C.muted, marginTop: 2 }}>{chain.subcategory}{chain.product_type ? " · " + chain.product_type : ""}</div>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 14px", flexShrink: 0 }}>
-        <button onClick={handleRFQ} style={{ padding: "5px 10px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: added ? "1px solid #16a34a" : "1px solid #2563eb", background: added ? "#f0fdf4" : "#eff6ff", color: added ? "#16a34a" : "#2563eb" }}>
+        <button onClick={handleRFQ} style={{ padding: "5px 10px", borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: "pointer", border: added ? "1px solid #2E7D46" : "1px solid #F26522", background: added ? "#f0fdf4" : "#FDF0E9", color: added ? "#2E7D46" : "#F26522" }}>
           {added ? "✓ In RFQ" : "+ RFQ"}
         </button>
         <span onClick={() => onSelect(chain)} style={{ fontSize: 11, fontWeight: 600, color: C.navyMid, whiteSpace: "nowrap", cursor: "pointer" }}>View ›</span>

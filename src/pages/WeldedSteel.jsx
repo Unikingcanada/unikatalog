@@ -9,10 +9,10 @@ const SUBCATEGORIES = [
   { key: "Mega Mac", label: "Mega Mac Drag Chain", desc: "The heaviest-duty welded steel drag chain for the most demanding applications." },
 ];
 
-const UNIKING_RED = "#C41E3A";
+const UNIKING_RED = "#F26522";
 const UNIKING_DARK = "#1a1a1a";
-const UNIKING_GRAY = "#f5f5f5";
-const UNIKING_BORDER = "#e0e0e0";
+const UNIKING_GRAY = "#F4F2ED";
+const UNIKING_BORDER = "#D9D6CE";
 
 // Strip trailing -N from sprocket slugs like "wr132xhd-8" → "wr132xhd"
 function parentSprocketSlug(slug) {
@@ -58,33 +58,33 @@ function printTearSheet(p, type) {
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a1a; background:#fff; padding: 0; }
-  .header { background: #1a1a1a; color: #fff; padding: 18px 32px; display:flex; align-items:center; gap:18px; border-bottom: 4px solid #C41E3A; }
-  .logo-box { width:48px; height:48px; background:#C41E3A; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:22px; color:#fff; letter-spacing:1px; flex-shrink:0; }
+  .header { background: #1a1a1a; color: #fff; padding: 18px 32px; display:flex; align-items:center; gap:18px; border-bottom: 4px solid #F26522; }
+  .logo-box { width:48px; height:48px; background:#F26522; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:22px; color:#fff; letter-spacing:1px; flex-shrink:0; }
   .header-text { flex:1; }
-  .header-title { font-size:13px; color:#aaa; letter-spacing:2px; text-transform:uppercase; }
+  .header-title { font-size:13px; color:#8A94A6; letter-spacing:2px; text-transform:uppercase; }
   .header-part { font-size:26px; font-weight:800; letter-spacing:0.5px; }
-  .header-type { font-size:12px; color:#C41E3A; letter-spacing:1.5px; text-transform:uppercase; margin-top:2px; }
-  .contact { font-size:11px; color:#aaa; text-align:right; line-height:1.7; }
+  .header-type { font-size:12px; color:#F26522; letter-spacing:1.5px; text-transform:uppercase; margin-top:2px; }
+  .contact { font-size:11px; color:#8A94A6; text-align:right; line-height:1.7; }
   .body { padding: 28px 32px; }
   .top-row { display:flex; gap:28px; margin-bottom:24px; }
   .images { display:flex; flex-direction:column; gap:12px; flex:0 0 280px; }
-  .main-img { max-width:280px; max-height:220px; object-fit:contain; border:1px solid #e0e0e0; border-radius:8px; padding:12px; background:#f5f5f5; }
-  .diag-img { max-width:280px; max-height:140px; object-fit:contain; border:1px solid #e0e0e0; border-radius:8px; padding:10px; background:#f5f5f5; }
+  .main-img { max-width:280px; max-height:220px; object-fit:contain; border:1px solid #D9D6CE; border-radius:8px; padding:12px; background:#F4F2ED; }
+  .diag-img { max-width:280px; max-height:140px; object-fit:contain; border:1px solid #D9D6CE; border-radius:8px; padding:10px; background:#F4F2ED; }
   .info { flex:1; }
-  .category-label { font-size:11px; color:#999; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
-  .industry { font-size:13px; color:#555; background:#f5f5f5; border-radius:6px; padding:8px 12px; margin-bottom:14px; }
+  .category-label { font-size:11px; color:#8A94A6; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
+  .industry { font-size:13px; color:#555; background:#F4F2ED; border-radius:6px; padding:8px 12px; margin-bottom:14px; }
   ul { padding-left:20px; margin-bottom:16px; }
   li { font-size:13px; color:#444; line-height:1.9; }
-  .section-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#999; margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid #e0e0e0; }
+  .section-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#8A94A6; margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid #D9D6CE; }
   table { width:100%; border-collapse:collapse; font-size:12px; margin-bottom:8px; }
   th { background:#1a1a1a; color:#fff; padding:9px 14px; text-align:left; font-weight:600; font-size:11px; white-space:nowrap; }
-  td { padding:9px 14px; white-space:nowrap; border-bottom:1px solid #e0e0e0; }
+  td { padding:9px 14px; white-space:nowrap; border-bottom:1px solid #D9D6CE; }
   tr.even td { background:#fff; }
-  tr.odd td { background:#f5f5f5; }
-  td.bold { font-weight:700; color:#C41E3A; }
-  .footer { margin-top:32px; padding:16px 32px; border-top:2px solid #e0e0e0; display:flex; justify-content:space-between; align-items:center; }
-  .footer-note { font-size:11px; color:#999; }
-  .footer-brand { font-size:12px; color:#C41E3A; font-weight:700; }
+  tr.odd td { background:#F4F2ED; }
+  td.bold { font-weight:700; color:#F26522; }
+  .footer { margin-top:32px; padding:16px 32px; border-top:2px solid #D9D6CE; display:flex; justify-content:space-between; align-items:center; }
+  .footer-note { font-size:11px; color:#8A94A6; }
+  .footer-brand { font-size:12px; color:#F26522; font-weight:700; }
   @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
 </style>
 </head>
@@ -143,7 +143,7 @@ function ImageCarousel({ images }) {
       >
         <img src={imgs[idx]} alt="" style={{ maxWidth: "100%", maxHeight: 240, objectFit: "contain" }} />
         {imgs.length > 1 && (
-          <div style={{ position: "absolute", bottom: 10, right: 12, fontSize: 11, color: "#999", background: "rgba(255,255,255,0.8)", borderRadius: 4, padding: "2px 6px" }}>
+          <div style={{ position: "absolute", bottom: 10, right: 12, fontSize: 11, color: "#8A94A6", background: "rgba(255,255,255,0.8)", borderRadius: 4, padding: "2px 6px" }}>
             {idx + 1} / {imgs.length}
           </div>
         )}
@@ -256,7 +256,7 @@ function ProductDetail({ product: p, onBack, activeRelTab, setActiveRelTab, acti
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
         <button onClick={onBack} style={{ background: "none", border: `1px solid ${UNIKING_BORDER}`, borderRadius: 6, padding: "8px 16px", cursor: "pointer", fontSize: 13, color: "#555" }}>← Back</button>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 11, color: "#999", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 2 }}>{p.category} — {p.subcategory}</div>
+          <div style={{ fontSize: 11, color: "#8A94A6", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 2 }}>{p.category} — {p.subcategory}</div>
           <div style={{ fontSize: 22, fontWeight: 800, color: UNIKING_DARK }}>{p.part_number}</div>
         </div>
         <button
@@ -290,7 +290,7 @@ function ProductDetail({ product: p, onBack, activeRelTab, setActiveRelTab, acti
         <div style={{ marginBottom: 32 }}>
           <div style={{ display: "flex", borderBottom: `1px solid ${UNIKING_BORDER}`, marginBottom: 16 }}>
             {[{ key: "basic", label: "Basic Specs" }, ...(hasMoreSpecs ? [{ key: "more", label: "More Specs" }] : [])].map(tab => (
-              <button key={tab.key} onClick={() => setActiveSpecTab(tab.key)} style={{ padding: "10px 20px", border: "none", borderBottom: activeSpecTab === tab.key ? `2px solid ${UNIKING_RED}` : "2px solid transparent", background: "none", cursor: "pointer", fontWeight: activeSpecTab === tab.key ? 700 : 500, color: activeSpecTab === tab.key ? UNIKING_RED : "#666", fontSize: 14 }}>
+              <button key={tab.key} onClick={() => setActiveSpecTab(tab.key)} style={{ padding: "10px 20px", border: "none", borderBottom: activeSpecTab === tab.key ? `2px solid ${UNIKING_RED}` : "2px solid transparent", background: "none", cursor: "pointer", fontWeight: activeSpecTab === tab.key ? 700 : 500, color: activeSpecTab === tab.key ? UNIKING_RED : "#3A4A66", fontSize: 14 }}>
                 {tab.label}
               </button>
             ))}
@@ -305,10 +305,10 @@ function ProductDetail({ product: p, onBack, activeRelTab, setActiveRelTab, acti
       {/* Related products */}
       {hasRelated && (
         <div>
-          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#999", marginBottom: 12 }}>Related Products</div>
+          <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#8A94A6", marginBottom: 12 }}>Related Products</div>
           <div style={{ display: "flex", borderBottom: `1px solid ${UNIKING_BORDER}`, marginBottom: 24 }}>
             {relTabs.map(tab => (
-              <button key={tab.key} onClick={() => setActiveRelTab(tab.key)} style={{ padding: "10px 20px", border: "none", borderBottom: activeRelTab === tab.key ? `2px solid ${UNIKING_RED}` : "2px solid transparent", background: "none", cursor: "pointer", fontWeight: activeRelTab === tab.key ? 700 : 500, color: activeRelTab === tab.key ? UNIKING_RED : "#666", fontSize: 13 }}>
+              <button key={tab.key} onClick={() => setActiveRelTab(tab.key)} style={{ padding: "10px 20px", border: "none", borderBottom: activeRelTab === tab.key ? `2px solid ${UNIKING_RED}` : "2px solid transparent", background: "none", cursor: "pointer", fontWeight: activeRelTab === tab.key ? 700 : 500, color: activeRelTab === tab.key ? UNIKING_RED : "#3A4A66", fontSize: 13 }}>
                 {tab.label}
               </button>
             ))}
@@ -354,7 +354,7 @@ function RelatedItemModal({ product: p, relType, originalPartNumber, onClose }) 
         {/* Header */}
         <div style={{ padding: "20px 28px 16px", borderBottom: `3px solid ${UNIKING_RED}`, display: "flex", alignItems: "flex-start", gap: 12, background: UNIKING_DARK }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 11, color: "#aaa", textTransform: "uppercase", letterSpacing: 2, marginBottom: 6 }}>
+            <div style={{ fontSize: 11, color: "#8A94A6", textTransform: "uppercase", letterSpacing: 2, marginBottom: 6 }}>
               {p.category || p.name || typeLabel}{p.subcategory ? ` — ${p.subcategory}` : ""}
             </div>
             <div style={{ fontSize: 26, fontWeight: 800, color: "#fff", letterSpacing: 0.5 }}>{p.part_number}</div>
@@ -375,7 +375,7 @@ function RelatedItemModal({ product: p, relType, originalPartNumber, onClose }) 
             {images.length > 0 && <ImageCarousel images={images} />}
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {(p.description || p.name) && (
-                <div style={{ fontSize: 14, color: "#333", lineHeight: 1.8, borderLeft: `3px solid ${UNIKING_RED}`, paddingLeft: 14 }}>
+                <div style={{ fontSize: 14, color: "#0E1F3A", lineHeight: 1.8, borderLeft: `3px solid ${UNIKING_RED}`, paddingLeft: 14 }}>
                   {p.description || p.name}
                 </div>
               )}
@@ -403,7 +403,7 @@ function RelatedItemModal({ product: p, relType, originalPartNumber, onClose }) 
               {(hasSpecs && hasMoreSpecs) && (
                 <div style={{ display: "flex", borderBottom: `1px solid ${UNIKING_BORDER}`, marginBottom: 16 }}>
                   {[{ key: "basic", label: "Basic Specs" }, { key: "more", label: "More Specs" }].map(tab => (
-                    <button key={tab.key} onClick={() => setActiveSpecTab(tab.key)} style={{ padding: "10px 20px", border: "none", borderBottom: activeSpecTab === tab.key ? `2px solid ${UNIKING_RED}` : "2px solid transparent", background: "none", cursor: "pointer", fontWeight: activeSpecTab === tab.key ? 700 : 500, color: activeSpecTab === tab.key ? UNIKING_RED : "#666", fontSize: 13 }}>
+                    <button key={tab.key} onClick={() => setActiveSpecTab(tab.key)} style={{ padding: "10px 20px", border: "none", borderBottom: activeSpecTab === tab.key ? `2px solid ${UNIKING_RED}` : "2px solid transparent", background: "none", cursor: "pointer", fontWeight: activeSpecTab === tab.key ? 700 : 500, color: activeSpecTab === tab.key ? UNIKING_RED : "#3A4A66", fontSize: 13 }}>
                       {tab.label}
                     </button>
                   ))}
@@ -411,13 +411,13 @@ function RelatedItemModal({ product: p, relType, originalPartNumber, onClose }) 
               )}
               {(!hasMoreSpecs || activeSpecTab === "basic") && hasSpecs && (
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#999", marginBottom: 10 }}>Basic Specifications</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#8A94A6", marginBottom: 10 }}>Basic Specifications</div>
                   <div style={{ overflowX: "auto" }}><SpecTable headers={p.basic_headers} rows={displayProduct.basic_rows} /></div>
                 </div>
               )}
               {hasMoreSpecs && activeSpecTab === "more" && (
                 <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#999", marginBottom: 10 }}>Additional Specifications</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, color: "#8A94A6", marginBottom: 10 }}>Additional Specifications</div>
                   <div style={{ overflowX: "auto" }}><SpecTable headers={p.more_headers} rows={displayProduct.more_rows} /></div>
                 </div>
               )}
@@ -498,11 +498,11 @@ export default function WeldedSteel() {
       <div style={{ background: UNIKING_DARK, color: "#fff", padding: "18px 32px", display: "flex", alignItems: "center", gap: 16, borderBottom: `3px solid ${UNIKING_RED}` }}>
         <div style={{ width: 40, height: 40, background: UNIKING_RED, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 18 }}>U</div>
         <div>
-          <div style={{ fontSize: 11, color: "#aaa", letterSpacing: 2, textTransform: "uppercase" }}>Uniking Canada — Product Catalog</div>
+          <div style={{ fontSize: 11, color: "#8A94A6", letterSpacing: 2, textTransform: "uppercase" }}>Uniking Canada — Product Catalog</div>
           <div style={{ fontSize: 20, fontWeight: 700 }}>Welded Steel Chain</div>
         </div>
         <div style={{ flex: 1 }} />
-        <a href="/" style={{ color: "#aaa", textDecoration: "none", fontSize: 13 }}>← Back to Catalog</a>
+        <a href="/" style={{ color: "#8A94A6", textDecoration: "none", fontSize: 13 }}>← Back to Catalog</a>
       </div>
 
       {/* Subcategory Nav */}
@@ -521,7 +521,7 @@ export default function WeldedSteel() {
         {!activeSubcat && (
           <div style={{ padding: "64px 0", textAlign: "center" }}>
             <div style={{ fontSize: 28, fontWeight: 700, marginBottom: 12 }}>Welded Steel Chain</div>
-            <div style={{ fontSize: 16, color: "#666", maxWidth: 600, margin: "0 auto 40px", lineHeight: 1.7 }}>
+            <div style={{ fontSize: 16, color: "#3A4A66", maxWidth: 600, margin: "0 auto 40px", lineHeight: 1.7 }}>
               Mac Chain welded steel chains are manufactured with superior steel for the most demanding conveying and elevating applications. Select a chain type above to browse products.
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, maxWidth: 900, margin: "0 auto" }}>
@@ -543,11 +543,11 @@ export default function WeldedSteel() {
           <div style={{ paddingTop: 32 }}>
             <div style={{ marginBottom: 24, paddingBottom: 16, borderBottom: `1px solid ${UNIKING_BORDER}` }}>
               <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 6 }}>{subcatInfo?.label}</div>
-              <div style={{ fontSize: 14, color: "#666", lineHeight: 1.6 }}>{subcatInfo?.desc}</div>
-              {products.length > 0 && <div style={{ fontSize: 12, color: "#999", marginTop: 8 }}>{products.length} products — click a part number for full specifications</div>}
+              <div style={{ fontSize: 14, color: "#3A4A66", lineHeight: 1.6 }}>{subcatInfo?.desc}</div>
+              {products.length > 0 && <div style={{ fontSize: 12, color: "#8A94A6", marginTop: 8 }}>{products.length} products — click a part number for full specifications</div>}
             </div>
             {loading ? (
-              <div style={{ textAlign: "center", padding: "60px 0", color: "#999" }}>Loading products...</div>
+              <div style={{ textAlign: "center", padding: "60px 0", color: "#8A94A6" }}>Loading products...</div>
             ) : (
               <>
                 {products.length > 0 && products[0].basic_headers?.length > 0 && (

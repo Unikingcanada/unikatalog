@@ -9,10 +9,10 @@ import SystemPlastConfigurator from "./SystemPlastConfigurator";
 import { SP_SERIES, SP_STRAIGHT_SERIES, SP_SIDEFLEXING_SERIES, SP_SMART_GUIDE_URL } from "@/lib/systemPlastData";
 
 const C = {
-  navy: "#0C2340", navyMid: "#1A3A5C", gold: "#C9A84C",
-  border: "#e2e8f0", muted: "#64748b", bg: "#f8fafc", text: "#0f172a",
+  navy: "#0E1F3A", navyMid: "#0E1F3A", gold: "#F26522",
+  border: "#D9D6CE", muted: "#3A4A66", bg: "#F4F2ED", text: "#0E1F3A",
 };
-const SP_BLUE = "#0057A8";
+const SP_BLUE = "#0E1F3A";
 
 const FILTER_TYPES = [
   { key: "all",         label: "All Series" },
@@ -119,7 +119,7 @@ export default function SystemPlastCatalog({ onBack, onGoRFQ }) {
               <span style={{ color: C.gold, fontSize: 13, fontWeight: 600 }}>Modular Belts & Sprockets</span>
             </div>
             <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-              {rfqAdded && <span style={{ background: "#16a34a", color: "#fff", padding: "5px 12px", borderRadius: 8, fontSize: 12, fontWeight: 700 }}>✓ Added to RFQ</span>}
+              {rfqAdded && <span style={{ background: "#2E7D46", color: "#fff", padding: "5px 12px", borderRadius: 8, fontSize: 12, fontWeight: 700 }}>✓ Added to RFQ</span>}
               {onGoRFQ && <button onClick={onGoRFQ} style={{ background: C.gold, color: C.navy, padding: "7px 16px", borderRadius: 8, fontSize: 13, fontWeight: 700, border: "none", cursor: "pointer" }}>RFQ Cart</button>}
             </div>
           </div>
