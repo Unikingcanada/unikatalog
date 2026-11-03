@@ -4,7 +4,7 @@ import RFQCartView from "@/components/RFQCartView";
 import WireMeshConfigurator from "@/components/WireMeshConfigurator";
 import ElevBucketsView from "@/components/elevatorBuckets/ElevBucketsView";
 import ForgedChainView from "@/pages/ForgedChain";
-import RollerConfigView from "@/pages/RollerConfigurator";
+import RollerConfigView from "@/components/rollersW61/RollerSection";
 import SharpTopCatalog from "@/components/sharpTop/SharpTopCatalog";
 import IntraloxCatalog from "@/components/intralox/IntraloxCatalog";
 import ChainCatalog from "@/components/chains/ChainCatalog";
@@ -1412,8 +1412,7 @@ export default function Home() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("section") === "rollers") {
-      _setSelectedType("Conveyor Rollers");
-      _setView("products");
+      setCurrentPage("rollerConfig");
       window.history.replaceState({}, "", window.location.pathname);
     }
   }, []);

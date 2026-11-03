@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import AuthGate from './components/layout/AuthGate'
 import Home from './pages/Home';
-import RollerConfigurator from './pages/RollerConfigurator';
+import RollerConfigurator from './components/rollersW61/RollerSection';
 import RFQCart from './pages/RFQCart';
 import ElevatorBuckets from './pages/ElevatorBuckets';
 import Catalog from './pages/Catalog';
