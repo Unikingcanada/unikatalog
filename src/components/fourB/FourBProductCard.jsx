@@ -74,12 +74,19 @@ export default function FourBProductCard({ product, onClick }) {
       {/* Image */}
       <div onClick={() => onClick(product)}
         style={{ background: "#F4F2ED", height: 160, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", position: "relative", borderBottom: "1px solid #ECEAE4" }}>
-        <img
-          src={product.image}
-          alt={product.name}
-          style={{ maxHeight: 144, maxWidth: "90%", objectFit: "contain", transition: "transform 0.25s", transform: hov ? "scale(1.04)" : "scale(1)" }}
-          onError={e => { e.target.parentElement.style.background = "#ECEAE4"; e.target.style.display = "none"; }}
-        />
+        {product.image ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            style={{ maxHeight: 144, maxWidth: "90%", objectFit: "contain", transition: "transform 0.25s", transform: hov ? "scale(1.04)" : "scale(1)" }}
+            onError={e => { e.target.parentElement.style.background = "#ECEAE4"; e.target.style.display = "none"; }}
+          />
+        ) : (
+          <div style={{ textAlign: "center", color: "#8A94A6", fontSize: 11, fontWeight: 600 }}>
+            <div style={{ fontSize: 34, marginBottom: 4 }}>📟</div>
+            Photo coming soon
+          </div>
+        )}
         {/* 4B logo stamp */}
         <div style={{
           position: "absolute", top: 8, right: 8,

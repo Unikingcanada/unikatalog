@@ -9,6 +9,7 @@ const NAVYMID = "#0E1F3A";
 const BORDER = "#D9D6CE";
 const BG = "#F4F2ED";
 
+const CATALOGUE_PDF = "https://base44.app/api/apps/69ebd56ae74b0ffcc2427c7a/files/mp/public/69ebd56ae74b0ffcc2427c7a/22d369870_uniking-hazard-monitoring-catalogue.pdf";
 const FOURBLOGO = "https://www.go4b.com/usa/images/misc/4b-logo.gif";
 
 function SubcategoryCard({ sub, count, hovered, setHovered, onSelect }) {
@@ -102,8 +103,12 @@ export default function FourBCatalog({ onBack, onGoRFQ }) {
             </div>
             <div style={{ marginBottom: 16 }}>
               <div style={{ fontSize: 13, color: "#3A4A66", fontWeight: 700 }}>
-                {PRODUCTS.length} products across {SUBCATEGORIES.length} categories — all directly sourced from go4b.com
+                {PRODUCTS.length} products across {SUBCATEGORIES.length} categories — sourced from go4b.com and the Uniking 2026 Hazard Monitoring Catalogue
               </div>
+              <a href={CATALOGUE_PDF} target="_blank" rel="noopener noreferrer"
+                style={{ display: "inline-block", marginTop: 10, background: FOURBRED, color: "#fff", padding: "8px 16px", borderRadius: 8, fontSize: 12, fontWeight: 700, textDecoration: "none" }}>
+                📄 Download Hazard Monitoring Catalogue (PDF)
+              </a>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 14, marginBottom: 48 }}>
               {SUBCATEGORIES.map(sub => (
@@ -149,10 +154,12 @@ export default function FourBCatalog({ onBack, onGoRFQ }) {
               <div style={{ fontSize: 13, color: "#3A4A66", maxWidth: 560, lineHeight: 1.6 }}>{activeSub.description}</div>
               <div style={{ marginTop: 8 }}>
                 <span style={{ fontSize: 12, color: "#3A4A66" }}>{filteredProducts.length} of {subcatProducts.length} products</span>
-                <a href={activeSub.url} target="_blank" rel="noopener noreferrer"
-                  style={{ marginLeft: 14, fontSize: 11, fontWeight: 700, color: FOURBRED, textDecoration: "none" }}>
-                  View on go4b.com ↗
-                </a>
+                {activeSub.url && (
+                  <a href={activeSub.url} target="_blank" rel="noopener noreferrer"
+                    style={{ marginLeft: 14, fontSize: 11, fontWeight: 700, color: FOURBRED, textDecoration: "none" }}>
+                    View on go4b.com ↗
+                  </a>
+                )}
               </div>
             </div>
             <input
@@ -176,7 +183,7 @@ export default function FourBCatalog({ onBack, onGoRFQ }) {
 
           {/* Disclaimer */}
           <div style={{ marginTop: 40, padding: "12px 16px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, fontSize: 11, color: "#92400e" }}>
-            ⚠ All product information is sourced directly from 4B Braime™ (go4b.com). Approvals shown are as listed on the 4B website. Final product selection and specifications must be confirmed by Uniking before supply.
+            ⚠ Product information is sourced from 4B Braime™ (go4b.com) and the Uniking 2026 Hazard Monitoring Catalogue. Approvals shown are as listed in those publications. Final product selection and specifications must be confirmed by Uniking before supply.
           </div>
         </div>
       )}

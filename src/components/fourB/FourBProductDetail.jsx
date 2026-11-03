@@ -317,8 +317,10 @@ function AccessoryCard({ product, onView }) {
   return (
     <div style={{ border: "1px solid #D9D6CE", borderRadius: 8, overflow: "hidden", background: "#fff" }}>
       <div style={{ background: "#F4F2ED", height: 90, display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid #ECEAE4" }}>
-        <img src={product.image} alt={product.name} style={{ maxHeight: 78, maxWidth: "88%", objectFit: "contain" }}
-          onError={e => e.target.style.display = "none"} />
+        {product.image ? (
+          <img src={product.image} alt={product.name} style={{ maxHeight: 78, maxWidth: "88%", objectFit: "contain" }}
+            onError={e => e.target.style.display = "none"} />
+        ) : <span style={{ fontSize: 28 }}>📟</span>}
       </div>
       <div style={{ padding: "10px 12px" }}>
         <div style={{ fontSize: 12, fontWeight: 700, color: "#0E1F3A", marginBottom: 4 }}>{product.name}</div>

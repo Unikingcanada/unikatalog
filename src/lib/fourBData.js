@@ -5,11 +5,13 @@
  * Images and downloads link directly to 4B official resources.
  */
 
+import { PRODUCT_UPDATES, NEW_PRODUCTS, NEW_SUBCATEGORIES, NEW_APPROVALS } from "./fourB/uniking2026Catalog";
+
 const B = "https://www.go4b.com/usa/";
 const IMG = B + "images/";
 
 // ── Approval badge definitions ────────────────────────────────────────────────
-export const APPROVALS = {
+const BASE_APPROVALS = {
   CSA:   { label: "CSA",   fullLabel: "CSA — USA & Canada",         logo: IMG + "misc/csa-logo.gif",   color: "#c00",   bg: "#fff5f5" },
   ATEX:  { label: "ATEX",  fullLabel: "ATEX — Europe (Dust/Gas)",   logo: IMG + "misc/atex-logo.gif",  color: "#e07b00",bg: "#fff8f0" },
   CE:    { label: "CE",    fullLabel: "CE — Europe",                 logo: IMG + "misc/ce-logo.gif",    color: "#003399",bg: "#f0f4ff" },
@@ -18,7 +20,7 @@ export const APPROVALS = {
 };
 
 // ── Subcategories ─────────────────────────────────────────────────────────────
-export const SUBCATEGORIES = [
+const BASE_SUBCATEGORIES = [
   {
     key: "hazard",
     label: "Hazard Monitoring Systems",
@@ -86,7 +88,7 @@ export const SUBCATEGORIES = [
 ];
 
 // ── Products ─────────────────────────────────────────────────────────────────
-export const PRODUCTS = [
+const BASE_PRODUCTS = [
 
   // ── HAZARD MONITORING SYSTEMS ─────────────────────────────────────────────
   {
@@ -926,6 +928,20 @@ export const PRODUCTS = [
     accessories: [],
     partNumbers: ["X400"],
   },
+];
+
+// ── Merge the Uniking 2026 catalogue over the go4b.com base data ─────────────
+export const APPROVALS = { ...BASE_APPROVALS, ...NEW_APPROVALS };
+
+export const SUBCATEGORIES = [...BASE_SUBCATEGORIES, ...NEW_SUBCATEGORIES];
+
+export const PRODUCTS = [
+  ...BASE_PRODUCTS.map(p => {
+    const u = PRODUCT_UPDATES[p.id];
+    if (!u) return p;
+    return { ...p, ...u, specs: u.specs || p.specs ? { ...p.specs, ...u.specs } : undefined };
+  }),
+  ...NEW_PRODUCTS,
 ];
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
