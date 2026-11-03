@@ -332,16 +332,19 @@ export default function ChainDataLoader() {
           for (const [k, v] of Object.entries(w)) if (!same(r[k], v)) diff[k] = v;
           if (Object.keys(diff).length) updates.push({ id: r.id, diff });
         }
-        let done = 0;
+        // Base44 allows 210 entity_update calls per 60 s: send 5 every 1.6 s (~187/min) to stay under it.
+        let done = 0, failed = 0;
         for (let i = 0; i < updates.length; i += 5) {
-          await Promise.all(updates.slice(i, i + 5).map((u) => withRetry(() => ent.update(u.id, u.diff), `update ${u.id}`, log)));
+          const t0 = Date.now();
+          const res = await Promise.allSettled(updates.slice(i, i + 5).map((u) => withRetry(() => ent.update(u.id, u.diff), `update ${u.id}`, log)));
+          failed += res.filter((r) => r.status === "rejected").length;
           done += Math.min(5, updates.length - i);
           setProgress((s) => ({ ...s, [p.entity]: { phase: "updating", done, total: updates.length } }));
-          await sleep(150);
+          await sleep(Math.max(0, 1600 - (Date.now() - t0)));
         }
-        setProgress((s) => ({ ...s, [p.entity]: { phase: "up to date", done: want.length, total: want.length } }));
-        log(`  ${p.entity}: ${updates.length} rows updated`);
-        total += updates.length;
+        setProgress((s) => ({ ...s, [p.entity]: { phase: failed ? `${failed} failed` : "up to date", done: want.length, total: want.length } }));
+        log(`  ${p.entity}: ${updates.length - failed} rows updated${failed ? `, ${failed} failed (press Apply corrections again)` : ""}`);
+        total += updates.length - failed;
       }
       clearChainCache();
       log(`Corrections applied: ${total} rows updated.`);
