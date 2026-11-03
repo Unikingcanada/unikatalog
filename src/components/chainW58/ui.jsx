@@ -102,3 +102,43 @@ export function Loading({ label = "Loading" }) {
 export function ErrorBox({ error }) {
   return <div className="ukc-empty">Chain data could not be loaded ({String(error?.message || error)}). Please refresh, or contact Uniking.</div>;
 }
+
+/** Full-size image viewer for catalogue drawings: Fit / 100 % toggle, scroll and pinch to inspect lettering. */
+export function ZoomViewer({ src, title, onClose }) {
+  const [full, setFull] = useState(false);
+  useEffect(() => {
+    const k = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", k);
+    const prev = document.body.style.overflow; document.body.style.overflow = "hidden";
+    return () => { window.removeEventListener("keydown", k); document.body.style.overflow = prev; };
+  }, [onClose]);
+  return (
+    <div className="ukc-zoom" role="dialog" aria-modal="true" aria-label={title || "Drawing"} onClick={onClose}>
+      <div className="ukc-zoom-bar" onClick={(e) => e.stopPropagation()}>
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{title}</span>
+        <span style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+          <button onClick={() => setFull((f) => !f)}>{full ? "Fit to screen" : "Actual size"}</button>
+          <button onClick={onClose} aria-label="Close">Close ×</button>
+        </span>
+      </div>
+      <div className={"ukc-zoom-stage " + (full ? "full" : "fit")} onClick={(e) => e.stopPropagation()}>
+        <img src={src} alt={title || ""} onClick={() => setFull((f) => !f)} style={{ cursor: full ? "zoom-out" : "zoom-in" }} />
+      </div>
+    </div>
+  );
+}
+
+/** A catalogue drawing shown at no more than its own pixel size, with a zoom viewer on click. */
+export function Drawing({ src, alt, title, fallback = null }) {
+  const [zoom, setZoom] = useState(false);
+  const [bad, setBad] = useState(!src);
+  useEffect(() => setBad(!src), [src]);
+  if (bad) return fallback;
+  return (
+    <>
+      <img src={src} alt={alt || ""} decoding="async" className="ukc-zoomable" onClick={() => setZoom(true)} onError={() => setBad(true)} />
+      <button type="button" className="ukc-zoom-hint" onClick={() => setZoom(true)}>Zoom drawing ⤢</button>
+      {zoom && <ZoomViewer src={src} title={title || alt} onClose={() => setZoom(false)} />}
+    </>
+  );
+}

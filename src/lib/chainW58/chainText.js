@@ -96,10 +96,11 @@ export function legendRows(chain, dims) {
   const legend = Array.isArray(chain?.drawing_legend) ? chain.drawing_legend : [];
   return legend
     .filter((x) => Array.isArray(x) && x[1])
-    .map(([key, label]) => {
+    .map(([key, label, letter]) => {
       const f = key ? LEGEND_FIELDS[key] : null;
       const value = f && dims ? inMm(dims[f[0]], f[1] ? dims[f[1]] : null) : null;
-      return { key: key || "", label: tx(label), value };
+      // letter = the callout printed on the catalogue drawing (present when the drawing style is lettered)
+      return { key: key || "", label: tx(label), value, letter: letter || "" };
     });
 }
 

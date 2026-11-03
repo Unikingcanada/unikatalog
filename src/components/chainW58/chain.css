@@ -140,15 +140,31 @@ button.ukc-chip { cursor: pointer; font-family: inherit; }
 .ukc-tabs button { font-family: var(--ukc-mono); letter-spacing: .14em; text-transform: uppercase; font-size: 11.5px !important; padding: 10px 14px; background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; font-weight: 700; font-size: 13px; color: var(--ukc-muted); cursor: pointer; white-space: nowrap; font-family: inherit; }
 .ukc-tabs button.on { color: var(--ukc-navy); border-bottom-color: var(--ukc-accent); }
 .ukc-tabs .k { display: inline-block; margin-left: 6px; background: var(--ukc-line); border-radius: 999px; padding: 1px 7px; font-size: 11px; }
-.ukc-drawing { background: #fff; border: 1px solid var(--ukc-border); border-radius: var(--ukc-radius); padding: 10px; overflow-x: auto; }
-.ukc-drawing img { width: 100%; min-width: 520px; height: auto; display: block; }
+.ukc-drawing { background: #fff; border: 1px solid var(--ukc-border); border-radius: var(--ukc-radius); padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+/* Drawings are never stretched past their own pixel size (that is what made small ones blurry and big ones huge);
+   they shrink to fit the column and the height cap, and open full size in the zoom viewer. */
+.ukc-drawing img, .ukc-zoomable { width: auto; height: auto; max-width: 100%; max-height: var(--ukc-draw-max, 440px); object-fit: contain; display: block; cursor: zoom-in; image-rendering: auto; }
+.ukc-zoom-hint { font-family: var(--ukc-mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ukc-muted); background: none; border: 0; cursor: zoom-in; padding: 2px 0; }
+.ukc-zoom-hint:hover { color: var(--ukc-ink); }
+.ukc-zoom { position: fixed; inset: 0; z-index: 2000; background: #0E1F3A; display: flex; flex-direction: column; }
+.ukc-zoom-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 14px; color: #F4F2ED; font-family: var(--ukc-mono, 'IBM Plex Mono', monospace); font-size: 12px; letter-spacing: .08em; }
+.ukc-zoom-bar button { font: inherit; color: #0E1F3A; background: #F4F2ED; border: 0; border-radius: 6px; padding: 8px 12px; cursor: pointer; }
+.ukc-zoom-stage { flex: 1; min-height: 0; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 12px; -webkit-overflow-scrolling: touch; }
+.ukc-zoom-stage.full { align-items: flex-start; justify-content: flex-start; }
+.ukc-zoom-stage img { background: #fff; display: block; margin: auto; border-radius: 4px; padding: 8px; }
+.ukc-zoom-stage.fit img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.ukc-zoom-stage.full img { max-width: none; max-height: none; }
+@media (max-width: 760px) { .ukc { --ukc-draw-max: 300px; } .ukc-drawing { padding: 10px; } }
 .ukc-legend { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
 .ukc-legend td { padding: 8px 10px; border-bottom: 1px solid var(--ukc-line); }
 .ukc-legend td.v { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .ukc-att-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
 .ukc-att { background: #fff; border: 1px solid var(--ukc-border); border-radius: var(--ukc-radius); overflow: hidden; display: flex; flex-direction: column; }
 .ukc-att .img { background: #fff; height: 150px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--ukc-line); padding: 6px; }
-.ukc-att .img img { max-width: 100%; max-height: 138px; object-fit: contain; }
+.ukc-att .img img { width: auto; height: auto; max-width: 100%; max-height: 138px; object-fit: contain; }
+.ukc-att .mstat { font-family: var(--ukc-mono); font-size: 10.5px; letter-spacing: .06em; }
+.ukc-legend td.L { width: 56px; }
+.ukc-legend tr.q td.v { color: var(--ukc-muted); font-family: var(--ukc-font); font-weight: 400; }
 .ukc-att .body { padding: 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
 .ukc-att .code { font-family: var(--ukc-display); font-weight: 400; text-transform: uppercase; font-size: 18px; letter-spacing: .02em; color: var(--ukc-ink); }
 .ukc-listed { list-style: none; padding: 0; margin: 0; background: #fff; border: 1px solid var(--ukc-border); border-radius: var(--ukc-radius); }
@@ -214,3 +230,5 @@ button.ukc-chip { cursor: pointer; font-family: inherit; }
 .ukc-rule { border: none; border-top: 1px solid var(--ukc-border); margin: 24px 0; }
 .ukc-key { font-family: var(--ukc-mono); color: var(--ukc-accent); font-weight: 500; }
 @media (max-width: 760px) { .ukc-k { width: 44px; height: 44px; } .ukc-k svg { inset: 8px; } .ukc-hero { gap: 12px; } }
+
+@media (max-width: 760px) { .ukc .ukc-legend td.v { white-space: normal; } .ukc .ukc-legend td.L { width: 40px; } .ukc .ukc-legend td { padding: 7px 6px; } }
