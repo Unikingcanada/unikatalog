@@ -302,6 +302,55 @@ export default function ChainDataLoader() {
     } finally { setRunning(false); }
   }
 
+  // 3c. apply corrections: update rows whose values differ from the package (matched by natural key). No deletes.
+  async function doSync() {
+    if (!pkgOk) return;
+    setRunning(true); setVerify(null);
+    // key-order-independent comparison, numbers compared by value (Base44 may return "1.5" vs 1.5 or reorder keys)
+    const canon = (v) => {
+      if (v === null || v === undefined || v === "") return null;
+      if (Array.isArray(v)) return v.map(canon);
+      if (typeof v === "object") return Object.fromEntries(Object.keys(v).sort().map((k) => [k, canon(v[k])]));
+      if (typeof v === "string" && v.trim() !== "" && !isNaN(+v) && /^-?[0-9.]+$/.test(v.trim())) return +v;
+      return v;
+    };
+    const same = (a, b) => JSON.stringify(canon(a)) === JSON.stringify(canon(b));
+    try {
+      let total = 0;
+      for (const p of PLAN) {
+        const ent = base44.entities[p.entity];
+        const want = pkg.data[p.entity].map(clean);
+        const keyOf = KEY[p.entity];
+        log(`${p.entity}: comparing with the package…`);
+        const have = await readAllEntity(p.entity, { onPage: (n) => setProgress((s) => ({ ...s, [p.entity]: { phase: "checking", done: n, total: want.length } })) });
+        const byKey = new Map(have.map((r) => [keyOf(r), r]));
+        const updates = [];
+        for (const w of want) {
+          const r = byKey.get(keyOf(w));
+          if (!r) continue;
+          const diff = {};
+          for (const [k, v] of Object.entries(w)) if (!same(r[k], v)) diff[k] = v;
+          if (Object.keys(diff).length) updates.push({ id: r.id, diff });
+        }
+        let done = 0;
+        for (let i = 0; i < updates.length; i += 5) {
+          await Promise.all(updates.slice(i, i + 5).map((u) => withRetry(() => ent.update(u.id, u.diff), `update ${u.id}`, log)));
+          done += Math.min(5, updates.length - i);
+          setProgress((s) => ({ ...s, [p.entity]: { phase: "updating", done, total: updates.length } }));
+          await sleep(150);
+        }
+        setProgress((s) => ({ ...s, [p.entity]: { phase: "up to date", done: want.length, total: want.length } }));
+        log(`  ${p.entity}: ${updates.length} rows updated`);
+        total += updates.length;
+      }
+      clearChainCache();
+      log(`Corrections applied: ${total} rows updated.`);
+      await doVerify();
+    } catch (e) {
+      log(`STOPPED: ${errText(e)}. Press "Apply corrections" again - it only updates what still differs.`);
+    } finally { setRunning(false); }
+  }
+
   // 4. verify
   async function doVerify() {
     log("Verifying counts…");
@@ -369,6 +418,7 @@ export default function ChainDataLoader() {
             <input value={confirmText} onChange={(e) => setConfirmText(e.target.value)} placeholder="REPLACE" style={{ padding: "9px 12px", borderRadius: 8, border: "1px solid #e2e8f0", fontSize: 14, width: 160 }} />
             <button style={btn(!running && pkgOk && !!backupInfo && confirmText === "REPLACE", true)} disabled={running || !pkgOk || !backupInfo || confirmText !== "REPLACE"} onClick={doReplace}>Replace chain data</button>
             <button style={btn(!running && pkgOk)} disabled={running || !pkgOk} onClick={doResume} title="Loads only rows that are missing; deletes nothing except exact duplicates">Resume (load missing rows)</button>
+            <button style={btn(!running && pkgOk)} disabled={running || !pkgOk} onClick={doSync} title="Updates rows whose values changed in the package; adds and deletes nothing">Apply corrections</button>
             <button style={btn(!running && !!pkg)} disabled={running || !pkg} onClick={() => { setRunning(true); doVerify().finally(() => setRunning(false)); }}>Verify only</button>
           </div>
           <div style={{ marginTop: 14 }}>

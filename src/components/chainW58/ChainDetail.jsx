@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { getChainDetail } from "@/lib/chainW58/chainRepo";
 import { tx, inMm, fmtInt, num, legendRows, materialsByClass, strandLabel, ON_QUOTE, fmtIn, fmtMm } from "@/lib/chainW58/chainText";
 import { addChainQuoteRequest, readCart } from "@/lib/chainW58/chainRfq";
-import { Crumbs, Img, Loading, ErrorBox, Modal, thumbOf, useAsync } from "./ui";
+import { Crumbs, Img, Loading, ErrorBox, Modal, thumbOf, useAsync, Drawing } from "./ui";
 
 export function specRows(chain, dims, perf) {
   const d = dims || {}, p = perf || {};
@@ -54,43 +54,71 @@ export function CustomRequestBox({ chain, kind, placeholder, go }) {
   );
 }
 
-function AttachmentMeasurements({ a, chain, onClose }) {
-  const letters = a.lettered_dims_in && typeof a.lettered_dims_in === "object" ? Object.entries(a.lettered_dims_in) : [];
-  const legend = new Map((Array.isArray(a.legend) ? a.legend : []).map((x) => [x[0], x[1]]));
+/**
+ * Measurement status of one attachment against its own drawing: every lettered value on the drawing,
+ * which of them are published, and the other published (unlettered) figures.
+ */
+export function measurementInfo(a) {
+  const legend = Array.isArray(a.legend) ? a.legend.filter((x) => Array.isArray(x) && x[0]) : [];
+  const vals = a.lettered_dims_in && typeof a.lettered_dims_in === "object" ? a.lettered_dims_in : {};
+  const order = legend.map((x) => x[0]);
+  Object.keys(vals).forEach((k) => { if (!order.includes(k)) order.push(k); });
+  const text = new Map(legend.map((x) => [x[0], x[1]]));
+  const rows = order.map((L) => ({ L, label: text.get(L) || "", v: num(vals[L]) }));
   const extra = [
-    ["Hole diameter", inMm(a.hole_dia_in, a.hole_dia_mm)],
-    ["Lug height", inMm(a.lug_height_in, a.lug_height_mm)],
-    ["Platform width", inMm(a.platform_width_in, null)],
+    ["Bolt-hole diameter", inMm(a.hole_dia_in, a.hole_dia_mm)],
+    ["Lug height / reach", inMm(a.lug_height_in, a.lug_height_mm)],
+    ["Lug / platform width", inMm(a.platform_width_in, null)],
     ["Overall width over attachments", inMm(a.overall_width_over_attachments_in, null)],
     ["Holes per lug", a.holes_per_lug ? String(a.holes_per_lug) : null],
   ].filter((r) => r[1]);
+  const have = rows.filter((r) => r.v !== null).length;
+  const status = rows.length && have === rows.length ? "complete" : have > 0 ? "partial" : extra.length ? "key" : "none";
+  return { rows, have, total: rows.length, extra, status };
+}
+
+export function MeasureBadge({ a }) {
+  const m = measurementInfo(a);
+  if (m.status === "complete") return <span className="ukc-chip ok mstat">All {m.total} measurements</span>;
+  if (m.status === "partial") return <span className="ukc-chip warn mstat">{m.have} of {m.total} measurements</span>;
+  if (m.status === "key") return <span className="ukc-chip mstat">Key dimensions only</span>;
+  return <span className="ukc-chip mstat">Measurements on quote</span>;
+}
+
+function AttachmentMeasurements({ a, chain, onClose }) {
+  const m = measurementInfo(a);
   return (
     <Modal title={`${tx(a.attachment_code)} on ${tx(chain.chain_number)}`} onClose={onClose} wide>
       <p className="muted">{tx(a.description)}{a.side ? ` · ${tx(a.side)}` : ""}</p>
       <div className="ukc-drawing" style={{ marginBottom: 12 }}>
-        <Img src={a.image_url} alt={`${a.attachment_code} attachment drawing`} style={{ minWidth: 0, maxHeight: 420, objectFit: "contain" }} fallback={<div className="muted small">Drawing not available.</div>} />
+        <Drawing src={a.image_url} alt={`${a.attachment_code} attachment drawing`} title={`${tx(a.attachment_code)} - attachment drawing`} fallback={<div className="muted small">Drawing not available.</div>} />
       </div>
-      {letters.length > 0 ? (
+      <div style={{ marginBottom: 8 }}><MeasureBadge a={a} /></div>
+      {m.rows.length > 0 && (
         <table className="ukc-legend">
           <thead><tr className="mono small muted"><td>Letter</td><td>Measurement</td><td className="v">in</td><td className="v">mm</td></tr></thead>
           <tbody>
-            {letters.map(([L, v]) => (
-              <tr key={L}>
-                <td className="ukc-key" style={{ width: 56 }}>{L}</td>
-                <td>{tx(legend.get(L) || "")}</td>
-                <td className="v">{num(v) !== null ? fmtIn(v) : ON_QUOTE}</td>
-                <td className="v">{num(v) !== null ? fmtMm(num(v) * 25.4) : ""}</td>
+            {m.rows.map((r) => (
+              <tr key={r.L} className={r.v === null ? "q" : ""}>
+                <td className="ukc-key L">{r.L}</td>
+                <td>{tx(r.label)}</td>
+                <td className="v">{r.v !== null ? fmtIn(r.v) : ON_QUOTE}</td>
+                <td className="v">{r.v !== null ? fmtMm(r.v * 25.4) : ""}</td>
               </tr>
             ))}
           </tbody>
         </table>
-      ) : <div className="ukc-empty">Lettered measurements for this attachment are {ON_QUOTE.toLowerCase()}.</div>}
-      {extra.length > 0 && (
-        <dl className="ukc-kv" style={{ marginTop: 14 }}>
-          {extra.map(([k, v]) => <FragmentKV key={k} k={k} v={v} />)}
-        </dl>
       )}
-      {a.spacing_note && <p className="ukc-note">{tx(a.spacing_note)}</p>}
+      {m.extra.length > 0 && (
+        <>
+          <h3 style={{ marginTop: 16 }}>Other published dimensions</h3>
+          <dl className="ukc-kv">{m.extra.map(([k, v]) => <FragmentKV key={k} k={k} v={v} />)}</dl>
+        </>
+      )}
+      {m.status !== "complete" && (
+        <p className="ukc-note">Values marked "{ON_QUOTE}" are not published in the catalogue for {tx(chain.chain_number)}; Uniking confirms them from the works drawing with your quotation.</p>
+      )}
+      {a.spacing_note && <p className="ukc-note">Spacing: {tx(a.spacing_note)}</p>}
       <p className="ukc-note">Catalogue drawing. Measurements are the published figures for {tx(chain.chain_number)}; confirm on the quotation before machining.</p>
     </Modal>
   );
@@ -126,6 +154,7 @@ function AttachmentsTab({ chain, attachments, go }) {
                 </div>
                 <div className="small muted">{tx(a.attachment_type)}</div>
                 <div className="small">{tx(a.description)}</div>
+                <div><MeasureBadge a={a} /></div>
                 <div style={{ marginTop: "auto", paddingTop: 6 }}><button className="ukc-btn ghost sm" onClick={() => setOpen(a)}>View measurements</button></div>
               </div>
             </div>
@@ -189,12 +218,17 @@ function DrawingTab({ chain, dims, drawingUrl }) {
   return (
     <div>
       {chain.drawing_title && <div className="mono small muted" style={{ marginBottom: 8, letterSpacing: ".08em" }}>{tx(chain.drawing_title)}</div>}
-      <div className="ukc-drawing"><Img src={drawingUrl} alt={`Catalogue reference drawing, ${tx(chain.chain_number)}`} fallback={<div className="muted small">Drawing not available.</div>} /></div>
+      <div className="ukc-drawing"><Drawing src={drawingUrl} alt={`Catalogue reference drawing, ${tx(chain.chain_number)}`} title={`${tx(chain.chain_number)} - ${tx(chain.drawing_title || "reference drawing")}`} fallback={<div className="muted small">Drawing not available.</div>} /></div>
       {rows.length > 0 && (
         <table className="ukc-legend">
+          {rows.some((r) => r.letter) && <thead><tr className="mono small muted"><td>Letter</td><td>Dimension</td><td className="v">Value</td></tr></thead>}
           <tbody>
             {rows.map((r, i) => (
-              <tr key={i}><td>{r.label}</td><td className="v">{r.value || <span className="muted" style={{ fontFamily: "var(--ukc-font)", fontWeight: 400 }}>{ON_QUOTE}</span>}</td></tr>
+              <tr key={i} className={r.value ? "" : "q"}>
+                {rows.some((x) => x.letter) && <td className="ukc-key L">{r.letter}</td>}
+                <td>{r.label}</td>
+                <td className="v">{r.value || ON_QUOTE}</td>
+              </tr>
             ))}
           </tbody>
         </table>
