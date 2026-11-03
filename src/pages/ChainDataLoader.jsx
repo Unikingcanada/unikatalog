@@ -31,11 +31,36 @@ const PLAN = [
 ];
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const PAUSE_MS = 400; // pause between batches so Base44 does not rate-limit the run
+
+/** Natural key per entity: used by Resume to find rows that are missing or duplicated. */
+const KEY = {
+  Chain_Catalog_Groups: (r) => r.catalog_group,
+  Chain_Attachment_Codes: (r) => r.code_key,
+  Normalized_Chains: (r) => r.chain_id,
+  Chain_Dimensions: (r) => r.chain_id,
+  Performance_Data: (r) => r.chain_id,
+  Chain_Attachments: (r) => [r.chain_id, r.code_key, r.attachment_code, r.side, r.sort_order].join("|"),
+  Chain_Media: (r) => [r.chain_id, r.media_type, r.url].join("|"),
+};
+const KEY_FIELDS = {
+  Chain_Catalog_Groups: ["catalog_group"], Chain_Attachment_Codes: ["code_key"], Normalized_Chains: ["chain_id"],
+  Chain_Dimensions: ["chain_id"], Performance_Data: ["chain_id"],
+  Chain_Attachments: ["chain_id", "code_key", "attachment_code", "side", "sort_order"], Chain_Media: ["chain_id", "media_type", "url"],
+};
+
+/** Nulls inside arrays/objects (e.g. a drawing_legend entry with no dimension key) are rejected by
+ *  Base44, which is what kept 14 chains out on the first live run. Store them as "" instead. */
+function fillNested(v) {
+  if (Array.isArray(v)) return v.map((x) => (x === null || x === undefined ? "" : fillNested(x)));
+  if (v && typeof v === "object") return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, x === null || x === undefined ? "" : fillNested(x)]));
+  return v;
+}
 
 /** Drop null/undefined keys so typed fields are simply left empty. */
 function clean(row) {
   const o = {};
-  for (const [k, v] of Object.entries(row)) if (v !== null && v !== undefined) o[k] = v;
+  for (const [k, v] of Object.entries(row)) if (v !== null && v !== undefined) o[k] = fillNested(v);
   // "Other" carries no information and is not in older Chain_Attachments schemas' enum,
   // which made whole batches fail on the first live run. Leave the field empty instead.
   if (o.attachment_type === "Other") delete o.attachment_type;
@@ -54,9 +79,12 @@ const errText = (e) => {
  */
 async function createRobust(ent, rows, label, log, failures) {
   try {
-    await withRetry(() => ent.bulkCreate(rows), label, log, rows.length > 1 ? 4 : 2);
+    await withRetry(() => ent.bulkCreate(rows), label, log);
     return rows.length;
   } catch (e) {
+    const st = statusOf(e);
+    const validation = st && st >= 400 && st < 500 && st !== 408 && st !== 429;
+    if (!validation) throw e; // rate limit / network / server: stop cleanly, Resume picks up from here
     if (rows.length === 1) {
       failures.push({ chain_id: rows[0].chain_id, code: rows[0].attachment_code || rows[0].url || "", error: errText(e) });
       if (failures.length <= 5) log(`  ✗ rejected ${rows[0].chain_id}: ${errText(e)}`);
@@ -69,15 +97,17 @@ async function createRobust(ent, rows, label, log, failures) {
   }
 }
 
-async function withRetry(fn, label, log, tries = 4) {
+async function withRetry(fn, label, log, tries = 9) {
   let last;
   for (let i = 0; i < tries; i++) {
     try { return await fn(); } catch (e) {
       last = e;
       const st = statusOf(e);
       if (st && st >= 400 && st < 500 && st !== 408 && st !== 429) throw e; // validation errors: no point retrying
-      const wait = 1000 * 2 ** i;
-      log(`  ↻ ${label} failed (${e?.message || e}); retry ${i + 1}/${tries - 1} in ${wait / 1000}s`);
+      // rate limit / server / network: back off up to a minute (total ~4 min) before giving up
+      const ra = Number(e?.response?.headers?.["retry-after"]);
+      const wait = Number.isFinite(ra) && ra > 0 ? ra * 1000 : Math.min(60000, 2000 * 2 ** i);
+      log(`  ↻ ${label}: ${st || ""} ${e?.message || e}; retry ${i + 1}/${tries - 1} in ${Math.round(wait / 1000)}s`);
       if (i < tries - 1) await sleep(wait);
     }
   }
@@ -215,6 +245,7 @@ export default function ChainDataLoader() {
           created += await createRobust(ent, chunk, `${p.entity} batch ${i / BATCH + 1}`, log, failures);
           done += chunk.length;
           setProgress((s) => ({ ...s, [p.entity]: { phase: "loading", done, total: rows.length } }));
+          await sleep(PAUSE_MS);
         }
         log(`  ${p.entity}: ${created} created${failures.length ? `, ${failures.length} REJECTED (first: ${failures[0].error})` : ""}`);
         if (failures.length) setRejected((r) => ({ ...r, [p.entity]: failures }));
@@ -222,7 +253,52 @@ export default function ChainDataLoader() {
       clearChainCache();
       await doVerify();
     } catch (e) {
-      log(`STOPPED: ${e?.message || e}. Fix the cause and run Replace again — it is safe to re-run.`);
+      log(`STOPPED: ${errText(e)}. Wait a minute, then press "Resume (load missing rows)" - it continues without deleting anything.`);
+    } finally { setRunning(false); }
+  }
+
+  // 3b. resume: load only what is missing (and remove exact duplicates of W58 rows). No full delete.
+  async function doResume() {
+    if (!pkgOk) return;
+    setRunning(true); setVerify(null); setRejected({});
+    try {
+      for (const p of PLAN) {
+        const ent = base44.entities[p.entity];
+        const want = pkg.data[p.entity].map(clean);
+        const keyOf = KEY[p.entity];
+        log(`${p.entity}: reading what is already loaded…`);
+        const have = await readAllEntity(p.entity, { fields: KEY_FIELDS[p.entity], onPage: (n) => setProgress((s) => ({ ...s, [p.entity]: { phase: "checking", done: n, total: want.length } })) });
+        const wantKeys = new Set(want.map(keyOf));
+        const seen = new Map(), dupes = [], stray = [];
+        for (const r of have) {
+          const k = keyOf(r);
+          if (!wantKeys.has(k)) stray.push(r.id);
+          else if (seen.has(k)) dupes.push(r.id);
+          else seen.set(k, r.id);
+        }
+        const missing = want.filter((r) => !seen.has(keyOf(r)));
+        log(`  ${p.entity}: ${seen.size} ok, ${missing.length} missing, ${dupes.length} duplicates, ${stray.length} not in W58`);
+        for (let i = 0; i < dupes.length; i += 10) {
+          await Promise.all(dupes.slice(i, i + 10).map((id) => withRetry(() => ent.delete(id), `delete duplicate ${id}`, log)));
+        }
+        const failures = [];
+        let done = 0, created = 0;
+        for (let i = 0; i < missing.length; i += BATCH) {
+          const chunk = missing.slice(i, i + BATCH);
+          created += await createRobust(ent, chunk, `${p.entity} resume ${i / BATCH + 1}`, log, failures);
+          done += chunk.length;
+          setProgress((s) => ({ ...s, [p.entity]: { phase: "loading", done: seen.size + done, total: want.length } }));
+          await sleep(PAUSE_MS);
+        }
+        setProgress((s) => ({ ...s, [p.entity]: { phase: "loading", done: want.length, total: want.length } }));
+        if (missing.length) log(`  ${p.entity}: ${created} added${failures.length ? `, ${failures.length} REJECTED (first: ${failures[0].error})` : ""}`);
+        if (stray.length) log(`  ${p.entity}: ${stray.length} older rows not in W58 left in place (use Replace to clear them)`);
+        if (failures.length) setRejected((r) => ({ ...r, [p.entity]: failures }));
+      }
+      clearChainCache();
+      await doVerify();
+    } catch (e) {
+      log(`STOPPED: ${errText(e)}. Wait a minute and press Resume again.`);
     } finally { setRunning(false); }
   }
 
@@ -292,6 +368,7 @@ export default function ChainDataLoader() {
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <input value={confirmText} onChange={(e) => setConfirmText(e.target.value)} placeholder="REPLACE" style={{ padding: "9px 12px", borderRadius: 8, border: "1px solid #e2e8f0", fontSize: 14, width: 160 }} />
             <button style={btn(!running && pkgOk && !!backupInfo && confirmText === "REPLACE", true)} disabled={running || !pkgOk || !backupInfo || confirmText !== "REPLACE"} onClick={doReplace}>Replace chain data</button>
+            <button style={btn(!running && pkgOk)} disabled={running || !pkgOk} onClick={doResume} title="Loads only rows that are missing; deletes nothing except exact duplicates">Resume (load missing rows)</button>
             <button style={btn(!running && !!pkg)} disabled={running || !pkg} onClick={() => { setRunning(true); doVerify().finally(() => setRunning(false)); }}>Verify only</button>
           </div>
           <div style={{ marginTop: 14 }}>
